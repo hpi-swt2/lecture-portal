@@ -1,0 +1,24 @@
+<%# https://getbootstrap.com/docs/4.0/components/navbar/ %>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark">
+    <div class="navbar-brand">Lecture-Portal</div>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <%# fa_icon helper: https://github.com/bokmann/font-awesome-rails %>
+                <%= link_to (fa_icon 'home', text: 'home'), root_path, class: 'nav-link' %>
+            </li>
+            <%# https://github.com/plataformatec/devise#controller-filters-and-helpers %>
+            <% if user_signed_in? %>
+                <li class="navbar-text">
+                    <%= fa_icon 'user', text: current_user.email %>
+                </li>
+                <li class="nav-item">
+                    <%= link_to (fa_icon 'edit', text: 'edit user'), edit_user_registration_path, class: 'nav-link'%>
+                </li>
+                <li class="nav-item">
+                    <%= link_to (fa_icon 'sign-out', text: 'logout'), destroy_user_session_path, method: :delete, class: 'nav-link' %>
+                </li>
+            <% end %>
+        </ul>
+    </div>
+</nav>

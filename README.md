@@ -7,4 +7,6 @@ Created in the [Software Engineering II course](https://hpi.de/plattner/teaching
 
 ## Setup
 
-* Ensure Ruby v2.5.1 with [rbenv](https://github.com/rbenv/rbenv) or [RVM](http://rvm.io/)
+* Ensure [Ruby](https://www.ruby-lang.org/) v2.5.1 (`ruby -v`) with [rbenv](https://github.com/rbenv/rbenv) or [RVM](http://rvm.io/)
+* Ensure [Bundler](https://rubygems.org/gems/bundler) v2.0.2 (`bundle -v`) with `gem install bundler -v 2.0.2`
+* Ensure Rails v5.2.3 (`rails -v`) with `gem install rails -v 5.2.3`
