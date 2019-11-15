@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :lecture do
-    name { "MyString" }
-    enrollment_key { "MyString" }
-    is_running { false }
+    name { "SWTII" }
+    enrollment_key { "ruby" }
+    is_running { true }
   end
 end
