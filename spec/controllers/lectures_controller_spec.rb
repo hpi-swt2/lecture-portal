@@ -73,9 +73,9 @@ RSpec.describe LecturesController, type: :controller do
         lecture = Lecture.create! valid_attributes
         put :update, params: {id: lecture.to_param, lecture: new_attributes}, session: valid_session
         lecture.reload
-        expect(lecture.name).to equal('SWT2')
-        expect(lecture.enrollment_key).to equal('epic')
-        expect(lecture.is_running).to equal(false)
+        expect(lecture.name).to eq('SWT2')
+        expect(lecture.enrollment_key).to eq('epic')
+        expect(lecture.is_running).to eq(false)
       end
 
       it "redirects to the lecture" do
