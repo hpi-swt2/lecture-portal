@@ -25,6 +25,9 @@ gem 'bootsnap', '>= 1.1.0', require: false
 #
 # Additional core gems
 #
+ 
+# Linter / Formatter using Rubocop https://github.com/rubocop-hq/rubocop
+gem 'rubocop', require: false
 
 # Flexible authentication solution for Rails with Warden
 gem 'devise' # https://github.com/plataformatec/devise
