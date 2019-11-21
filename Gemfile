@@ -40,6 +40,15 @@ gem "rubocop-rspec", require: false
 # Extension for Rubocop https://github.com/rubocop-hq/rubocop-performance
 gem "rubocop-performance", require: false
 
+# Linter / Formatter using Rubocop https://github.com/rubocop-hq/rubocop
+gem "rubocop", require: false
+# Rails Extension for Rubocop https://github.com/rubocop-hq/rubocop-rails
+gem "rubocop-rails", require: false
+# rspec Extension for Rubocop https://github.com/rubocop-hq/rubocop-rspec
+gem "rubocop-rspec", require: false
+# Extension for Rubocop https://github.com/rubocop-hq/rubocop-performance
+gem "rubocop-performance", require: false
+
 # Flexible authentication solution for Rails with Warden
 gem "devise" # https://github.com/plataformatec/devise
 gem "devise-i18n" # https://github.com/tigrish/devise-i18n
