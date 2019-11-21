@@ -1,0 +1,35 @@
+version: 3
+
+extends: https://api.github.com/repos/example/pullapprove-config/contents/.pullapprove.yml
+
+- when: pullapprove.approved
+  comment: "The review is completed. @{{ author }}, please merge this asap.
+
+groups:
+  S⊙w⊙T:
+    conditions:
+    - "'S⊙w⊙T' in labels"
+    reviewers:
+      users:
+      - grittaweisheit
+      - Xantocx
+      - JoeAtHPI
+      - lpfennigschmidt
+      - MichaelBuessemeyer
+    reviews:
+      required: 1
+      request: 1  
+      request_order: random 
+  PO-AD:
+    conditions:
+    - "'S⊙w⊙T' in groups.approved"
+    reviewers:
+      users:
+      - ADimeo
+      teams:
+      - team-S⊙w⊙T
+    reviews:
+      required: 1
+      request: 1
+      request_order: given  
+
