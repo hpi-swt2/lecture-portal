@@ -1,11 +1,11 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "lectures/show", type: :view do
   before(:each) do
     @lecture = assign(:lecture, Lecture.create!(
-      :name => "Name",
-      :enrollment_key => "Enrollment Key",
-      :is_running => false
+                                  name: "Name",
+                                  enrollment_key: "Enrollment Key",
+                                  is_running: false
     ))
   end
 

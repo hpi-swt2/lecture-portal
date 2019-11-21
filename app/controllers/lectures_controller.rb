@@ -24,7 +24,7 @@ class LecturesController < ApplicationController
     @lecture = Lecture.new(lecture_params)
 
     if @lecture.save
-      redirect_to @lecture, notice: 'Lecture was successfully created.'
+      redirect_to @lecture, notice: "Lecture was successfully created."
     else
       render :new
     end
@@ -33,7 +33,7 @@ class LecturesController < ApplicationController
   # PATCH/PUT /lectures/1
   def update
     if @lecture.update(lecture_params)
-      redirect_to @lecture, notice: 'Lecture was successfully updated.'
+      redirect_to @lecture, notice: "Lecture was successfully updated."
     else
       render :edit
     end
@@ -42,7 +42,7 @@ class LecturesController < ApplicationController
   # DELETE /lectures/1
   def destroy
     @lecture.destroy
-    redirect_to lectures_url, notice: 'Lecture was successfully destroyed.'
+    redirect_to lectures_url, notice: "Lecture was successfully destroyed."
   end
 
   private

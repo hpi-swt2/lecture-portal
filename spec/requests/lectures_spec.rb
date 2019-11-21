@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe "Lectures", type: :request do
   describe "GET /lectures" do
