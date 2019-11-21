@@ -8,8 +8,8 @@ RSpec.describe "questions/index", type: :view do
         :content => "MyText"
       ),
       Question.create!(
-        :author => "MyText",
-        :content => "MyText"
+        :author => "MyText1",
+        :content => "MyText1"
       )
     ])
   end
@@ -17,6 +17,6 @@ RSpec.describe "questions/index", type: :view do
   it "renders a list of questions" do
     render
     assert_select "tr>td", :text => "MyText".to_s, :count => 2
-    assert_select "tr>td", :text => "MyText".to_s, :count => 2
+    assert_select "tr>td", :text => "MyText1".to_s, :count => 2
   end
 end
