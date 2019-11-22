@@ -5,6 +5,9 @@ services:
  - docker
 #install heroku CLI for deployment
 before_script:
+# remove default node
+ - sudo apt-get remove -y node || true
+ - sudo apt-get remove -y nodejs || true
  - export HOME="/home/travis"
  - curl https://toolbelt.heroku.com/install.sh | sudo sh
 # need node to compile assets
