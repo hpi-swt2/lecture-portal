@@ -3,7 +3,7 @@ version: 3
 pullapprove_conditions:
 - condition: "'WIP' not in labels"
   unmet_status: pending
-- condition: "'Travis*' in statuses.succeeded"
+- condition: "'*travis*' in statuses.succeeded"
   unmet_status: failure
   explanation: "Travis must pass before review starts"
 
