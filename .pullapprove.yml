@@ -18,7 +18,7 @@ notifications:
 groups:
   S⊙w⊙T:
     conditions:
-    - "'team-S⊙w⊙T' in labels"
+    - "'Team S⊙w⊙T' in labels"
     reviewers:
       teams:
       - s-w-t
@@ -27,7 +27,7 @@ groups:
       request: 1
   TEAM-AB:
     conditions:
-    - "'team-ab-19' in labels"
+    - "'Team AB' in labels"
     reviewers:
       teams:
       - team-ab-19
@@ -36,7 +36,7 @@ groups:
       request: 1
   TEAM-PB:
     conditions:
-    - "'team-pb-19' in labels"
+    - "'Team PB' in labels"
     reviewers:
       teams:
       - team-pb-19
@@ -45,7 +45,7 @@ groups:
       request: 1
   TEAM-PB:
     conditions:
-    - "'team-uberlapsch' in labels"
+    - "'Team Überlapsch' in labels"
     reviewers:
       teams:
       - uberlapsch
