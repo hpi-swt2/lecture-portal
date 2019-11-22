@@ -10,7 +10,15 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_22_102114) do
+ActiveRecord::Schema.define(version: 2019_11_22_145046) do
+
+  create_table "lectures", force: :cascade do |t|
+    t.string "name"
+    t.string "enrollment_key"
+    t.boolean "is_running"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "poll_options", force: :cascade do |t|
     t.text "description"
@@ -25,14 +33,8 @@ ActiveRecord::Schema.define(version: 2019_11_22_102114) do
     t.boolean "is_multiselect"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-  end
-
-  create_table "lectures", force: :cascade do |t|
-    t.string "name"
-    t.string "enrollment_key"
-    t.boolean "is_running"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer "lecture_id"
+    t.index ["lecture_id"], name: "index_polls_on_lecture_id"
   end
 
   create_table "users", force: :cascade do |t|
