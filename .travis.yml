@@ -5,13 +5,12 @@ services:
  - docker
 #install heroku CLI for deployment
 before_script:
-# remove default node
- - sudo apt-get remove -y node || true
- - sudo apt-get remove -y nodejs || true
  - export HOME="/home/travis"
  - curl https://toolbelt.heroku.com/install.sh | sudo sh
 # need node to compile assets
- - curl -sL https://deb.nodesource.com/setup_13.x | sudo bash
+ - nvm install 13.1.0
+ - nvm alias default 13.1.0
+ - nvm use 13.1.0
  - sudo apt-get install -y nodejs
 script:
 # fix rspec complaints
