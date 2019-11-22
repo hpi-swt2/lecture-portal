@@ -28,7 +28,7 @@ RSpec.describe PollsController, type: :controller do
   # Poll. As you add validations to Poll, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) { {
-    lecture: FactoryBot.create(:lecture),
+    # lecture: FactoryBot.create(:lecture),
     title: "Example Title",
     is_multiselect: true,
   }}
@@ -77,8 +77,6 @@ RSpec.describe PollsController, type: :controller do
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Poll" do
-        puts Lecture.first.valid?
-        puts Poll.new(valid_attributes).valid?
         expect {
           post :create, params: { poll: valid_attributes }, session: valid_session
         }.to change(Poll, :count).by(1)

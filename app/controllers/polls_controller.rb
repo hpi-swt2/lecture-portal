@@ -21,9 +21,7 @@ class PollsController < ApplicationController
 
   # POST /polls
   def create
-    puts poll_params
     @poll = Poll.new(poll_params)
-    puts @poll.valid?
     if @poll.save
       redirect_to @poll, notice: "Poll was successfully created."
     else

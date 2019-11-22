@@ -1,5 +1,5 @@
 class Poll < ApplicationRecord
-  belongs_to :lecture
+  # belongs_to :lecture
   has_many :poll_options, dependent: :destroy
 
   validates :title, presence: true
