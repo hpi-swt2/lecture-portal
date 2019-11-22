@@ -21,8 +21,9 @@ class PollsController < ApplicationController
 
   # POST /polls
   def create
+    puts poll_params
     @poll = Poll.new(poll_params)
-
+    puts @poll.valid?
     if @poll.save
       redirect_to @poll, notice: "Poll was successfully created."
     else
@@ -53,6 +54,6 @@ class PollsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def poll_params
-      params.require(:poll).permit(:title, :is_multiselect)
+      params.require(:poll).permit(:title, :is_multiselect, :lecture)
     end
 end

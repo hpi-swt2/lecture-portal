@@ -3,7 +3,9 @@ class CreateLectures < ActiveRecord::Migration[5.2]
     create_table :lectures do |t|
       t.string :name
       t.string :enrollment_key
-      t.boolean :is_running
+      t.boolean :questions_enabled
+      t.boolean :polls_enabled
+      t.string :status
 
       t.timestamps
     end

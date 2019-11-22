@@ -5,11 +5,13 @@ RSpec.describe "polls/index", type: :view do
     assign(:polls, [
       Poll.create!(
         title: "Title",
-        is_multiselect: false
-      ),
-      Poll.create!(
-        title: "Title",
-        is_multiselect: false
+        is_multiselect: false,
+        lecture: FactoryBot.build(:lecture)
+    ),
+        Poll.create!(
+          title: "Title",
+          is_multiselect: false,
+          lecture: FactoryBot.build(:lecture)
       )
     ])
   end

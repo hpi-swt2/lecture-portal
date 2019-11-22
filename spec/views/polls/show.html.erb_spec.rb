@@ -4,7 +4,8 @@ RSpec.describe "polls/show", type: :view do
   before(:each) do
     @poll = assign(:poll, Poll.create!(
                             title: "Title",
-                            is_multiselect: false
+                            is_multiselect: false,
+                            lecture: FactoryBot.build(:lecture)
     ))
   end
 
