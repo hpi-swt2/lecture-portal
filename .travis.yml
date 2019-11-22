@@ -7,6 +7,8 @@ services:
 before_script:
  - export HOME="/home/travis"
  - curl https://toolbelt.heroku.com/install.sh | sudo sh
+# need node to compile assets
+ - curl -sL https://deb.nodesource.com/setup_13.x | bash
 script:
 # fix rspec complaints
  - RAILS_ENV=test bundle exec rails assets:precompile

@@ -129,3 +129,4 @@ gem "react-rails"
 gem "autoprefixer-rails", "= 9.7.1"
 gem "ffi", "= 1.11.1"
 gem "sprockets", "= 3.7.2"
+gem 'parallel', '= 1.19.0'
