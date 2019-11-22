@@ -27,14 +27,14 @@ RSpec.describe PollsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Poll. As you add validations to Poll, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {{
-    :title => "Example Title",
-    :is_multiselect => true
+  let(:valid_attributes) { {
+    title: "Example Title",
+    is_multiselect: true
   }}
 
-  let(:invalid_attributes) {{
-    :title => nil,
-    :is_multiselect => nil
+  let(:invalid_attributes) { {
+    title: nil,
+    is_multiselect: nil
   }}
 
   # This should return the minimal set of values that should be in the session
@@ -97,11 +97,10 @@ RSpec.describe PollsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) {{
-        #skip("Add a hash of attributes valid for your model")
-        :title => "New Title",
-        :is_multiselect => false
-
+      let(:new_attributes) { {
+        # skip("Add a hash of attributes valid for your model")
+        title: "New Title",
+        is_multiselect: false
       }}
 
       it "updates the requested poll" do
@@ -110,7 +109,6 @@ RSpec.describe PollsController, type: :controller do
         poll.reload
         expect(poll.title).to eql(new_attributes[:title])
         expect(poll.is_multiselect).to eql(new_attributes[:is_multiselect])
-
       end
 
       it "redirects to the poll" do
