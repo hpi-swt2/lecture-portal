@@ -22,6 +22,11 @@
     <%= f.password_field :password_confirmation, autocomplete: 'current-password', class: 'form-control' %>
   </div>
 
+  <div class="field">
+    <%= f.label :is_student %>
+    <%= f.check_box :is_student %>
+  </div>
+
   <div class="form-group">
     <%= f.submit t('.sign_up'), class: 'btn btn-primary' %>
   </div>
