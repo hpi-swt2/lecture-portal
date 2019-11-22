@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @lecture.name %>
+</p>
+
+<p>
+  <strong>Enrollment key:</strong>
+  <%= @lecture.enrollment_key %>
+</p>
+
+<p>
+  <strong>Is running:</strong>
+  <%= @lecture.is_running %>
+</p>
+
+<%= link_to 'Edit', edit_lecture_path(@lecture) %> |
+<%= link_to 'Back', lectures_path %>

@@ -1,0 +1,19 @@
+language: ruby
+cache: bundler
+sudo: required
+services:
+ - docker
+#install heroku CLI for deployment
+before_script:
+ - export HOME="/home/travis"
+ - curl https://toolbelt.heroku.com/install.sh | sudo sh
+script:
+ - RAILS_ENV=test bundle exec rails db:migrate
+ - bundle exec rspec spec/
+ - bundle exec rubocop
+
+after_success:
+ - export APP="secret-ocean-99829"
+ - echo "$APIKEY" | docker login $REGISTRY -u $USERNAME --password-stdin
+ - HEROKU_API_KEY="$APIKEY" heroku container:push --app $APP --arg secret=${SECRET} web
+ - HEROKU_API_KEY="$APIKEY" heroku container:release --app $APP web
