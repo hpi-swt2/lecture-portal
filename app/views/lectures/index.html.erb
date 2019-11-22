@@ -1,0 +1,31 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Lectures</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Enrollment key</th>
+      <th>Is running</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @lectures.each do |lecture| %>
+      <tr>
+        <td><%= lecture.name %></td>
+        <td><%= lecture.enrollment_key %></td>
+        <td><%= lecture.is_running %></td>
+        <td><%= link_to 'Show', lecture %></td>
+        <td><%= link_to 'Edit', edit_lecture_path(lecture) %></td>
+        <td><%= link_to 'Destroy', lecture, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Lecture', new_lecture_path %>

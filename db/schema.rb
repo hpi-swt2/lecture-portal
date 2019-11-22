@@ -27,6 +27,14 @@ ActiveRecord::Schema.define(version: 2019_11_22_102114) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "lectures", force: :cascade do |t|
+    t.string "name"
+    t.string "enrollment_key"
+    t.boolean "is_running"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
