@@ -27,7 +27,7 @@ groups:
       request: 1
   RESTless:
     conditions:
-    - "'Team AB' in labels"
+    - "'Team RESTless' in labels"
     reviewers:
       teams:
       - team-ab-19
