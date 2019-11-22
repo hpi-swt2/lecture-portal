@@ -22,9 +22,20 @@
   </div>
 
   <div class="field">
-    <%= form.label :is_running %>
-    <%= form.check_box :is_running %>
+    <%= form.label :status%>
+    <%= form.select :status, Lecture.statuses.keys %>
   </div>
+
+  <div class="field">
+    <%= form.label "Enable Questions"%>
+    <%= form.check_box :questions_enabled %>
+  </div>
+
+  <div class="field">
+    <%= form.label "Enable Polls"%>
+    <%= form.check_box :polls_enabled%>
+  </div>
+
 
   <div class="actions">
     <%= form.submit %>

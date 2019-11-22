@@ -2,10 +2,10 @@ require "rails_helper"
 
 RSpec.describe LecturesController, type: :controller do
   let(:valid_attributes) {
-    { name: "SWT", enrollment_key: "swt", is_running: true }
+    { name: "SWT", enrollment_key: "swt", status: "created" }
   }
   let(:invalid_attributes) {
-    { name: "", enrollment_key: "swt", is_running: true }
+    { name: "", enrollment_key: "swt", status: "created" }
   }
   let(:valid_session) { {} }
 
@@ -65,7 +65,7 @@ RSpec.describe LecturesController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        { name: "SWT2", enrollment_key: "epic", is_running: false }
+        { name: "SWT2", enrollment_key: "epic", status: "running" }
       }
 
       it "updates the requested lecture" do
@@ -74,7 +74,8 @@ RSpec.describe LecturesController, type: :controller do
         lecture.reload
         expect(lecture.name).to eq("SWT2")
         expect(lecture.enrollment_key).to eq("epic")
-        expect(lecture.is_running).to eq(false)
+        expect(lecture.running?).to eq(true)
+        expect(lecture.status).to eq("running")
       end
 
       it "redirects to the lecture" do

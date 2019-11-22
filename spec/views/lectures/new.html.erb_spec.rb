@@ -5,7 +5,7 @@ RSpec.describe "lectures/new", type: :view do
     assign(:lecture, Lecture.new(
                        name: "MyString",
                        enrollment_key: "MyString",
-                       is_running: false
+                       status: "created"
     ))
   end
 
@@ -17,7 +17,11 @@ RSpec.describe "lectures/new", type: :view do
 
       assert_select "input[name=?]", "lecture[enrollment_key]"
 
-      assert_select "input[name=?]", "lecture[is_running]"
+      assert_select "select[name=?]", "lecture[status]"
+
+      assert_select "input[name=?]", "lecture[questions_enabled]"
+
+      assert_select "input[name=?]", "lecture[polls_enabled]"
     end
   end
 end

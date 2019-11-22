@@ -15,9 +15,4 @@ RSpec.describe Lecture, type: :model do
     lecture = FactoryBot.build(:lecture, enrollment_key: "")
     expect(lecture).not_to be_valid
   end
-
-  it "is not valid without an is running status" do
-    lecture = FactoryBot.build(:lecture, is_running: "")
-    expect(lecture).not_to be_valid
-  end
 end
