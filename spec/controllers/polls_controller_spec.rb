@@ -27,15 +27,15 @@ RSpec.describe PollsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Poll. As you add validations to Poll, be sure to
   # adjust the attributes here as well.
-  let(:valid_attributes) {{
-    :title => "Example Title",
-    :is_multiselect => true
+  let(:valid_attributes) { {
+    title: "Example Title",
+    is_multiselect: true
   }}
 
-  let(:invalid_attributes) {{
-    #skip("Add a hash of attributes invalid for your model")
-    :title => nil,
-    :is_multiselect => nil
+  let(:invalid_attributes) { {
+    # skip("Add a hash of attributes invalid for your model")
+    title: nil,
+    is_multiselect: nil
   }}
 
   # This should return the minimal set of values that should be in the session
