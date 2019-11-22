@@ -3,8 +3,8 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Web application for organizing and managing lecture participation, written in [Ruby on Rails](https://rubyonrails.org/).
-Created in the [Software Engineering II course](https://hpi.de/plattner/teaching/winter-term-201920/softwaretechnik-ii.html) at HPI in Potsdam.
-
+Created in the [Software Engineering II course](https://hpi.de/plattner/teaching/winter-term-201920/softwaretechnik-ii.html) at HPI in Potsdam.  
+Productive url: [https://secret-ocean-99829.herokuapp.com/](https://secret-ocean-99829.herokuapp.com/)
 ## Setup
 
 * Ensure [Ruby](https://www.ruby-lang.org/) v2.5.1 (`ruby -v`) with [rbenv](https://github.com/rbenv/rbenv) or [RVM](http://rvm.io/)
