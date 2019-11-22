@@ -25,7 +25,7 @@ groups:
     reviews:
       required: 1
       request: 1
-  TEAM-AB:
+  RESTless:
     conditions:
     - "'Team AB' in labels"
     reviewers:
