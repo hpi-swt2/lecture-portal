@@ -28,6 +28,7 @@ gem "bootsnap", ">= 1.1.0", require: false
 # Additional core gems
 #
 
+
 # Linter / Formatter using Rubocop https://github.com/rubocop-hq/rubocop
 gem "rubocop", require: false
 # Rails Extension for Rubocop https://github.com/rubocop-hq/rubocop-rails
@@ -36,6 +37,7 @@ gem "rubocop-rails", require: false
 gem "rubocop-rspec", require: false
 # Extension for Rubocop https://github.com/rubocop-hq/rubocop-performance
 gem "rubocop-performance", require: false
+
 
 # Flexible authentication solution for Rails with Warden
 gem "devise" # https://github.com/plataformatec/devise

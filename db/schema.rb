@@ -10,7 +10,28 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_07_143429) do
+ActiveRecord::Schema.define(version: 2019_11_22_102114) do
+
+  create_table "poll_options", force: :cascade do |t|
+    t.text "description"
+    t.integer "poll_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["poll_id"], name: "index_poll_options_on_poll_id"
+  end
+
+  create_table "polls", force: :cascade do |t|
+    t.string "title"
+    t.boolean "is_multiselect"
+  end
+    
+  create_table "lectures", force: :cascade do |t|
+    t.string "name"
+    t.string "enrollment_key"
+    t.boolean "is_running"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false

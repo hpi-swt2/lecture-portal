@@ -1,3 +1,8 @@
+# jetbrains: rubymine ignore files
+.generators
+.idea
+.rakeTasks
+
 *.rbc
 capybara-*.html
 .rspec
