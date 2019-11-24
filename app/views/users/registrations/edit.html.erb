@@ -27,11 +27,9 @@
     <small class="form-text text-muted"><%= t('.we_need_your_current_password_to_confirm_your_changes') %></small>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= f.label :is_student %>
-    <%= f.check_box :is_student, autocomplete: 'is_student', class: 'form-control' %>
-
-    <small class="form-text text-muted"></small>
+    <%= f.check_box :is_student, autocomplete: 'is_student', class: 'form-check-label' %>
   </div>
 
   <div class="form-group">
