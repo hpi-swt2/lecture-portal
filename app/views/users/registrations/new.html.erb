@@ -22,9 +22,11 @@
     <%= f.password_field :password_confirmation, autocomplete: 'current-password', class: 'form-control' %>
   </div>
 
-  <div class="field">
-    <%= f.label :is_student %>
-    <%= f.check_box :is_student %>
+  <div class="form-group form-check">
+    <%= f.check_box :is_student, class: 'form-check-input' %>
+    <%= f.label :is_student, class: 'form-check-label' do %>
+      <%= resource.class.human_attribute_name('is_student') %>
+    <% end %>
   </div>
 
   <div class="form-group">
@@ -32,4 +34,4 @@
   </div>
 <% end %>
 
-<%= render 'devise/shared/links' %>
+<%= render 'users/shared/links' %>
