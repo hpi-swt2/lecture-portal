@@ -23,7 +23,7 @@ script:
 
 after_success:
  - echo "Currently running a $TRAVIS_EVENT_TYPE"
- - if [ $TRAVIS_BRANCH = "ab-continuous-deployment" ]; then export APP="secret-ocean-99829"; elif [ $TRAVIS_BRANCH = "ab-continuous-deployment-multibranch" ]; then export APP="floating-shelf-59360"; fi
+ - if [ $TRAVIS_BRANCH = "ab-continuous-deployment" ]; then export APP="hpi-lectureportal"; elif [ $TRAVIS_BRANCH = "ab-continuous-deployment-multibranch" ]; then export APP="hpi-lectureportal-dev"; fi
  - echo "$APIKEY" | docker login $REGISTRY -u $USERNAME --password-stdin
  - HEROKU_API_KEY="$APIKEY" heroku container:push --app $APP --arg secret=${SECRET} web
  - HEROKU_API_KEY="$APIKEY" heroku container:release --app $APP web
