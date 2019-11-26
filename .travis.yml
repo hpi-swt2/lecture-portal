@@ -22,7 +22,4 @@ script:
  - bundle exec rubocop
 
 after_success:
- - export APP="secret-ocean-99829"
- - echo "$APIKEY" | docker login $REGISTRY -u $USERNAME --password-stdin
- - HEROKU_API_KEY="$APIKEY" heroku container:push --app $APP --arg secret=${SECRET} web
- - HEROKU_API_KEY="$APIKEY" heroku container:release --app $APP web
+ - ./deployment.sh
