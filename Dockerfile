@@ -17,13 +17,13 @@ ENV RAILS_ENV=production
 RUN gem install rake -v 13.0.0
 RUN gem install bundler -v 2.0.2
 ENV BUNDLER_VERSION 2.0.2
-RUN bundle install --system
+RUN bundle install --without development test
 
 COPY . .
 RUN yarn install --check-files
 RUN ./bin/rails webpacker:install && \
     ./bin/rails webpacker:install:react && \
-    ./bin/rails generate react:install && \
+    # ./bin/rails generate react:install && \
     ./bin/rails webpacker:install:typescript
 
 RUN ./bin/rails assets:precompile
