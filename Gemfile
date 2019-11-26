@@ -125,9 +125,3 @@ end
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 gem "webpacker"
 gem "react-rails"
-# TODO Why does bundler install different / wrong versions?
-gem "autoprefixer-rails", "= 9.7.1"
-gem "ffi", "= 1.11.1"
-gem "sprockets", "= 3.7.2"
-gem "parallel", "= 1.19.0"
-gem "loofah", "= 2.3.1"
