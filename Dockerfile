@@ -3,7 +3,7 @@ ARG secret=wzfeguzwgfg8924rfgsdvf
 ENV SECRET_KEY_BASE=${secret}
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
-        postgresql-client \
+        postgresql-client libpq-dev \
     && rm -rf /var/lib/apt/lists/*
 RUN curl -sL https://deb.nodesource.com/setup_13.x | bash
 RUN apt-get install -y nodejs
@@ -12,7 +12,7 @@ RUN curl -sL https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
      apt-get update && apt-get install yarn
 
 WORKDIR /usr/src/app
-COPY Gemfile ./
+COPY Gemfile* ./
 ENV RAILS_ENV=production
 RUN gem install rake -v 13.0.0
 RUN gem install bundler -v 2.0.2
