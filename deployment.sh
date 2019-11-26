@@ -4,10 +4,10 @@ then
 	echo "Not deploying in a pull request!"
 	exit 0;
 fi
-if [ "$TRAVIS_BRANCH" = "ab-continuous-deployment" ]
+if [ "$TRAVIS_BRANCH" = "master" ]
 then 
 	export APP="hpi-lectureportal"; 
-elif [ "$TRAVIS_BRANCH" = "ab-continuous-deployment-multibranch" ]
+elif [ "$TRAVIS_BRANCH" = "dev" ]
 then 
 	export APP="hpi-lectureportal-dev"; 
 else
