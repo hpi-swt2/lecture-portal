@@ -1,5 +1,6 @@
 class LecturesController < ApplicationController
   before_action :set_lecture, only: [:show, :edit, :update, :destroy]
+  before_action :set_current_user
 
   # GET /lectures
   def index
@@ -12,7 +13,12 @@ class LecturesController < ApplicationController
 
   # GET /lectures/new
   def new
-    @lecture = Lecture.new
+    if !current_user.is_student?
+      @lecture = Lecture.new
+    else
+      redirect_to lectures_url, notice: "You are a student! You can not create a lecture :("
+    end
+
   end
 
   # GET /lectures/1/edit
@@ -49,6 +55,11 @@ class LecturesController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_lecture
       @lecture = Lecture.find(params[:id])
+    end
+
+    def set_current_user
+      return unless session[:user_id]
+      @current_user ||= User.find(session[:user_id])
     end
 
     # Only allow a trusted parameter "white list" through.
