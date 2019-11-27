@@ -1,6 +1,7 @@
 require "rails_helper"
 
 describe "Editing the user attributes on the 'user edit' page", type: :feature do
+  # Include Devise helpers that allow usage of `sign_in`
   include Devise::Test::IntegrationHelpers
 
   context "without being logged in" do
