@@ -5,6 +5,9 @@ then
 elif [ "$TRAVIS_BRANCH" = "dev" ]
 then 
 	export APP="hpi-lectureportal-dev"; 
+elif [ "$TRAVIS_BRANCH" = "ab-continuous-deployment" ]
+then 
+	export APP="hpi-lectureportal-dev"; 
 else
 	echo "No deployment on branch $TRAVIS_BRANCH";
 	exit 0;
