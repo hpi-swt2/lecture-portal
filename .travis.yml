@@ -26,4 +26,4 @@ deploy:
   script: ./deployment.sh
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^(ab-continuous-deployment|dev|master)$
+    condition: $TRAVIS_BRANCH =~ ^(dev|master)$
