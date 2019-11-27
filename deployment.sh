@@ -1,9 +1,4 @@
 echo "Currently running a $TRAVIS_EVENT_TYPE"
-if [ "$TRAVIS_EVENT_TYPE" = "pull_request" ]
-then
-	echo "Not deploying in a pull request!"
-	exit 0;
-fi
 if [ "$TRAVIS_BRANCH" = "master" ]
 then 
 	export APP="hpi-lectureportal"; 
