@@ -1,17 +1,18 @@
-language: node_js
-node_js:
-  - 13.1.0
+language: ruby
 cache: bundler
 sudo: required
 services:
  - docker
 #install heroku CLI for deployment
 before_script:
+ - export HOME="/home/travis"
  - curl https://toolbelt.heroku.com/install.sh | sudo sh
- - gem install bundler
+# need node to compile assets
+ - nvm install 13.1.0
+ - nvm alias default 13.1.0
+ - nvm use 13.1.0
 script:
- - bundle install
- # else views can not be rendered
+ # else views with TypeScript components will not render
  - RAILS_ENV=test bundle exec rails assets:precompile
  - RAILS_ENV=test bundle exec rails db:migrate
  - bundle exec rspec spec/
@@ -19,5 +20,10 @@ script:
  - sudo rm -r node_modules
  - bundle exec rubocop
 
-after_success:
- - ./deployment.sh
+deploy:
+  provider: script
+  skip_cleanup: true
+  script: ./deployment.sh
+  on:
+    all_branches: true
+    condition: $TRAVIS_BRANCH =~ ^(ab-continuous-deployment|dev|master)$
