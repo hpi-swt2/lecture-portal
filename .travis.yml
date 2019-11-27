@@ -10,11 +10,12 @@ before_script:
  - curl https://toolbelt.heroku.com/install.sh | sudo sh
  - gem install bundler
 script:
-# fix rspec complaints
+ - bundle install
+ # else views can not be rendered
  - RAILS_ENV=test bundle exec rails assets:precompile
  - RAILS_ENV=test bundle exec rails db:migrate
  - bundle exec rspec spec/
-# rubocop tends to think this is valid ruby code
+ # rubocop tends to think this is valid ruby code
  - sudo rm -r node_modules
  - bundle exec rubocop
 
