@@ -70,5 +70,5 @@ RSpec.configure do |config|
 
   # for login of users in tests via devise
   config.include Devise::Test::ControllerHelpers, type: :controller
-  config.include Devise::Test::ControllerHelpers, type: :view
+  config.include Devise::Test::IntegrationHelpers, type: :view
 end

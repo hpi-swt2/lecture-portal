@@ -21,10 +21,10 @@ RSpec.describe "users/edit", type: :view do
     expect(page).to have_field('user[is_student]')
   end
 
+
   def login_student
-    @request.env["devise.mapping"] = Devise.mappings[:user]
-    user = FactoryBot.create(:user, :student)
-    sign_in(user, scope: :user)
+    student = FactoryBot.create(:user, :student)
+    sign_in(student, scope: :user)
   end
 end
 
