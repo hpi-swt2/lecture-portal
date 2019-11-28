@@ -1,0 +1,54 @@
+version: 3
+
+pullapprove_conditions:
+- condition: "'WIP' not in labels"
+  unmet_status: pending
+# - condition: "'*travis*' in statuses.succeeded"
+#   unmet_status: failure
+#   explanation: "Travis must pass before review starts"
+
+notifications:
+- when: pull_request.opened
+  comment: |
+    Hey @{{ author }}, thanks for the PR! The review will start once
+    the tests, CI checks and PR requirements (see checklist in your PR) have passed.
+- when: pullapprove.approved
+  comment: "The review is completed. @{{ author }}, please merge this asap."
+
+groups:
+  S⊙w⊙T:
+    conditions:
+    - "'Team S⊙w⊙T' in labels"
+    reviewers:
+      teams:
+      - s-w-t
+    reviews:
+      required: 1
+      request: 1
+  RESTless:
+    conditions:
+    - "'Team RESTless' in labels"
+    reviewers:
+      teams:
+      - team-ab-19
+    reviews:
+      required: 1
+      request: 1
+  TEAM-PB:
+    conditions:
+    - "'Team PB' in labels"
+    reviewers:
+      teams:
+      - team-pb-19
+    reviews:
+      required: 1
+      request: 1
+  TEAM-PB:
+    conditions:
+    - "'Team Überlapsch' in labels"
+    reviewers:
+      teams:
+      - uberlapsch
+    reviews:
+      required: 1
+      request: 1
