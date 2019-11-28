@@ -12,29 +12,6 @@ class QuestionsController < ApplicationController
     render json: questions
   end
 
-  # GET /questions/1
-  def show
-    question = Question.find(params[:id])
-    render json: question
-  end
-
-  # GET /questions/new
-  def new
-    @question = Question.new
-  end
-
-  # GET /questions/1/edit
-  def edit
-  end
-
-  # POST /questions
-  def create
-    question = Question.new(question_params)
-    if question.save
-    end
-  end
-
-
   # POST /api/questions
   def apiCreate
     question = Question.new(question_params)
