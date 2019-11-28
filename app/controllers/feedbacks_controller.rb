@@ -6,7 +6,7 @@ class FeedbacksController < ApplicationController
   end
 
   private
-  def comment_params
-    params.require(:feedback).permit(:content)
-  end
+    def comment_params
+      params.require(:feedback).permit(:content)
+    end
 end
