@@ -24,7 +24,7 @@ ActiveRecord::Schema.define(version: 2019_11_22_102114) do
     t.string "title"
     t.boolean "is_multiselect"
   end
-    
+
   create_table "lectures", force: :cascade do |t|
     t.string "name"
     t.string "enrollment_key"
