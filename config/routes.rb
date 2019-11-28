@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   root to: "home#index"
 
 
+  get '/questions', to: 'questions#index'
   mount ActionCable.server => '/cable'
 
 end
