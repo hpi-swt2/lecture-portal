@@ -10,14 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_22_102114) do
+ActiveRecord::Schema.define(version: 2019_11_28_093012) do
 
   create_table "lectures", force: :cascade do |t|
     t.string "name"
     t.string "enrollment_key"
-    t.boolean "questions_enabled", default: true, null: true
-    t.boolean "polls_enabled", default: true, null: true
-    t.string "status", default: "created", null: false
+    t.boolean "questions_enabled", default: true
+    t.boolean "polls_enabled", default: true
+    t.string "status", default: "created"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
