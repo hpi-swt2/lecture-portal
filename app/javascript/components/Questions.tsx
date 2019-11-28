@@ -1,19 +1,25 @@
-import * as React from "react"
+import { ActionCableProvider } from 'react-actioncable-provider';
+import { API_WS_ROOT, API_ROOT, HEADERS } from './constants';
+import React from "react"
+import QuestionsList from './QuestionsList';
 
 
-// interface IQuestionsProps {
-//   content: string;
-//   author: string;
-// }
+interface IQuestionsProps {
+  content: string;
+  author: string;
+}
 
 interface IQuestionsState {
+  author: string,
   content: string;
 }
 
 class Questions extends React.Component <IQuestionsProps, IQuestionsState> {
+
   constructor(props) {
     super(props);
     this.state = {
+      author: 'Tester',
       content: 'Please ask a question :)'
     };
 
@@ -21,21 +27,29 @@ class Questions extends React.Component <IQuestionsProps, IQuestionsState> {
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  handleChange(event) {
-    this.setState({content: event.target.content});
-  }
+  handleChange = e => {
+    this.setState({ content: e.target.value });
+  };
 
-  handleSubmit(event) {
-    alert('A question was submitted: ' + this.state.content);
-    event.preventDefault();
-  }
+  handleSubmit = e => {
+    fetch(`${API_ROOT}/api/questions`, {
+      method: 'POST',
+      headers: HEADERS,
+      body: JSON.stringify(this.state)
+    });
+    this.setState({ content: '', author: 'Tester' });
+    e.preventDefault();
+  };
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <textarea value={this.state.content} onChange={this.handleChange} cols={100} rows={1}/>
-        <p><input type="submit" value="Submit" /></p>
-      </form>
+      <ActionCableProvider url={API_WS_ROOT}>
+        <form onSubmit={this.handleSubmit}>
+          <textarea value={this.state.content} onChange={this.handleChange} cols={100} rows={1}/>
+          <p><input type="submit" value="Submit" /></p>
+        </form>
+        <QuestionsList />
+      </ActionCableProvider>
     );
   }
 }

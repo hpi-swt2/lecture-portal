@@ -1,9 +1,15 @@
 class QuestionsController < ApplicationController
   before_action :set_question, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token
 
   # GET /questions
   def index
-    @questions = Question.all
+  end
+
+  # GET api/questions
+  def apiIndex
+    questions = Question.all
+    render json: questions
   end
 
   # GET /questions/1
@@ -23,12 +29,21 @@ class QuestionsController < ApplicationController
 
   # POST /questions
   def create
-    @question = Question.new(question_params)
+    question = Question.new(question_params)
+    if question.save
+    end
+  end
 
-    if @question.save
-      redirect_to @question, notice: 'Question was successfully created.'
-    else
-      render :new
+
+  # POST /api/questions
+  def apiCreate
+    question = Question.new(question_params)
+    if question.save
+      serialized_question = ActiveModelSerializers::Adapter::Json.new(
+          QuestionSerializer.new(question)
+      ).serializable_hash
+      ActionCable.server.broadcast('questions', serialized_question)
+      head :ok
     end
   end
 

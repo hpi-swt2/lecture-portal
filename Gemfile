@@ -125,3 +125,5 @@ gem 'webpacker'
 gem 'react-rails'
 
 gem 'rack-cors'
+
+gem 'active_model_serializers'
