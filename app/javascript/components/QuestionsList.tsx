@@ -4,7 +4,6 @@ import {API_ROOT, API_WS_ROOT, HEADERS} from './constants';
 class QuestionsList extends React.Component {
     state = {
         content: '',
-        author: 'Tester',
         questions: []
     };
 
@@ -18,7 +17,14 @@ class QuestionsList extends React.Component {
             {
                 received: (data) => {
                     const { question } = data;
-                    this.setState({questions: [question, ...this.state.questions]})
+                    let questions = [question, ...this.state.questions];
+
+                    // sort questions by creation date to prevent wrong sorting
+                    questions.sort((a, b): number => {
+                        return new Date(b.created_at) - new Date(a.created_at);
+                    });
+
+                    this.setState({questions: questions})
                 }
         });
     };

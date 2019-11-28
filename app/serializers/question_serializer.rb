@@ -1,3 +1,3 @@
 class QuestionSerializer < ActiveModel::Serializer
-  attributes :id, :content, :author
+  attributes :id, :content, :created_at
 end
