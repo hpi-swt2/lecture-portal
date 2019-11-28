@@ -3,8 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Web application for organizing and managing lecture participation, written in [Ruby on Rails](https://rubyonrails.org/).
-Created in the [Software Engineering II course](https://hpi.de/plattner/teaching/winter-term-201920/softwaretechnik-ii.html) at HPI in Potsdam.
-
+Created in the [Software Engineering II course](https://hpi.de/plattner/teaching/winter-term-201920/softwaretechnik-ii.html) at HPI in Potsdam.  
+Productive url: [https://hpi-lectureportal.herokuapp.com/](https://hpi-lectureportal.herokuapp.com/) (will be deployed on every push to master)
+Test url: [https://hpi-lectureportal-dev.herokuapp.com/](https://hpi-lectureportal-dev.herokuapp.com/) (will be deployed on every push to dev)
 ## Setup
 
 * Ensure [Ruby](https://www.ruby-lang.org/) v2.5.1 (`ruby -v`) with [rbenv](https://github.com/rbenv/rbenv) or [RVM](http://rvm.io/)
