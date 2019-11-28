@@ -1,57 +1,36 @@
-import { ActionCableProvider } from 'react-actioncable-provider';
-import { API_WS_ROOT, API_ROOT, HEADERS } from './constants';
-import React from "react"
-import QuestionsList from './QuestionsList';
+import React from 'react';
+import {API_ROOT, HEADERS} from './constants';
+import QuestionsList from "./QuestionsList";
 
-
-interface IQuestionsProps {
-  content: string;
-  author: string;
-}
-
-interface IQuestionsState {
-  author: string,
-  content: string;
-}
-
-class Questions extends React.Component <IQuestionsProps, IQuestionsState> {
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      author: 'Tester',
-      content: 'Please ask a question :)'
+class Questions extends React.Component {
+    state = {
+        content: ''
     };
 
-    this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
-  }
+    handleChange = e => {
+        this.setState({ content: e.target.value });
+    };
 
-  handleChange = e => {
-    this.setState({ content: e.target.value });
-  };
+    handleSubmit = e => {
+        fetch(`${API_ROOT}/api/questions`, {
+            method: 'POST',
+            headers: HEADERS,
+            body: JSON.stringify(this.state)
+        });
+        this.setState({ content: '', author: 'Tester' });
+        e.preventDefault();
+    };
 
-  handleSubmit = e => {
-    fetch(`${API_ROOT}/api/questions`, {
-      method: 'POST',
-      headers: HEADERS,
-      body: JSON.stringify(this.state)
-    });
-    this.setState({ content: '', author: 'Tester' });
-    e.preventDefault();
-  };
-
-  render() {
-    return (
-      <ActionCableProvider url={API_WS_ROOT}>
-        <form onSubmit={this.handleSubmit}>
-          <textarea value={this.state.content} onChange={this.handleChange} cols={100} rows={1}/>
-          <p><input type="submit" value="Submit" /></p>
-        </form>
-        <QuestionsList />
-      </ActionCableProvider>
-    );
-  }
+    render = () => {
+        return (
+            <div>
+                <form onSubmit={this.handleSubmit}>
+                    <textarea value={this.state.content} onChange={this.handleChange} cols={100} rows={1}/>
+                    <p><input type="submit" value="Submit" /></p>
+                </form>
+                <QuestionsList />
+            </div>)
+    }
 }
 
-export default Questions
+export default Questions;
