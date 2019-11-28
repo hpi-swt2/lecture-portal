@@ -17,8 +17,6 @@ RSpec.describe "lectures/new", type: :view do
 
       assert_select "input[name=?]", "lecture[enrollment_key]"
 
-      assert_select "select[name=?]", "lecture[status]"
-
       assert_select "input[name=?]", "lecture[questions_enabled]"
 
       assert_select "input[name=?]", "lecture[polls_enabled]"

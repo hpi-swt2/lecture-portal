@@ -3,4 +3,5 @@
 <%= render 'form', lecture: @lecture %>
 
 <%= link_to 'Show', @lecture %> |
+<%= link_to 'Delete', @lecture, method: :delete, data: { confirm: 'Are you sure?' } %> |
 <%= link_to 'Back', lectures_path %>

@@ -22,7 +22,7 @@ Created in the [Software Engineering II course](https://hpi.de/plattner/teaching
 
 ### Testing
 * To run the full test suite: `bundle exec rspec`.
-* For fancier test running use option `-f doc` 
+* For fancier test running use option `-f doc`
 * `bundle exec rspec spec/<rest_of_file_path>.rb` Specify a folder or test file to run
 * specify what tests to run dynamically by `-e 'search keyword in test name'`
 * `bundle exec rspec --profile` examine how much time individual tests take
