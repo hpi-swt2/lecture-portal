@@ -1,9 +1,10 @@
 class PollsController < ApplicationController
   before_action :set_poll, only: [:show, :edit, :update, :destroy]
+  before_action :get_lecture
 
   # GET /polls
   def index
-    @polls = Poll.all
+    @polls = @lecture.polls
   end
 
   # GET /polls/1
@@ -12,7 +13,7 @@ class PollsController < ApplicationController
 
   # GET /polls/new
   def new
-    @poll = Poll.new
+    @poll = @lecture.polls.build
   end
 
   # GET /polls/1/edit
@@ -21,10 +22,11 @@ class PollsController < ApplicationController
 
   # POST /polls
   def create
-    @poll = Poll.new(poll_params)
+    @poll = @lecture.polls.build(poll_params)
+    #@lecture = Lecture.find(params[:lecture_id])
 
     if @poll.save
-      redirect_to @poll, notice: "Poll was successfully created."
+      redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully created."
     else
       render :new
     end
@@ -33,7 +35,7 @@ class PollsController < ApplicationController
   # PATCH/PUT /polls/1
   def update
     if @poll.update(poll_params)
-      redirect_to @poll, notice: "Poll was successfully updated."
+      redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully updated."
     else
       render :edit
     end
@@ -42,7 +44,7 @@ class PollsController < ApplicationController
   # DELETE /polls/1
   def destroy
     @poll.destroy
-    redirect_to polls_url, notice: "Poll was successfully destroyed."
+    redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully destroyed."
   end
 
   private
@@ -53,6 +55,10 @@ class PollsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def poll_params
-      params.require(:poll).permit(:title, :is_multiselect, :lecture)
+      params.require(:poll).permit(:title, :is_multiselect, :lecture_id)
+    end
+
+    def get_lecture
+      @lecture = Lecture.find(params[:lecture_id])
     end
 end

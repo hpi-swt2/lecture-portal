@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
 
-  resources :polls
+  # resources :polls
 
-  resources :lectures
+  resources :lectures do
+    resources :polls
+  end
+
   devise_for :users, controllers: {
       confirmations: 'users/confirmations',
       passwords: 'users/passwords',

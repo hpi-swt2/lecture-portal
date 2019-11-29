@@ -13,6 +13,13 @@
   <%= @lecture.is_running %>
 </p>
 
+<h2>Polls</h2>
+<% for poll in @lecture.polls %>
+	<ul>
+		<li><%= poll.title %></li>
+	</ul>
+<% end %>
+
 <%= link_to 'Edit', edit_lecture_path(@lecture) %> |
-<%= link_to 'New Poll', new_poll_path() %> |
+<%= link_to 'New Poll', new_lecture_poll_path(@lecture) %> |
 <%= link_to 'Back', lectures_path %>

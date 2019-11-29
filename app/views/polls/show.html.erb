@@ -10,5 +10,5 @@
   <%= @poll.is_multiselect %>
 </p>
 
-<%= link_to 'Edit', edit_poll_path(@poll) %> |
-<%= link_to 'Back', polls_path %>
+<%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
+<%= link_to 'Back', lecture_polls_path(@lecture) %>

@@ -2,5 +2,5 @@
 
 <%= render 'form', poll: @poll %>
 
-<%= link_to 'Show', @poll %> |
-<%= link_to 'Back', polls_path %>
+<%= link_to 'Show', [@lecture, @poll] %> |
+<%= link_to 'Back', lecture_polls_path(@lecture) %>
