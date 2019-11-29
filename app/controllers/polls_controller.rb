@@ -1,6 +1,7 @@
 class PollsController < ApplicationController
   before_action :set_poll, only: [:show, :edit, :update, :destroy]
   before_action :get_lecture
+  before_action :set_current_user
 
   # GET /polls
   def index
@@ -13,7 +14,11 @@ class PollsController < ApplicationController
 
   # GET /polls/new
   def new
-    @poll = @lecture.polls.build
+    if @current_user.is_student
+      redirect_to lecture_path(@lecture), notice: "You are a student. You can not create polls."
+    else
+      @poll = @lecture.polls.build
+    end
   end
 
   # GET /polls/1/edit
@@ -23,7 +28,7 @@ class PollsController < ApplicationController
   # POST /polls
   def create
     @poll = @lecture.polls.build(poll_params)
-    #@lecture = Lecture.find(params[:lecture_id])
+    # @lecture = Lecture.find(params[:lecture_id])
 
     if @poll.save
       redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully created."
@@ -61,4 +66,9 @@ class PollsController < ApplicationController
     def get_lecture
       @lecture = Lecture.find(params[:lecture_id])
     end
+
+    def set_current_user
+      return unless session[:user_id]
+      @current_user ||= User.find(session[:user_id])
+      end
 end
