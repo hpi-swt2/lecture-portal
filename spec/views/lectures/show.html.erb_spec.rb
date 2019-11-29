@@ -9,7 +9,7 @@ RSpec.describe "lectures/show", type: :view do
     ))
   end
 
-  it "renders attributes in <p>" do
+  it "renders navbar tabs" do
     render
     assert_select "a", "Dashboard"
     assert_select "a", "Feedback"
