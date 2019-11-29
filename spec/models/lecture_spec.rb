@@ -26,5 +26,4 @@ RSpec.describe Lecture, type: :model do
     lecture = FactoryBot.build(:lecture)
     expect(lecture.status).to eq "created"
   end
-
 end

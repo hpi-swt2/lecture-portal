@@ -4,4 +4,3 @@ FactoryBot.define do
     enrollment_key { "ruby" }
   end
 end
-
