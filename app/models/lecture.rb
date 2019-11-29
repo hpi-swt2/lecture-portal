@@ -4,4 +4,8 @@ class Lecture < ApplicationRecord
   validates :is_running, inclusion: { in: [ true, false ] }
 
   scope :active, -> { where is_running: true }
+
+  def set_active
+    self.is_running=true
+  end
 end

@@ -4,6 +4,7 @@ class LecturesController < ApplicationController
   # GET /lectures
   def index
     @lectures = Lecture.all
+    # TODO if user is lecturer render index
   end
 
   # GET /lectures/1
@@ -47,6 +48,15 @@ class LecturesController < ApplicationController
 
   def current
     @lectures = Lecture.active
+  end
+
+  def start_lecture
+    # TODO make sure user is lecturer
+    id = params["lecture"]
+    lecture = Lecture.find(id)
+    lecture.set_active
+    lecture.save
+    redirect_to lecture_path(lecture)
   end
 
   private
