@@ -14,8 +14,8 @@ class QuestionsController < ApplicationController
 
   # POST /api/questions
   def apiCreate
-    # TODO: save current_user to question 
     question = Question.new(question_params)
+    question.author = current_user
     if question.save
       serialized_question = ActiveModelSerializers::Adapter::Json.new(
           QuestionSerializer.new(question)

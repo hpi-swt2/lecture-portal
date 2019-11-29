@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :question do
-    author { "MyText" }
-    content { "MyText" }
+    content { "" }
+    user { nil }
   end
 end
