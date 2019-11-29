@@ -11,8 +11,8 @@ class QuestionsApiController < ApplicationController
   # POST /api/questions
   def create
     puts params
-    # create new question based on received question content and current user
-    question = Question.new(:content => params[:content], :author => current_user)
+    # create new question based on stripped received question content and current user
+    question = Question.new(:content => params[:content].strip, :author => current_user)
     if question.save
       # serialize question and broadcast it via ActionCable to subscribers
       serialized_question = ActiveModelSerializers::Adapter::Json.new(
