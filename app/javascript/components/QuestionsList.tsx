@@ -35,7 +35,9 @@ class QuestionsList extends React.Component<IQuestionsListProps> {
 
   render = () => {
     const { questions } = this.state;
-    return <ul>{mapQuestions(questions)}</ul>;
+    const divClassName = ["questions"];
+    if (this.props.is_student) divClassName.push("is_student");
+    return <ul className={divClassName.join(" ").trim()}>{mapQuestions(questions)}</ul>;
   };
 }
 
