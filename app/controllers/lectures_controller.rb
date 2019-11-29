@@ -17,7 +17,6 @@ class LecturesController < ApplicationController
     else
       redirect_to lectures_url, notice: "You are a student! You can not create a lecture :("
     end
-
   end
 
   # GET /lectures/1/edit
