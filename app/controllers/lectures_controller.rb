@@ -12,7 +12,11 @@ class LecturesController < ApplicationController
 
   # GET /lectures/new
   def new
-    @lecture = Lecture.new
+    if !current_user.is_student?
+      @lecture = Lecture.new
+    else
+      redirect_to lectures_url, notice: "You are a student! You can not create a lecture :("
+    end
   end
 
   # GET /lectures/1/edit
