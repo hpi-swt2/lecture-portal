@@ -60,4 +60,12 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  
+  # for login of users in tests via devise
+  config.include Devise::Test::ControllerHelpers, type: :controller
+  # For Rails 5, include Devise::Test::IntegrationHelpers
+  # https://github.com/plataformatec/devise#integration-tests
+  config.include Devise::Test::IntegrationHelpers, type: :view
 end
+
