@@ -1,4 +1,8 @@
 language: ruby
+branches:
+  only:
+    - dev
+    - master
 cache:
   bundler: true
   npm: true
