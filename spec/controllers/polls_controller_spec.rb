@@ -27,9 +27,12 @@ RSpec.describe PollsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Poll. As you add validations to Poll, be sure to
   # adjust the attributes here as well.
+
   let(:valid_attributes) { {
     title: "Example Title",
-    is_multiselect: true
+    is_multiselect: true,
+    lecture: FactoryBot.create(:lecture),
+    is_active: true
   }}
 
   let(:invalid_attributes) { {
@@ -45,8 +48,8 @@ RSpec.describe PollsController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
-      Poll.create! valid_attributes
-      get :index, params: {}, session: valid_session
+      poll = Poll.create! valid_attributes
+      get :index, params: { lecture_id: poll.lecture.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -54,14 +57,14 @@ RSpec.describe PollsController, type: :controller do
   describe "GET #show" do
     it "returns a success response" do
       poll = Poll.create! valid_attributes
-      get :show, params: { id: poll.to_param }, session: valid_session
+      get :show, params: { lecture_id: poll.lecture.to_param, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
 
   describe "GET #new" do
     it "returns a success response" do
-      get :new, params: {}, session: valid_session
+      get :new, params: { lecture_id: poll.lecture.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -69,7 +72,7 @@ RSpec.describe PollsController, type: :controller do
   describe "GET #edit" do
     it "returns a success response" do
       poll = Poll.create! valid_attributes
-      get :edit, params: { id: poll.to_param }, session: valid_session
+      get :edit, params: { lecture_id: poll.lecture.to_param, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
