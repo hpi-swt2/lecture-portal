@@ -10,4 +10,14 @@ RSpec.describe User, type: :model do
     user = FactoryBot.build(:user, email: '')
     expect(user).to_not be_valid
   end
+
+  it "is not valid without a password" do
+    user = FactoryBot.build(:user, password: nil)
+    expect(user).not_to be_valid
+  end
+
+  it "is not valid without an is student status" do
+    user = FactoryBot.build(:user, is_student: "")
+    expect(user).not_to be_valid
+  end
 end
