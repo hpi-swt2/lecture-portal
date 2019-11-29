@@ -1,4 +1,5 @@
 class QuestionsController < ApplicationController
+  before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
 
   # GET /questions
@@ -13,6 +14,7 @@ class QuestionsController < ApplicationController
 
   # POST /api/questions
   def apiCreate
+    # TODO: save current_user to question 
     question = Question.new(question_params)
     if question.save
       serialized_question = ActiveModelSerializers::Adapter::Json.new(
