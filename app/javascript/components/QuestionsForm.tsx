@@ -1,9 +1,9 @@
-import { API_ROOT, HEADERS } from "./constants";
+import { HEADERS } from "./constants";
 import React from "react";
 
 class QuestionsForm extends React.Component {
   state = {
-    content: "Please ask a question :)"
+    content: ""
   };
 
   constructor(props) {
@@ -18,12 +18,14 @@ class QuestionsForm extends React.Component {
   };
 
   handleSubmit = e => {
-    fetch(`${API_ROOT}/api/questions`, {
-      method: "POST",
-      headers: HEADERS,
-      body: JSON.stringify(this.state)
-    });
-    this.setState({ content: "" });
+    if (this.state.content.trim() != "") {
+      fetch(`/api/questions`, {
+        method: "POST",
+        headers: HEADERS,
+        body: JSON.stringify({ content: this.state.content.trim() })
+      });
+      this.setState({ content: "" });
+    }
     e.preventDefault();
   };
 
@@ -37,7 +39,11 @@ class QuestionsForm extends React.Component {
           rows={1}
         />
         <p>
-          <input type="submit" value="Submit" />
+          <input
+            type="submit"
+            value="Submit"
+            placeholder="Please ask a question"
+          />
         </p>
       </form>
     );

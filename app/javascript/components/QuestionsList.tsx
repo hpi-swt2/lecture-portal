@@ -1,5 +1,5 @@
 import React from "react";
-import { API_ROOT, API_WS_ROOT, HEADERS } from "./constants";
+import { HEADERS } from "./constants";
 
 interface IQuestionsListProps {
   is_student: boolean;
@@ -11,7 +11,7 @@ class QuestionsList extends React.Component<IQuestionsListProps> {
   };
 
   componentDidMount = () => {
-    fetch(`${API_ROOT}/api/questions`)
+    fetch(`/api/questions`)
       .then(res => res.json())
       .then(questions => this.setState({ questions: questions }));
 
@@ -42,7 +42,6 @@ class QuestionsList extends React.Component<IQuestionsListProps> {
 export default QuestionsList;
 
 // helpers
-
 const mapQuestions = questions => {
   return questions.map(question => {
     return <li key={question.id}>{question.content}</li>;
