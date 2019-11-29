@@ -36,8 +36,6 @@ groups:
         - essal0815
         - caustt
         - MartinBuessemeyer
-      teams:
-      - team-ab-19
     reviews:
       required: 1
       request: 2
