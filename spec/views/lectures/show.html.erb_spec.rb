@@ -11,8 +11,10 @@ RSpec.describe "lectures/show", type: :view do
 
   it "renders attributes in <p>" do
     render
-    expect(rendered).to match(/Name/)
-    expect(rendered).to match(/Enrollment Key/)
-    expect(rendered).to match(/false/)
+    assert_select "a", "Dashboard"
+    assert_select "a", "Feedback"
+    assert_select "a", "Questions"
+    assert_select "a", "Settings"
+    assert_select "a", "Polls"
   end
 end
