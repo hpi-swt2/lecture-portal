@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_28_093012) do
+ActiveRecord::Schema.define(version: 2019_11_29_144858) do
 
   create_table "lectures", force: :cascade do |t|
     t.string "name"
@@ -20,6 +20,8 @@ ActiveRecord::Schema.define(version: 2019_11_28_093012) do
     t.string "status", default: "created"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "lecturer_id"
+    t.index ["lecturer_id"], name: "index_lectures_on_lecturer_id"
   end
 
   create_table "poll_options", force: :cascade do |t|
