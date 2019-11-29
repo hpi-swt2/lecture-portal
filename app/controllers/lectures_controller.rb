@@ -57,6 +57,15 @@ class LecturesController < ApplicationController
     lecture.set_active
     lecture.save
     redirect_to lecture_path(lecture)
+    end
+
+  def end_lecture
+    # TODO make sure user is lecturer
+    id = params["lecture"]
+    lecture = Lecture.find(id)
+    lecture.set_inactive
+    lecture.save
+    redirect_to lecture_path(lecture)
   end
 
   private

@@ -8,4 +8,8 @@ class Lecture < ApplicationRecord
   def set_active
     self.is_running=true
   end
+
+  def set_inactive
+    self.is_running=false
+  end
 end
