@@ -25,10 +25,8 @@ class Questions extends React.Component {
   render = () => {
     return (
       <div>
-        {this.state.is_student ? (
-          <QuestionsForm content={""} author={""} />
-        ) : null}
-        <QuestionsList />
+        {this.state.is_student ? <QuestionsForm /> : null}
+        <QuestionsList is_student={this.state.is_student} />
       </div>
     );
   };
