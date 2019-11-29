@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_29_144858) do
+ActiveRecord::Schema.define(version: 2019_11_29_161543) do
 
   create_table "lectures", force: :cascade do |t|
     t.string "name"
@@ -35,8 +35,10 @@ ActiveRecord::Schema.define(version: 2019_11_29_144858) do
   create_table "polls", force: :cascade do |t|
     t.string "title"
     t.boolean "is_multiselect"
+    t.integer "lecture_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["lecture_id"], name: "index_polls_on_lecture_id"
   end
 
   create_table "users", force: :cascade do |t|

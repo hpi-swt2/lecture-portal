@@ -5,7 +5,8 @@ RSpec.describe "lectures/show", type: :view do
     @lecture = assign(:lecture, Lecture.create!(
                                   name: "Name",
                                   enrollment_key: "Enrollment Key",
-                                  status: "created"
+                                  status: "created",
+                                  lecturer: FactoryBot.create(:user, :lecturer, email: "bp@hpi.de")
     ))
   end
 

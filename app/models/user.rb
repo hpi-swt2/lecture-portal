@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_many :lectures, dependent: :destroy
+
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :is_student, inclusion: { in: [ true, false ] }
   # Include default devise modules. Others available are:
