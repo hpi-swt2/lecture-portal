@@ -1,0 +1,23 @@
+version: '3'
+services:
+  db:
+    image: postgres
+    volumes:
+      - ./tmp/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=someuser
+      - POSTGRES_PASSWORD=somepw
+      - POSTGRES_DB=railsdb
+  web:
+    image: rails
+    command: bash -c "gem list && ./bin/rails db:migrate && bundle exec rails s -p 3000 -b '0.0.0.0'"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    environment:
+      - USERNAME=someuser
+      - PASSWORD=somepw
+      - DATABASE=railsdb
+      - DBPORT=5432
+      - HOST=db
