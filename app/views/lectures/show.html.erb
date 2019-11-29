@@ -14,9 +14,12 @@
   <strong>Is running:</strong>
   <%= @lecture.is_running %>
 </p>
-
-<%= link_to 'Edit', edit_lecture_path(@lecture) %> |
-<%= link_to 'Back', lectures_path %>
-<% if @lecture.is_running %>
-  <%= button_to "End", {action: "end_lecture", params: {lecture: @lecture.id}}, {class:"btn btn-link"} %>
-<%end %>
+<table>
+  <tr>
+    <td colspan="2"><%= link_to 'Edit', edit_lecture_path(@lecture), {class:"btn btn-link"} %> | </td>
+    <td colspan="2"><%= link_to 'Back', lectures_path, {class:"btn btn-link"} %> | </td>
+    <% if @lecture.is_running %>
+      <td colspan="2"><%= button_to "End", {action: "end_lecture", params: {lecture: @lecture.id}}, {class:"btn btn-link"} %> </td>
+    <%end %>
+  </tr>
+</table>
