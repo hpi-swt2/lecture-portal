@@ -3,4 +3,5 @@ class Poll < ApplicationRecord
   belongs_to :lecture
   validates :title, presence: true
   validates :is_multiselect, inclusion: { in: [true, false] }
+  validates :is_active, inclusion: { in: [true, false] }
 end
