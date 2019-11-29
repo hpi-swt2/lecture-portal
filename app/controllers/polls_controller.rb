@@ -53,6 +53,6 @@ class PollsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def poll_params
-      params.require(:poll).permit(:title, :is_multiselect)
+      params.require(:poll).permit(:title, :is_multiselect, :lecture)
     end
 end
