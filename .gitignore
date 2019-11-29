@@ -1,3 +1,8 @@
+# jetbrains: rubymine ignore files
+.generators
+.idea
+.rakeTasks
+
 *.rbc
 capybara-*.html
 .rspec
@@ -47,3 +52,16 @@ bower.json
 # Ignore node_modules
 node_modules/
 
+
+/public/packs
+/public/packs-test
+/node_modules
+/yarn-error.log
+yarn-debug.log*
+.yarn-integrity
+
+# Ignore master key for decrypting credentials and more.
+/config/master.key
+
+# ignore assets
+public/assets/
