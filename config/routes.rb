@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  
   get "/lectures/current", to: "lectures#current", as: "current_lectures"
   resources :lectures
   resources :polls
