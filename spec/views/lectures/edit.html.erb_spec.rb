@@ -21,6 +21,8 @@ RSpec.describe "lectures/edit", type: :view do
       assert_select "input[name=?]", "lecture[questions_enabled]"
 
       assert_select "input[name=?]", "lecture[polls_enabled]"
+
+      assert_select "input[name=?]", "lecture[description]"
     end
   end
 
