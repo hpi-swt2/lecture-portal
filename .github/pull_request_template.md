@@ -1,4 +1,4 @@
-# Resolves #1
+# Resolves #number
 
 This PR changes / adds / introduces the feature of ....
 
