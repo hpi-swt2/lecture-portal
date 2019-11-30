@@ -1,3 +1,5 @@
+# Resolves #1
+
 This PR changes / adds / introduces the feature of ....
 
 Acceptance Criteria:
