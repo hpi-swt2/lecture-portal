@@ -5,7 +5,7 @@ import QuestionsList from "./QuestionsList";
 
 class Questions extends React.Component {
   state = {
-    is_student: true
+    is_student: this.props.is_student
   };
 
   handleChange = e => {
