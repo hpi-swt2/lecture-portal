@@ -10,7 +10,6 @@ class QuestionsApiController < ApplicationController
 
   # POST /api/questions
   def create
-    puts params
     # create new question based on stripped received question content and current user
     question = Question.new(:content => params[:content].strip, :author => current_user)
     if question.save
