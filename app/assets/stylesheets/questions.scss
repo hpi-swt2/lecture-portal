@@ -2,6 +2,9 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+input[name=questionInput] {
+    width: 100%
+}
 .questions {
     font-size: 36px;
     &.is_student {

@@ -32,11 +32,11 @@ class QuestionsForm extends React.Component {
   render() {
     return (
       <form onSubmit={this.handleSubmit}>
-        <textarea
+        <input
+          type="text"
+          name="questionInput"
           value={this.state.content}
           onChange={this.handleChange}
-          cols={100}
-          rows={1}
         />
         <p>
           <input

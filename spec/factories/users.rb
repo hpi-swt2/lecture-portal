@@ -11,10 +11,4 @@ FactoryBot.define do
       is_student { false }
     end
   end
-
-  factory :another_user do
-    email { "another_user@example.com" }
-    password { "password" }
-    password_confirmation { "password" }
-  end
 end

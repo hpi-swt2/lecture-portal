@@ -12,11 +12,10 @@ RSpec.describe QuestionsController, type: :controller do
       end
     end
     
-    context "with user logged in" do
+    context "with user logged in as student" do
       it "returns a success response" do
-        # TODO: add student!
-        user = FactoryBot.create(:user)
-        sign_in(user, scope: :user)        
+        student = FactoryBot.create(:user, :student)
+        sign_in(student, scope: :user)        
         get :index, params: {}, session: valid_session
         expect(response).to be_successful
       end

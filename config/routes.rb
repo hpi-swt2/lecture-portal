@@ -1,5 +1,8 @@
 Rails.application.routes.draw do
-  resources :questions
+  resources :questions, only: [:index]
+  namespace :api do
+    resources :questions, only: [:index, :create]
+  end
   resources :polls
   resources :lectures
   devise_for :users, controllers: {
@@ -11,9 +14,6 @@ Rails.application.routes.draw do
   }
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: "home#index"
-
-  get '/api/questions', to: 'questions_api#index'
-  post '/api/questions', to: 'questions_api#create'
-
+  
   mount ActionCable.server => '/cable'
 end
