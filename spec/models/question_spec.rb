@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 RSpec.describe Question, type: :model do
   it "is creatable using a Factory" do
@@ -7,7 +7,7 @@ RSpec.describe Question, type: :model do
   end
 
   it "is not valid with an empty content" do
-    question = FactoryBot.build(:question, content: '')
+    question = FactoryBot.build(:question, content: "")
     expect(question).to_not be_valid
   end
 

@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  root to: "home#index"
   resources :questions, only: [:index]
   namespace :api do
     resources :questions, only: [:index, :create]
@@ -12,8 +14,5 @@ Rails.application.routes.draw do
       sessions: "users/sessions",
       unlocks: "users/unlocks",
   }
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
-  root to: "home#index"
-  
-  mount ActionCable.server => '/cable'
+  mount ActionCable.server => "/cable"
 end

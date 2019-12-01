@@ -4,5 +4,4 @@ class QuestionsController < ApplicationController
   # GET /questions
   def index
   end
-  
 end

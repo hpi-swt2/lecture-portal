@@ -1,16 +1,13 @@
-require 'rails_helper'
+require "rails_helper"
 require "action_cable/testing/rspec"
 
 RSpec.describe Api::QuestionsController, type: :controller do
-
   let(:valid_attributes) {
-    {:content => "Question"}
+    { content: "Question" }
   }
-
   let(:invalid_attributes) {
-    {:content => ""}
+    { content: "" }
   }
-
   let(:valid_session) { {} }
 
   context "with user not logged in" do
@@ -21,32 +18,32 @@ RSpec.describe Api::QuestionsController, type: :controller do
       end
     end
   end
-  
+
   context "with user logged in as student" do
     before(:each) do
       @student = FactoryBot.create(:user, :student)
-      sign_in(@student, scope: :user)        
+      sign_in(@student, scope: :user)
     end
 
     describe "GET #index" do
       it "should return successful response" do
         get :index, params: {}, session: valid_session
         expect(response).to be_successful
-      end      
+      end
       it "should return valid json" do
         expected = [].to_json
         get :index, params: {}, session: valid_session
         expect(response.body).to eq(expected)
       end
       it "should return list of a question" do
-        question = FactoryBot.create(:question, :author => @student)
+        question = FactoryBot.create(:question, author: @student)
         expected = [ QuestionSerializer.new(question).as_json ]
         get :index, params: {}, session: valid_session
         expect(response.body).to eq(expected.to_json)
       end
       it "should return a time-sorted list of all questions" do
-        question1 = FactoryBot.create(:question, :author => @student)
-        question2 = FactoryBot.create(:question, :author => @student)
+        question1 = FactoryBot.create(:question, author: @student)
+        question2 = FactoryBot.create(:question, author: @student)
         expected = [ QuestionSerializer.new(question2).as_json,
                       QuestionSerializer.new(question1).as_json ]
         get :index, params: {}, session: valid_session
@@ -73,20 +70,19 @@ RSpec.describe Api::QuestionsController, type: :controller do
           created_question = Question.find(1)
           expect(created_question.author).to eq(@student)
         end
-        it "broadcasts a question after creation" do          
-          expect { 
+        it "broadcasts a question after creation" do
+          expect {
             post :create, params: valid_attributes, session: valid_session
           }.to have_broadcasted_to("questions_channel")
         end
-      end   
+      end
     end
   end
 
-  
   context "with user logged in as lecturer" do
     before(:each) do
       @lecturer = FactoryBot.create(:user, :lecturer)
-      sign_in(@lecturer, scope: :user)        
+      sign_in(@lecturer, scope: :user)
     end
 
     describe "POST #create" do

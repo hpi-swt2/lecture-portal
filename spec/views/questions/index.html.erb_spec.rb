@@ -1,4 +1,4 @@
-require 'rails_helper'
+require "rails_helper"
 
 # RSpec.describe "questions/index", type: :view do
 #   context "with user signed in as student" do
@@ -24,7 +24,7 @@ require 'rails_helper'
 #       expect(page).to have_content("Question")
 #     end
 #   end
-  
+
 #   context "with user signed in as lecturer" do
 #     before(:each) do
 #       @lecturer = FactoryBot.create(:user, :lecturer)

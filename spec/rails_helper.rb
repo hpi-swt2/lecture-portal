@@ -74,4 +74,3 @@ RSpec.configure do |config|
   # https://github.com/plataformatec/devise#integration-tests
   config.include Devise::Test::IntegrationHelpers, type: :view
 end
-
