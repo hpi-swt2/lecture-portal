@@ -1,6 +1,7 @@
 require "rails_helper"
 
 describe "Editing the user attributes on the 'user edit' page", type: :feature do
+  # Include Devise helpers that allow usage of `sign_in`
   include Devise::Test::IntegrationHelpers
 
   context "without being logged in" do
@@ -9,7 +10,7 @@ describe "Editing the user attributes on the 'user edit' page", type: :feature d
     end
 
     scenario "shows an error message" do
-      expect(page).to have_css('.alert-danger', count: 1)
+      expect(page).to have_css(".alert-danger", count: 1)
     end
 
     scenario "redirects to the log in page" do
@@ -18,19 +19,24 @@ describe "Editing the user attributes on the 'user edit' page", type: :feature d
   end
 
   context "while logged in as a student" do
-    scenario "does not show an error" do
-      student = FactoryBot.create(:user, :student)
-      sign_in student
+    before(:each) do
+      @student = FactoryBot.create(:user, :student)
+      sign_in @student
       visit edit_user_registration_path
-      expect(page).to_not have_css('.alert-danger')
+    end
+
+    scenario "does not show an error" do
+      expect(page).to_not have_css(".alert-danger")
       expect(page).to have_current_path(edit_user_registration_path)
     end
-    
-    scenario "shows previously set attributes" do
-      student = FactoryBot.create(:user, :student)
-      sign_in student
-      visit edit_user_registration_path
-      expect(find_field('user[email]').value).to eq student.email
+
+    scenario "shows previously set email in input field" do
+      expect(find_field("user[email]").value).to eq @student.email
+    end
+
+    scenario "shows inputs for setting the password" do
+      expect(page).to have_field("user[password]")
+      expect(page).to have_field("user[password_confirmation]")
     end
   end
 end

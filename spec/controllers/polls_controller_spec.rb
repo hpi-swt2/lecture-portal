@@ -33,7 +33,6 @@ RSpec.describe PollsController, type: :controller do
   }}
 
   let(:invalid_attributes) { {
-    # skip("Add a hash of attributes invalid for your model")
     title: nil,
     is_multiselect: nil
   }}
@@ -98,15 +97,18 @@ RSpec.describe PollsController, type: :controller do
 
   describe "PUT #update" do
     context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+      let(:new_attributes) { {
+        # skip("Add a hash of attributes valid for your model")
+        title: "New Title",
+        is_multiselect: false
+      }}
 
       it "updates the requested poll" do
         poll = Poll.create! valid_attributes
         put :update, params: { id: poll.to_param, poll: new_attributes }, session: valid_session
         poll.reload
-        skip("Add assertions for updated state")
+        expect(poll.title).to eql(new_attributes[:title])
+        expect(poll.is_multiselect).to eql(new_attributes[:is_multiselect])
       end
 
       it "redirects to the poll" do

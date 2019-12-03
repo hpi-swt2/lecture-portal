@@ -14,6 +14,7 @@ AllCops:
     - '**/tmp/**/*'
     - '**/vendor/**/*'
     - '**/bin/**/*'
+    - 'node_modules/**/*'
 
 # Prefer assert_not over assert !
 Rails/AssertNot:

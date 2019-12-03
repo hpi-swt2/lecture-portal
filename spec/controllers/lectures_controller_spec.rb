@@ -115,12 +115,10 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   def login_student
-    @request.env["devise.mapping"] = Devise.mappings[:user]
     user = FactoryBot.create(:user, :student)
     sign_in(user, scope: :user)
   end
   def login_lecturer
-    @request.env["devise.mapping"] = Devise.mappings[:user]
     user = FactoryBot.create(:user, :lecturer)
     sign_in(user, scope: :user)
   end
