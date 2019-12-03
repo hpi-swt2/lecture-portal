@@ -14,7 +14,7 @@ class PollsController < ApplicationController
 
   # GET /polls/new
   def new
-    if @current_user.is_student
+    if current_user.is_student
       redirect_to lecture_path(@lecture), notice: "You are a student. You can not create polls."
     else
       @poll = @lecture.polls.build
