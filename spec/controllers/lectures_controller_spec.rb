@@ -26,7 +26,13 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #new" do
-    it "returns a success response" do
+    it "does not redirect for student" do
+      login_student
+      get :new, params: {}, session: valid_session
+      expect(response).to redirect_to(lectures_url)
+    end
+    it "returns a success response for lecturer" do
+      login_lecturer
       get :new, params: {}, session: valid_session
       expect(response).to be_successful
     end
@@ -106,5 +112,14 @@ RSpec.describe LecturesController, type: :controller do
       delete :destroy, params: { id: lecture.to_param }, session: valid_session
       expect(response).to redirect_to(lectures_url)
     end
+  end
+
+  def login_student
+    user = FactoryBot.create(:user, :student)
+    sign_in(user, scope: :user)
+  end
+  def login_lecturer
+    user = FactoryBot.create(:user, :lecturer)
+    sign_in(user, scope: :user)
   end
 end
