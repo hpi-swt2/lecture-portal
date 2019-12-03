@@ -5,7 +5,7 @@ RSpec.describe "Polls", type: :request do
     @lecture = FactoryBot.create(:lecture)
     @poll = FactoryBot.create(:poll)
   end
-  
+
   describe "GET /polls" do
     it "works! (now write some real specs)" do
       get lecture_polls_path(@lecture)
