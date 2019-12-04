@@ -28,7 +28,7 @@ class PollsController < ApplicationController
   # POST /polls
   def create
     current_poll_params = poll_params
-    @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect])
+    @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
     poll_options = current_poll_params[:poll_options]
     for poll_option in poll_options do
       poll_option_description = poll_option.values_at(1)
@@ -64,7 +64,7 @@ class PollsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def poll_params
-      params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :number_of_options, poll_options: params[:poll][:poll_options].keys)
+      params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
     end
 
     def get_lecture

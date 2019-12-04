@@ -10,6 +10,11 @@
   <%= @poll.is_multiselect %>
 </p>
 
+<p>
+  <strong>Is active:</strong>
+  <%= @poll.is_active %>
+</p>
+
 <h2>Options</h2>
 <ol>
 <% for option in @poll.poll_options %>
