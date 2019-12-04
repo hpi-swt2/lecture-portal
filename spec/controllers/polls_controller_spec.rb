@@ -28,7 +28,6 @@ RSpec.describe PollsController, type: :controller do
   # Poll. As you add validations to Poll, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) { {
-    # lecture: FactoryBot.create(:lecture),
     title: "Example Title",
     is_multiselect: true,
   }}
