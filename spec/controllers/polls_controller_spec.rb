@@ -31,7 +31,7 @@ RSpec.describe PollsController, type: :controller do
     FactoryBot.create(:lecture)
   }
   let(:poll_options_params) {
-    {option_1: "", option_2: ""}
+    { option_1: "", option_2: "" }
   }
   let(:poll_options) {
     [PollOption.new(id: 1, description: ""), PollOption.new(id: 2, description: "")]
