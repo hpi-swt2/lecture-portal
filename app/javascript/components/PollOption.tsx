@@ -24,9 +24,9 @@ class PollOption extends React.Component <IPollOptionState> {
         const options = [];
         for (let index = 1; index <= this.state.numberOfOptions; ++index) {
             const currentOption = <React.Fragment>
-                <br/>
-                <text>{index}. Option</text>
-                <input name={`${index}_option`} type="text" key={`${index}`}/></React.Fragment>;
+                <br key={index}/>
+                <label key={index}>{index}. Option {" "} </label>
+                <input id={`poll_${index}_option`} name={`poll[poll_options[${index}_option]]`} type="text" key={`${index}`}/></React.Fragment>;
             options.push(currentOption);
         }
         return options;
@@ -34,11 +34,12 @@ class PollOption extends React.Component <IPollOptionState> {
 
     render() {
         const allOptions = this.renderOptions();
+        // {" "} forces a space
         return <React.Fragment>
 
             <div className="field">
-                <text>Number of Options</text>
-                <input name="number_of_options" type="number" onBlur={(evt) => this.onBlur(evt)}/>
+                <label>Number of Options {" "}</label>
+                <input id="number_of_options" name="number_of_options" type="number" onBlur={(evt) => this.onBlur(evt)} min={2} defaultValue={2}/>
                 {allOptions}
             </div>
         </React.Fragment>

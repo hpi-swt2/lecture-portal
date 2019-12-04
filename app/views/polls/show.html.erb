@@ -10,5 +10,13 @@
   <%= @poll.is_multiselect %>
 </p>
 
+<h2>Options</h2>
+<ol>
+<% for option in @poll.poll_options %>
+
+    <li><%= option.description %></li>
+<% end %>
+</ol>
+
 <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
 <%= link_to 'Back', lecture_polls_path(@lecture) %>
