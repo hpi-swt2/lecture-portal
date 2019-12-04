@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   get "/lectures/current", to: "lectures#current", as: "current_lectures"
+  resources :lectures do
+    resources :polls
+  end
+
   resources :lectures
-  resources :polls
 
   devise_for :users, controllers: {
       confirmations: "users/confirmations",

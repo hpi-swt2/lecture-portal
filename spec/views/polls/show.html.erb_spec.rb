@@ -2,10 +2,8 @@ require "rails_helper"
 
 RSpec.describe "polls/show", type: :view do
   before(:each) do
-    @poll = assign(:poll, Poll.create!(
-                            title: "Title",
-                            is_multiselect: false,
-    ))
+    @lecture = FactoryBot.create(:lecture)
+    @poll = FactoryBot.create(:poll)
   end
 
   it "renders attributes in <p>" do
