@@ -7,7 +7,7 @@ class Poll < ApplicationRecord
   validate :only_one_poll_active
 
   def only_one_poll_active
-    if Poll.exists?(lecture_id: lecture.id, is_active: true) && is_active
+    if is_active && Poll.where(lecture_id: lecture.id, is_active: true).where.not(id: id).length > 0
       errors.add(:only_one_poll_can_be_active, "There can be only one poll active for one lecture.")
     end
   end

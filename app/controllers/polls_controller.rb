@@ -31,7 +31,6 @@ class PollsController < ApplicationController
   # POST /polls
   def create
     current_poll_params = poll_params
-    puts(poll_params)
     @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
     poll_options = current_poll_params[:poll_options]
     for poll_option in poll_options do
