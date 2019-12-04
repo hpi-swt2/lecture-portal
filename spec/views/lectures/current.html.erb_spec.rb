@@ -4,12 +4,12 @@ RSpec.describe "lectures/current", type: :view do
       Lecture.create!(
         name: "running lecture",
         enrollment_key: "Enrollment Key",
-        is_running: true
+        status: "running"
       ),
       Lecture.create!(
         name: "not running lecture",
         enrollment_key: "Enrollment Key",
-        is_running: false
+        status: "created"
       )
     ])
   end
