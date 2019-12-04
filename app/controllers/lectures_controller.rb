@@ -22,6 +22,9 @@ class LecturesController < ApplicationController
 
   # GET /lectures/1/edit
   def edit
+    if current_user.is_student?
+      redirect_to lectures_url, notice: "You are a student! You can not edit a lecture :("
+    end
   end
 
   # POST /lectures

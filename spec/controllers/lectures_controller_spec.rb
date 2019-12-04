@@ -43,7 +43,8 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #edit" do
-    it "returns a success response" do
+    it "returns a success response for lecturer" do
+      login_lecturer
       lecture = Lecture.create! valid_attributes_with_lecturer
       get :edit, params: { id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
