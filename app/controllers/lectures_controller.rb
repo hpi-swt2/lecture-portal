@@ -48,6 +48,14 @@ class LecturesController < ApplicationController
     @lecture.destroy
     redirect_to lectures_url, notice: "Lecture was successfully destroyed."
   end
+  # GET /lectures/current
+  def current
+    if current_user.is_student?
+      @lectures = Lecture.active
+    else
+      redirect_to root_path
+    end
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
-  # resources :polls
-
+  
+  get "/lectures/current", to: "lectures#current", as: "current_lectures"
   resources :lectures do
     resources :polls
   end
@@ -14,6 +14,7 @@ Rails.application.routes.draw do
       sessions: "users/sessions",
       unlocks: "users/unlocks",
   }
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: "home#index"
 end
