@@ -32,7 +32,7 @@ class PollsController < ApplicationController
     poll_options = current_poll_params[:poll_options]
     for poll_option in poll_options do
       poll_option_description = poll_option.values_at(1)
-      new_poll_option = @poll.poll_options.build(description: poll_option_description)
+      new_poll_option = @poll.poll_options.build(description: poll_option_description.to_param)
     end
     if @poll.save
       redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully created."
