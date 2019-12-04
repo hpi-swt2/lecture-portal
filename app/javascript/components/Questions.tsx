@@ -10,10 +10,10 @@ interface IQuestionsProps {
 class Questions extends React.Component<IQuestionsProps> {
   render = () => {
     return (
-      <div>
-        {this.props.is_student ? <QuestionsForm /> : null}
-        <QuestionsList is_student={this.props.is_student} />
-      </div>
+        <div>
+          {this.props.is_student ? <QuestionsForm /> : null}
+          <QuestionsList is_student={this.props.is_student} />
+        </div>
     );
   };
 }
