@@ -25,10 +25,10 @@ class PollOption extends React.Component <IPollOptionProps, IPollOptionState> {
     renderOptions() {
         const options = [];
         for (let index = 1; index <= this.state.numberOfOptions; ++index) {
-            const currentOption = <React.Fragment key={`${index}_frag`}>
-                <br key={`${index}_br`}/>
-                <label key={`${index}_option_label`}>{index}. Option {" "} </label>
-                <input id={`poll_${index}_option`} name={`poll[poll_options[${index}_option]]`} type="text" key={`${index}`} defaultValue={this.props.options[index-1]}/></React.Fragment>;
+            const currentOption = <React.Fragment key={`frag_${index}`}>
+                <br key={`br_${index}`}/>
+                <label key={`option_${index}_label`}>{index}. Option {" "} </label>
+                <input id={`poll_option_${index}`} name={`poll[poll_options[option_${index}]]`} type="text" key={`${index}`} defaultValue={this.props.options[index-1]}/></React.Fragment>;
             options.push(currentOption);
         }
         return options;
