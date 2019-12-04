@@ -1,7 +1,6 @@
 require "rails_helper"
 
 RSpec.describe PollsController, type: :routing do
-
   describe "routing" do
     it "routes to #index" do
       expect(get: "lectures/1/polls").to route_to("polls#index", lecture_id: "1")

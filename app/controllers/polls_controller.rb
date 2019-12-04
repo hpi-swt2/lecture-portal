@@ -32,7 +32,7 @@ class PollsController < ApplicationController
     poll_options = current_poll_params[:poll_options]
     for poll_option in poll_options do
       poll_option_description = poll_option.values_at(1)
-      new_poll_option = @poll.poll_options.build(description: poll_option_description.to_param)
+      @poll.poll_options.build(description: poll_option_description.to_param)
     end
     if @poll.save
       redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully created."
@@ -43,8 +43,20 @@ class PollsController < ApplicationController
 
   # PATCH/PUT /polls/1
   def update
-    if @poll.update(poll_params)
-      redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully updated."
+    current_poll_params = poll_params
+    if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
+      # Remove all previously existing options so there are no conflicts with the new/updated ones.
+      PollOption.where(poll_id: @poll.id).destroy_all
+      poll_options = current_poll_params[:poll_options]
+      for poll_option in poll_options do
+        poll_option_description = poll_option.values_at(1)
+        @poll.poll_options.build(description: poll_option_description.to_param)
+      end
+      if @poll.save
+        redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully updated."
+      else
+        render :edit
+      end
     else
       render :edit
     end
