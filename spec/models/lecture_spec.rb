@@ -9,12 +9,12 @@ RSpec.describe Lecture, type: :model do
   end
 
   it "is not valid without a name" do
-    @lecture.name = nil
+    @lecture.name = ""
     expect(@lecture).not_to be_valid
   end
 
   it "is not valid without a enrollment key" do
-    @lecture.enrollment_key = nil
+    @lecture.enrollment_key = ""
     expect(@lecture).not_to be_valid
   end
 
