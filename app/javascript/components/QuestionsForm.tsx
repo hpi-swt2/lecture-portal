@@ -12,9 +12,15 @@ class QuestionsForm extends React.Component {
       content: ""
     };
     this.formRef = React.createRef();
+    this.textareaRef = React.createRef();
+
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleKeyDown = this.handleKeyDown.bind(this);
+  }
+
+  componentDidMount(){
+    this.textareaRef.current.focus();
   }
 
   handleChange = e => {
@@ -51,6 +57,7 @@ class QuestionsForm extends React.Component {
         <label for={this.inputId}>Ask a question:</label>
         <textarea
           rows="3"
+          ref={this.textareaRef}
           id={this.inputId}
           value={this.state.content}
           onChange={this.handleChange}
