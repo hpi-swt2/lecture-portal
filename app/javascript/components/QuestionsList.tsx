@@ -6,9 +6,14 @@ interface IQuestionsListProps {
 }
 
 class QuestionsList extends React.Component<IQuestionsListProps> {
-  state = {
-    questions: []
-  };
+
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      questions: []
+    };
+  }
 
   componentDidMount = () => {
     fetch(`/api/questions`)
@@ -35,8 +40,8 @@ class QuestionsList extends React.Component<IQuestionsListProps> {
 
   render = () => {
     const { questions } = this.state;
-    const divClassName = ["questions"];
-    if (this.props.is_student) divClassName.push("is_student");
+    const divClassName = ["questionsList"];
+    if (!this.props.is_student) divClassName.push("is_lecturer");
     return <ul className={divClassName.join(" ").trim()}>{mapQuestions(questions)}</ul>;
   };
 }

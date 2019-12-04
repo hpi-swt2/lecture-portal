@@ -2,12 +2,29 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
-input[name=questionInput] {
-    width: 100%
+form#questionForm {
+  > textarea {
+    width: 100%;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+  }
+  > button {
+    float: right;
+  }
 }
-.questions {
+ul.questionsList {
+  clear: both;
+  list-style-type: none !important;
+  margin: 70px 0 0 0;
+  padding: 0;
+
+  &.is_lecturer {
     font-size: 36px;
-    &.is_student {
-        font-size: initial; 
-    }
+  }
+  > li {
+    padding: 20px;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    margin-bottom: 10px;
+  }
 }

@@ -2,19 +2,31 @@ import { HEADERS } from "./constants";
 import React from "react";
 
 class QuestionsForm extends React.Component {
-  state = {
-    content: ""
-  };
+  formId = "questionForm";
+  inputId = "questionInput";
 
   constructor(props) {
     super(props);
 
+    this.state = {
+      content: ""
+    };
+    this.formRef = React.createRef();
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleKeyDown = this.handleKeyDown.bind(this);
   }
 
   handleChange = e => {
-    this.setState({ content: e.target.value });
+    const content = e.target.value.replace(/[\r\n\v]+/g, "");
+    this.setState({ content });
+  };
+
+  handleKeyDown = (e) => {
+    if(e.keyCode == 13) {
+      e.preventDefault();
+      this.formRef.current.dispatchEvent(new Event('submit', { cancelable: true }));
+    }
   };
 
   handleSubmit = e => {
@@ -31,20 +43,20 @@ class QuestionsForm extends React.Component {
 
   render() {
     return (
-      <form onSubmit={this.handleSubmit}>
-        <input
-          type="text"
-          name="questionInput"
+      <form
+        id={this.formId}
+        ref={this.formRef}
+        onSubmit={this.handleSubmit}
+      >
+        <label for={this.inputId}>Ask a question:</label>
+        <textarea
+          rows="3"
+          id={this.inputId}
           value={this.state.content}
           onChange={this.handleChange}
+          onKeyDown={this.handleKeyDown}
         />
-        <p>
-          <input
-            type="submit"
-            value="Submit"
-            placeholder="Please ask a question"
-          />
-        </p>
+        <button type="submit" className="btn btn-secondary">Ask Question</button>
       </form>
     );
   }
