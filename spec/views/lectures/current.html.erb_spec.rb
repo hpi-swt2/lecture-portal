@@ -1,15 +1,18 @@
 RSpec.describe "lectures/current", type: :view do
   before(:each) do
+    @lecturer =FactoryBot.create(:user, :lecturer, email: "test@test.de")
     @lectures = assign(:lectures, [
       Lecture.create!(
         name: "running lecture",
         enrollment_key: "Enrollment Key",
-        status: "running"
+        status: "running",
+        lecturer: @lecturer
       ),
       Lecture.create!(
         name: "not running lecture",
         enrollment_key: "Enrollment Key",
-        status: "created"
+        status: "created",
+        lecturer: @lecturer
       )
     ])
   end
