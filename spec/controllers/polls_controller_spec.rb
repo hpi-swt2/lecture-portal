@@ -31,7 +31,7 @@ RSpec.describe PollsController, type: :controller do
     FactoryBot.create(:lecture)
   }
   let(:poll_options_params) {
-    { option_1: "", option_2: "" }
+    {option_1: "", option_2: ""}
   }
   let(:poll_options) {
     [PollOption.new(id: 1, description: ""), PollOption.new(id: 2, description: "")]
@@ -85,19 +85,31 @@ RSpec.describe PollsController, type: :controller do
   end
 
   describe "GET #new" do
-    it "returns a success response" do
+    it "returns a success response for lecturers" do
       login_lecturer
       get :new, params: { lecture_id: lecture.id }, session: valid_session
       expect(response).to be_successful
     end
+    it "redirects to lecture poll index for students" do
+      login_student
+      get :new, params: { lecture_id: lecture.id }, session: valid_session
+      expect(response).to redirect_to(lecture_polls_path(lecture))
+    end
   end
 
   describe "GET #edit" do
-    it "returns a success response" do
+    it "returns a success response for lecturers" do
       login_lecturer
       poll = Poll.create! valid_attributes
       get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
+    end
+
+    it "redirects to poll show view for students" do
+      login_student
+      poll = Poll.create! valid_attributes
+      get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      expect(response).to redirect_to(lecture_poll_path(lecture, poll))
     end
   end
 
@@ -176,4 +188,9 @@ RSpec.describe PollsController, type: :controller do
     user = FactoryBot.create(:user, :lecturer)
     sign_in(user, scope: :user)
   end
+  def login_student
+    user = FactoryBot.create(:user, :student)
+    sign_in(user, scope: :user)
+  end
+
 end
