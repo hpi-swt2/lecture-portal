@@ -7,5 +7,5 @@ FactoryBot.define do
 end
 
 def random_name
-  ('a'..'z').to_a.shuffle.join
+  ("a".."z").to_a.shuffle.join
 end
