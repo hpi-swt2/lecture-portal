@@ -46,14 +46,14 @@ class QuestionsList extends React.Component<IQuestionsListProps> {
                 received: data => {
                     const updatedQuestions = this.state.questions;
                     updatedQuestions.forEach(question => {
-                        if(question.id == data) {
+                        if (question.id == data) {
                             const index = updatedQuestions.indexOf(question, 0);
                             if (index > -1) {
                                 updatedQuestions.splice(index, 1);
                             }
                         }
                     });
-                    this.setState({questions: updatedQuestions});
+                    this.setState({ questions: updatedQuestions });
                     console.log(data)
                 }
             }
