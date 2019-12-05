@@ -44,11 +44,13 @@ class QuestionsList extends React.Component<IStoreProps> {
   };
 
   render = () => {
+
+    console.log(this.props.store.getQuestionById("8"));
     const divClassName = ["questionsList"];
     if (!this.props.store.is_student) divClassName.push("is_lecturer");
     return (
       <ul className={divClassName.join(" ").trim()}>
-        {mapQuestions(this.props.store.questionsList)}
+        {mapQuestions(this.props.store)}
       </ul>
     );
   };
@@ -59,8 +61,9 @@ export default inject("store")(
 ) as React.ComponentType<{}>;
 
 // helpers
-const mapQuestions = questions => {
-  return questions.map(question => {
-    return <li key={question.id}>{question.content}</li>;
-  });
+const mapQuestions = store => {
+  //console.log(store.questionsList.data.get("8"));
+  /*return questions.keys().forEach(key => {
+    return <li key={questions[key].id}>{questions[key].content}</li>;
+  });*/
 };

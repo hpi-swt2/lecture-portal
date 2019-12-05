@@ -1,5 +1,6 @@
 import { types } from "mobx-state-tree";
 
+
 const question = types
   .model({
     id: types.integer,
@@ -15,5 +16,6 @@ const question = types
     //   self.value--;
     // }
   }));
+
 
 export default question;

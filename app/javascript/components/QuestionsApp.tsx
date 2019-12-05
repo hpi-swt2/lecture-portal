@@ -6,11 +6,12 @@ import { Provider } from "mobx-react";
 
 const rootStore = store.create();
 
-const QuestionsApp: React.FC = () => {
+const QuestionsApp: React.FC = (props) => {
+  console.log(rootStore);
   return (
     <Provider store={rootStore}>
-      <div className="App">
-        {rootStore.is_student ? <QuestionsForm /> : null}
+      <div className="QuestionsApp">
+        <QuestionsForm />
         <QuestionsList />
       </div>
     </Provider>
