@@ -21,10 +21,18 @@
 <div class="tab-content" id="lectureTabsContent">
   <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab"></div>
   <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab"></div>
-  <div class="tab-pane fade" id="polls" role="tabpanel" aria-labelledby="polls-tab"></div>
+  <div class="tab-pane fade" id="polls" role="tabpanel" aria-labelledby="polls-tab">
+    <h2>Polls</h2>
+    <% for poll in @lecture.polls %>
+      <ul>
+        <li><%= poll.title %></li>
+      </ul>
+    <% end %>
+  </div>
   <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab"></div>
   <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab"></div>
 </div>
 
 <%= link_to 'Edit', edit_lecture_path(@lecture) %> |
+<%= link_to 'New Poll', new_lecture_poll_path(@lecture) %> |
 <%= link_to 'Back', lectures_path %>
