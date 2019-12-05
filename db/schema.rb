@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_11_22_141439) do
+ActiveRecord::Schema.define(version: 2019_12_04_101435) do
 
   create_table "lectures", force: :cascade do |t|
     t.string "name"
@@ -25,7 +25,6 @@ ActiveRecord::Schema.define(version: 2019_11_22_141439) do
     t.integer "poll_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "votes", default: 0, null: false
     t.index ["poll_id"], name: "index_poll_options_on_poll_id"
   end
 
@@ -37,6 +36,14 @@ ActiveRecord::Schema.define(version: 2019_11_22_141439) do
     t.integer "lecture_id"
     t.boolean "is_active", default: false, null: false
     t.index ["lecture_id"], name: "index_polls_on_lecture_id"
+  end
+
+  create_table "questions", force: :cascade do |t|
+    t.string "content"
+    t.integer "author_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["author_id"], name: "index_questions_on_author_id"
   end
 
   create_table "users", force: :cascade do |t|
