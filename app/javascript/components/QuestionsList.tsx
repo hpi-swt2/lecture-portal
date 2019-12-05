@@ -38,6 +38,26 @@ class QuestionsList extends React.Component<IQuestionsListProps> {
                 }
             }
         );
+
+
+        CableApp.cable.subscriptions.create(
+            { channel: "QuestionResolvingChannel" },
+            {
+                received: data => {
+                    const updatedQuestions = this.state.questions;
+                    updatedQuestions.forEach(question => {
+                        if(question.id == data) {
+                            const index = updatedQuestions.indexOf(question, 0);
+                            if (index > -1) {
+                                updatedQuestions.splice(index, 1);
+                            }
+                        }
+                    });
+                    this.setState({questions: updatedQuestions});
+                    console.log(data)
+                }
+            }
+        );
     };
 
     render = () => {
