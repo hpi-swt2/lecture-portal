@@ -1,5 +1,9 @@
-import App from "../../assets/javascripts/cable"
+import ActionCable from "actioncable";
 import React from "react";
+
+const CableApp = {
+    cable: ActionCable.createConsumer(`/cable`)
+};
 
 interface IQuestionsListProps {
     is_student: boolean;
@@ -15,7 +19,7 @@ class QuestionsList extends React.Component<IQuestionsListProps> {
             .then(res => res.json())
             .then(questions => this.setState({ questions: questions }));
 
-        App.cable.subscriptions.create(
+        CableApp.cable.subscriptions.create(
             { channel: "QuestionsChannel" },
             {
                 received: data => {
@@ -24,7 +28,10 @@ class QuestionsList extends React.Component<IQuestionsListProps> {
 
                     // sort questions by creation date to prevent wrong sorting
                     questions.sort((a, b): number => {
-                        return new Date(b.created_at).getMilliseconds() - new Date(a.created_at).getMilliseconds() ;
+                        return (
+                            new Date(b.created_at).getTime() -
+                            new Date(a.created_at).getTime()
+                        );
                     });
 
                     this.setState({ questions: questions });
