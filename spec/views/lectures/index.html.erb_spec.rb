@@ -6,12 +6,14 @@ RSpec.describe "lectures/index", type: :view do
       Lecture.create!(
         name: "Name",
         enrollment_key: "Enrollment Key",
-        is_running: false
+        status: "created",
+        lecturer: FactoryBot.create(:user, :lecturer, email: "hp@hpi.de")
       ),
       Lecture.create!(
         name: "Name",
         enrollment_key: "Enrollment Key",
-        is_running: false
+        status: "created",
+        lecturer: FactoryBot.create(:user, :lecturer, email: "cm@hpi.de")
       )
     ])
   end
@@ -19,5 +21,7 @@ RSpec.describe "lectures/index", type: :view do
   it "renders a list of lectures" do
     render
     assert_select "tr>td", text: "Name".to_s, count: 2
+    assert_select "tr>td", text: "Enrollment Key".to_s, count: 2
+    assert_select "tr>td", text: "created".to_s, count: 2
   end
 end

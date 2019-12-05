@@ -2,13 +2,16 @@
 <div class="d-flex justify-content-center my-5">
   <%= link_to 'Create Lecture', new_lecture_path, :class => "btn btn-primary btn-lg"%>
 </div>
+
 <h1>My Lectures</h1>
 
 <table class="table .table-sm table-striped">
   <thead>
     <tr>
-      <th>Name</th>
-      <th></th>
+      <th scope="col">Name</th>
+      <th scope="col">Enrollment key</th>
+      <th scope="col">Status</th>
+      <th scope="col" colspan="2"></th>
     </tr>
   </thead>
 
@@ -16,8 +19,10 @@
     <% @lectures.each do |lecture| %>
       <tr>
         <td><%= lecture.name %></td>
+        <td><%= lecture.enrollment_key %></td>
+        <td><%= lecture.status%></td>
         <td class="text-right">
-        <% if lecture.is_running %>
+        <% if lecture.status == "running" %>
           <!-- TODO Stop button -->
           <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
         <% else %>
@@ -29,4 +34,4 @@
   </tbody>
 </table>
 
-<br>
+

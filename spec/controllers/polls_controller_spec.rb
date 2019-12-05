@@ -27,14 +27,40 @@ RSpec.describe PollsController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Poll. As you add validations to Poll, be sure to
   # adjust the attributes here as well.
+  let(:lecture) {
+    FactoryBot.create(:lecture)
+  }
+  let(:poll_options_params) {
+    { option_1: "", option_2: "" }
+  }
+  let(:poll_options) {
+    [PollOption.new(id: 1, description: ""), PollOption.new(id: 2, description: "")]
+  }
   let(:valid_attributes) { {
     title: "Example Title",
-    is_multiselect: true
+    is_multiselect: true,
+    lecture_id: lecture.id,
+    is_active: false,
+    poll_options: poll_options
   }}
-
+  # we need the distinction between params and attributes because
+  # we use a react component to dynamically generate the options
+  # from input
+  let(:valid_params) { {
+      title: "Example Title",
+      is_multiselect: true,
+      lecture_id: lecture.id,
+      is_active: false,
+      poll_options: poll_options_params
+  }}
   let(:invalid_attributes) { {
-    title: nil,
-    is_multiselect: nil
+      title: nil,
+      is_multiselect: nil
+  }}
+  let(:invalid_params) { {
+      title: nil,
+      is_multiselect: nil,
+      poll_options: poll_options_params
   }}
 
   # This should return the minimal set of values that should be in the session
@@ -45,7 +71,7 @@ RSpec.describe PollsController, type: :controller do
   describe "GET #index" do
     it "returns a success response" do
       Poll.create! valid_attributes
-      get :index, params: {}, session: valid_session
+      get :index, params: { lecture_id: lecture.id }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -53,23 +79,37 @@ RSpec.describe PollsController, type: :controller do
   describe "GET #show" do
     it "returns a success response" do
       poll = Poll.create! valid_attributes
-      get :show, params: { id: poll.to_param }, session: valid_session
+      get :show, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
 
   describe "GET #new" do
-    it "returns a success response" do
-      get :new, params: {}, session: valid_session
+    it "returns a success response for lecturers" do
+      login_lecturer
+      get :new, params: { lecture_id: lecture.id }, session: valid_session
       expect(response).to be_successful
+    end
+    it "redirects to lecture poll index for students" do
+      login_student
+      get :new, params: { lecture_id: lecture.id }, session: valid_session
+      expect(response).to redirect_to(lecture_polls_path(lecture))
     end
   end
 
   describe "GET #edit" do
-    it "returns a success response" do
+    it "returns a success response for lecturers" do
+      login_lecturer
       poll = Poll.create! valid_attributes
-      get :edit, params: { id: poll.to_param }, session: valid_session
+      get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
+    end
+
+    it "redirects to poll show view for students" do
+      login_student
+      poll = Poll.create! valid_attributes
+      get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      expect(response).to redirect_to(lecture_poll_path(lecture, poll))
     end
   end
 
@@ -77,19 +117,19 @@ RSpec.describe PollsController, type: :controller do
     context "with valid params" do
       it "creates a new Poll" do
         expect {
-          post :create, params: { poll: valid_attributes }, session: valid_session
+          post :create, params: { lecture_id: lecture.id, poll: valid_params }, session: valid_session
         }.to change(Poll, :count).by(1)
       end
 
-      it "redirects to the created poll" do
-        post :create, params: { poll: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(Poll.last)
+      it "redirects to the lecture's poll index" do
+        post :create, params: { lecture_id: lecture.id, poll: valid_params }, session: valid_session
+        expect(response).to redirect_to(lecture_polls_path(lecture))
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)" do
-        post :create, params: { poll: invalid_attributes }, session: valid_session
+        post :create, params: { lecture_id: lecture.id, poll: invalid_params }, session: valid_session
         expect(response).to be_successful
       end
     end
@@ -100,28 +140,30 @@ RSpec.describe PollsController, type: :controller do
       let(:new_attributes) { {
         # skip("Add a hash of attributes valid for your model")
         title: "New Title",
-        is_multiselect: false
+        is_multiselect: false,
+        is_active: false,
+        poll_options: poll_options_params
       }}
 
       it "updates the requested poll" do
         poll = Poll.create! valid_attributes
-        put :update, params: { id: poll.to_param, poll: new_attributes }, session: valid_session
+        put :update, params: { lecture_id: lecture.id, id: poll.to_param, poll: new_attributes }, session: valid_session
         poll.reload
         expect(poll.title).to eql(new_attributes[:title])
         expect(poll.is_multiselect).to eql(new_attributes[:is_multiselect])
       end
 
-      it "redirects to the poll" do
+      it "redirects to the lecture's poll index" do
         poll = Poll.create! valid_attributes
-        put :update, params: { id: poll.to_param, poll: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(poll)
+        put :update, params: { lecture_id: lecture.id, id: poll.to_param, poll: valid_params }, session: valid_session
+        expect(response).to redirect_to(lecture_polls_path(lecture))
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
         poll = Poll.create! valid_attributes
-        put :update, params: { id: poll.to_param, poll: invalid_attributes }, session: valid_session
+        put :update, params: { lecture_id: lecture.id, id: poll.to_param, poll: invalid_params }, session: valid_session
         expect(response).to be_successful
       end
     end
@@ -131,14 +173,23 @@ RSpec.describe PollsController, type: :controller do
     it "destroys the requested poll" do
       poll = Poll.create! valid_attributes
       expect {
-        delete :destroy, params: { id: poll.to_param }, session: valid_session
+        delete :destroy, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       }.to change(Poll, :count).by(-1)
     end
 
     it "redirects to the polls list" do
       poll = Poll.create! valid_attributes
-      delete :destroy, params: { id: poll.to_param }, session: valid_session
-      expect(response).to redirect_to(polls_url)
+      delete :destroy, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      expect(response).to redirect_to(lecture_polls_path(lecture))
     end
+  end
+
+  def login_lecturer
+    user = FactoryBot.create(:user, :lecturer)
+    sign_in(user, scope: :user)
+  end
+  def login_student
+    user = FactoryBot.create(:user, :student)
+    sign_in(user, scope: :user)
   end
 end
