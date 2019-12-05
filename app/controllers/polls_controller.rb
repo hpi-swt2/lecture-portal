@@ -24,7 +24,7 @@ class PollsController < ApplicationController
   # GET /polls/1/edit
   def edit
     if current_user.is_student
-      redirect_to lecture_poll_path(@poll)
+      redirect_to lecture_poll_path(@lecture, @poll)
     end
   end
 

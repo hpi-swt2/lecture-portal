@@ -22,6 +22,23 @@ RSpec.describe LecturesController, type: :controller do
     end
   end
 
+  describe "Should prompt the user to log in first and redirect before accessing" do
+    @lecture = FactoryBot.create(:lecture)
+    urls = {
+        :index => {},
+        :show => {id: @lecture.to_param},
+        :new => {},
+        :edit => {id: @lecture.to_param}
+    }
+    urls.each do |path, params|
+      it " the #{path.to_s}  page" do
+        get path, params: params,  session: valid_session
+        expect(response).to redirect_to(new_user_session_path)
+      end
+
+    end
+  end
+
   describe "GET #index" do
     it "returns a success response", :logged_lecturer do
       Lecture.create! valid_attributes_with_lecturer
