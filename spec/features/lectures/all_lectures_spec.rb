@@ -61,7 +61,8 @@ describe "The all lectures page", type: :feature do
 
   it "should redirect to current lectures page when accessed by a student" do
     @student = FactoryBot.create(:user, :student)
+    sign_in @student
     visit(lectures_path)
-    expect(page).to_not have_current_path(current_lectures_path)
+    expect(page).to have_current_path(current_lectures_path)
   end
 end

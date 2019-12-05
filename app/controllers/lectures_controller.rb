@@ -11,6 +11,9 @@ class LecturesController < ApplicationController
 
   # GET /lectures/1
   def show
+    if @lecture.lecturer != current_user
+      redirect_to lectures_url, notice: "You can only access your own lectures"
+    end
   end
 
   # GET /lectures/new
