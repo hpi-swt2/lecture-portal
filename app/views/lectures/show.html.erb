@@ -39,7 +39,6 @@
       </p>
     <% end %>
 
-
     <%= form_with(model: [ @lecture, @lecture.feedbacks.build ], local: true) do |form| %>
       <p>
         <%= form.label :content %><br>
@@ -49,6 +48,7 @@
         <%= form.submit %>
       </p>
     <% end %>
+
   </div>
   <% if !@current_user.is_student %>
     <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab"></div>
