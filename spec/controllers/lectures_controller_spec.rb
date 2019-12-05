@@ -5,8 +5,7 @@ RSpec.describe LecturesController, type: :controller do
     { name: "SWT", enrollment_key: "swt", status: "created", questions_enabled: true, polls_enabled: true }
   }
   let(:valid_attributes_with_lecturer) {
-    { name: "SWT", enrollment_key: "swt", status: "created", questions_enabled: true,
-      polls_enabled: true, lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de") }
+    valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
   }
   let(:invalid_attributes) {
     { name: "", enrollment_key: "swt", status: "created" }
@@ -44,8 +43,8 @@ RSpec.describe LecturesController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response for lecturer" do
-      login_lecturer
       lecture = Lecture.create! valid_attributes_with_lecturer
+      login_lecturer(lecture.lecturer)
       get :edit, params: { id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
     end
@@ -84,36 +83,36 @@ RSpec.describe LecturesController, type: :controller do
         { name: "SWT2", enrollment_key: "epic", status: "running" }
       }
       before(:each) do
-        # login user
-        user = FactoryBot.create(:user, :lecturer)
-        sign_in(user, scope: :user)
+        @lecture = Lecture.create! valid_attributes_with_lecturer
+        # login lecturer
+        login_lecturer(@lecture.lecturer)
       end
 
       it "updates the requested lecture" do
-        lecture = Lecture.create! valid_attributes_with_lecturer
-        put :update, params: { id: lecture.to_param, lecture: new_attributes }, session: valid_session
-        lecture.reload
-        expect(lecture.name).to eq("SWT2")
-        expect(lecture.enrollment_key).to eq("epic")
-        expect(lecture.running?).to eq(true)
-        expect(lecture.status).to eq("running")
+        put :update, params: { id: @lecture.to_param, lecture: new_attributes }, session: valid_session
+        @lecture.reload
+        expect(@lecture.name).to eq("SWT2")
+        expect(@lecture.enrollment_key).to eq("epic")
+        expect(@lecture.running?).to eq(true)
+        expect(@lecture.status).to eq("running")
       end
 
       it "redirects to the lecture" do
-        lecture = Lecture.create! valid_attributes_with_lecturer
-        put :update, params: { id: lecture.to_param, lecture: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(lecture)
+        put :update, params: { id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
+        expect(response).to redirect_to(@lecture)
       end
     end
 
     context "with invalid params" do
-      before(:each) do
-        # login user
-        user = FactoryBot.create(:user, :lecturer)
-        sign_in(user, scope: :user)
-      end
-      it "returns a success response (i.e. to display the 'edit' template)" do
+      it "redirects for other lecturers" do
         lecture = Lecture.create! valid_attributes_with_lecturer
+        login_lecturer()
+        put :update, params: { id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
+        expect(response).to redirect_to(lectures_url)
+      end
+      it "returns a success response for lecturer (i.e. to display the 'edit' template)" do
+        lecture = Lecture.create! valid_attributes_with_lecturer
+        login_lecturer(lecture.lecturer)
         put :update, params: { id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
         expect(response).to be_successful
       end
@@ -140,12 +139,10 @@ RSpec.describe LecturesController, type: :controller do
     end
   end
 
-  def login_student
-    user = FactoryBot.create(:user, :student)
+  def login_student(user = FactoryBot.create(:user, :student))
     sign_in(user, scope: :user)
   end
-  def login_lecturer
-    user = FactoryBot.create(:user, :lecturer)
+  def login_lecturer(user = FactoryBot.create(:user, :lecturer))
     sign_in(user, scope: :user)
   end
 end

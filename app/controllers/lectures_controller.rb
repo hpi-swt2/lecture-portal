@@ -25,6 +25,9 @@ class LecturesController < ApplicationController
     if current_user.is_student?
       redirect_to lectures_url, notice: "You are a student! You can not edit a lecture :("
     end
+    if @lecture.lecturer != current_user
+      redirect_to lectures_url, notice: "You can only edit your own lectures"
+    end
   end
 
   # POST /lectures
@@ -46,6 +49,8 @@ class LecturesController < ApplicationController
   def update
     if current_user.is_student?
       redirect_to lectures_url, notice: "You are a student! You can not update a lecture :("
+    elsif @lecture.lecturer != current_user
+        redirect_to lectures_url, notice: "You can only update your own lectures"
     elsif @lecture.update(lecture_params)
       redirect_to @lecture, notice: "Lecture was successfully updated."
     else
