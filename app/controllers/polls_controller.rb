@@ -1,7 +1,7 @@
 class PollsController < ApplicationController
   before_action :set_poll, only: [:show, :edit, :update, :destroy]
   before_action :get_lecture
-  before_action :set_current_user
+  before_action :authenticate_user!
 
   # GET /polls
   def index
@@ -85,9 +85,4 @@ class PollsController < ApplicationController
     def get_lecture
       @lecture = Lecture.find(params[:lecture_id])
     end
-
-    def set_current_user
-      return unless session[:user_id]
-      @current_user ||= User.find(session[:user_id])
-      end
 end

@@ -68,8 +68,18 @@ RSpec.describe PollsController, type: :controller do
   # PollsController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+  before(:each) do |test|
+    unless test.metadata[:logged_student]
+      login_lecturer
+    end
+
+    if test.metadata[:logged_student]
+      login_student
+    end
+  end
+
   describe "GET #index" do
-    it "returns a success response" do
+    it "returns a success response", :logged_student do
       Poll.create! valid_attributes
       get :index, params: { lecture_id: lecture.id }, session: valid_session
       expect(response).to be_successful
@@ -86,12 +96,10 @@ RSpec.describe PollsController, type: :controller do
 
   describe "GET #new" do
     it "returns a success response for lecturers" do
-      login_lecturer
       get :new, params: { lecture_id: lecture.id }, session: valid_session
       expect(response).to be_successful
     end
-    it "redirects to lecture poll index for students" do
-      login_student
+    it "redirects to lecture poll index for students", :logged_student do
       get :new, params: { lecture_id: lecture.id }, session: valid_session
       expect(response).to redirect_to(lecture_polls_path(lecture))
     end
@@ -99,14 +107,12 @@ RSpec.describe PollsController, type: :controller do
 
   describe "GET #edit" do
     it "returns a success response for lecturers" do
-      login_lecturer
       poll = Poll.create! valid_attributes
       get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
 
-    it "redirects to poll show view for students" do
-      login_student
+    it "redirects to poll show view for students", :logged_student do
       poll = Poll.create! valid_attributes
       get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to redirect_to(lecture_poll_path(lecture, poll))

@@ -12,8 +12,18 @@ RSpec.describe LecturesController, type: :controller do
   }
   let(:valid_session) { {} }
 
+  before(:each) do |test|
+    if test.metadata[:logged_student]
+      login_student
+    end
+
+    if test.metadata[:logged_lecturer]
+      login_lecturer
+    end
+  end
+
   describe "GET #index" do
-    it "returns a success response" do
+    it "returns a success response", :logged_lecturer do
       Lecture.create! valid_attributes_with_lecturer
       get :index, params: {}, session: valid_session
       expect(response).to be_successful
@@ -21,7 +31,7 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #show" do
-    it "returns a success response" do
+    it "returns a success response", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer
       get :show, params: { id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
@@ -29,13 +39,11 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #new" do
-    it "does not redirect for student" do
-      login_student
+    it "does not redirect for student", :logged_student do
       get :new, params: {}, session: valid_session
       expect(response).to redirect_to(lectures_url)
     end
-    it "returns a success response for lecturer" do
-      login_lecturer
+    it "returns a success response for lecturer", :logged_lecturer do
       get :new, params: {}, session: valid_session
       expect(response).to be_successful
     end
@@ -51,26 +59,21 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "POST #create" do
-    before(:each) do
-      # login user
-      user = FactoryBot.create(:user, :lecturer)
-      sign_in(user, scope: :user)
-    end
     context "with valid params" do
-      it "creates a new Lecture" do
+      it "creates a new Lecture", :logged_lecturer do
         expect {
           post :create, params: { lecture: valid_attributes }, session: valid_session
         }.to change(Lecture, :count).by(1)
       end
 
-      it "redirects to the created lecture" do
+      it "redirects to the created lecture", :logged_lecturer do
         post :create, params: { lecture: valid_attributes }, session: valid_session
         expect(response).to redirect_to(Lecture.last)
       end
     end
 
     context "with invalid params" do
-      it "returns a success response (i.e. to display the 'new' template)" do
+      it "returns a success response (i.e. to display the 'new' template)", :logged_lecturer do
         post :create, params: { lecture: invalid_attributes }, session: valid_session
         expect(response).to be_successful
       end
@@ -104,13 +107,12 @@ RSpec.describe LecturesController, type: :controller do
     end
 
     context "with invalid params" do
-      it "redirects for other lecturers" do
+      it "redirects for other lecturers", :logged_lecturer do
         lecture = Lecture.create! valid_attributes_with_lecturer
-        login_lecturer()
         put :update, params: { id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
         expect(response).to redirect_to(lectures_url)
       end
-      it "returns a success response for lecturer (i.e. to display the 'edit' template)" do
+      it "returns a success response for lecturer (i.e. to display the 'edit' template)", :logged_lecturer do
         lecture = Lecture.create! valid_attributes_with_lecturer
         login_lecturer(lecture.lecturer)
         put :update, params: { id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
@@ -121,9 +123,7 @@ RSpec.describe LecturesController, type: :controller do
 
   describe "DELETE #destroy" do
     before(:each) do
-      # login user
-      user = FactoryBot.create(:user, :lecturer)
-      sign_in(user, scope: :user)
+      login_lecturer
     end
     it "destroys the requested lecture" do
       lecture = Lecture.create! valid_attributes_with_lecturer
