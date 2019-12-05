@@ -50,7 +50,7 @@ class LecturesController < ApplicationController
     if current_user.is_student?
       redirect_to lectures_url, notice: "You are a student! You can not update a lecture :("
     elsif @lecture.lecturer != current_user
-        redirect_to lectures_url, notice: "You can only update your own lectures"
+      redirect_to lectures_url, notice: "You can only update your own lectures"
     elsif @lecture.update(lecture_params)
       redirect_to @lecture, notice: "Lecture was successfully updated."
     else
