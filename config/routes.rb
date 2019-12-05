@@ -8,8 +8,9 @@ Rails.application.routes.draw do
 
   resources :questions, only: [:index]
   namespace :api do
-    resources :questions, only: [:index, :create]
-    post "/question/:id/resolve", to: "questions#resolve", as: "question"
+    resources :questions, only: [:index, :create] do
+      post "resolve", on: :member
+    end
   end
 
   devise_for :users, controllers: {
