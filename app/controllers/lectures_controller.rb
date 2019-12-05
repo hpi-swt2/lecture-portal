@@ -14,6 +14,7 @@ class LecturesController < ApplicationController
   def new
     if !current_user.is_student?
       @lecture = Lecture.new
+      @lecture.lecturer = current_user
     else
       redirect_to lectures_url, notice: "You are a student! You can not create a lecture :("
     end
@@ -21,22 +22,36 @@ class LecturesController < ApplicationController
 
   # GET /lectures/1/edit
   def edit
+    if current_user.is_student?
+      redirect_to lectures_url, notice: "You are a student! You can not edit a lecture :("
+    end
+    if @lecture.lecturer != current_user
+      redirect_to lectures_url, notice: "You can only edit your own lectures"
+    end
   end
 
   # POST /lectures
   def create
-    @lecture = Lecture.new(lecture_params)
-
-    if @lecture.save
-      redirect_to @lecture, notice: "Lecture was successfully created."
+    if current_user.is_student?
+      redirect_to lectures_url, notice: "You are a student! You can not create a lecture :("
     else
-      render :new
+      @lecture = Lecture.new(lecture_params)
+      @lecture.lecturer = current_user
+      if @lecture.save
+        redirect_to @lecture, notice: "Lecture was successfully created."
+      else
+        render :new
+      end
     end
   end
 
   # PATCH/PUT /lectures/1
   def update
-    if @lecture.update(lecture_params)
+    if current_user.is_student?
+      redirect_to lectures_url, notice: "You are a student! You can not update a lecture :("
+    elsif @lecture.lecturer != current_user
+      redirect_to lectures_url, notice: "You can only update your own lectures"
+    elsif @lecture.update(lecture_params)
       redirect_to @lecture, notice: "Lecture was successfully updated."
     else
       render :edit
@@ -45,8 +60,12 @@ class LecturesController < ApplicationController
 
   # DELETE /lectures/1
   def destroy
-    @lecture.destroy
-    redirect_to lectures_url, notice: "Lecture was successfully destroyed."
+    if current_user.is_student?
+      redirect_to lectures_url, notice: "You are a student! You can not delete a lecture :("
+    else
+      @lecture.destroy
+      redirect_to lectures_url, notice: "Lecture was successfully destroyed."
+    end
   end
   # GET /lectures/current
   def current
@@ -65,6 +84,6 @@ class LecturesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def lecture_params
-      params.require(:lecture).permit(:name, :enrollment_key, :is_running)
+      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled)
     end
 end

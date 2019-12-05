@@ -5,7 +5,8 @@ RSpec.describe "lectures/edit", type: :view do
     @lecture = assign(:lecture, Lecture.create!(
                                   name: "MyString",
                                   enrollment_key: "MyString",
-                                  is_running: false
+                                  status: "created",
+                                  lecturer: FactoryBot.create(:user, :lecturer, email: "123test@gmail.com")
     ))
   end
 
@@ -17,7 +18,17 @@ RSpec.describe "lectures/edit", type: :view do
 
       assert_select "input[name=?]", "lecture[enrollment_key]"
 
-      assert_select "input[name=?]", "lecture[is_running]"
+      assert_select "input[name=?]", "lecture[questions_enabled]"
+
+      assert_select "input[name=?]", "lecture[polls_enabled]"
+
+      assert_select "input[name=?]", "lecture[description]"
     end
+  end
+
+  it "renders a delete button" do
+    render
+
+    assert_select "[data-method=delete]"
   end
 end
