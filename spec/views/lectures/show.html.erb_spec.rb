@@ -5,7 +5,8 @@ RSpec.describe "lectures/show", type: :view do
     @lecture = assign(:lecture, Lecture.create!(
                                   name: "Name",
                                   enrollment_key: "Enrollment Key",
-                                  is_running: false
+                                  status: "created",
+                                  lecturer: FactoryBot.create(:user, :lecturer, email: "bp@hpi.de")
     ))
   end
 
@@ -13,6 +14,6 @@ RSpec.describe "lectures/show", type: :view do
     render
     expect(rendered).to match(/Name/)
     expect(rendered).to match(/Enrollment Key/)
-    expect(rendered).to match(/false/)
+    expect(rendered).to match(/created/)
   end
 end
