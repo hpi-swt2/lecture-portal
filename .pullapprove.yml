@@ -29,11 +29,16 @@ groups:
     conditions:
     - "'Team RESTless' in labels"
     reviewers:
-      teams:
-      - team-ab-19
+      users:
+        - leonschmidt99
+        - adrianjost
+        - WorldofJARcraft
+        - essal0815
+        - caustt
+        - MartinBuessemeyer
     reviews:
       required: 1
-      request: 1
+      request: 2
   TEAM-PB:
     conditions:
     - "'Team PB' in labels"
