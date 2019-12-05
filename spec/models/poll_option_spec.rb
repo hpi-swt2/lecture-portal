@@ -6,8 +6,8 @@ RSpec.describe PollOption, type: :model do
     expect(poll_option).to be_valid
   end
 
-  it "is not valid without a description" do
+  it "is valid without a description" do
     poll_option = FactoryBot.build :poll_option, description: ""
-    expect(poll_option).to_not be_valid
+    expect(poll_option).to be_valid
   end
 end
