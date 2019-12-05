@@ -1,5 +1,6 @@
 class LecturesController < ApplicationController
-  before_action :set_lecture, only: [:show, :edit, :update, :destroy]
+  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture]
+  before_action :validtate_lecture_owner, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :authenticate_user!
   before_action :require_lecturer, except: [:current]
 
@@ -11,9 +12,6 @@ class LecturesController < ApplicationController
 
   # GET /lectures/1
   def show
-    if @lecture.lecturer != current_user
-      redirect_to lectures_url, notice: "You can only access your own lectures"
-    end
   end
 
   # GET /lectures/new
@@ -24,9 +22,6 @@ class LecturesController < ApplicationController
 
   # GET /lectures/1/edit
   def edit
-    if @lecture.lecturer != current_user
-      redirect_to lectures_url, notice: "You can only edit your own lectures"
-    end
   end
 
   # POST /lectures
@@ -42,9 +37,7 @@ class LecturesController < ApplicationController
 
   # PATCH/PUT /lectures/1
   def update
-    if @lecture.lecturer != current_user
-      redirect_to lectures_url, notice: "You can only update your own lectures"
-    elsif @lecture.update(lecture_params)
+    if @lecture.update(lecture_params)
       redirect_to @lecture, notice: "Lecture was successfully updated."
     else
       render :edit
@@ -67,19 +60,15 @@ class LecturesController < ApplicationController
   end
 
   def start_lecture
-    id = params["lecture"]
-    lecture = Lecture.find(id)
-    lecture.set_active
-    lecture.save
-    redirect_to lecture_path(lecture)
+    @lecture.set_active
+    @lecture.save
+    redirect_to lecture_path(@lecture)
     end
 
   def end_lecture
-    id = params["lecture"]
-    lecture = Lecture.find(id)
-    lecture.set_inactive
-    lecture.save
-    redirect_to lecture_path(lecture)
+    @lecture.set_inactive
+    @lecture.save
+    redirect_to lecture_path(@lecture)
   end
 
   private
@@ -88,13 +77,17 @@ class LecturesController < ApplicationController
       @lecture = Lecture.find(params[:id])
     end
 
-  private
+    def validtate_lecture_owner
+      if @lecture.lecturer != current_user
+        redirect_to lectures_url, notice: "You can only access your own lectures"
+      end
+    end
+
     # Only allow a trusted parameter "white list" through.
     def lecture_params
       params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled)
     end
 
-  private
     def require_lecturer
       if current_user.is_student?
         redirect_to current_lectures_url, notice: "You can't access this site as a student."

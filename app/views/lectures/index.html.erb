@@ -1,4 +1,3 @@
-<p id="notice"><%= notice %></p>
 <div class="d-flex justify-content-center my-5">
   <%= link_to 'Create Lecture', new_lecture_path, :class => "btn btn-primary btn-lg"%>
 </div>
@@ -23,10 +22,9 @@
         <td><%= lecture.status%></td>
         <td class="text-right">
         <% if lecture.status == "running" %>
-          <!-- TODO Stop button -->
           <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
         <% else %>
-          <%= button_to "Start", {action: "start_lecture", params: {lecture: lecture.id}}, {class:"btn btn-primary"} %>
+          <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
         <%end %>
         </td>
       </tr>

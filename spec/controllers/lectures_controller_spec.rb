@@ -31,7 +31,7 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #new" do
-    it "does not redirect for student" do
+    it "will redirect student to the current lecture path" do
       login_student
       get :new, params: {}, session: valid_session
       expect(response).to redirect_to(current_lectures_path)
@@ -124,19 +124,18 @@ RSpec.describe LecturesController, type: :controller do
   describe "DELETE #destroy" do
     before(:each) do
       # login user
-      user = FactoryBot.create(:user, :lecturer)
-      sign_in(user, scope: :user)
+      @lecturer = FactoryBot.create(:user, :lecturer)
+      @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+      sign_in(@lecturer, scope: :user)
     end
     it "destroys the requested lecture" do
-      lecture = Lecture.create! valid_attributes_with_lecturer
       expect {
-        delete :destroy, params: { id: lecture.to_param }, session: valid_session
+        delete :destroy, params: { id: @lecture.to_param }, session: valid_session
       }.to change(Lecture, :count).by(-1)
     end
 
     it "redirects to the lectures list" do
-      lecture = Lecture.create! valid_attributes_with_lecturer
-      delete :destroy, params: { id: lecture.to_param }, session: valid_session
+      delete :destroy, params: { id: @lecture.to_param }, session: valid_session
       expect(response).to redirect_to(lectures_url)
     end
   end
