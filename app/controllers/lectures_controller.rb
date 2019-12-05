@@ -8,6 +8,7 @@ class LecturesController < ApplicationController
 
   # GET /lectures/1
   def show
+    @current_user = current_user
   end
 
   # GET /lectures/new
