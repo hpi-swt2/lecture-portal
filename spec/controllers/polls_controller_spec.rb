@@ -82,17 +82,16 @@ RSpec.describe PollsController, type: :controller do
     @lecture = FactoryBot.create(:lecture)
     @poll = FactoryBot.create(:poll)
     urls = {
-        :index => {lecture_id: @lecture.to_param},
-        :show => {lecture_id: @lecture.to_param, id: @poll.to_param},
-        :new => {lecture_id: @lecture.to_param},
-        :edit => {lecture_id: @lecture.to_param, id: @poll.to_param}
+        index: { lecture_id: @lecture.to_param },
+        show: { lecture_id: @lecture.to_param, id: @poll.to_param },
+        new: { lecture_id: @lecture.to_param },
+        edit: { lecture_id: @lecture.to_param, id: @poll.to_param }
     }
     urls.each do |path, params|
-      it " the #{path.to_s}  page" do
+      it " the #{path}  page" do
         get path, params: params,  session: valid_session
         expect(response).to redirect_to(new_user_session_path)
       end
-
     end
   end
 
