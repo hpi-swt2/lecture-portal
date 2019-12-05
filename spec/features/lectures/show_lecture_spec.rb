@@ -1,8 +1,13 @@
 require "rails_helper"
 
 describe "The show lecture page", type: :feature do
+  # Include Devise helpers that allow usage of `sign_in`
+  include Devise::Test::IntegrationHelpers
+
   before(:each) do
-    @lecture = FactoryBot.create(:lecture)
+    @lecturer = FactoryBot.create(:user, :lecturer)
+    @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+    sign_in @lecturer
   end
 
   it "should have no end button if the lecture is not running" do

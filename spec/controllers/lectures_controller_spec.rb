@@ -14,6 +14,7 @@ RSpec.describe LecturesController, type: :controller do
 
   describe "GET #index" do
     it "returns a success response" do
+      login_lecturer
       Lecture.create! valid_attributes_with_lecturer
       get :index, params: {}, session: valid_session
       expect(response).to be_successful
@@ -22,6 +23,7 @@ RSpec.describe LecturesController, type: :controller do
 
   describe "GET #show" do
     it "returns a success response" do
+      login_lecturer
       lecture = Lecture.create! valid_attributes_with_lecturer
       get :show, params: { id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
@@ -32,7 +34,7 @@ RSpec.describe LecturesController, type: :controller do
     it "does not redirect for student" do
       login_student
       get :new, params: {}, session: valid_session
-      expect(response).to redirect_to(lectures_url)
+      expect(response).to redirect_to(current_lectures_path)
     end
     it "returns a success response for lecturer" do
       login_lecturer
