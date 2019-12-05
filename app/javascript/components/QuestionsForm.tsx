@@ -2,15 +2,15 @@ import { HEADERS } from "./constants";
 import React from "react";
 
 class QuestionsForm extends React.Component {
+    state = {
+        content: ""
+    };
     formId = "questionForm";
-    inputId = "questionInput";
+    formRef; textareaRef;
 
     constructor(props) {
         super(props);
 
-        this.state = {
-            content: ""
-        };
         this.formRef = React.createRef();
         this.textareaRef = React.createRef();
 
@@ -52,11 +52,10 @@ class QuestionsForm extends React.Component {
     render() {
         return (
             <form id={this.formId} ref={this.formRef} onSubmit={this.handleSubmit}>
-                <label for={this.inputId}>Ask a question:</label>
+                <label>Ask a question:</label>
                 <textarea
-                    rows="3"
+                    rows={3}
                     ref={this.textareaRef}
-                    id={this.inputId}
                     value={this.state.content}
                     onChange={this.handleChange}
                     onKeyDown={this.handleKeyDown}

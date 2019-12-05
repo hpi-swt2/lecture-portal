@@ -1,18 +1,14 @@
+import App from "../../assets/javascripts/cable"
 import React from "react";
-import { HEADERS } from "./constants";
 
 interface IQuestionsListProps {
     is_student: boolean;
 }
 
 class QuestionsList extends React.Component<IQuestionsListProps> {
-    constructor(props) {
-        super(props);
-
-        this.state = {
-            questions: []
-        };
-    }
+    state = {
+        questions: []
+    };
 
     componentDidMount = () => {
         fetch(`/api/questions`)
@@ -28,7 +24,7 @@ class QuestionsList extends React.Component<IQuestionsListProps> {
 
                     // sort questions by creation date to prevent wrong sorting
                     questions.sort((a, b): number => {
-                        return new Date(b.created_at) - new Date(a.created_at);
+                        return new Date(b.created_at).getMilliseconds() - new Date(a.created_at).getMilliseconds() ;
                     });
 
                     this.setState({ questions: questions });
