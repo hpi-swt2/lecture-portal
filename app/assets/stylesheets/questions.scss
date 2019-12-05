@@ -1,0 +1,32 @@
+// Place all the styles related to the questions controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+form#questionForm {
+  > textarea {
+    width: 100%;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    resize: none !important;
+  }
+  > button {
+    float: right;
+  }
+}
+ul.questionsList {
+  clear: both;
+  list-style-type: none !important;
+  margin: 70px 0;
+  padding: 0;
+
+  &.is_lecturer {
+    font-size: 36px;
+  }
+  > li {
+    padding: 20px;
+    border: 1px solid #aaa;
+    border-radius: 3px;
+    margin-bottom: 10px;
+    word-break: break-all;
+  }
+}
