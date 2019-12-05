@@ -1,5 +1,6 @@
 # lecture-portal
 
+[![Build Status](https://travis-ci.com/hpi-swt2/lecture-portal.svg?branch=master)](https://travis-ci.com/hpi-swt2/lecture-portal)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 
 Web application for organizing and managing lecture participation, written in [Ruby on Rails](https://rubyonrails.org/).
