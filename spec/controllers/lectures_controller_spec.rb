@@ -39,7 +39,8 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #index" do
-    it "returns a success response", :logged_lecturer do
+    it "returns a success response" do
+      login_lecturer
       Lecture.create! valid_attributes_with_lecturer
       get :index, params: {}, session: valid_session
       expect(response).to be_successful
@@ -49,15 +50,17 @@ RSpec.describe LecturesController, type: :controller do
   describe "GET #show" do
     it "returns a success response", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer
+      login_lecturer(lecture.lecturer)
       get :show, params: { id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
 
   describe "GET #new" do
-    it "does not redirect for student", :logged_student do
+    it "will redirect student to the current lecture path" do
+      login_student
       get :new, params: {}, session: valid_session
-      expect(response).to redirect_to(lectures_url)
+      expect(response).to redirect_to(current_lectures_path)
     end
     it "returns a success response for lecturer", :logged_lecturer do
       get :new, params: {}, session: valid_session
@@ -139,18 +142,19 @@ RSpec.describe LecturesController, type: :controller do
 
   describe "DELETE #destroy" do
     before(:each) do
-      login_lecturer
+      # login user
+      @lecturer = FactoryBot.create(:user, :lecturer)
+      @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+      sign_in(@lecturer, scope: :user)
     end
     it "destroys the requested lecture" do
-      lecture = Lecture.create! valid_attributes_with_lecturer
       expect {
-        delete :destroy, params: { id: lecture.to_param }, session: valid_session
+        delete :destroy, params: { id: @lecture.to_param }, session: valid_session
       }.to change(Lecture, :count).by(-1)
     end
 
     it "redirects to the lectures list" do
-      lecture = Lecture.create! valid_attributes_with_lecturer
-      delete :destroy, params: { id: lecture.to_param }, session: valid_session
+      delete :destroy, params: { id: @lecture.to_param }, session: valid_session
       expect(response).to redirect_to(lectures_url)
     end
   end
