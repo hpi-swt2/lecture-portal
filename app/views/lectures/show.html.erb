@@ -45,7 +45,7 @@
         </p>
       <% end %>
 
-  <% else %>
+    <% else %>
 
       <% @lecture.feedbacks.each do |feedback| %>
         <p>
@@ -62,6 +62,13 @@
   <% end %>
 </div>
 
-<%= link_to 'Edit', edit_lecture_path(@lecture) %> |
-<%= link_to 'New Poll', new_lecture_poll_path(@lecture) %> |
-<%= link_to 'Back', lectures_path %>
+<table>
+  <tr>
+    <td colspan="2"><%= link_to 'Edit', edit_lecture_path(@lecture), {class:"btn btn-link"} %> | </td>
+    <td colspan="2"><%= link_to 'Back', lectures_path, {class:"btn btn-link"} %> | </td>
+    <% if @lecture.status == "running" %>
+      <td colspan="2"><%= link_to 'New Poll', new_lecture_poll_path(@lecture), {class:"btn btn-link"}  %> | </td>
+      <td colspan="2"><%= button_to "End", {action: "end_lecture", params: {id: @lecture.id}}, {class:"btn btn-link"} %> </td>
+    <%end %>
+  </tr>
+</table>
