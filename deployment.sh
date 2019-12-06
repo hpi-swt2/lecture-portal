@@ -2,7 +2,7 @@ echo "Currently running a $TRAVIS_EVENT_TYPE"
 if [ "$TRAVIS_BRANCH" = "master" ]
 then 
 	export APP="hpi-lectureportal"; 
-elif [ "$TRAVIS_BRANCH" = "dev" ]
+elif [ "$TRAVIS_BRANCH" = "fix/cd" ]
 then 
 	export APP="hpi-lectureportal-dev"; 
 else
