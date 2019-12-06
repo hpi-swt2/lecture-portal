@@ -10,7 +10,7 @@ type Props = {
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
 
     const onClick = _ => {
-        fetch(`/api/question/` + question.id + '/resolve', {
+        fetch(`/api/questions/` + question.id + '/resolve', {
             method: "POST",
             headers: HEADERS
         });
