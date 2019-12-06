@@ -1,69 +1,29 @@
-import ActionCable from "actioncable";
 import React from "react";
-import { inject, observer } from "mobx-react";
-import { IStoreProps } from "../models";
+import { observer } from "mobx-react";
+import Question from "./Question";
+import {RootStoreModel} from "../stores/RootStore";
+import useInject from "../hooks/useInject"
 
-const CableApp = {
-  cable: ActionCable.createConsumer(`/cable`)
-};
+const mapStore = ({ is_student, questionsList }: RootStoreModel) => ({
+  is_student,
+  questionsList
+});
 
-class QuestionsList extends React.Component<IStoreProps> {
-  componentDidMount = () => {
-    fetch(`/api/questions`)
-      .then(res => res.json())
-      .then(questions => this.props.store.setQuestionsList(questions));
 
-    CableApp.cable.subscriptions.create(
-      { channel: "QuestionsChannel" },
-      {
-        received: data => {
-          const { question } = data;
-          this.props.store.addQuestion(question);
-        }
-      }
-    );
+const QuestionsList: React.FunctionComponent<{}> = observer(() => {
+  const { is_student, questionsList } = useInject(mapStore);
 
-    // CableApp.cable.subscriptions.create(
-    //   { channel: "QuestionResolvingChannel" },
-    //   {
-    //     received: data => {
-    //       const updatedQuestions = this.state.questions;
-    //       updatedQuestions.forEach(question => {
-    //         if (question.id == data) {
-    //           const index = updatedQuestions.indexOf(question, 0);
-    //           if (index > -1) {
-    //             updatedQuestions.splice(index, 1);
-    //           }
-    //         }
-    //       });
-    //       this.setState({ questions: updatedQuestions });
-    //       console.log(data);
-    //     }
-    //   }
-    // );
-  };
+  const className = ["questionsList"];
+  if (!is_student) className.push("is_lecturer");
 
-  render = () => {
+  return (
+    <ul className={className.join(" ").trim()}>
+      {questionsList.list.map(question => (
+          <Question question={question} key={question.id} />
+      ))}
 
-    console.log(this.props.store.getQuestionById("8"));
-    const divClassName = ["questionsList"];
-    if (!this.props.store.is_student) divClassName.push("is_lecturer");
-    return (
-      <ul className={divClassName.join(" ").trim()}>
-        {mapQuestions(this.props.store)}
-      </ul>
-    );
-  };
-}
+    </ul>
+  );
+});
 
-export default inject("store")(
-  observer(QuestionsList as any)
-) as React.ComponentType<{}>;
-
-// helpers
-const mapQuestions = store => {
-  //console.log(store.questionsList.data.get("8"));
-  /*return questions.keys().forEach(key => {
-    return <li key={questions[key].id}>{questions[key].content}</li>;
-  });*/
-};
+export default QuestionsList;
