@@ -24,4 +24,24 @@ class Api::QuestionsController < ApplicationController
       end
     end
   end
+
+  # POST /api/question/:id/upvote
+  def upvote
+    question = Question.find(params[:id])
+    if question && current_user.is_student && question.author != current_user && !question.upvoters.include?(current_user)
+
+      question.upvoters << current_user
+      if question.save
+        # broadcast upvote via ActionCable
+        ActionCable.server.broadcast(
+          "question_upvoting_channel",
+          {
+            question: question.id,
+            upvoter: current_user.id
+          }
+        )
+        head :ok
+      end
+    end
+  end
 end

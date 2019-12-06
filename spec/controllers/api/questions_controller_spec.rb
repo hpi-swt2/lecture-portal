@@ -51,6 +51,15 @@ RSpec.describe Api::QuestionsController, type: :controller do
       end
     end
 
+    describe "POST #upvote" do
+      it "should set the user as an upvoter for the question" do
+        question = FactoryBot.create(:question)
+        post :upvote, params: { id: question.id }, session: valid_session
+        updatedQuestion = Question.find(question.id)
+        expect(updatedQuestion.upvoters).to include(@student)
+      end
+    end
+
     describe "POST #create" do
       context "with invalid params" do
         it "does not create a question" do
