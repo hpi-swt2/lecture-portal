@@ -4,7 +4,12 @@ Rails.application.routes.draw do
   post "/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
 
   resources :lectures do
-    resources :polls
+    resources :polls do
+      member do
+        patch :save_answers
+        put :save_answers
+      end
+    end
   end
 
   resources :questions, only: [:index]
