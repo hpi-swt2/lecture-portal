@@ -1,9 +1,8 @@
 class LecturesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :validtate_lecture_owner, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture]
-  before_action :authenticate_user!
   before_action :require_lecturer, except: [:current]
-
 
   # GET /lectures
   def index
