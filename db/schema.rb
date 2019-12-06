@@ -12,6 +12,14 @@
 
 ActiveRecord::Schema.define(version: 2019_12_04_101435) do
 
+  create_table "feedbacks", force: :cascade do |t|
+    t.text "content"
+    t.integer "lecture_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
+  end
+
   create_table "lectures", force: :cascade do |t|
     t.string "name"
     t.string "description", default: ""
