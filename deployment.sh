@@ -10,7 +10,7 @@ else
 	exit 0
 fi
 #cleaner than vanilla docker command
-HEROKU_API_KEY="$APIKEY" heroku container:login --app $APP
+HEROKU_API_KEY="$APIKEY" heroku container:login
 #herokucli always exits with 0, even if docker build failed, so build using vanilla docker command
 if sh -c ./build.sh;
 then
