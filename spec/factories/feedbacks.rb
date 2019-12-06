@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :feedback do
-    content { "MyText" }
-    lecture { nil }
+    content { "My Feedback" }
+    lecture { FactoryBot.create(:lecture) }
   end
 end

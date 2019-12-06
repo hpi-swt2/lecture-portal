@@ -10,8 +10,7 @@ RSpec.describe "lectures/show", type: :view do
                                   status: "created",
                                   lecturer: FactoryBot.create(:user, :lecturer, email: "bp@hpi.de")
     ))
-   # @student = FactoryBot.create(:user, :student)
-
+    # @student = FactoryBot.create(:user, :student)
   end
 
   it "renders navbar tabs without settings for student" do
@@ -32,5 +31,4 @@ RSpec.describe "lectures/show", type: :view do
     assert_select "a", "Polls"
     assert_select "a", "Settings"
   end
-
 end
