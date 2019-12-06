@@ -1,7 +1,7 @@
 language: ruby
 branches:
   only:
-    - dev
+    - fix/cd
     - master
 cache:
   bundler: true
