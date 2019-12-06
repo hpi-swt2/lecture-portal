@@ -51,14 +51,14 @@ RSpec.describe Api::QuestionsController, type: :controller do
       end
 
       it "should only show unresolved questions" do
-        question1 = FactoryBot.create(:question, author: @student)
-        question2 = FactoryBot.create(:question, author: @student)
+        FactoryBot.create(:question, author: @student)
+        question = FactoryBot.create(:question, author: @student)
         post :resolve, params: { id: 1 }, session: valid_session
-        expected = [ QuestionSerializer.new(question2).as_json ]
+        expected = [ QuestionSerializer.new(question).as_json ]
         get :index, params: {}, session: valid_session
         expect(response.body).to eq(expected.to_json)
       end
-    end    
+    end
 
     describe "POST #create" do
       context "with invalid params" do
@@ -98,7 +98,7 @@ RSpec.describe Api::QuestionsController, type: :controller do
         post :resolve, params: { id: question.id }, session: valid_session
         updatedQuestion = Question.find(question.id)
         expect(updatedQuestion.resolved).to eq(true)
-      end 
+      end
 
       it "should not set a question as resolved if the student is not the author" do
         student2 = FactoryBot.create(:user, :student, email: "student2@mail.de")
@@ -106,7 +106,7 @@ RSpec.describe Api::QuestionsController, type: :controller do
         post :resolve, params: { id: question.id }, session: valid_session
         updatedQuestion = Question.find(question.id)
         expect(updatedQuestion.resolved).to eq(false)
-      end 
+      end
     end
   end
 
@@ -130,7 +130,7 @@ RSpec.describe Api::QuestionsController, type: :controller do
         post :resolve, params: { id: @question.id }, session: valid_session
         updatedQuestion = Question.find(@question.id)
         expect(updatedQuestion.resolved).to eq(true)
-      end 
+      end
 
       it "should only show unresolved questions" do
         post :resolve, params: { id: @question.id }, session: valid_session
