@@ -37,6 +37,6 @@ RSpec.describe "lectures/show", type: :view do
     @current_user = FactoryBot.create(:user, :student)
     render
     expect(rendered).not_to have_content("Settings")
-    expect(rendered).not_to have_content("Settings")
+    expect(rendered).not_to have_css("#settings-tab")
   end
 end
