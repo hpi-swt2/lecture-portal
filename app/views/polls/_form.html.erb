@@ -12,8 +12,8 @@
   <% end %>
 
   <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
+    <%= form.label :title, 'Question:' %>
+    <%= form.text_field :title, class: 'text_field' %>
   </div>
 
   <div class="field">
@@ -31,7 +31,7 @@
   </div>
 
   <div class="actions">
-    <%= form.submit %>
+    <%= form.submit, 'Start poll'%>
   </div>
 
 <% end %>

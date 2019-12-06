@@ -1,3 +1,21 @@
 // Place all the styles related to the Polls controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+form {
+  label {
+    font-weight: bold;}
+
+  .text_field {
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; }
+
+  .field {
+    padding: 20px 0px;
+  }
+
+  input {
+    display: block;
+  }
+}
