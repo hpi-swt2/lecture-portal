@@ -1,7 +1,7 @@
 language: ruby
 branches:
   only:
-    - fix/cd
+    - dev
     - master
 cache:
   bundler: true
@@ -30,4 +30,4 @@ deploy:
   script: ./deployment.sh
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^(fix/cd|master)$
+    condition: $TRAVIS_BRANCH =~ ^(dev|master)$
