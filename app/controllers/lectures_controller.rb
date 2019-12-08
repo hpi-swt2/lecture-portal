@@ -1,8 +1,9 @@
 class LecturesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture]
-  before_action :validtate_lecture_owner, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture]
-  before_action :require_lecturer, except: [:current]
+  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture]
+  before_action :validate_lecture_owner, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture]
+  before_action :require_lecturer, except: [:current, :join_lecture]
+  before_action :require_student, only: [:join_lecture]
 
   # GET /lectures
   def index
@@ -50,12 +51,13 @@ class LecturesController < ApplicationController
       redirect_to lectures_url, notice: "Lecture was successfully destroyed."
     end
   end
+
   # GET /lectures/current
   def current
     if current_user.is_student?
       @lectures = Lecture.active
     else
-      redirect_to root_path
+      redirect_to root_path, notice: "Only Students can access this site."
     end
   end
 
@@ -63,12 +65,19 @@ class LecturesController < ApplicationController
     @lecture.set_active
     @lecture.save
     redirect_to lecture_path(@lecture)
-    end
+  end
+
+  def join_lecture
+    @lecture.join_lecture(current_user)
+    @lecture.save
+    current_user.save
+    redirect_to current_lectures_url, notice: "You successfully joined the lecture."
+  end
 
   def end_lecture
     @lecture.set_inactive
     @lecture.save
-    redirect_to lecture_path(@lecture)
+    redirect_to lecture_path(@lecture), notice: "You successfully ended the lecture."
   end
 
   private
@@ -77,9 +86,15 @@ class LecturesController < ApplicationController
       @lecture = Lecture.find(params[:id])
     end
 
-    def validtate_lecture_owner
+    def validate_lecture_owner
       if @lecture.lecturer != current_user
         redirect_to lectures_url, notice: "You can only access your own lectures"
+      end
+    end
+
+    def require_student
+      if !current_user.is_student
+        redirect_to lectures_url, notice: "Only students can join a lecture."
       end
     end
 
