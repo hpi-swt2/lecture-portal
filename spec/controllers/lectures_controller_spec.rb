@@ -77,8 +77,6 @@ RSpec.describe LecturesController, type: :controller do
       get :show, params: { id: lecture.to_param }, session: valid_session
       expect(response).to redirect_to(lectures_path)
     end
-
-
   end
 
   describe "GET #new" do
