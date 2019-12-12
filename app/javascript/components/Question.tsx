@@ -33,14 +33,12 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
                 <div className="arrow" onClick={onUpvoteClick} />
                 <p className="count">{question.upvotes}</p>
             </div>
-            <div>
-                <div className="questionContent">
-                    {question.content}
-                </div>
-                <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg")} onClick={onResolveClick}>
-                    mark as solved
-                </button>
+            <div className="questionContent">
+                {question.content}
             </div>
+            <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg")} onClick={onResolveClick}>
+                mark as solved
+            </button>
         </li>
     );
 };
