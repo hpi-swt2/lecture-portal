@@ -2,11 +2,11 @@ import React from "react";
 import { observer } from "mobx-react";
 import { QuestionModel } from "../stores/Question";
 import { resolveQuestionById } from "../utils/QuestionsUtils";
-import { RootStoreModel } from "../stores/QuestionsRootStore";
+import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject";
 
 
-const mapStore = ({ is_student, current_question }: RootStoreModel) => ({
+const mapStore = ({ is_student, current_question }: QuestionsRootStoreModel) => ({
     is_student,
     current_question
 });

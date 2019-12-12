@@ -1,7 +1,7 @@
 import { useStore} from "../utils/QuestionsUtils";
-import { RootStoreModel } from "../stores/QuestionsRootStore"
+import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore"
 
-export type MapStore<T> = (store: RootStoreModel) => T
+export type MapStore<T> = (store: QuestionsRootStoreModel) => T
 
 const useInject = <T>(mapStore: MapStore<T>) => {
     const store = useStore();
