@@ -13,20 +13,34 @@ form#questionForm {
     float: right;
   }
 }
+
 ul.questionsList {
   clear: both;
   list-style-type: none !important;
   margin: 70px 0;
   padding: 0;
-
+  
   &.is_lecturer {
     font-size: 36px;
   }
   > li {
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
     padding: 20px;
     border: 1px solid #aaa;
     border-radius: 3px;
     margin-bottom: 10px;
     word-break: break-all;
+    > .questionContent{
+      padding-right: 50px;
+    }
+    > button {
+      min-width: 110px;
+      float: right;
+      color: #333;
+      background-color: white;
+    }
   }
 }
