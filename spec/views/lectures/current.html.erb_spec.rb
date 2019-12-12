@@ -29,12 +29,4 @@ RSpec.describe "lectures/current", type: :view do
     render
     have_selector("input[type=submit][value='Join']")
   end
-
-  it "clicking the join button adds the student to the lecture" do
-    render
-    have_selector("input[type=submit][value='Join']")
-    # TODO don't know who I can click the button...
-    puts rendered
-    # click_button "Join"
-  end
 end
