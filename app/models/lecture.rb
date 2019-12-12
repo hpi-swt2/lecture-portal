@@ -17,4 +17,10 @@ class Lecture < ApplicationRecord
   def set_inactive
     self.status = :ended
   end
+
+  def join_lecture(student)
+    if !self.participating_students.include?(student)
+      self.participating_students << student
+    end
+  end
 end

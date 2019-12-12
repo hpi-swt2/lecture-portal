@@ -7,10 +7,12 @@ const rootStore = initQuestionsApp();
 //onSnapshot(rootStore, console.log);
 
 interface IQuestionsAppProps {
+    user_id: number,
     is_student: boolean
 }
 
-const QuestionsApp: React.FunctionComponent<IQuestionsAppProps> = ({is_student}) => {
+const QuestionsApp: React.FunctionComponent<IQuestionsAppProps> = ({user_id, is_student}) => {
+    rootStore.setUserId(user_id);
     rootStore.setIsStudent(is_student);
     return (
         <StoreProvider value={rootStore}>

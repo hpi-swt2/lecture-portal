@@ -35,9 +35,11 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
             <div className="questionContent">
                 {question.content} ({question.author_id} und {user_id})
             </div>
-            <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg")} onClick={onResolveClick}>
-                mark as solved
-            </button>
+
+            { (user_id == question.author_id || !is_student) &&
+                <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg")} onClick={onResolveClick}>
+                    mark as solved
+                </button>}
         </li>
     );
 };
