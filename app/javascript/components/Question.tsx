@@ -5,7 +5,6 @@ import { resolveQuestionById, upvoteQuestionById } from "../utils/QuestionsUtils
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject";
 
-
 const mapStore = ({ user_id, is_student }: QuestionsRootStoreModel) => ({
     user_id,
     is_student

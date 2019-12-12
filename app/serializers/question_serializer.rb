@@ -6,5 +6,4 @@ class QuestionSerializer < ActiveModel::Serializer
       (current_user.id != object.author_id) && (!object.upvoter_ids.include?(current_user.id))
     end
   end
-
 end
