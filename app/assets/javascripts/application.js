@@ -15,4 +15,5 @@
 //= require turbolinks
 //  https://github.com/rails/jquery-rails
 //= require jquery
+//= require bootstrap
 //= require_tree .

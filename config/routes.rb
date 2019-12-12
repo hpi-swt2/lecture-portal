@@ -5,6 +5,7 @@ Rails.application.routes.draw do
 
   resources :lectures do
     resources :polls
+    resources :feedbacks
   end
 
   resources :questions, only: [:index]

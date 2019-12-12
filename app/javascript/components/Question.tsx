@@ -2,12 +2,22 @@ import React from "react";
 import { observer } from "mobx-react";
 import { QuestionModel } from "../stores/Question";
 import { resolveQuestionById, upvoteQuestionById } from "../utils/QuestionsUtils";
+import { resolveQuestionById } from "../utils/QuestionsUtils";
+import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
+import useInject from "../hooks/useInject";
+
+
+const mapStore = ({ is_student, current_question }: QuestionsRootStoreModel) => ({
+    is_student,
+    current_question
+});
 
 type Props = {
     question: QuestionModel
 }
 
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
+    const { is_student } = useInject(mapStore);
 
     const onResolveClick = _ => {
         resolveQuestionById(question.id)
@@ -27,7 +37,7 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
                 <div className="questionContent">
                     {question.content}
                 </div>
-                <button className="btn btn-secondary btn-sm" onClick={onResolveClick}>
+                <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg")} onClick={onResolveClick}>
                     mark as solved
                 </button>
             </div>

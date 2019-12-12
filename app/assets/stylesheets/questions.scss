@@ -33,6 +33,7 @@ ul.questionsList {
     margin-bottom: 10px;
     word-break: break-all;
     > .questionUpvotes {
+      padding-right: 50px;
       > .arrow {
         cursor: pointer;
         width: 0;
@@ -62,14 +63,16 @@ ul.questionsList {
     > div:last-child {
       padding: 20px;
     }
-    .questionContent{
-      padding-right: 50px;
-    }
-    button {
-      min-width: 110px;
+    > button {
       float: right;
       color: #333;
       background-color: white;
+    }
+    > .btn-sm{
+      min-width: 110px;
+    }
+    > .btn-lg{
+      min-width: 165px;
     }
   }
 }
