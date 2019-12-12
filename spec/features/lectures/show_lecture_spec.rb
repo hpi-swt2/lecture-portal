@@ -38,24 +38,24 @@ describe "The show lecture page", type: :feature do
     end
   end
 
-  # describe "as a student" do
-  #   before(:each) do
-  #     @lecturer = FactoryBot.create(:user, :lecturer)
-  #     @student = FactoryBot.create(:user, :student)
-  #     @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
-  #     sign_in @student
-  #   end
+  describe "as a student" do
+    before(:each) do
+      @lecturer = FactoryBot.create(:user, :lecturer)
+      @student = FactoryBot.create(:user, :student)
+      @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+      sign_in @student
+    end
 
-  #   it "students should be able to leave a lecture" do
-  #     @lecture.update(status: "running")
-  #     @lecture.join_lecture(@student)
-  #     visit(lecture_path(@lecture))
-  #     expect(@lecture.participating_students.length).to be 1
-  #     expect(@lecture.participating_students[0]).to eq @student
-  #     @lecture.reload
-  #     click_on("Leave Lecture")
-  #     @lecture.reload
-  #     expect(@lecture.participating_students.length).to be 0
-  #   end
-  # end
+    it "students should be able to leave a lecture" do
+      @lecture.update(status: "running")
+      @lecture.join_lecture(@student)
+      visit(lecture_path(@lecture))
+      expect(@lecture.participating_students.length).to be 1
+      expect(@lecture.participating_students[0]).to eq @student
+      @lecture.reload
+      click_on("Leave Lecture")
+      @lecture.reload
+      expect(@lecture.participating_students.length).to be 0
+    end
+  end
 end
