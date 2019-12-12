@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { QuestionModel } from "../stores/Question";
-import { resolveQuestionById } from "../utils/QuestionsUtils";
+import { resolveQuestionById, upvoteQuestionById } from "../utils/QuestionsUtils";
 
 type Props = {
     question: QuestionModel
@@ -9,8 +9,12 @@ type Props = {
 
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
 
-    const onClick = _ => {
+    const onResolveClick = _ => {
         resolveQuestionById(question.id)
+    };
+
+    const onUpvoteClick = _ => {
+        upvoteQuestionById(question.id)
     };
 
     return (
@@ -18,9 +22,10 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
             <div className="questionContent">
                 {question.content}
             </div>
-            <button className="btn btn-secondary btn-sm" onClick={onClick}>
+            <button className="btn btn-secondary btn-sm" onClick={onResolveClick}>
                 mark as solved
             </button>
+            <button className="btn btn-secondary btn-sm" onClick={onUpvoteClick}>{question.upvotes}</button>
         </li>
     );
 };

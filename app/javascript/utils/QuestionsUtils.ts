@@ -38,6 +38,14 @@ const setupActionCable = (rootStore) => {
             }
         }
     );
+    CableApp.cable.subscriptions.create(
+        { channel: "QuestionUpvotingChannel" },
+        {
+            received: data => {
+                rootStore.questionsList.upvoteQuestionById(data.question)
+            }
+        }
+    );
 };
 
 const initQuestionsApp = (): QuestionsRootStoreModel => {
@@ -59,6 +67,13 @@ export const createQuestion = (content) => {
 
 export const resolveQuestionById = (id) => {
     fetch(`/api/questions/` + id + '/resolve', {
+        method: "POST",
+        headers: HEADERS
+    });
+};
+
+export const upvoteQuestionById = (id) => {
+    fetch(`/api/questions/` + id + '/upvote', {
         method: "POST",
         headers: HEADERS
     });

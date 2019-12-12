@@ -40,6 +40,7 @@ class Api::QuestionsController < ApplicationController
             upvoter: current_user.id
           }
         )
+        head :ok
       end
     end
   end

@@ -9,7 +9,12 @@ const Question = types
     author_id: types.integer,
     created_at: types.Date,
     upvotes: types.optional(types.integer, 0)
-  });
+  })
+  .actions(self => ({
+    upvote() {
+      self.upvotes++;
+    }
+  }));
 
 
 export default Question;
