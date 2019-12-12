@@ -4,4 +4,7 @@ class Question < ApplicationRecord
 
   validates :content, presence: true
   validates :author, presence: true
+  def upvotes
+    upvoters.count
+  end
 end

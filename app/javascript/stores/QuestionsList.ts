@@ -17,7 +17,8 @@ const createQuestionFromData = (questionData) => {
         id: questionData.id,
         content: questionData.content,
         author_id: questionData.author_id,
-        created_at: new Date(questionData.created_at)
+        created_at: new Date(questionData.created_at),
+        upvotes: questionData.upvotes
     });
 }
 
