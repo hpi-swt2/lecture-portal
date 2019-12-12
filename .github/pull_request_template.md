@@ -21,5 +21,5 @@ Steps needed for migration:
 ---
 
 Definition Of Done:
-- [ ] [Class-Diagram](https://www.lucidchart.com/documents/edit/683c773b-0912-4055-9540-6a41bf6b06e7/0_0?shared=true) updated
+- [ ] [Class-Diagram](https://www.lucidchart.com/invitations/accept/705a122b-58a9-4dfa-8b16-c936bc0a46bc) updated
 
