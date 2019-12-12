@@ -40,6 +40,9 @@ class Api::QuestionsController < ApplicationController
             upvoter: current_user.id
           }
         )
+      end
+    end
+  end
   # POST /api/question/:id/resolve
   def resolve
     question = Question.find(params[:id])
