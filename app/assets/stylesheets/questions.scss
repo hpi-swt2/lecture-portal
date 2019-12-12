@@ -54,6 +54,7 @@ ul.questionsList {
       &.disabled {
         > .arrow {
           border-bottom-color: #AAA;
+          cursor: default !important;
         }
       }
     }

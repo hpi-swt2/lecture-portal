@@ -42,7 +42,9 @@ const setupActionCable = (rootStore) => {
         { channel: "QuestionUpvotingChannel" },
         {
             received: data => {
-                rootStore.questionsList.upvoteQuestionById(data.question)
+                const upvotedQuestion = rootStore.questionsList.upvoteQuestionById(data.question);
+                if(upvotedQuestion && data.upvoter == rootStore.user_id)
+                    upvotedQuestion.disallowUpvote();
             }
         }
     );

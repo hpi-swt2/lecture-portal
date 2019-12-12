@@ -25,7 +25,7 @@ class Api::QuestionsController < ApplicationController
     end
   end
 
-  # POST /api/question/:id/upvote
+  # POST /api/questions/:id/upvote
   def upvote
     question = Question.find(params[:id])
     if question && current_user.is_student && question.author != current_user && !question.upvoters.include?(current_user)
@@ -44,7 +44,7 @@ class Api::QuestionsController < ApplicationController
       end
     end
   end
-  # POST /api/question/:id/resolve
+  # POST /api/questions/:id/resolve
   def resolve
     question = Question.find(params[:id])
     # only allow author or lecturer to resolve the question
