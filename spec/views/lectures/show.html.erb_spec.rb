@@ -63,7 +63,6 @@ RSpec.describe "lectures/show", type: :view do
     end
     it "renders no end button" do
       expect(rendered).not_to have_css("[value='End']")
-
     end
     it "renders a leave lecture button" do
       expect(rendered).to have_css("[value='Leave Lecture']")
