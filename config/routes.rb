@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :courses
   get "/lectures/current", to: "lectures#current", as: "current_lectures"
   post "/lectures/start_lecture", to: "lectures#start_lecture", as: "start_lecture"
   post "/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
