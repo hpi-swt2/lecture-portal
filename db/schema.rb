@@ -10,25 +10,17 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_06_144904) do
-
-  create_table "feedbacks", force: :cascade do |t|
-    t.text "content"
-    t.integer "lecture_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
-  end
+ActiveRecord::Schema.define(version: 2019_12_06_134114) do
 
   create_table "lectures", force: :cascade do |t|
     t.string "name"
     t.string "description", default: ""
     t.string "enrollment_key"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.boolean "questions_enabled", default: true
     t.boolean "polls_enabled", default: true
     t.string "status", default: "created"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.integer "lecturer_id"
     t.index ["lecturer_id"], name: "index_lectures_on_lecturer_id"
   end
@@ -45,7 +37,6 @@ ActiveRecord::Schema.define(version: 2019_12_06_144904) do
     t.integer "poll_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "votes", default: 0, null: false
     t.index ["poll_id"], name: "index_poll_options_on_poll_id"
   end
 

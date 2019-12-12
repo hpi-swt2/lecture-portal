@@ -28,15 +28,44 @@ ul.questionsList {
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    padding: 20px;
     border: 1px solid #aaa;
     border-radius: 3px;
     margin-bottom: 10px;
     word-break: break-all;
-    > .questionContent{
+    > .questionUpvotes {
+      > .arrow {
+        cursor: pointer;
+        width: 0;
+        height: 0;
+        border-left: 15px solid transparent;
+        border-right: 15px solid transparent;
+        border-bottom: 25px solid #888;
+        &:hover, &:focus, &:active {
+          border-bottom-color: #000;
+        }
+      }
+      > .count {
+        font-size: 25px;
+        text-align: center;
+        width: 100%;
+        margin: 0 !important;
+      }
+      &.disabled {
+        > .arrow {
+          border-bottom-color: #AAA;
+        }
+      }
+    }
+    > div:first-child {
+      padding: 10px;
+    }
+    > div:last-child {
+      padding: 20px;
+    }
+    .questionContent{
       padding-right: 50px;
     }
-    > button {
+    button {
       min-width: 110px;
       float: right;
       color: #333;

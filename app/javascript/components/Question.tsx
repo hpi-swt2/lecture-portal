@@ -19,13 +19,18 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
 
     return (
         <li key={question.id}>
-            <div className="questionContent">
-                {question.content}
+            <div className={"questionUpvotes " + (question.upvoted_by_me ? "disabled" : "")}>
+                <div className="arrow" onClick={onUpvoteClick} />
+                <p className="count">{question.upvotes}</p>
             </div>
-            <button className="btn btn-secondary btn-sm" onClick={onResolveClick}>
-                mark as solved
-            </button>
-            <button className="btn btn-secondary btn-sm" onClick={onUpvoteClick}>{question.upvotes}</button>
+            <div>
+                <div className="questionContent">
+                    {question.content}
+                </div>
+                <button className="btn btn-secondary btn-sm" onClick={onResolveClick}>
+                    mark as solved
+                </button>
+            </div>
         </li>
     );
 };
