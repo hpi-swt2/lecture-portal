@@ -200,7 +200,7 @@ RSpec.describe LecturesController, type: :controller do
       expect(response).to redirect_to(lectures_url)
     end
   end
-  
+
   describe "POST #leave_lecture" do
     before(:each) do
       # login user
