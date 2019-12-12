@@ -1,10 +1,10 @@
 import ActionCable from "actioncable";
-import {createContext, useContext} from "react";
-import {RootStoreModel} from "../stores/QuestionsRootStore";
-import {createStore} from "../stores/createStore";
-import {HEADERS} from "./constants";
+import { createContext, useContext } from "react";
+import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
+import { createStore } from "../stores/createStore";
+import { HEADERS } from "./constants";
 
-const StoreContext = createContext<RootStoreModel>({} as RootStoreModel);
+const StoreContext = createContext<QuestionsRootStoreModel>({} as QuestionsRootStoreModel);
 export const useStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
@@ -22,16 +22,16 @@ const CableApp = {
 
 const setupActionCable = (rootStore) => {
     CableApp.cable.subscriptions.create(
-        {channel: "QuestionsChannel"},
+        { channel: "QuestionsChannel" },
         {
             received: data => {
-                const {question} = data;
+                const { question } = data;
                 rootStore.questionsList.addQuestion(question);
             }
         }
     );
     CableApp.cable.subscriptions.create(
-        {channel: "QuestionResolvingChannel"},
+        { channel: "QuestionResolvingChannel" },
         {
             received: id => {
                 rootStore.questionsList.resolveQuestionById(id)
@@ -40,7 +40,7 @@ const setupActionCable = (rootStore) => {
     );
 };
 
-const initQuestionsApp = () : RootStoreModel => {
+const initQuestionsApp = (): QuestionsRootStoreModel => {
     const rootStore = createStore();
     loadQuestionsList(rootStore);
     setupActionCable(rootStore);

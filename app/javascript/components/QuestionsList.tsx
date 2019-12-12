@@ -1,10 +1,10 @@
 import React from "react";
 import { observer } from "mobx-react";
 import Question from "./Question";
-import {RootStoreModel} from "../stores/QuestionsRootStore";
+import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject"
 
-const mapStore = ({ is_student, questionsList }: RootStoreModel) => ({
+const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
   is_student,
   questionsList
 });
@@ -18,7 +18,7 @@ const QuestionsList: React.FunctionComponent<{}> = observer(() => {
   return (
     <ul className={className.join(" ").trim()}>
       {questionsList.list.map(question => (
-          <Question question={question} key={question.id} />
+        <Question question={question} key={question.id} />
       ))}
     </ul>
   );

@@ -1,10 +1,10 @@
 import { types, Instance } from "mobx-state-tree"
-import questionsList, {QuestionsListModel} from "./QuestionsList";
-import currentQuestion, {CurrentQuestionModel} from "./CurrentQuestion";
+import questionsList, { QuestionsListModel } from "./QuestionsList";
+import currentQuestion, { CurrentQuestionModel } from "./CurrentQuestion";
 
-export type RootStoreModel = Instance<typeof QuestionsRootStore>
+export type QuestionsRootStoreModel = Instance<typeof QuestionsRootStore>
 
-export type RootStoreEnv = {
+export type QuestionsRootStoreEnv = {
     questionsList: QuestionsListModel,
     current_question: CurrentQuestionModel
 }
