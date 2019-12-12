@@ -11,6 +11,7 @@ Rails.application.routes.draw do
   namespace :api do
     resources :questions, only: [:index, :create] do
       post "upvote", on: :member
+      post "resolve", on: :member
     end
   end
 

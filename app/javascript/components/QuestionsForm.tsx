@@ -1,71 +1,64 @@
-import { HEADERS } from "./constants";
-import React from "react";
+import React, { createRef, useEffect } from "react";
+import { observer } from "mobx-react";
+import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
+import useInject from "../hooks/useInject"
+import { createQuestion } from "../utils/QuestionsUtils";
 
-class QuestionsForm extends React.Component {
-    state = {
-        content: ""
-    };
-    formId = "questionForm";
-    formRef; textareaRef;
+const mapStore = ({ is_student, current_question }: QuestionsRootStoreModel) => ({
+  is_student,
+  current_question
+});
 
-    constructor(props) {
-        super(props);
+const QuestionsForm: React.FunctionComponent<{}> = observer(() => {
+  const { is_student, current_question } = useInject(mapStore);
 
-        this.formRef = React.createRef();
-        this.textareaRef = React.createRef();
+  if (is_student) {
+    const formRef = createRef<HTMLFormElement>();
+    const textareaRef = createRef<HTMLTextAreaElement>();
+    const formId = "questionForm";
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleKeyDown = this.handleKeyDown.bind(this);
-    }
+    useEffect(() => textareaRef.current.focus(), []);
 
-    componentDidMount() {
-        this.textareaRef.current.focus();
-    }
-
-    handleChange = e => {
-        const content = e.target.value.replace(/[\r\n\v]+/g, "");
-        this.setState({ content });
+    const handleChange = e => {
+      current_question.set(e.target.value);
     };
 
-    handleKeyDown = e => {
-        if (e.keyCode == 13) {
-            e.preventDefault();
-            this.formRef.current.dispatchEvent(
-                new Event("submit", { cancelable: true })
-            );
-        }
-    };
-
-    handleSubmit = e => {
-        if (this.state.content.trim() != "") {
-            fetch(`/api/questions`, {
-                method: "POST",
-                headers: HEADERS,
-                body: JSON.stringify({ content: this.state.content.trim() })
-            });
-            this.setState({ content: "" });
-        }
+    const handleKeyDown = e => {
+      if (e.keyCode == 13) {
         e.preventDefault();
+        formRef.current.dispatchEvent(
+          new Event("submit", { cancelable: true })
+        );
+      }
     };
 
-    render() {
-        return (
-            <form id={this.formId} ref={this.formRef} onSubmit={this.handleSubmit}>
-                <label>Ask a question:</label>
-                <textarea
-                    rows={3}
-                    ref={this.textareaRef}
-                    value={this.state.content}
-                    onChange={this.handleChange}
-                    onKeyDown={this.handleKeyDown}
-                />
-                <button type="submit" className="btn btn-secondary">
-                    Ask Question
-                </button>
-            </form>
-        );
-    }
-}
+    const handleSubmit = e => {
+      if (current_question.getTrimmed() != "") {
+        createQuestion(current_question.getTrimmed());
+        current_question.clear();
+      }
+      e.preventDefault();
+    };
+
+    return (
+      <form id={formId} ref={formRef} onSubmit={handleSubmit}>
+        <label>Ask a question:</label>
+        <textarea
+          rows={3}
+          ref={textareaRef}
+          value={current_question.content}
+          onChange={handleChange}
+          onKeyDown={handleKeyDown}
+        />
+        <button type="submit" className="btn btn-secondary">
+          Ask Question
+          </button>
+      </form>
+    );
+  }
+
+});
+
+
 
 export default QuestionsForm;

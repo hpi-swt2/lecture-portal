@@ -55,6 +55,7 @@ ActiveRecord::Schema.define(version: 2019_12_06_134114) do
     t.integer "author_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "resolved", default: false, null: false
     t.index ["author_id"], name: "index_questions_on_author_id"
   end
 
