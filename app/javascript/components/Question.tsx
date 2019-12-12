@@ -18,31 +18,35 @@ type Props = {
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
     const { user_id, is_student } = useInject(mapStore);
 
+    const canQuestionBeUpvoted : boolean =
+        question.can_be_upvoted && question.author_id != user_id && is_student;
+    const canQuestionBeResolved : boolean =
+        user_id == question.author_id || !is_student;
+
     const onResolveClick = _ => {
-        resolveQuestionById(question.id)
+        canQuestionBeResolved && resolveQuestionById(question.id)
     };
 
     const onUpvoteClick = _ => {
-        upvoteQuestionById(question.id)
+        canQuestionBeUpvoted && upvoteQuestionById(question.id)
     };
 
     return (
         <li key={question.id}>
-            <div className={"questionUpvotes " + ((!question.can_be_upvoted || question.author_id == user_id || !is_student) ? "disabled" : "")}>
+            <div className={"questionUpvotes " + (!canQuestionBeUpvoted ? "disabled" : "")}>
                 <div className="arrow" onClick={onUpvoteClick} />
                 <p className="count">{question.upvotes}</p>
             </div>
             <div className="questionContent">
-                {question.content} ({question.author_id} und {user_id})
+                {question.content}
             </div>
 
-            { (user_id == question.author_id || !is_student) &&
+            { canQuestionBeResolved &&
                 <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg")} onClick={onResolveClick}>
                     mark as solved
-                </button>}
+                </button> }
         </li>
     );
 };
-
 
 export default observer(QuestionView)

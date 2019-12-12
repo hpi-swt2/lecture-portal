@@ -9,7 +9,7 @@ const Question = types
     author_id: types.integer,
     created_at: types.Date,
     upvotes: types.optional(types.integer, 0),
-    can_be_upvoted: types.optional(types.boolean, true)
+    can_be_upvoted: types.boolean
   })
   .actions(self => ({
     upvote() {

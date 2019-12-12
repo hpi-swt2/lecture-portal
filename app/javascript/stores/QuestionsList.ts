@@ -19,7 +19,7 @@ const createQuestionFromData = (questionData) => {
         author_id: questionData.author_id,
         created_at: new Date(questionData.created_at),
         upvotes: questionData.upvotes,
-        can_be_upvoted: questionData.can_be_upvoted ? questionData.can_be_upvoted : true
+        can_be_upvoted: questionData.can_be_upvoted != null ? questionData.can_be_upvoted : true
     });
 };
 
