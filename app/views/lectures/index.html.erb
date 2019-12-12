@@ -1,10 +1,10 @@
 <div class="d-flex justify-content-center my-5">
-<%= link_to 'Create New Lecture', new_lecture_path, :class => "btn btn-primary btn-lg"%>
+  <%= link_to 'Create Lecture', new_lecture_path, :class => "btn btn-primary btn-lg"%>
 </div>
 
-<h1>Lectures</h1>
+<h1>My Lectures</h1>
 
-<table class="table">
+<table class="table .table-sm table-striped">
   <thead>
     <tr>
       <th scope="col">Name</th>
@@ -20,9 +20,16 @@
         <td><%= lecture.name %></td>
         <td><%= lecture.enrollment_key %></td>
         <td><%= lecture.status%></td>
-        <td><%= link_to 'Show', lecture %></td>
-        <td><%= link_to 'Edit', edit_lecture_path(lecture) %></td>
+        <td class="text-right">
+        <% if lecture.status == "running" %>
+          <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
+        <% else %>
+          <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
+        <%end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
+
+

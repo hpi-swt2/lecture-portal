@@ -14,7 +14,7 @@ gem "rails", "~> 5.2.3"
 # Use sqlite3 as the database for Active Record. https://www.sqlite.org/index.html
 gem "sqlite3"
 # Use Puma as the app server. https://github.com/puma/puma
-gem "puma", "~> 3.11"
+gem "puma", "~> 3.12"
 # Use Uglifier as compressor for JavaScript assets. https://github.com/lautis/uglifier
 gem "uglifier", ">= 1.3.0"
 # See https://github.com/rails/execjs#readme for more supported runtimes
