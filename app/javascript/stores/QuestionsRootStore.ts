@@ -10,10 +10,14 @@ export type QuestionsRootStoreEnv = {
 }
 
 const QuestionsRootStore = types.model("QuestionsRootStore", {
+    user_id: types.optional(types.integer, -1),
     is_student: types.optional(types.boolean, true),
     current_question: currentQuestion,
     questionsList: questionsList,
 }).actions(self => ({
+    setUserId(user_id) {
+        self.user_id = user_id;
+    },
     setIsStudent(is_student) {
         self.is_student = is_student;
     }

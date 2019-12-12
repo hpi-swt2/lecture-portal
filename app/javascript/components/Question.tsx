@@ -6,9 +6,9 @@ import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject";
 
 
-const mapStore = ({ is_student, current_question }: QuestionsRootStoreModel) => ({
-    is_student,
-    current_question
+const mapStore = ({ user_id, is_student }: QuestionsRootStoreModel) => ({
+    user_id,
+    is_student
 });
 
 type Props = {
@@ -16,7 +16,7 @@ type Props = {
 }
 
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
-    const { is_student } = useInject(mapStore);
+    const { user_id, is_student } = useInject(mapStore);
 
     const onClick = _ => {
         resolveQuestionById(question.id)
@@ -34,9 +34,10 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
             <div className="questionContent">
                 {question.content}
             </div>
-            <button className={className.join(" ").trim()} onClick={onClick}>
-                mark as solved
-            </button>
+            { (user_id == question.author_id || !is_student) &&
+                <button className={className.join(" ").trim()} onClick={onClick}>
+                    mark as solved
+                </button>}
         </li>
     );
 };
