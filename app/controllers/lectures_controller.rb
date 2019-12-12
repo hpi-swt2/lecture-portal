@@ -30,7 +30,7 @@ class LecturesController < ApplicationController
     @lecture = Lecture.new(lecture_params)
     @lecture.lecturer = current_user
     if @lecture.save
-      redirect_to @lecture, notice: "Lecture was successfully created."
+      redirect_to lectures_url, notice: "Lecture was successfully created."
     else
       render :new
     end

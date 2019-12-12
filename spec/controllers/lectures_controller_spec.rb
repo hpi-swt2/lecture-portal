@@ -85,9 +85,9 @@ RSpec.describe LecturesController, type: :controller do
         }.to change(Lecture, :count).by(1)
       end
 
-      it "redirects to the created lecture", :logged_lecturer do
+      it "redirects to the lectures overview", :logged_lecturer do
         post :create, params: { lecture: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(Lecture.last)
+        expect(response).to redirect_to(lectures_url)
       end
     end
 
