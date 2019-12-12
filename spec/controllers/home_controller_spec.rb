@@ -13,7 +13,7 @@ RSpec.describe HomeController, type: :controller do
       expect(response).to redirect_to(lectures_url)
     end
 
-    it "redirects lecturer to currently active lectures overview" do
+    it "redirects student to currently active lectures overview" do
       sign_in(FactoryBot.create(:user, :student), scope: :user)
       get :index
       expect(response).to redirect_to(current_lectures_url)
