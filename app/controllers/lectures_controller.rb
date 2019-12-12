@@ -1,8 +1,9 @@
 class LecturesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture]
-  before_action :validate_lecture_owner, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture]
-  before_action :require_lecturer, except: [:current, :join_lecture]
+  before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
+  before_action :validate_joined_user_or_owner, only: [:show]
+  before_action :require_lecturer, except: [:current, :join_lecture, :show]
   before_action :require_student, only: [:join_lecture]
 
   # GET /lectures
@@ -71,7 +72,7 @@ class LecturesController < ApplicationController
     @lecture.join_lecture(current_user)
     @lecture.save
     current_user.save
-    redirect_to current_lectures_url, notice: "You successfully joined the lecture."
+    redirect_to @lecture, notice: "You successfully joined the lecture."
   end
 
   def end_lecture
@@ -88,7 +89,18 @@ class LecturesController < ApplicationController
 
     def validate_lecture_owner
       if @lecture.lecturer != current_user
-        redirect_to lectures_url, notice: "You can only access your own lectures"
+        redirect_to lectures_url, notice: "You can only access your own lectures."
+      end
+    end
+
+    def validate_joined_user_or_owner
+      isStudent = current_user.is_student
+      isJoinedStudent = @lecture.participating_students.include?(current_user)
+      isLectureOwner = @lecture.lecturer == current_user
+      if isStudent && !isJoinedStudent
+        redirect_to current_lectures_url, notice: "You must join a lecture before you can view it."
+      elsif !isStudent && !isLectureOwner
+        redirect_to lectures_url, notice: "You can only access your own lectures."
       end
     end
 

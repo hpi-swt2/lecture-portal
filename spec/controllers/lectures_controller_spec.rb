@@ -48,12 +48,37 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #show" do
-    it "returns a success response", :logged_lecturer do
+    it "returns a success response for owner", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer
       login_lecturer(lecture.lecturer)
       get :show, params: { id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
     end
+
+    it "returns a success response for joined students", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer
+      student = FactoryBot.create(:user, :student)
+      lecture.join_lecture(student)
+      login_student(student)
+      get :show, params: { id: lecture.to_param }, session: valid_session
+      expect(response).to be_successful
+    end
+
+    it "redirects to overview for not joined students", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer
+      login_student()
+      get :show, params: { id: lecture.to_param }, session: valid_session
+      expect(response).to redirect_to(current_lectures_path)
+    end
+
+    it "redirects to overview for other lecturers", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer
+      login_lecturer()
+      get :show, params: { id: lecture.to_param }, session: valid_session
+      expect(response).to redirect_to(lectures_path)
+    end
+
+
   end
 
   describe "GET #new" do
@@ -155,6 +180,25 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to the lectures list" do
       delete :destroy, params: { id: @lecture.to_param }, session: valid_session
+      expect(response).to redirect_to(lectures_url)
+    end
+  end
+
+  describe "POST #join_lecture" do
+    before(:each) do
+      # login user
+      @lecture = FactoryBot.create(:lecture, status: "running")
+    end
+
+    it "redirects to the lectures overview for students" do
+      login_student
+      post :join_lecture, params: { id: @lecture.id }, session: valid_session
+      expect(response).to redirect_to(@lecture)
+    end
+
+    it "redirects to overview for other lecturers" do
+      login_lecturer
+      post :join_lecture, params: { id: @lecture.id }, session: valid_session
       expect(response).to redirect_to(lectures_url)
     end
   end
