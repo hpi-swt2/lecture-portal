@@ -1,5 +1,5 @@
-import { useStore } from "../components/QuestionsApp"
-import { RootStoreModel } from "../stores/RootStore"
+import { useStore} from "../utils/QuestionsUtils";
+import { RootStoreModel } from "../stores/QuestionsRootStore"
 
 export type MapStore<T> = (store: RootStoreModel) => T
 

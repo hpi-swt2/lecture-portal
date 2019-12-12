@@ -1,7 +1,7 @@
 import React from "react";
 import { observer } from "mobx-react";
-import {QuestionModel} from "../stores/question";
-import {HEADERS} from "./constants";
+import {QuestionModel} from "../stores/Question";
+import {resolveQuestionById} from "../utils/QuestionsUtils";
 
 type Props = {
     question: QuestionModel
@@ -10,10 +10,7 @@ type Props = {
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
 
     const onClick = _ => {
-        fetch(`/api/questions/` + question.id + '/resolve', {
-            method: "POST",
-            headers: HEADERS
-        });
+        resolveQuestionById(question.id)
     };
 
     return (

@@ -1,14 +1,13 @@
 import React from "react";
 import { observer } from "mobx-react";
 import Question from "./Question";
-import {RootStoreModel} from "../stores/RootStore";
+import {RootStoreModel} from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject"
 
 const mapStore = ({ is_student, questionsList }: RootStoreModel) => ({
   is_student,
   questionsList
 });
-
 
 const QuestionsList: React.FunctionComponent<{}> = observer(() => {
   const { is_student, questionsList } = useInject(mapStore);
@@ -21,7 +20,6 @@ const QuestionsList: React.FunctionComponent<{}> = observer(() => {
       {questionsList.list.map(question => (
           <Question question={question} key={question.id} />
       ))}
-
     </ul>
   );
 });

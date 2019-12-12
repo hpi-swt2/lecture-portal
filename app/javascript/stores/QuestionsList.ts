@@ -17,8 +17,8 @@ const QuestionsList = types
             }));
             self.list = self.list.sort((a, b): number => {
                 return (
-                    new Date(b.created_at).getTime() -
-                    new Date(a.created_at).getTime()
+                    b.created_at.getTime() -
+                    a.created_at.getTime()
                 );
             });
         },
@@ -34,19 +34,19 @@ const QuestionsList = types
             });
             self.list = self.list.sort((a, b): number => {
                 return (
-                    new Date(b.created_at).getTime() -
-                    new Date(a.created_at).getTime()
+                    b.created_at.getTime() -
+                    a.created_at.getTime()
                 );
             });
         },
         resolveQuestionById(id) {
-            console.log(id);
             let resolvedQuestion: QuestionModel;
             self.list.forEach(question => {
                 if(question.id == id)
                     resolvedQuestion = question
             });
-            destroy(resolvedQuestion)
+            if(resolvedQuestion)
+                destroy(resolvedQuestion)
         }
     }));
 

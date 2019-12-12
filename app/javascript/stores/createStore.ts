@@ -1,4 +1,4 @@
-import RootStore, {RootStoreEnv, RootStoreModel} from "./RootStore";
+import QuestionsRootStore, {RootStoreEnv, RootStoreModel} from "./QuestionsRootStore";
 import QuestionsList from "./QuestionsList";
 import CurrentQuestion from "./CurrentQuestion";
 
@@ -14,7 +14,7 @@ export const createStore = (): RootStoreModel => {
         current_question: currentQuestion
     };
 
-    return RootStore.create(
+    return QuestionsRootStore.create(
         {
             current_question: currentQuestion,
             questionsList: questionsList

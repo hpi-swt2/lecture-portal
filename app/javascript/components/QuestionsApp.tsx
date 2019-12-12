@@ -1,57 +1,24 @@
-import React, {createContext, useContext} from "react";
+import React from "react";
 import QuestionsForm from "./QuestionsForm";
 import QuestionsList from "./QuestionsList";
-import {RootStoreModel} from "../stores/RootStore";
-import {createStore} from "../stores/createStore";
+import initQuestionsApp, {StoreProvider} from "../utils/QuestionsUtils";
 
-
-const StoreContext = createContext<RootStoreModel>({} as RootStoreModel);
-
-export const useStore = () => useContext(StoreContext);
-
-export const StoreProvider = StoreContext.Provider;
-
-const rootStore = createStore();
-
+const rootStore = initQuestionsApp();
 //onSnapshot(rootStore, console.log);
-import ActionCable from "actioncable";
 
-const CableApp = {
-    cable: ActionCable.createConsumer(`/cable`)
+interface IQuestionsAppProps {
+    is_student: boolean
+}
+
+const QuestionsApp: React.FunctionComponent<IQuestionsAppProps> = ({is_student}) => {
+    rootStore.setIsStudent(is_student);
+    return (
+        <StoreProvider value={rootStore}>
+            <div className="QuestionsApp">
+                <QuestionsForm/>
+                <QuestionsList/>
+            </div>
+        </StoreProvider>
+    )
 };
-
-fetch(`/api/questions`)
-    .then(res => res.json())
-    .then(questions => {
-        rootStore.questionsList.setQuestionsList(questions);
-    });
-
-CableApp.cable.subscriptions.create(
-    { channel: "QuestionsChannel" },
-    {
-        received: data => {
-            const { question } = data;
-            rootStore.questionsList.addQuestion(question);
-        }
-    }
-);
-
-CableApp.cable.subscriptions.create(
-  { channel: "QuestionResolvingChannel" },
-  {
-    received: data => {
-        rootStore.questionsList.resolveQuestionById(data)
-    }
-  }
-);
-
-
-const QuestionsApp: React.FunctionComponent<{}> = () => (
-    <StoreProvider value={rootStore}>
-      <div className="QuestionsApp">
-        <QuestionsForm />
-        <QuestionsList />
-      </div>
-    </StoreProvider>
-);
 export default QuestionsApp;

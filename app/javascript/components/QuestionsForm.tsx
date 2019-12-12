@@ -1,8 +1,8 @@
 import React, {createRef, useEffect} from "react";
 import { observer } from "mobx-react";
-import {RootStoreModel} from "../stores/RootStore";
+import {RootStoreModel} from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject"
-import {HEADERS} from "./constants";
+import {createQuestion} from "../utils/QuestionsUtils";
 
 const mapStore = ({ is_student, current_question }: RootStoreModel) => ({
   is_student,
@@ -21,7 +21,6 @@ const QuestionsForm: React.FunctionComponent<{}> = observer(() => {
 
     const handleChange = e => {
       current_question.set(e.target.value);
-      console.log(current_question.get());
     };
 
     const handleKeyDown = e => {
@@ -35,13 +34,7 @@ const QuestionsForm: React.FunctionComponent<{}> = observer(() => {
 
     const handleSubmit = e => {
       if (current_question.getTrimmed() != "") {
-        fetch(`/api/questions`, {
-          method: "POST",
-          headers: HEADERS,
-          body: JSON.stringify({
-            content: current_question.getTrimmed()
-          })
-        });
+        createQuestion(current_question.getTrimmed());
         current_question.clear();
       }
       e.preventDefault();
