@@ -42,7 +42,7 @@ class PollsController < ApplicationController
       current_answer.save
     }
 
-    redirect_to lecture_poll_path(@lecture, params[:id])
+    redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
   end
 
   # POST /polls
