@@ -15,8 +15,8 @@ RSpec.describe Poll, type: :model do
    expect(poll).to be_valid
  end
 
- it "is active by default" do
-   poll = FactoryBot.create :poll
-   expect(poll.is_active).to equal(true)
- end
+  it "is active by default" do
+    poll = FactoryBot.create :poll
+    expect(poll.is_active).to equal(true)
+  end
 end

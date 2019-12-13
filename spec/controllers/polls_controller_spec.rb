@@ -175,7 +175,6 @@ RSpec.describe PollsController, type: :controller do
   end
 
   describe "#save_answers" do
-
   end
   describe "PUT #update" do
     context "with valid params" do

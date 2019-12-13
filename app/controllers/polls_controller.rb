@@ -47,7 +47,6 @@ class PollsController < ApplicationController
         redirect_to lecture_poll_path(@lecture, @poll), notice: "This did not work :("
       end
     end
-
   end
 
   # POST /polls/id/save_answers
