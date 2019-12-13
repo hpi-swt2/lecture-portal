@@ -68,7 +68,7 @@ class AnswerOption extends React.Component<
             }
           />
           <label key={`option_${index}_label`}>
-            {index}. {options[index]}{" "}
+            {index}. {options[index-1]}{" "}
           </label>
         </React.Fragment>
       );
