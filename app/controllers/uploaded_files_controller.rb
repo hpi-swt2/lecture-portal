@@ -13,14 +13,14 @@ class UploadedFilesController < ApplicationController
 
   # POST /uploaded_files
   def create
-    file = params["uploaded_file"]["attachment"]
+    file = uploaded_file_params["attachment"]
     if file.nil? || !(file.is_a? ActionDispatch::Http::UploadedFile)
       render :new
     else
       filename = file.original_filename
       content_type = file.content_type
       data = file.read
-      lecture_id = params["uploaded_file"]["lecture"]
+      lecture_id = uploaded_file_params["lecture"]
       unless Lecture.exists?(lecture_id)
         render :new
         return
@@ -39,6 +39,6 @@ class UploadedFilesController < ApplicationController
   private
     # Only allow a trusted parameter "white list" through.
     def uploaded_file_params
-      params.require(:uploaded_file).permit(:content_type, :filename, :data)
+      params.require(:uploaded_file).permit(:attachment, :lecture)
     end
 end
