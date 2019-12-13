@@ -128,12 +128,6 @@ RSpec.describe PollsController, type: :controller do
       get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
-
-    it "redirects to poll show view for students", :logged_student do
-      poll = Poll.create! valid_attributes
-      get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
-      expect(response).to redirect_to(lecture_poll_path(lecture, poll))
-    end
   end
 
   describe "POST #create" do
