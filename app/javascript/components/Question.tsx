@@ -1,10 +1,9 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { QuestionModel } from "../stores/Question";
-import { resolveQuestionById } from "../utils/QuestionsUtils";
+import { resolveQuestionById, upvoteQuestionById } from "../utils/QuestionsUtils";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject";
-
 
 const mapStore = ({ user_id, is_student }: QuestionsRootStoreModel) => ({
     user_id,
@@ -18,29 +17,35 @@ type Props = {
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
     const { user_id, is_student } = useInject(mapStore);
 
-    const onClick = _ => {
-        resolveQuestionById(question.id)
+    const canQuestionBeUpvoted : boolean =
+        question.can_be_upvoted && question.author_id != user_id && is_student;
+    const canQuestionBeResolved : boolean =
+        user_id == question.author_id || !is_student;
+
+    const onResolveClick = _ => {
+        canQuestionBeResolved && resolveQuestionById(question.id)
     };
 
-    const className = ["btn btn-secondary"];
-    if (is_student) {
-        className.push("btn-sm");
-    } else {
-        className.push("btn-lg");
-    }
+    const onUpvoteClick = _ => {
+        canQuestionBeUpvoted && upvoteQuestionById(question.id)
+    };
 
     return (
         <li key={question.id}>
+            <div className={"questionUpvotes " + (!canQuestionBeUpvoted ? "disabled" : "")}>
+                <div className="arrow" onClick={onUpvoteClick} />
+                <p className="count">{question.upvotes}</p>
+            </div>
             <div className="questionContent">
                 {question.content}
             </div>
-            { (user_id == question.author_id || !is_student) &&
-                <button className={className.join(" ").trim()} onClick={onClick}>
+
+            { canQuestionBeResolved &&
+                <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg")} onClick={onResolveClick}>
                     mark as solved
-                </button>}
+                </button> }
         </li>
     );
 };
-
 
 export default observer(QuestionView)
