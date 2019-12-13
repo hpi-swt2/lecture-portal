@@ -12,7 +12,6 @@ class LecturesController < ApplicationController
     @running_lectures = @lectures.where(status: "running")
     @created_lectures = @lectures.where(status: "created")
     @ended_lectures = @lectures.where(status: "ended")
-
   end
 
   # GET /lectures/1
