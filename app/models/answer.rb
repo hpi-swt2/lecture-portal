@@ -3,4 +3,3 @@ class Answer < ApplicationRecord
   validates :student_id, presence: true
   validates :option_id, presence: true
 end
-

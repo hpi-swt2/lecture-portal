@@ -1,92 +1,86 @@
 <div class="d-flex justify-content-center my-5">
-  <%= link_to 'Create Lecture', new_lecture_path, :class => "btn btn-primary btn-lg"%>
+  <%= link_to 'Create Lecture', new_lecture_path, :class => "btn btn-primary
+  btn-lg"%>
 </div>
 
 <h1>My Lectures</h1>
 
 <% if !@running_lectures.empty? %>
 
-  <h2>Running Lectures</h2>
+<h2>Running Lectures</h2>
 
-  <table class="table .table-sm table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Enrollment key</th>
-        <th scope="col" colspan="2"></th>
-      </tr>
-    </thead>
+<table class="table .table-sm table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Enrollment key</th>
+      <th scope="col" colspan="2"></th>
+    </tr>
+  </thead>
 
-    <tbody>
-      <% @running_lectures.each do |lecture| %>
-        <tr>
-          <td><%= lecture.name %></td>
-          <td><%= lecture.enrollment_key %></td>
-          <td class="text-right">
-            <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
-
-<% if !@created_lectures.empty? %>
+  <tbody>
+    <% @running_lectures.each do |lecture| %>
+    <tr>
+      <td><%= lecture.name %></td>
+      <td><%= lecture.enrollment_key %></td>
+      <td class="text-right">
+        <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %> <% if !@created_lectures.empty? %>
 
 <h2>Created Lectures</h2>
 
-  <table class="table .table-sm table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Enrollment key</th>
-        <th scope="col" colspan="2"></th>
-      </tr>
-    </thead>
+<table class="table .table-sm table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Enrollment key</th>
+      <th scope="col" colspan="2"></th>
+    </tr>
+  </thead>
 
-    <tbody>
-      <% @created_lectures.each do |lecture| %>
-        <tr>
-          <td><%= lecture.name %></td>
-          <td><%= lecture.enrollment_key %></td>
-          <td class="text-right">
-          <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>        
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  <tbody>
+    <% @created_lectures.each do |lecture| %>
+    <tr>
+      <td><%= lecture.name %></td>
+      <td><%= lecture.enrollment_key %></td>
+      <td class="text-right">
+        <% if !@is_student %> <%= button_to "Start", {action: "start_lecture",
+        params: {id: lecture.id}}, {class:"btn btn-primary inline-button"} %> <%
+        end %> <%= link_to 'View', lecture, {class:"btn btn-primary
+        inline-button"} %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
+<% end %> <% if !@ended_lectures.empty? %>
+
+<h2>Ended Lectures</h2>
+
+<table class="table .table-sm table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Enrollment key</th>
+      <th scope="col" colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @ended_lectures.each do |lecture| %>
+    <tr>
+      <td><%= lecture.name %></td>
+      <td><%= lecture.enrollment_key %></td>
+      <td class="text-right">
+        <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
+      </td>
+    </tr>
+    <% end %>
+  </tbody>
+</table>
 <% end %>
-
-<% if !@ended_lectures.empty? %>
-
-  <h2>Ended Lectures</h2>
-
-  <table class="table .table-sm table-striped">
-    <thead>
-      <tr>
-        <th scope="col">Name</th>
-        <th scope="col">Enrollment key</th>
-        <th scope="col" colspan="2"></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @ended_lectures.each do |lecture| %>
-        <tr>
-          <td><%= lecture.name %></td>
-          <td><%= lecture.enrollment_key %></td>
-          <td class="text-right">
-          <%= link_to 'View', lecture, {class:"btn btn-primary"} %>        
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
-
-
-
-
-
-

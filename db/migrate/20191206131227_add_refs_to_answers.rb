@@ -4,5 +4,4 @@ class AddRefsToAnswers < ActiveRecord::Migration[5.2]
     add_reference :answers, :option, foreign_key: { to_table: :poll_options }
     add_reference :answers, :poll, foreign_key: { to_table: :polls }
     end
-  end
-
+end
