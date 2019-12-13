@@ -23,8 +23,11 @@
         <td class="text-right">
         <% if lecture.status == "running" %>
           <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
+          <!-- So stripe is fully filled. -->
+          <td></td>
         <% else %>
           <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
+          <td>  <%= link_to 'Edit', edit_lecture_path(lecture), {class:"btn btn-primary"} %> </td>
         <%end %>
         </td>
       </tr>

@@ -57,6 +57,10 @@ describe "The all lectures page", type: :feature do
       visit(lectures_path)
       expect(page).to_not have_link("View", href: lecture_path(@lecture2))
     end
+    it "should have an \"edit\" button." do
+      visit lectures_path
+      expect(page).to have_link("Edit", href: edit_lecture_path(@lecture))
+    end
   end
 
   it "should redirect to current lectures page when accessed by a student" do
@@ -65,4 +69,6 @@ describe "The all lectures page", type: :feature do
     visit(lectures_path)
     expect(page).to have_current_path(current_lectures_path)
   end
+
+
 end
