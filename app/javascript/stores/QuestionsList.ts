@@ -67,6 +67,10 @@ const QuestionsList = types
                 !self.is_sorted_by_time && (self.list = sortQuestionsList(self.list, self.is_sorted_by_time))
             }
             return upvoteQuestion;
+        },
+        toggleSorting() {
+            self.is_sorted_by_time = !self.is_sorted_by_time;
+            self.list = sortQuestionsList(self.list, self.is_sorted_by_time)
         }
     }));
 
