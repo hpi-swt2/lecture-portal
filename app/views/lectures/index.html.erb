@@ -4,32 +4,89 @@
 
 <h1>My Lectures</h1>
 
-<table class="table .table-sm table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Enrollment key</th>
-      <th scope="col">Status</th>
-      <th scope="col" colspan="2"></th>
-    </tr>
-  </thead>
+<% if !@running_lectures.empty? %>
 
-  <tbody>
-    <% @lectures.each do |lecture| %>
+  <h2>Running Lectures</h2>
+
+  <table class="table .table-sm table-striped">
+    <thead>
       <tr>
-        <td><%= lecture.name %></td>
-        <td><%= lecture.enrollment_key %></td>
-        <td><%= lecture.status%></td>
-        <td class="text-right">
-        <% if lecture.status == "running" %>
-          <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
-        <% else %>
-          <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
-        <%end %>
-        </td>
+        <th scope="col">Name</th>
+        <th scope="col">Enrollment key</th>
+        <th scope="col" colspan="2"></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+
+    <tbody>
+      <% @running_lectures.each do |lecture| %>
+        <tr>
+          <td><%= lecture.name %></td>
+          <td><%= lecture.enrollment_key %></td>
+          <td class="text-right">
+            <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<% if !@created_lectures.empty? %>
+
+<h2>Created Lectures</h2>
+
+  <table class="table .table-sm table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Enrollment key</th>
+        <th scope="col" colspan="2"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @created_lectures.each do |lecture| %>
+        <tr>
+          <td><%= lecture.name %></td>
+          <td><%= lecture.enrollment_key %></td>
+          <td class="text-right">
+          <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>        
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+<% if !@ended_lectures.empty? %>
+
+  <h2>Ended Lectures</h2>
+
+  <table class="table .table-sm table-striped">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Enrollment key</th>
+        <th scope="col" colspan="2"></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @ended_lectures.each do |lecture| %>
+        <tr>
+          <td><%= lecture.name %></td>
+          <td><%= lecture.enrollment_key %></td>
+          <td class="text-right">
+          <%= link_to 'View', lecture, {class:"btn btn-primary"} %>        
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>
+
+
+
+
 
 
