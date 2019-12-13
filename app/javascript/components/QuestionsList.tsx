@@ -12,11 +12,8 @@ const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
 const QuestionsList: React.FunctionComponent<{}> = observer(() => {
   const { is_student, questionsList } = useInject(mapStore);
 
-  const className = ["questionsList"];
-  if (!is_student) className.push("is_lecturer");
-
   return (
-    <ul className={className.join(" ").trim()}>
+    <ul className={"questionsList " + (is_student ? "" : "is_lecturer")}>
       {questionsList.list.map(question => (
         <Question question={question} key={question.id} />
       ))}

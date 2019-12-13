@@ -9,6 +9,9 @@ class LecturesController < ApplicationController
   # GET /lectures
   def index
     @lectures = Lecture.where(lecturer: current_user)
+    @running_lectures = @lectures.where(status: "running")
+    @created_lectures = @lectures.where(status: "created")
+    @ended_lectures = @lectures.where(status: "ended")
   end
 
   # GET /lectures/1
@@ -63,9 +66,13 @@ class LecturesController < ApplicationController
   end
 
   def start_lecture
-    @lecture.set_active
-    @lecture.save
-    redirect_to lecture_path(@lecture)
+    if @lecture.status != "ended"
+      @lecture.set_active
+      @lecture.save
+      redirect_to lecture_path(@lecture)
+    else
+      redirect_to lectures_path, notice: "Can't restart an ended lecture."
+    end
   end
 
   def join_lecture
@@ -115,7 +122,7 @@ class LecturesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def lecture_params
-      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled)
+      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled, :description)
     end
 
     def require_lecturer
