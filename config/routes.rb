@@ -1,11 +1,10 @@
 Rails.application.routes.draw do
+  resources :uploaded_files
   get "/lectures/current", to: "lectures#current", as: "current_lectures"
   post "/lectures/start_lecture", to: "lectures#start_lecture", as: "start_lecture"
   post "/lectures/join_lecture", to: "lectures#join_lecture", as: "join_lecture"
   post "/lectures/leave_lecture", to: "lectures#leave_lecture", as: "leave_lecture"
   post "/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
-  post "/files/upload", to: "files#upload", as: "upload_file"
-  post "/files", to: "file#upload", as: "upload"
 
   resources :lectures do
     resources :polls

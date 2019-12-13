@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_13_110357) do
+ActiveRecord::Schema.define(version: 2019_12_13_172449) do
 
   create_table "feedbacks", force: :cascade do |t|
     t.text "content"
@@ -18,6 +18,17 @@ ActiveRecord::Schema.define(version: 2019_12_13_110357) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
+  end
+
+  create_table "files", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "allowsUpload_type"
+    t.integer "allowsUpload_id"
+    t.string "filename"
+    t.string "content_type"
+    t.binary "data"
+    t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_files_on_allowsUpload_type_and_allowsUpload_id"
   end
 
   create_table "lectures", force: :cascade do |t|
@@ -69,13 +80,13 @@ ActiveRecord::Schema.define(version: 2019_12_13_110357) do
   end
 
   create_table "uploaded_files", force: :cascade do |t|
+    t.string "content_type"
+    t.string "filename"
+    t.binary "data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "allowsUpload_type"
     t.integer "allowsUpload_id"
-    t.string "filename"
-    t.string "content_type"
-    t.binary "data"
     t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
   end
 

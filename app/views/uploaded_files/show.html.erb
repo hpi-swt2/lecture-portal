@@ -1,0 +1,19 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Content type:</strong>
+  <%= @uploaded_file.content_type %>
+</p>
+
+<p>
+  <strong>Filename:</strong>
+  <%= @uploaded_file.filename %>
+</p>
+
+<p>
+  <strong>Data:</strong>
+  <%= @uploaded_file.data %>
+</p>
+
+<%= link_to 'Edit', edit_uploaded_file_path(@uploaded_file) %> |
+<%= link_to 'Back', uploaded_files_path %>
