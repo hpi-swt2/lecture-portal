@@ -28,6 +28,7 @@ class PollsController < ApplicationController
     end
   end
 
+  # PATCH/PUT /polls/id/save_answers
   def save_answers
     puts(params)
     redirect_to lecture_poll_path(@lecture, params[:id])
