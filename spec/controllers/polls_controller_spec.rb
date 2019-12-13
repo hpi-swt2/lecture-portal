@@ -133,7 +133,7 @@ RSpec.describe PollsController, type: :controller do
     it "returns a success response for students", :logged_student do
       poll = Poll.create! valid_attributes
       get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
-      expect(response).to be_successful
+      expect(response).to_not be_successful
     end
   end
 
@@ -159,6 +159,24 @@ RSpec.describe PollsController, type: :controller do
     end
   end
 
+  describe "#stop_start" do
+    it "starts an inactive poll", :logged_student do
+      poll = FactoryBot.create(:poll, :inactive)
+      get :stop_start, params: { lecture_id: lecture.id, id: poll.id }, session: valid_session
+      poll.reload
+      expect(poll.is_active).to eq(true)
+    end
+    it "stops an active poll", :logged_student do
+      poll = FactoryBot.create(:poll, :active)
+      get :stop_start, params: { lecture_id: lecture.id, id: poll.id }, session: valid_session
+      poll.reload
+      expect(poll.is_active).to eq(false)
+    end
+  end
+
+  describe "#save_answers" do
+
+  end
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) { {
