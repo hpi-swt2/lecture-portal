@@ -70,7 +70,7 @@ RSpec.describe Api::QuestionsController, type: :controller do
 
       it "should not upvote a question if the student is the author" do
         question = FactoryBot.create(:question, author: @student)
-        post :upvote , params: { id: question.id }, session: valid_session
+        post :upvote, params: { id: question.id }, session: valid_session
         updatedQuestion = Question.find(question.id)
         expect(updatedQuestion.upvotes).to eq(0)
       end
@@ -163,14 +163,14 @@ RSpec.describe Api::QuestionsController, type: :controller do
       end
     end
 
-    describe "POST #upvote" do 
+    describe "POST #upvote" do
       it "should not upvote a question" do
         post :upvote, params: { id: @question.id }, session: valid_session
         updatedQuestion = Question.find(@question.id)
         expect(updatedQuestion.upvotes).to eq(0)
       end
 
-      it "should return a sorted list with upvoted questions first" do 
+      it "should return a sorted list with upvoted questions first" do
         student1 = FactoryBot.create(:user, :student)
         student2 = FactoryBot.create(:user, :student, email: "student2@mail.de")
         question1 = FactoryBot.create(:question, author: student1)
