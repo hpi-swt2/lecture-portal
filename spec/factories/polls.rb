@@ -10,5 +10,11 @@ FactoryBot.define do
     trait :inactive do
       is_active { false }
     end
+    trait :single_select do
+      is_multiselect { false }
+    end
+    trait :multi_select do
+      is_multiselect { true }
+    end
   end
 end
