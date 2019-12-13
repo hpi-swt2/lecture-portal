@@ -69,6 +69,4 @@ describe "The all lectures page", type: :feature do
     visit(lectures_path)
     expect(page).to have_current_path(current_lectures_path)
   end
-
-
 end

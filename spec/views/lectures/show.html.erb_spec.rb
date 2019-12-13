@@ -53,7 +53,7 @@ RSpec.describe "lectures/show", type: :view do
     expect(rendered).to have_selector("input[id='lecture_description'][type='text']")
   end
 
-  #wireframe does not show it
+  # wireframe does not show it
   it "can change description in settings tab" do
     @current_user = FactoryBot.create(:user, :lecturer)
     render
@@ -61,10 +61,10 @@ RSpec.describe "lectures/show", type: :view do
     expect(rendered).to_not have_selector("input[id='lecture_enrollment_key'][type='text']")
   end
   it "can change polls in settings tab" do
-    @current_user = FactoryBot.create(:user, :lecturer)
-    render
-    assert_select "a", "Settings"
-    expect(rendered).to have_selector("input[id='lecture_polls_enabled'][type='checkbox']")
+      @current_user = FactoryBot.create(:user, :lecturer)
+      render
+      assert_select "a", "Settings"
+      expect(rendered).to have_selector("input[id='lecture_polls_enabled'][type='checkbox']")
     end
 
   it "can change questions in settings tab" do
