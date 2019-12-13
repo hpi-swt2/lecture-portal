@@ -2,6 +2,9 @@ require "rails_helper"
 
 RSpec.describe LecturesController, type: :controller do
   let(:valid_attributes) {
+    { name: "SWT", enrollment_key: "swt", status: "created", questions_enabled: true, polls_enabled: true }
+  }
+  let(:valid_attributes_with_description) {
     { name: "SWT", enrollment_key: "swt", status: "created", questions_enabled: true, polls_enabled: true, description: "description" }
   }
   let(:valid_attributes_with_lecturer) {
@@ -105,6 +108,12 @@ RSpec.describe LecturesController, type: :controller do
       it "creates a new Lecture", :logged_lecturer do
         expect {
           post :create, params: { lecture: valid_attributes }, session: valid_session
+        }.to change(Lecture, :count).by(1)
+      end
+
+      it "creates a new Lecture with description", :logged_lecturer do
+        expect {
+          post :create, params: { lecture: valid_attributes_with_description }, session: valid_session
         }.to change(Lecture, :count).by(1)
       end
 
