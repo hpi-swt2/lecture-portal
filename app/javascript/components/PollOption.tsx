@@ -3,6 +3,7 @@ import * as React from "react"
 
 interface IPollOptionProps {
     options: Array<string>;
+    title: string
 }
 interface IPollOptionState {
     numberOfOptions: number;
