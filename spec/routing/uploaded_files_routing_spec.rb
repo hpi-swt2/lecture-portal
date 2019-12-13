@@ -11,10 +11,12 @@ RSpec.describe UploadedFilesController, type: :routing do
     end
 
     it "routes to #show" do
+      skip("Deleted because not part of current story")
       expect(:get => "/uploaded_files/1").to route_to("uploaded_files#show", :id => "1")
     end
 
     it "routes to #edit" do
+      skip("Deleted because not part of current story")
       expect(:get => "/uploaded_files/1/edit").to route_to("uploaded_files#edit", :id => "1")
     end
 
@@ -24,14 +26,17 @@ RSpec.describe UploadedFilesController, type: :routing do
     end
 
     it "routes to #update via PUT" do
+      skip("Deleted because not part of current story")
       expect(:put => "/uploaded_files/1").to route_to("uploaded_files#update", :id => "1")
     end
 
     it "routes to #update via PATCH" do
+      skip("Deleted because not part of current story")
       expect(:patch => "/uploaded_files/1").to route_to("uploaded_files#update", :id => "1")
     end
 
     it "routes to #destroy" do
+      skip("Deleted because not part of current story")
       expect(:delete => "/uploaded_files/1").to route_to("uploaded_files#destroy", :id => "1")
     end
   end
