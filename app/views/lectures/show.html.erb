@@ -64,11 +64,15 @@
 
 <table>
   <tr>
-    <td colspan="2"><%= link_to 'Edit', edit_lecture_path(@lecture), {class:"btn btn-link"} %> | </td>
-    <td colspan="2"><%= link_to 'Back', lectures_path, {class:"btn btn-link"} %> | </td>
-    <% if @lecture.status == "running" %>
-      <td colspan="2"><%= link_to 'New Poll', new_lecture_poll_path(@lecture), {class:"btn btn-link"}  %> | </td>
-      <td colspan="2"><%= button_to "End", {action: "end_lecture", params: {id: @lecture.id}}, {class:"btn btn-link"} %> </td>
-    <%end %>
+    <td><%= link_to 'Back', lectures_path, {class:"btn btn-link"} %> | </td>
+    <% if @current_user.is_student %>
+      <td><%= button_to "Leave Lecture", {action: "leave_lecture", params: {id: @lecture.id}}, {class:"btn btn-link"} %> </td>
+    <% else %>
+      <td><%= link_to 'Edit', edit_lecture_path(@lecture), {class:"btn btn-link"} %> | </td>
+      <% if @lecture.status == "running" %>
+        <td><%= link_to 'New Poll', new_lecture_poll_path(@lecture), {class:"btn btn-link"} %> | </td>
+        <td><%= button_to "End", {action: "end_lecture", params: {id: @lecture.id}}, {class:"btn btn-link"} %> </td>
+      <%end %>
+    <% end %>
   </tr>
 </table>
