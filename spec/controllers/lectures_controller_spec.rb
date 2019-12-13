@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe LecturesController, type: :controller do
   let(:valid_attributes) {
-    { name: "SWT", enrollment_key: "swt", status: "created", questions_enabled: true, polls_enabled: true }
+    { name: "SWT", enrollment_key: "swt", status: "created", questions_enabled: true, polls_enabled: true, description: "description" }
   }
   let(:valid_attributes_with_lecturer) {
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
@@ -125,7 +125,7 @@ RSpec.describe LecturesController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        { name: "SWT2", enrollment_key: "epic", status: "running" }
+        { name: "SWT2", enrollment_key: "epic", status: "running", description: "new description" }
       }
       before(:each) do
         @lecture = Lecture.create! valid_attributes_with_lecturer
@@ -139,6 +139,7 @@ RSpec.describe LecturesController, type: :controller do
         expect(@lecture.name).to eq("SWT2")
         expect(@lecture.enrollment_key).to eq("epic")
         expect(@lecture.running?).to eq(true)
+        expect(@lecture.description).to eq("new description")
         expect(@lecture.status).to eq("running")
       end
 
