@@ -10,16 +10,18 @@ const sortQuestionsList = (questionsList) => {
             a.created_at.getTime()
         );
     });
-}
+};
 
 const createQuestionFromData = (questionData) => {
     return Question.create({
         id: questionData.id,
         content: questionData.content,
         author_id: questionData.author_id,
-        created_at: new Date(questionData.created_at)
+        created_at: new Date(questionData.created_at),
+        upvotes: questionData.upvotes,
+        can_be_upvoted: questionData.can_be_upvoted != null ? questionData.can_be_upvoted : true
     });
-}
+};
 
 const QuestionsList = types
     .model({
@@ -45,6 +47,16 @@ const QuestionsList = types
             });
             if (resolvedQuestion)
                 destroy(resolvedQuestion)
+        },
+        upvoteQuestionById(id) : QuestionModel {
+            let upvoteQuestion: QuestionModel;
+            self.list.forEach(question => {
+                if (question.id == id)
+                    upvoteQuestion = question
+            });
+            if (upvoteQuestion)
+                upvoteQuestion.upvote();
+            return upvoteQuestion;
         }
     }));
 
