@@ -130,10 +130,10 @@ RSpec.describe PollsController, type: :controller do
       expect(response).to be_successful
     end
 
-    it "returns a success response for students", :logged_student do
+    it "redirects to polls index for students", :logged_student do
       poll = Poll.create! valid_attributes
       get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
-      expect(response).to_not be_successful
+      expect(response).to redirect_to(lecture_polls_path(lecture))
     end
   end
 
