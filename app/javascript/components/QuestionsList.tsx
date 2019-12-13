@@ -1,62 +1,24 @@
-import ActionCable from "actioncable";
 import React from "react";
+import { observer } from "mobx-react";
+import Question from "./Question";
+import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
+import useInject from "../hooks/useInject"
 
-const CableApp = {
-    cable: ActionCable.createConsumer(`/cable`)
-};
+const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
+  is_student,
+  questionsList
+});
 
-interface IQuestionsListProps {
-    is_student: boolean;
-}
+const QuestionsList: React.FunctionComponent<{}> = observer(() => {
+  const { is_student, questionsList } = useInject(mapStore);
 
-class QuestionsList extends React.Component<IQuestionsListProps> {
-    state = {
-        questions: []
-    };
-
-    componentDidMount = () => {
-        fetch(`/api/questions`)
-            .then(res => res.json())
-            .then(questions => this.setState({ questions: questions }));
-
-        CableApp.cable.subscriptions.create(
-            { channel: "QuestionsChannel" },
-            {
-                received: data => {
-                    const { question } = data;
-                    let questions = [question, ...this.state.questions];
-
-                    // sort questions by creation date to prevent wrong sorting
-                    questions.sort((a, b): number => {
-                        return (
-                            new Date(b.created_at).getTime() -
-                            new Date(a.created_at).getTime()
-                        );
-                    });
-
-                    this.setState({ questions: questions });
-                }
-            }
-        );
-    };
-
-    render = () => {
-        const { questions } = this.state;
-        const divClassName = ["questionsList"];
-        if (!this.props.is_student) divClassName.push("is_lecturer");
-        return (
-            <ul className={divClassName.join(" ").trim()}>
-                {mapQuestions(questions)}
-            </ul>
-        );
-    };
-}
+  return (
+    <ul className={"questionsList " + (is_student ? "" : "is_lecturer")}>
+      {questionsList.list.map(question => (
+        <Question question={question} key={question.id} />
+      ))}
+    </ul>
+  );
+});
 
 export default QuestionsList;
-
-// helpers
-const mapQuestions = questions => {
-    return questions.map(question => {
-        return <li key={question.id}>{question.content}</li>;
-    });
-};

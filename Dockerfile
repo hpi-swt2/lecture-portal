@@ -21,10 +21,6 @@ RUN bundle install --without development test
 
 COPY . .
 RUN yarn install --check-files
-RUN ./bin/rails webpacker:install && \
-    ./bin/rails webpacker:install:react && \
-    # ./bin/rails generate react:install && \
-    ./bin/rails webpacker:install:typescript
 
 RUN ./bin/rails assets:precompile
 EXPOSE 3000
