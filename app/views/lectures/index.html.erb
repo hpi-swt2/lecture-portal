@@ -21,11 +21,14 @@
         <td><%= lecture.enrollment_key %></td>
         <td><%= lecture.status%></td>
         <td class="text-right">
-        <% if lecture.status == "running" %>
-          <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
-        <% else %>
+        <% if lecture.status == "created" %>
           <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
-        <%end %>
+        <% elsif lecture.status == "running" %>
+          <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
+          <%= button_to "End", {action: "end_lecture", params: {id: lecture.id}}, {class:"btn btn-secondary"} %>
+        <% else %>
+          <%= link_to 'Review', lecture, {class:"btn btn-primary"} %>
+        <% end %>
         </td>
       </tr>
     <% end %>
