@@ -13,6 +13,7 @@ class CoursesController < ApplicationController
   # GET /courses/new
   def new
     @course = Course.new
+    @course.creator = current_user
   end
 
   # GET /courses/1/edit
@@ -22,7 +23,7 @@ class CoursesController < ApplicationController
   # POST /courses
   def create
     @course = Course.new(course_params)
-
+    @course.creator = current_user
     if @course.save
       redirect_to @course, notice: "Course was successfully created."
     else
