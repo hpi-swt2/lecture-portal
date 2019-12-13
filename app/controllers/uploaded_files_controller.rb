@@ -28,7 +28,7 @@ class UploadedFilesController < ApplicationController
       lecture = Lecture.find(lecture_id)
       file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: lecture)
       if file.save
-        redirect_to (uploaded_files_url), notice: 'Uploaded file was successfully created.'
+        redirect_to (uploaded_files_url), notice: "Uploaded file was successfully created."
       else
         render :new
       end
