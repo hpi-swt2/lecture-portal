@@ -101,6 +101,9 @@ class AnswerOption extends React.Component<
   };
 
   handleOptionChange = (option_id: number, is_selected: boolean) => {
+    if(!this.props.is_multiselect){
+      this.answers = new Array(this.props.options.length).fill(false);
+    }
     this.answers[option_id - 1] = is_selected;
   };
 }
