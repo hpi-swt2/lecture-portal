@@ -21,5 +21,13 @@
 <% end %>
 </ol>
 
+<h2>Votes</h2>
+<ol>
+	<% for answer in @poll.answers %>
+	<li><%= answer.option_id %></li>
+<% end %>
+</ol>
+
+
 <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
 <%= link_to 'Back', lecture_polls_path(@lecture) %>
