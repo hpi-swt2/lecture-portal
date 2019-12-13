@@ -37,15 +37,15 @@ RSpec.describe Api::QuestionsController, type: :controller do
       end
       it "should return list of a question" do
         question = FactoryBot.create(:question, author: @student)
-        expected = [ QuestionSerializer.new(question).as_json ]
+        expected = [ QuestionSerializer.new(question, scope: @student, scope_name: :current_user).as_json ]
         get :index, params: {}, session: valid_session
         expect(response.body).to eq(expected.to_json)
       end
       it "should return a time-sorted list of all questions" do
         question1 = FactoryBot.create(:question, author: @student)
         question2 = FactoryBot.create(:question, author: @student)
-        expected = [ QuestionSerializer.new(question2).as_json,
-                      QuestionSerializer.new(question1).as_json ]
+        expected = [ QuestionSerializer.new(question2, scope: @student, scope_name: :current_user).as_json,
+                      QuestionSerializer.new(question1, scope: @student, scope_name: :current_user).as_json ]
         get :index, params: {}, session: valid_session
         expect(response.body).to eq(expected.to_json)
       end
@@ -54,9 +54,18 @@ RSpec.describe Api::QuestionsController, type: :controller do
         FactoryBot.create(:question, author: @student)
         question = FactoryBot.create(:question, author: @student)
         post :resolve, params: { id: 1 }, session: valid_session
-        expected = [ QuestionSerializer.new(question).as_json ]
+        expected = [ QuestionSerializer.new(question, scope: @student, scope_name: :current_user).as_json ]
         get :index, params: {}, session: valid_session
         expect(response.body).to eq(expected.to_json)
+      end
+    end
+
+    describe "POST #upvote" do
+      it "should set the user as an upvoter for the question" do
+        question = FactoryBot.create(:question)
+        post :upvote, params: { id: question.id }, session: valid_session
+        updatedQuestion = Question.find(question.id)
+        expect(updatedQuestion.upvoters).to include(@student)
       end
     end
 
