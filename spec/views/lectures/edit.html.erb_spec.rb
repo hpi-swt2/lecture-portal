@@ -25,4 +25,10 @@ RSpec.describe "lectures/edit", type: :view do
       assert_select "input[name=?]", "lecture[description]"
     end
   end
+
+  it "renders a delete button" do
+    render
+
+    assert_select "[data-method=delete]"
+  end
 end
