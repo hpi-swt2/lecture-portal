@@ -1,8 +1,6 @@
 import * as React from "react";
 import { ChangeEvent } from "react";
 import * as axios from "axios";
-import ts from "typescript/lib/tsserverlibrary";
-import nullCancellationToken = ts.server.nullCancellationToken;
 
 interface IAnswerOptionProps {
   options: Array<string>;
@@ -80,7 +78,7 @@ class AnswerOption extends React.Component<
   }
 
   // Use anonymous methods so it is automatically bound to this.
-  submitAnswers = event => {
+  submitAnswers = async event => {
     event.preventDefault();
     const { lecture_id, poll_id } = this.props;
     const outerFormForSubmit = document.getElementById("outer-form");
@@ -94,7 +92,12 @@ class AnswerOption extends React.Component<
       id: poll_id,
       answers: this.answers
     };
-    axios.post(`/lectures/${lecture_id}/polls/${poll_id}/save_answers`, data);
+    const response = await axios.post(
+      `/lectures/${lecture_id}/polls/${poll_id}/save_answers`,
+      data
+    );
+    const newUrl = response.request.responseURL;
+    window.location.href = newUrl;
   };
 
   handleOptionChange = (option_id: number, is_selected: boolean) => {
