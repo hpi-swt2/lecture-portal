@@ -1,5 +1,5 @@
 class PollsController < ApplicationController
-  before_action :set_poll, only: [:show, :edit, :update, :destroy]
+  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers]
   before_action :get_lecture
   before_action :authenticate_user!
 
@@ -28,16 +28,28 @@ class PollsController < ApplicationController
     end
   end
 
+  # GET /polls/1/stop
+  def stop
+    if @poll.is_active
+      if @poll.update(is_active: false)
+        render :show, notice: "You stopped the poll!"
+      else
+        render :show, notice: "This did not work :("
+      end
+    else
+      render :show, notice: "The poll is not running, so you can not stop it..."
+    end
+
+  end
+
   # PATCH/PUT /polls/id/save_answers
   def save_answers
-    poll = Poll.find(params[:id])
-
     # delete answers from student to poll
-    Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
+    Answer.where(poll_id: @poll.id, student_id: current_user.id).destroy_all
 
     # save new answers
-    poll.poll_options.each { |option|
-      current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: option.id)
+    @poll.poll_options.each { |option|
+      current_answer = Answer.new(poll: @poll, student_id: current_user.id, option_id: option.id)
       puts(current_answer)
       current_answer.save
     }
