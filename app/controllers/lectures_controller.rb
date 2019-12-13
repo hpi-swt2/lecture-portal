@@ -70,15 +70,11 @@ class LecturesController < ApplicationController
 
   def join_lecture
     @lecture.join_lecture(current_user)
-    @lecture.save
-    current_user.save
     redirect_to @lecture, notice: "You successfully joined the lecture."
   end
 
   def leave_lecture
     @lecture.leave_lecture(current_user)
-    @lecture.save
-    current_user.save
     redirect_to current_lectures_url, notice: "You successfully left the lecture."
   end
 
