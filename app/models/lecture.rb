@@ -23,4 +23,10 @@ class Lecture < ApplicationRecord
       self.participating_students << student
     end
   end
+
+  def leave_lecture(student)
+    if self.participating_students.include?(student)
+      self.participating_students.delete(student)
+    end
+  end
 end
