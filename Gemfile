@@ -115,7 +115,7 @@ group :test do
   # gem 'faker' # https://github.com/stympy/faker
   # Code coverage for Ruby
   # gem 'simplecov', require: false # https://github.com/colszowka/simplecov
-  gem 'capybara_table'
+  gem "capybara_table"
 end
 
 group :production do
