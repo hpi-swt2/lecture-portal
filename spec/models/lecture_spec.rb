@@ -33,4 +33,13 @@ RSpec.describe Lecture, type: :model do
     @lecture.participating_students << user1
     @lecture.participating_students << user2
   end
+
+  it "each participating student is stored only once" do
+    user = FactoryBot.create(:user, :student, email: "test1@hpi.de")
+    expect(@lecture.participating_students.length).to be 0
+    @lecture.join_lecture(user)
+    expect(@lecture.participating_students.length).to be 1
+    @lecture.join_lecture(user)
+    expect(@lecture.participating_students.length).to be 1
+  end
 end

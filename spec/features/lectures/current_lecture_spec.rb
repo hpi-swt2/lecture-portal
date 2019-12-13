@@ -24,6 +24,16 @@ describe "The current lectures page", type: :feature do
       expect(page).to_not have_css("td", text: @lectures[0].name)
       expect(page).to have_css("td", text: @lectures[1].name)
     end
+
+    it "clicking the join button adds the student to the lecture" do
+      @lecture = FactoryBot.create(:lecture, status: "running")
+      visit current_lectures_path
+      expect(@lecture.participating_students.length).to be 0
+      click_on("Join")
+      @lecture.reload
+      expect(@lecture.participating_students.length).to be 1
+      expect(@lecture.participating_students[0]).to eq @student
+    end
   end
 
   context "being logged in as a lecturer" do

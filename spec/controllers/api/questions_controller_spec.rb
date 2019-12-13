@@ -37,15 +37,24 @@ RSpec.describe Api::QuestionsController, type: :controller do
       end
       it "should return list of a question" do
         question = FactoryBot.create(:question, author: @student)
-        expected = [ QuestionSerializer.new(question).as_json ]
+        expected = [ QuestionSerializer.new(question, scope: @student, scope_name: :current_user).as_json ]
         get :index, params: {}, session: valid_session
         expect(response.body).to eq(expected.to_json)
       end
       it "should return a time-sorted list of all questions" do
         question1 = FactoryBot.create(:question, author: @student)
         question2 = FactoryBot.create(:question, author: @student)
-        expected = [ QuestionSerializer.new(question2).as_json,
-                      QuestionSerializer.new(question1).as_json ]
+        expected = [ QuestionSerializer.new(question2, scope: @student, scope_name: :current_user).as_json,
+                      QuestionSerializer.new(question1, scope: @student, scope_name: :current_user).as_json ]
+        get :index, params: {}, session: valid_session
+        expect(response.body).to eq(expected.to_json)
+      end
+
+      it "should only show unresolved questions" do
+        FactoryBot.create(:question, author: @student)
+        question = FactoryBot.create(:question, author: @student)
+        post :resolve, params: { id: 1 }, session: valid_session
+        expected = [ QuestionSerializer.new(question, scope: @student, scope_name: :current_user).as_json ]
         get :index, params: {}, session: valid_session
         expect(response.body).to eq(expected.to_json)
       end
@@ -79,6 +88,11 @@ RSpec.describe Api::QuestionsController, type: :controller do
           created_question = Question.find(1)
           expect(created_question.author).to eq(@student)
         end
+        it "creates a new question with 'resolved' being set to false as a default" do
+          post :create, params: valid_attributes, session: valid_session
+          created_question = Question.find(1)
+          expect(created_question.resolved).to eq(false)
+        end
         it "broadcasts a question after creation" do
           expect {
             post :create, params: valid_attributes, session: valid_session
@@ -86,11 +100,29 @@ RSpec.describe Api::QuestionsController, type: :controller do
         end
       end
     end
+
+    describe "POST #resolve" do
+      it "should set a question as resolved if the student is the author" do
+        question = FactoryBot.create(:question, author: @student)
+        post :resolve, params: { id: question.id }, session: valid_session
+        updatedQuestion = Question.find(question.id)
+        expect(updatedQuestion.resolved).to eq(true)
+      end
+
+      it "should not set a question as resolved if the student is not the author" do
+        student2 = FactoryBot.create(:user, :student, email: "student2@mail.de")
+        question = FactoryBot.create(:question, author: student2)
+        post :resolve, params: { id: question.id }, session: valid_session
+        updatedQuestion = Question.find(question.id)
+        expect(updatedQuestion.resolved).to eq(false)
+      end
+    end
   end
 
   context "with user logged in as lecturer" do
     before(:each) do
-      @lecturer = FactoryBot.create(:user, :lecturer)
+      @question = FactoryBot.create(:question)
+      @lecturer = FactoryBot.create(:user, :lecturer, email: "lecturer@mail.de")
       sign_in(@lecturer, scope: :user)
     end
 
@@ -99,6 +131,20 @@ RSpec.describe Api::QuestionsController, type: :controller do
         expect {
           post :create, params: valid_attributes, session: valid_session
         }.to change(Question, :count).by(0)
+      end
+    end
+
+    describe "POST #resolve" do
+      it "should set a question as resolved after the resolve API call" do
+        post :resolve, params: { id: @question.id }, session: valid_session
+        updatedQuestion = Question.find(@question.id)
+        expect(updatedQuestion.resolved).to eq(true)
+      end
+
+      it "should only show unresolved questions" do
+        post :resolve, params: { id: @question.id }, session: valid_session
+        get :index, params: {}, session: valid_session
+        expect(response.body).to eq([].to_json)
       end
     end
   end

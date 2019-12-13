@@ -4,7 +4,7 @@ class Api::QuestionsController < ApplicationController
 
   # GET /api/questions
   def index
-    questions = Question.order(created_at: :desc)
+    questions = Question.where(resolved: false).order(created_at: :desc)
     render json: questions
   end
 
@@ -25,7 +25,7 @@ class Api::QuestionsController < ApplicationController
     end
   end
 
-  # POST /api/question/:id/upvote
+  # POST /api/questions/:id/upvote
   def upvote
     question = Question.find(params[:id])
     if question && current_user.is_student && question.author != current_user && !question.upvoters.include?(current_user)
@@ -40,6 +40,19 @@ class Api::QuestionsController < ApplicationController
             upvoter: current_user.id
           }
         )
+        head :ok
+      end
+    end
+  end
+  # POST /api/questions/:id/resolve
+  def resolve
+    question = Question.find(params[:id])
+    # only allow author or lecturer to resolve the question
+    if question && (!current_user.is_student || question.author == current_user)
+      question.resolved = true
+      if question.save
+        # broadcast resolving via ActionCable
+        ActionCable.server.broadcast("question_resolving_channel", question.id)
         head :ok
       end
     end

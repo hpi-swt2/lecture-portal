@@ -10,17 +10,25 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_06_134114) do
+ActiveRecord::Schema.define(version: 2019_12_06_144904) do
+
+  create_table "feedbacks", force: :cascade do |t|
+    t.text "content"
+    t.integer "lecture_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
+  end
 
   create_table "lectures", force: :cascade do |t|
     t.string "name"
     t.string "description", default: ""
     t.string "enrollment_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "questions_enabled", default: true
     t.boolean "polls_enabled", default: true
     t.string "status", default: "created"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.integer "lecturer_id"
     t.index ["lecturer_id"], name: "index_lectures_on_lecturer_id"
   end
@@ -37,6 +45,7 @@ ActiveRecord::Schema.define(version: 2019_12_06_134114) do
     t.integer "poll_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "votes", default: 0, null: false
     t.index ["poll_id"], name: "index_poll_options_on_poll_id"
   end
 
@@ -55,12 +64,15 @@ ActiveRecord::Schema.define(version: 2019_12_06_134114) do
     t.integer "author_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "resolved", default: false, null: false
     t.index ["author_id"], name: "index_questions_on_author_id"
   end
 
   create_table "questions_users", id: false, force: :cascade do |t|
     t.integer "question_id", null: false
     t.integer "user_id", null: false
+    t.index ["question_id", "user_id"], name: "index_questions_users_on_question_id_and_user_id"
+    t.index ["user_id", "question_id"], name: "index_questions_users_on_user_id_and_question_id"
   end
 
   create_table "users", force: :cascade do |t|
