@@ -15,7 +15,7 @@ RSpec.describe Course, type: :model do
   end
 
   it "persists lecturer as creator" do
-    expect(@course.creator).to exist
+    expect(@course.creator).to be_instance_of(User)
   end
 
   it "is not valid without a creator" do
