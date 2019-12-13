@@ -2,6 +2,6 @@ FactoryBot.define do
   factory :lecture do
     name { "SWTII" }
     enrollment_key { "ruby" }
-    is_running { true }
+    lecturer { FactoryBot.create(:user, :lecturer) }
   end
 end

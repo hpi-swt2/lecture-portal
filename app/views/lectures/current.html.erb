@@ -1,0 +1,27 @@
+<h1>Current Lectures</h1>
+
+<table class="table .table-sm table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @lectures.each do |lecture| %>
+      <tr>
+        <td><%= lecture.name %></td>
+        <td class="text-right">
+          <% if lecture.status == "running" %>
+            <%= button_to "Join", {action: "join_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
+          <% else %>
+            not running
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>

@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <p>
   <strong>Title:</strong>
   <%= @poll.title %>
@@ -9,6 +7,19 @@
   <strong>Is multiselect:</strong>
   <%= @poll.is_multiselect %>
 </p>
+
+<p>
+  <strong>Is active:</strong>
+  <%= @poll.is_active %>
+</p>
+
+<h2>Options</h2>
+<ol>
+<% for option in @poll.poll_options %>
+
+    <li><%= option.description %></li>
+<% end %>
+</ol>
 
 <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
 <%= link_to 'Back', lecture_polls_path(@lecture) %>

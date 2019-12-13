@@ -14,11 +14,11 @@ gem "rails", "~> 5.2.3"
 # Use sqlite3 as the database for Active Record. https://www.sqlite.org/index.html
 gem "sqlite3"
 # Use Puma as the app server. https://github.com/puma/puma
-gem "puma", "~> 3.11"
+gem "puma", "~> 3.12"
 # Use Uglifier as compressor for JavaScript assets. https://github.com/lautis/uglifier
 gem "uglifier", ">= 1.3.0"
 # See https://github.com/rails/execjs#readme for more supported runtimes
-gem "mini_racer", platforms: :ruby
+gem "mini_racer", "= 0.2.6", platforms: :ruby
 # Turbolinks makes navigating your web application faster. https://github.com/turbolinks/turbolinks
 gem "turbolinks", "~> 5"
 # Reduces boot times through caching; required in config/boot.rb
@@ -123,3 +123,9 @@ end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
 gem "tzinfo-data", platforms: [:mingw, :mswin, :x64_mingw, :jruby]
+gem "webpacker"
+gem "react-rails"
+
+gem "active_model_serializers"
+# Adds support to test action-cable behaviour, see https://github.com/palkan/action-cable-testing
+gem "action-cable-testing"

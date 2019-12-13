@@ -2,21 +2,29 @@ require "rails_helper"
 
 RSpec.describe "polls/index", type: :view do
   before(:each) do
+    login_lecturer
+    @lecture = FactoryBot.create(:lecture)
     assign(:polls, [
       Poll.create!(
-        title: "Title",
-        is_multiselect: false
+        title: "Title1",
+        is_multiselect: false,
+        lecture_id: @lecture.id
       ),
       Poll.create!(
-        title: "Title",
-        is_multiselect: false
+        title: "Title2",
+        is_multiselect: false,
+        lecture_id: @lecture.id
       )
     ])
   end
 
   it "renders a list of polls" do
-    render
-    assert_select "tr>td", text: "Title".to_s, count: 2
-    assert_select "tr>td", text: false.to_s, count: 2
+    visit lecture_polls_path(@lecture)
+    expect(page).to have_text("Title1")
+    expect(page).to have_text("Title2")
+  end
+  def login_lecturer
+    user = FactoryBot.create(:user, :lecturer)
+    sign_in(user, scope: :user)
   end
 end
