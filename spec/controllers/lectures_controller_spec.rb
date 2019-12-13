@@ -129,7 +129,6 @@ RSpec.describe LecturesController, type: :controller do
       }
       before(:each) do
         @lecture = Lecture.create! valid_attributes_with_lecturer
-        # login lecturer
         login_lecturer(@lecture.lecturer)
       end
 
@@ -198,6 +197,38 @@ RSpec.describe LecturesController, type: :controller do
       login_lecturer
       post :join_lecture, params: { id: @lecture.id }, session: valid_session
       expect(response).to redirect_to(lectures_url)
+    end
+  end
+
+  describe "POST #leave_lecture" do
+    before(:each) do
+      # login user
+      @lecture = FactoryBot.create(:lecture, status: "running")
+      login_student
+      post :join_lecture, params: { id: @lecture.id }, session: valid_session
+    end
+
+    it "redirects to the lectures overview" do
+      post :leave_lecture, params: { id: @lecture.id }, session: valid_session
+      expect(response).to redirect_to(current_lectures_path)
+    end
+  end
+
+  describe "POST #start_lecture" do
+    before(:each) do
+      @lecturer = FactoryBot.create(:user, :lecturer)
+      @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+      sign_in(@lecturer, scope: :user)
+    end
+
+    it "should not be possible to restart an ended lecture" do
+      @lecture.set_inactive
+      @lecture.save
+      expect(@lecture.status).to eq "ended"
+
+      post :start_lecture, params: { id: @lecture.id }, session: valid_session
+      @lecture.reload
+      expect(@lecture.status).to eq "ended"
     end
   end
 

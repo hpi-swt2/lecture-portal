@@ -1,14 +1,17 @@
 class LecturesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture]
+  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :validate_joined_user_or_owner, only: [:show]
-  before_action :require_lecturer, except: [:current, :join_lecture, :show]
-  before_action :require_student, only: [:join_lecture]
+  before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show]
+  before_action :require_student, only: [:join_lecture, :leave_lecture]
 
   # GET /lectures
   def index
     @lectures = Lecture.where(lecturer: current_user)
+    @running_lectures = @lectures.where(status: "running")
+    @created_lectures = @lectures.where(status: "created")
+    @ended_lectures = @lectures.where(status: "ended")
   end
 
   # GET /lectures/1
@@ -63,16 +66,23 @@ class LecturesController < ApplicationController
   end
 
   def start_lecture
-    @lecture.set_active
-    @lecture.save
-    redirect_to lecture_path(@lecture)
+    if @lecture.status != "ended"
+      @lecture.set_active
+      @lecture.save
+      redirect_to lecture_path(@lecture)
+    else
+      redirect_to lectures_path, notice: "Can't restart an ended lecture."
+    end
   end
 
   def join_lecture
     @lecture.join_lecture(current_user)
-    @lecture.save
-    current_user.save
     redirect_to @lecture, notice: "You successfully joined the lecture."
+  end
+
+  def leave_lecture
+    @lecture.leave_lecture(current_user)
+    redirect_to current_lectures_url, notice: "You successfully left the lecture."
   end
 
   def end_lecture
