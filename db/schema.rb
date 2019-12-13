@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_06_144904) do
+ActiveRecord::Schema.define(version: 2019_12_13_110357) do
 
   create_table "feedbacks", force: :cascade do |t|
     t.text "content"
@@ -66,6 +66,17 @@ ActiveRecord::Schema.define(version: 2019_12_06_144904) do
     t.datetime "updated_at", null: false
     t.boolean "resolved", default: false, null: false
     t.index ["author_id"], name: "index_questions_on_author_id"
+  end
+
+  create_table "uploaded_files", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "allowsUpload_type"
+    t.integer "allowsUpload_id"
+    t.string "filename"
+    t.string "content_type"
+    t.binary "data"
+    t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
   end
 
   create_table "users", force: :cascade do |t|

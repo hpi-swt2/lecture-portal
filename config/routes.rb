@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   post "/lectures/join_lecture", to: "lectures#join_lecture", as: "join_lecture"
   post "/lectures/leave_lecture", to: "lectures#leave_lecture", as: "leave_lecture"
   post "/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
+  post "/files/upload", to: "files#upload", as: "upload_file"
+  post "/files", to: "file#upload", as: "upload"
 
   resources :lectures do
     resources :polls
