@@ -1,9 +1,12 @@
-<%= form_with(model: [@lecture, @poll], local: true, url: save_answers_lecture_poll_path(@lecture, @poll)) do |form| %>
+<%= form_with(model: [@lecture, @poll], local: true, url:
+save_answers_lecture_poll_path(@lecture, @poll), id: "outer-form") do |form| %>
 
-  <div class="field">
-    <% form_props = {title: @poll.title, is_multiselect: @poll.is_multiselect, lecture_id: @poll.lecture_id, poll_id: @poll.id} %>
-    <% form_props[:options] = @poll.poll_options.length>1 ? @poll.poll_options.map{|option| option.description} : ["", ""] %>
-    <%= react_component("AnswerOption", form_props) %>
-  </div>
+<div class="field">
+  <% form_props = {title: @poll.title, is_multiselect: @poll.is_multiselect,
+  lecture_id: @poll.lecture_id, poll_id: @poll.id} %> <% form_props[:options] =
+  @poll.poll_options.length>1 ? @poll.poll_options.map{|option|
+  option.description} : ["", ""] %> <%= react_component("AnswerOption",
+  form_props) %>
+</div>
 
 <% end %>

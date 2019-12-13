@@ -9,7 +9,7 @@ Rails.application.routes.draw do
     resources :polls do
       member do
         patch :save_answers
-        put :save_answers
+        post :save_answers
       end
     end
 
