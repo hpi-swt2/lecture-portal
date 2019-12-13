@@ -17,10 +17,10 @@
 <ol>
 <% for option in @poll.poll_options %>
 
-    <li><%= option.description %></li>
+    <li><%= option.description + " => " + option.votes.to_s %></li>
 <% end %>
 </ol>
 
 <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
-<%= link_to 'Stop', stop_lecture_poll_path(@lecture, @poll) %> |
+<%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_lecture_poll_path(@lecture, @poll) %> |
 <%= link_to 'Back', lecture_polls_path(@lecture) %>

@@ -10,7 +10,7 @@ Rails.application.routes.draw do
       member do
         patch :save_answers
         post :save_answers
-        get :stop
+        get :stop_start
       end
     end
 

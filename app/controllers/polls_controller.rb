@@ -1,5 +1,5 @@
 class PollsController < ApplicationController
-  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers]
+  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start]
   before_action :get_lecture
   before_action :authenticate_user!
 
@@ -24,36 +24,58 @@ class PollsController < ApplicationController
   # GET /polls/1/edit
   def edit
     if current_user.is_student
-      render :answer
+      if @poll.is_active
+        render :answer
+      else
+        redirect_to lecture_polls_path(@lecture), notice: "The poll is not active :("
+      end
     end
   end
 
   # GET /polls/1/stop
-  def stop
+  def stop_start
     if @poll.is_active
       if @poll.update(is_active: false)
-        render :show, notice: "You stopped the poll!"
+        redirect_to lecture_poll_path(@lecture, @poll), notice: "You stopped the poll!"
       else
-        render :show, notice: "This did not work :("
+        redirect_to lecture_poll_path(@lecture, @poll), notice: "This did not work :("
       end
     else
-      render :show, notice: "The poll is not running, so you can not stop it..."
+      if @poll.update(is_active: true)
+        redirect_to lecture_poll_path(@lecture, @poll), notice: "You started the poll!"
+      else
+        redirect_to lecture_poll_path(@lecture, @poll), notice: "This did not work :("
+      end
     end
 
   end
 
-  # PATCH/PUT /polls/id/save_answers
+  # POST /polls/id/save_answers
   def save_answers
     # delete answers from student to poll
     Answer.where(poll_id: @poll.id, student_id: current_user.id).destroy_all
+    answer_settings = params[:answers]
 
     # save new answers
+    index = 0
+    while index < answer_settings.length do
+      if answer_settings[index]
+        current_option = @poll.poll_options[index]
+        current_answer = Answer.new(poll: @poll, student_id: current_user.id, option_id: current_option.id)
+        current_answer.save
+      end
+      index = index + 1
+    end
+=begin
     @poll.poll_options.each { |option|
       current_answer = Answer.new(poll: @poll, student_id: current_user.id, option_id: option.id)
       puts(current_answer)
       current_answer.save
     }
+=end
 
+    # gather votes for poll
+    @poll.gather_vote_results
     redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
   end
 
