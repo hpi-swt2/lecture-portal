@@ -23,6 +23,7 @@
           <td><%= lecture.name %></td>
           <td><%= lecture.enrollment_key %></td>
           <td class="text-right">
+            <%= button_to "End", {action: "end_lecture", params: {id: lecture.id}}, {class:"btn btn-outline-secondary"} %>
             <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
           </td>
         </tr>
@@ -50,7 +51,7 @@
           <td><%= lecture.name %></td>
           <td><%= lecture.enrollment_key %></td>
           <td class="text-right">
-          <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>        
+          <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
           </td>
         </tr>
       <% end %>
@@ -77,7 +78,7 @@
           <td><%= lecture.name %></td>
           <td><%= lecture.enrollment_key %></td>
           <td class="text-right">
-          <%= link_to 'View', lecture, {class:"btn btn-primary"} %>        
+          <%= link_to 'Review', lecture, {class:"btn btn-outline-secondary"} %>
           </td>
         </tr>
       <% end %>

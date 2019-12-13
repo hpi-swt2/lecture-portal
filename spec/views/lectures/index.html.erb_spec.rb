@@ -50,15 +50,21 @@ RSpec.describe "lectures/index", type: :view do
       ),
     ])
     render
+    assert_select "[value='End']", count: 1
     assert_select "a", "View"
     expect(rendered).to have_css("[value='End']")
   end
 
   it "renders Review button for ended lectures" do
-    @lectures[0].status = "ended"
-    @lectures[1].status = "ended"
+    assign(:ended_lectures, [
+      Lecture.create!(
+        name: "Name",
+        enrollment_key: "Enrollment Key",
+        status: "ended",
+        lecturer: FactoryBot.create(:user, :lecturer, email: "hp@hpi.de")
+      ),
+    ])
     render
-    assert_select "tr>td", text: "ended".to_s, count: 2
     assert_select "a", "Review"
   end
 end
