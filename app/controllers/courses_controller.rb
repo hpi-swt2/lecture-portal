@@ -1,5 +1,6 @@
 class CoursesController < ApplicationController
   before_action :set_course, only: [:show, :edit, :update, :destroy]
+  before_action :validate_owner, only: [:show, :edit]
 
   # GET /courses
   def index
@@ -46,6 +47,8 @@ class CoursesController < ApplicationController
     redirect_to courses_url, notice: "Course was successfully destroyed."
   end
 
+
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_course
@@ -56,4 +59,11 @@ class CoursesController < ApplicationController
     def course_params
       params.require(:course).permit(:name, :description, :status)
     end
+
+
+  def validate_owner
+    if @course.creator != current_user
+      redirect_to lectures_url, notice: "You can only access your own courses."
+    end
+  end
 end
