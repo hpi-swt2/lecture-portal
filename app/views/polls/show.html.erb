@@ -13,20 +13,30 @@
   <%= @poll.is_active %>
 </p>
 
-<h2>Options</h2>
-<ol>
-<% for option in @poll.poll_options %>
+<table class="table .table-sm table-striped">
+  <thead>
+    <tr>
+      <th>Options</th>
+      <% if !@poll.is_active? %>
+        <th>Votes</th>
+      <% end %>
+    </tr>
+  </thead>
 
-    <li><%= option.description %></li>
-<% end %>
-</ol>
+  <tbody>
+    <% for option in @poll.poll_options %>
+      <tr>
+        <td><%= option.description %></td>
+        <% if !@poll.is_active? %>
+        <td class="text-right">
+            <%= option.votes %>
+           <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
-<h2>Votes</h2>
-<ol>
-	<% for answer in @poll.answers %>
-	<li><%= answer.option_id %></li>
-<% end %>
-</ol>
 
 
 <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
