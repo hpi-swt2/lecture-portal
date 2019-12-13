@@ -30,8 +30,19 @@ class PollsController < ApplicationController
 
   # PATCH/PUT /polls/id/save_answers
   def save_answers
-    puts(params)
-    redirect_to lecture_poll_path(@lecture, params[:id])
+    poll = Poll.find(params[:id])
+
+    # delete answers from student to poll
+    Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
+
+    # save new answers
+    poll.poll_options.each { |option|
+      current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: option.id)
+      puts(current_answer)
+      current_answer.save
+    }
+
+    redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
   end
 
   # POST /polls
