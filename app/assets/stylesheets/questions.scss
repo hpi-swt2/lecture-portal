@@ -70,7 +70,7 @@ div.questionsList {
           height: 0;
           border-left: 15px solid transparent;
           border-right: 15px solid transparent;
-          border-bottom: 25px solid #888;
+          border-bottom: 25px solid #999;
           &:hover, &:focus, &:active {
             border-bottom-color: #000;
           }
@@ -81,9 +81,15 @@ div.questionsList {
           width: 100%;
           margin: 0 !important;
         }
+        &.upvoted {
+          > .arrow {
+            border-bottom-color: #000;
+            cursor: default !important;
+          }
+        }
         &.disabled {
           > .arrow {
-            border-bottom-color: #DDD;
+            border-bottom-color: #EEE;
             cursor: default !important;
           }
         }
