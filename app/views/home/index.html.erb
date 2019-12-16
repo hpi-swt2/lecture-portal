@@ -23,12 +23,23 @@
             <%end %>
           </td>
         </tr>
-        </table>
-
       <% end %>
+      </table>
+    <% end %>
+
+    <% if user_signed_in? && @current_user.is_student %>
+      <p class="lead">Available Courses</p>
+      <table>
+        <% @open_courses.each do |course| %>
+
+          <tr>
+              <td><%= course.name %></td>
+              <td class="text-right"> <%= link_to 'View', course, {class:"btn btn-primary"} %></td>
+          </tr>
 
 
-
+        <% end %>
+      </table>
     <% end %>
 
 
