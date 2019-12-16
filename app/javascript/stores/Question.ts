@@ -7,8 +7,18 @@ const Question = types
     id: types.integer,
     content: types.string,
     author_id: types.integer,
-    created_at: types.Date
-  });
+    created_at: types.Date,
+    upvotes: types.optional(types.integer, 0),
+    can_be_upvoted: types.boolean
+  })
+  .actions(self => ({
+    upvote() {
+      self.upvotes++;
+    },
+    disallowUpvote() {
+      self.can_be_upvoted = false;
+    }
+  }));
 
 
 export default Question;

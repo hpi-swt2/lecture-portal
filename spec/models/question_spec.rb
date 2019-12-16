@@ -15,4 +15,12 @@ RSpec.describe Question, type: :model do
     question = FactoryBot.build(:question, author: nil)
     expect(question).to_not be_valid
   end
+
+  it "can have upvoting users" do
+    question = FactoryBot.build(:question)
+    user1 = FactoryBot.create(:user, :student, email: "test1@hpi.de")
+    user2 = FactoryBot.create(:user, :student, email: "test2@hpi.de")
+    question.upvoters << user1
+    question.upvoters << user2
+  end
 end
