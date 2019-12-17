@@ -1,3 +1,22 @@
+# needs to be at the top of the file
+class LectureValidator < ActiveModel::Validator
+  # changing attributes from a lecture is prohibited if the lecture ended
+  def validate(lecture)
+    if lecture.ended?
+      db_lecture = Lecture.find_by_lecturer_id(lecture.id)
+      attributes_changed = lecture != db_lecture
+      if attributes_changed
+        lecture_set_from_running_to_ended = lecture.ended? and db_lecture.running?
+        other_attributes_than_status_changed = !lecture.compareIgnoreStatus(db_lecture)
+        # allow changing the lecture from running to ended
+        if !lecture_set_from_running_to_ended || other_attributes_than_status_changed
+          lecture.errors[:base] << "You cannot edit a lecture when is has been archived."
+        end
+      end
+    end
+  end
+end
+
 class Lecture < ApplicationRecord
   belongs_to :lecturer, class_name: :User
   has_and_belongs_to_many :participating_students, class_name: :User
@@ -7,8 +26,8 @@ class Lecture < ApplicationRecord
 
   validates :name, presence: true, length: { in: 2..40 }
   validates :enrollment_key, presence: true, length: { in: 3..20 }
-  scope :active, -> { where status: "running" }
   validates_with LectureValidator
+  scope :active, -> { where status: "running" }
 
 
   def set_active
@@ -31,9 +50,13 @@ class Lecture < ApplicationRecord
     end
   end
 
-  def ==(other_lecture)
-    return status == other_lecture.status && polls_enabled == other_lecture.polls_enabled && questions_enabled == other_lecture.questions_enabled \
+  def compareIgnoreStatus(other_lecture)
+    return name == other_lecture.name && polls_enabled == other_lecture.polls_enabled && questions_enabled == other_lecture.questions_enabled \
     && description == other_lecture.description && enrollment_key == other_lecture.enrollment_key && id == other_lecture.id
+  end
+
+  def ==(other_lecture)
+    return status == other_lecture.status && compareIgnoreStatus(other_lecture)
   end
 
   def !=(other_lecture)
@@ -41,15 +64,4 @@ class Lecture < ApplicationRecord
   end
 end
 
-class LectureValidator < ActiveModel::Validator
-  def validate(lecture)
-    if lecture.ended?
-      db_lecture = Lecture.find_by_lecturer_id(lecture.id)
-      attributes_changed = lecture != db_lecture
-      if attributes_changed
-        lecture.errors[:base] << "You cannot edit a lecture when is has been archived."
-      end
-    end
-  end
-end
 
