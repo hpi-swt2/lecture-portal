@@ -13,27 +13,47 @@
 
   <div class="field">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <% if lecture.ended? %>
+      <%= form.text_field :name, :readonly => true %>
+    <% else %>
+      <%= form.text_field :name %>
+    <% end %>
   </div>
 
   <div class="field">
     <%= form.label :description%>
-    <%= form.text_field :description%>
+    <% if lecture.ended? %>
+      <%= form.text_field :description, :readonly => true %>
+    <% else %>
+      <%= form.text_field :description %>
+    <% end %>
   </div>
 
   <div class="field">
     <%= form.label :enrollment_key %>
-    <%= form.text_field :enrollment_key %>
+    <% if lecture.ended? %>
+      <%= form.text_field :enrollment_key, :readonly => true %>
+    <% else %>
+      <%= form.text_field :enrollment_key %>
+    <% end %>
   </div>
 
   <div class="field">
     <%= form.label "Enable Questions"%>
-    <%= form.check_box :questions_enabled %>
+    <% if lecture.ended? %>
+      <%= form.check_box :questions_enabled, :disabled => true %>
+    <% else %>
+      <%= form.check_box :questions_enabled %>
+    <% end %>
   </div>
 
   <div class="field">
     <%= form.label "Enable Polls"%>
-    <%= form.check_box :polls_enabled%>
+    <% if lecture.ended? %>
+    <%= form.check_box :polls_enabled, :disabled => true %>
+    <% else %>
+      <%= form.check_box :polls_enabled %>
+    <% end %>
   </div>
 
 
