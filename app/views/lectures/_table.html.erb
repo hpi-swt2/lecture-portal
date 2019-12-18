@@ -3,7 +3,7 @@
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Enrollment key</th>
-      <th scope="col"></th>
+      <th scope="col" colspan="2"></th>
     </tr>
   </thead>
 
@@ -14,7 +14,6 @@
         <td><%= lecture.enrollment_key %></td>
         <td class="text-right">
           <% if lecture.status == "created" %>
-            <%= link_to 'Edit', edit_lecture_path(lecture), {class:"btn btn-outline-secondary"} %>
             <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
           <% elsif lecture.status == "running" %>
             <%= button_to "End", {action: "end_lecture", params: {id: lecture.id}}, {class:"btn btn-outline-secondary"} %>

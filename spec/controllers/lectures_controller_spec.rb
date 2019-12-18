@@ -95,20 +95,6 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #edit" do
-    describe "is only accessible before a lecture was started:" do
-      it "running lecture redirects to overview" do
-        lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "running")
-        login_lecturer(lecture.lecturer)
-        get :edit, params: { id: lecture.to_param }, session: valid_session
-        expect(response).to redirect_to(lectures_path)
-      end
-      it "ended lecture redirects to overview" do
-        lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "ended")
-        login_lecturer(lecture.lecturer)
-        get :edit, params: { id: lecture.to_param }, session: valid_session
-        expect(response).to redirect_to(lectures_path)
-      end
-    end
     it "returns a success response for lecturer" do
       lecture = Lecture.create! valid_attributes_with_lecturer
       login_lecturer(lecture.lecturer)
