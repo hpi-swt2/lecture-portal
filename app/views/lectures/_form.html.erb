@@ -11,34 +11,40 @@
     </div>
   <% end %>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <%= form.text_field :name, :class => "form-control" %>
   </div>
 
-  <div class="field">
+  <div class="form-group">
     <%= form.label :description%>
-    <%= form.text_field :description%>
+    <%= form.text_field :description, :class => "form-control" %>
   </div>
   <!-- Should not be able to be edited after the lecture has started.-->
   <% if render_enrolment_key==true %>
-    <div class="field">
+    <div class="form-group">
       <%= form.label :enrollment_key %>
-      <%= form.text_field :enrollment_key %>
+      <%= form.text_field :enrollment_key, :class => "form-control" %>
   </div>
   <% end %>
-  <div class="field">
-    <%= form.label "Enable Questions"%>
-    <%= form.check_box :questions_enabled %>
+  <div class="form-check">
+    <%= form.check_box :questions_enabled, :class => "form-check-input" %>
+    <%= form.label :questions_enabled, "Enable Questions", :class => "form-check-label"%>
   </div>
 
-  <div class="field">
-    <%= form.label "Enable Polls"%>
-    <%= form.check_box :polls_enabled%>
+  <div class="form-check">
+    <%= form.check_box :polls_enabled, :class => "form-check-input" %>
+    <%= form.label :polls_enabled, "Enable Polls", :class => "form-check-label" %>
   </div>
 
 
-  <div class="actions">
-    <%= form.submit :class => "btn btn-primary" %>
+  <div class="actions d-flex flex-row justify-content-between mt-2">
+    <div class="float-left">
+      <%= yield(:action_left) %>
+    </div>
+    <div class="float-left">
+      <%= yield(:action_right) %>
+      <%= form.submit :class => "btn btn-primary" %>
+    </div>
   </div>
 <% end %>
