@@ -10,6 +10,9 @@ cache:
 sudo: required
 services:
  - docker
+before_install:
+  # https://bundler.io/blog/2019/05/14/solutions-for-cant-find-gem-bundler-with-executable-bundle.html
+  - gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)"
 #install heroku CLI for deployment
 before_script:
  - export HOME="/home/travis"
