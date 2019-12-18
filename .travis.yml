@@ -1,5 +1,4 @@
 language: ruby
-dist: bionic
 branches:
   only:
     - dev
