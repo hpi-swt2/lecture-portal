@@ -40,7 +40,7 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_content("Edit")
     end
     it "renders end button" do
-      expect(rendered).to have_css("[value='End']")
+      expect(rendered).to have_css("[value='End Lecture']")
     end
     it "renders a leave lecture button" do
       expect(rendered).not_to have_css("[value='Leave Lecture']")

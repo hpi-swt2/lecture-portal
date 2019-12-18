@@ -13,14 +13,14 @@ describe "The show lecture page", type: :feature do
 
     it "should have no end button if the lecture is not running" do
       visit(lecture_path(@lecture))
-      expect(page).not_to have_selector("input[type=submit][value='End']")
+      expect(page).not_to have_selector("input[type=submit][value='End Lecture']")
     end
 
 
     it "should have an end button if the lecture is running" do
       @lecture.update(status: "running")
       visit(lecture_path(@lecture))
-      expect(page).to have_selector("input[type=submit][value='End']")
+      expect(page).to have_selector("input[type=submit][value='End Lecture']")
     end
 
     it "should end the lecture if the end button is clicked" do
