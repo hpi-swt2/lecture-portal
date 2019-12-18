@@ -78,7 +78,7 @@ RSpec.describe "lectures/show", type: :view do
     @current_user = FactoryBot.create(:user, :lecturer)
     render
     assert_select "a", "Settings"
-    expect(rendered).to have_selector("input[id='lecture_description'][type='text']")
+    expect(rendered).to have_selector("textarea[id='lecture_description']")
   end
 
   # wireframe does not show it
