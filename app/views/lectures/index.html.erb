@@ -4,35 +4,23 @@
 
 <h1>My Lectures</h1>
 
-<table class="table .table-sm table-striped">
-  <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <th scope="col">Enrollment key</th>
-      <th scope="col">Status</th>
-      <th scope="col" colspan="2"></th>
-    </tr>
-  </thead>
+<% if !@running_lectures.empty? %>
+  <h2>Running Lectures</h2>
+  <%= render 'table', lectures: @running_lectures %>
+<% end %>
 
-  <tbody>
-    <% @lectures.each do |lecture| %>
-      <tr>
-        <td><%= lecture.name %></td>
-        <td><%= lecture.enrollment_key %></td>
-        <td><%= lecture.status%></td>
-        <td class="text-right">
-        <% if lecture.status == "running" %>
-          <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
-          <!-- So stripe is fully filled. -->
-          <td></td>
-        <% else %>
-          <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
-          <td>  <%= link_to 'Edit', edit_lecture_path(lecture), {class:"btn btn-primary"} %> </td>
-        <%end %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<% if !@created_lectures.empty? %>
+  <h2>Created Lectures</h2>
+  <%= render 'table', lectures: @created_lectures %>
+<% end %>
+
+<% if !@ended_lectures.empty? %>
+  <h2>Ended Lectures</h2>
+  <%= render 'table', lectures: @ended_lectures %>
+<% end %>
+
+
+
+
 
 
