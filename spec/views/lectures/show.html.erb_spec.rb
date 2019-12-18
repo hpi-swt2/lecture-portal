@@ -36,9 +36,6 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_content("Settings")
       expect(rendered).to have_css("#settings-tab")
     end
-    it "renders no edit button" do
-      expect(rendered).to have_content("Edit")
-    end
     it "renders end button" do
       expect(rendered).to have_css("[value='End']")
     end
@@ -56,9 +53,6 @@ RSpec.describe "lectures/show", type: :view do
     it "renders no settings tab" do
       expect(rendered).not_to have_content("Settings")
       expect(rendered).not_to have_css("#settings-tab")
-    end
-    it "renders no edit button" do
-      expect(rendered).not_to have_content("Edit")
     end
     it "renders no end button" do
       expect(rendered).not_to have_css("[value='End']")
