@@ -18,7 +18,7 @@
 
   <div class="form-group">
     <%= form.label :description%>
-    <%= form.text_area :description, :class => "form-control" %>
+    <%= form.text_area :description, :class => "form-control", :rows => "5" %>
   </div>
   <!-- Should not be able to be edited after the lecture has started.-->
   <% if render_enrolment_key==true %>
