@@ -26,7 +26,7 @@ const CableApp = {
 
 const setupActionCable = (rootStore: QuestionsRootStoreModel) => {
     CableApp.cable.subscriptions.create(
-        { channel: "QuestionsChannel" },
+        { channel: "QuestionsChannel", lecture: rootStore.lecture_id },
         {
             received: data => {
                 const { question } = data;
@@ -35,7 +35,7 @@ const setupActionCable = (rootStore: QuestionsRootStoreModel) => {
         }
     );
     CableApp.cable.subscriptions.create(
-        { channel: "QuestionResolvingChannel" },
+        { channel: "QuestionResolvingChannel", lecture: rootStore.lecture_id },
         {
             received: id => {
                 rootStore.questionsList.resolveQuestionById(id)
@@ -43,11 +43,11 @@ const setupActionCable = (rootStore: QuestionsRootStoreModel) => {
         }
     );
     CableApp.cable.subscriptions.create(
-        { channel: "QuestionUpvotingChannel" },
+        { channel: "QuestionUpvotingChannel", lecture: rootStore.lecture_id },
         {
             received: data => {
-                const upvotedQuestion = rootStore.questionsList.upvoteQuestionById(data.question);
-                if (upvotedQuestion && data.upvoter == rootStore.user_id)
+                const upvotedQuestion = rootStore.questionsList.upvoteQuestionById(data.question_id);
+                if (upvotedQuestion && data.upvoter_id == rootStore.user_id)
                     upvotedQuestion.disallowUpvote();
             }
         }
@@ -55,8 +55,7 @@ const setupActionCable = (rootStore: QuestionsRootStoreModel) => {
 };
 
 export const createQuestionsRootStore = (): QuestionsRootStoreModel => {
-    const rootStore = createStore();
-    return rootStore;
+    return createStore();
 };
 
 export const initQuestionsApp = (rootStore: QuestionsRootStoreModel) => {

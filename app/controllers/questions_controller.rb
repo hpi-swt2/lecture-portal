@@ -2,6 +2,7 @@ class QuestionsController < ApplicationController
   before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
   before_action :get_lecture
+  before_action :validate_joined_user_or_owner
 
   # GET /questions
   def index
@@ -21,13 +22,13 @@ class QuestionsController < ApplicationController
     # only allow students to write questions
     if current_user.is_student
       # create new question based on stripped received question content and current user
-      question = Question.new(content: params[:content].strip, author: current_user)
+      question = Question.new(content: params[:content].strip, author: current_user, lecture: @lecture)
       if question.save
         # serialize question and broadcast it via ActionCable to subscribers
         serialized_question = ActiveModelSerializers::Adapter::Json.new(
           QuestionSerializer.new(question)
         ).serializable_hash
-        ActionCable.server.broadcast("questions_channel", serialized_question)
+        QuestionsChannel.broadcast_to(@lecture, serialized_question)
         head :ok
       end
     end
@@ -36,18 +37,15 @@ class QuestionsController < ApplicationController
   # POST /questions/:id/upvote
   def upvote
     question = Question.find(params[:id])
-    if question && current_user.is_student && question.author != current_user && !question.upvoters.include?(current_user)
+    if question && current_user.is_student && question.author != current_user && !question.upvoters.include?(current_user) && question.lecture == @lecture
 
       question.upvoters << current_user
       if question.save
         # broadcast upvote via ActionCable
-        ActionCable.server.broadcast(
-          "question_upvoting_channel",
-          {
-            question: question.id,
-            upvoter: current_user.id
-          }
-        )
+        QuestionUpvotingChannel.broadcast_to(@lecture, {
+            question_id: question.id,
+            upvoter_id: current_user.id
+        })
         head :ok
       end
     end
@@ -56,19 +54,29 @@ class QuestionsController < ApplicationController
   def resolve
     question = Question.find(params[:id])
     # only allow author or lecturer to resolve the question
-    if question && (!current_user.is_student || question.author == current_user)
+    if question && (!current_user.is_student || question.author == current_user) && question.lecture == @lecture
       question.resolved = true
       if question.save
         # broadcast resolving via ActionCable
-        ActionCable.server.broadcast("question_resolving_channel", question.id)
+        QuestionResolvingChannel.broadcast_to(@lecture, question.id)
         head :ok
       end
     end
   end
 
   private
-
     def get_lecture
       @lecture = Lecture.find(params[:lecture_id])
+    end
+
+    def validate_joined_user_or_owner
+      isStudent = current_user.is_student
+      isJoinedStudent = @lecture.participating_students.include?(current_user)
+      isLectureOwner = @lecture.lecturer == current_user
+      if isStudent && !isJoinedStudent
+        redirect_to current_lectures_url, notice: "You must join a lecture before you can view/edit it."
+      elsif !isStudent && !isLectureOwner
+        redirect_to lectures_url, notice: "You can only access your own lectures."
+      end
     end
 end
