@@ -20,7 +20,7 @@ const UpdatesList: React.FunctionComponent<{}> = observer(() => {
     <div className="questionsList mt-1">
       <ul className={(is_student ? "" : "is_lecturer")}>
         {questionsList.list.map(question => (
-          <Update question={question} key={question.id} />
+          < Update update={question.createUpdate()} key={question.id} />
         ))}
       </ul>
     </div>

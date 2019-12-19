@@ -1,4 +1,6 @@
-import {Instance, types} from "mobx-state-tree";
+import { Instance, types } from "mobx-state-tree";
+import { UpdateModel } from "./Update";
+import Update from "./Update";
 
 export type QuestionModel = Instance<typeof Question>
 
@@ -17,6 +19,16 @@ const Question = types
     },
     disallowUpvote() {
       self.already_upvoted = true;
+    },
+    createUpdate(): UpdateModel {
+      return Update.create({
+        id: self.id,
+        title: "Question",
+        content: self.content,
+        author_id: self.author_id,
+        created_at: self.created_at,
+        upvotes: self.upvotes
+      })
     }
   }));
 
