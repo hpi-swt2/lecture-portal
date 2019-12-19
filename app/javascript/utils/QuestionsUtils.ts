@@ -9,7 +9,7 @@ export const useStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
 const loadQuestionsList = (rootStore) => {
-    fetch(`/api/questions`)
+    fetch(`questions`)
         .then(res => res.json())
         .then(questions => {
             rootStore.questionsList.setQuestionsList(questions);
@@ -58,7 +58,7 @@ const initQuestionsApp = (): QuestionsRootStoreModel => {
 };
 
 export const createQuestion = (content) => {
-    fetch(`/api/questions`, {
+    fetch(`questions`, {
         method: "POST",
         headers: HEADERS,
         body: JSON.stringify({
@@ -68,14 +68,14 @@ export const createQuestion = (content) => {
 };
 
 export const resolveQuestionById = (id) => {
-    fetch(`/api/questions/` + id + '/resolve', {
+    fetch(`questions/` + id + '/resolve', {
         method: "POST",
         headers: HEADERS
     });
 };
 
 export const upvoteQuestionById = (id) => {
-    fetch(`/api/questions/` + id + '/upvote', {
+    fetch(`questions/` + id + '/upvote', {
         method: "POST",
         headers: HEADERS
     });
