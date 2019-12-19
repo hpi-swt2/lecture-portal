@@ -43,19 +43,22 @@ const setupActionCable = (rootStore) => {
         {
             received: data => {
                 const upvotedQuestion = rootStore.questionsList.upvoteQuestionById(data.question);
-                if(upvotedQuestion && data.upvoter == rootStore.user_id)
+                if (upvotedQuestion && data.upvoter == rootStore.user_id)
                     upvotedQuestion.disallowUpvote();
             }
         }
     );
 };
 
-const initQuestionsApp = (): QuestionsRootStoreModel => {
+export const createQuestionsRootStore = (): QuestionsRootStoreModel => {
     const rootStore = createStore();
-    loadQuestionsList(rootStore);
-    setupActionCable(rootStore);
     return rootStore;
 };
+
+export const initQuestionsApp = (rootStore: QuestionsRootStoreModel) => {
+    loadQuestionsList(rootStore);
+    setupActionCable(rootStore);
+}
 
 export const createQuestion = (content) => {
     fetch(`/api/questions`, {
@@ -80,5 +83,3 @@ export const upvoteQuestionById = (id) => {
         headers: HEADERS
     });
 };
-
-export default initQuestionsApp;

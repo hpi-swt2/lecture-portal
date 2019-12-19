@@ -4,7 +4,14 @@ class Api::QuestionsController < ApplicationController
 
   # GET /api/questions
   def index
-    questions = Question.where(resolved: false).order(created_at: :desc)
+    if current_user.is_student
+      questions = Question.where(resolved: false).order(created_at: :DESC)
+    else
+      questions = Question.where(resolved: false)
+        .left_joins(:upvoters)
+        .group(:id)
+        .order(Arel.sql("COUNT(users.id) DESC"), created_at: :DESC)
+    end
     render json: questions
   end
 
