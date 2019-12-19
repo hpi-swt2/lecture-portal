@@ -4,7 +4,6 @@ import QuestionsList from "./QuestionsList";
 import { StoreProvider, initQuestionsApp, createQuestionsRootStore } from "../utils/QuestionsUtils";
 
 const rootStore = createQuestionsRootStore();
-//onSnapshot(rootStore, console.log);
 
 interface IQuestionsAppProps {
     user_id: number,

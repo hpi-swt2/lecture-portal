@@ -12,15 +12,11 @@ const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
 const UpdatesList: React.FunctionComponent<{}> = observer(() => {
   const { is_student, questionsList } = useInject(mapStore);
 
-  const onSortingClick = e => {
-    questionsList.toggleSorting()
-  }
-
   return (
     <div className="questionsList mt-1">
       <ul className={(is_student ? "" : "is_lecturer")}>
         {questionsList.list.map(question => (
-          < Update update={question.createUpdate()} key={question.id} />
+          <Update update={question.createUpdate()} key={question.id} />
         ))}
       </ul>
     </div>

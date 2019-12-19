@@ -4,8 +4,7 @@ import { UpdateModel } from "../stores/Update";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject";
 
-const mapStore = ({ user_id, is_student }: QuestionsRootStoreModel) => ({
-    user_id,
+const mapStore = ({ is_student }: QuestionsRootStoreModel) => ({
     is_student
 });
 
@@ -14,7 +13,7 @@ type Props = {
 }
 
 const UpdateView: React.FunctionComponent<Props> = ({ update }) => {
-    const { user_id, is_student } = useInject(mapStore);
+    const { is_student } = useInject(mapStore);
 
     return (
         <li key={update.title + update.id} >
@@ -22,7 +21,7 @@ const UpdateView: React.FunctionComponent<Props> = ({ update }) => {
                 {is_student && <h3>{update.title}</h3>}
                 {update.content}
             </div>
-        </li >
+        </li>
     );
 };
 
