@@ -18,7 +18,7 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
 
     return (
         <li key={question.id}>
-            <div className="questionContent ml-4 mr-4">
+            <div className="questionContent p-4">
                 {question.content}
             </div>
         </li>
