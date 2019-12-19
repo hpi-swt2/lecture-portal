@@ -18,7 +18,7 @@ const UpdateView: React.FunctionComponent<Props> = ({ update }) => {
     return (
         <li key={update.title + update.id} >
             <div className="questionContent p-4">
-                {is_student && <h3>{update.title}</h3>}
+                {is_student && <span><b>{update.title}</b><br /></span>}
                 {update.content}
             </div>
         </li>

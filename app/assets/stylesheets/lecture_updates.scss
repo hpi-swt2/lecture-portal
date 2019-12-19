@@ -1,4 +1,43 @@
-.UpdatesApp {
-  overflow-y: scroll;
-  height: 50vh;
+#updates {
+  width: 33.33%;
+
+  > div {
+    overflow-y: scroll;
+    height: 50vh;
+  }
+
+  > h5 {
+    border-bottom: 1px solid #555;
+  }
+
+  div.questionsList {
+    margin: 0;
+
+    > ul {
+      font-size: inherit !important;
+      text-align: center;
+      margin-bottom: 0;
+      padding: 0 10px;
+
+      > li:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+@media(max-width: 800px) {
+  #updates {
+    width: 50%;
+  }
+}
+@media(max-width: 500px) {
+  #updates {
+    width: 100%;
+
+    > div {
+      overflow-y: unset;
+      height: auto;
+    }
+  }
 }
