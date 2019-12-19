@@ -4,7 +4,14 @@ class QuestionsController < ApplicationController
 
   # GET /questions
   def index
-    questions = Question.where(resolved: false).order(created_at: :desc)
+    if current_user.is_student
+      questions = Question.where(resolved: false).order(created_at: :DESC)
+    else
+      questions = Question.where(resolved: false)
+        .left_joins(:upvoters)
+        .group(:id)
+        .order(Arel.sql("COUNT(users.id) DESC"), created_at: :DESC)
+    end
     render json: questions
   end
 
@@ -17,7 +24,7 @@ class QuestionsController < ApplicationController
       if question.save
         # serialize question and broadcast it via ActionCable to subscribers
         serialized_question = ActiveModelSerializers::Adapter::Json.new(
-            QuestionSerializer.new(question)
+          QuestionSerializer.new(question)
         ).serializable_hash
         ActionCable.server.broadcast("questions_channel", serialized_question)
         head :ok
@@ -34,11 +41,11 @@ class QuestionsController < ApplicationController
       if question.save
         # broadcast upvote via ActionCable
         ActionCable.server.broadcast(
-            "question_upvoting_channel",
-            {
-                question: question.id,
-                upvoter: current_user.id
-            }
+          "question_upvoting_channel",
+          {
+            question: question.id,
+            upvoter: current_user.id
+          }
         )
         head :ok
       end

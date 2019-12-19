@@ -8,8 +8,12 @@ const StoreContext = createContext<QuestionsRootStoreModel>({} as QuestionsRootS
 export const useStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
+const getBaseRequestUrl = (lectureId: number): string => {
+    return `/lectures/` + lectureId + `/questions/`
+};
+
 const loadQuestionsList = (rootStore) => {
-    fetch(`questions`)
+    fetch(getBaseRequestUrl(rootStore.lectureId))
         .then(res => res.json())
         .then(questions => {
             rootStore.questionsList.setQuestionsList(questions);
@@ -58,10 +62,10 @@ export const createQuestionsRootStore = (): QuestionsRootStoreModel => {
 export const initQuestionsApp = (rootStore: QuestionsRootStoreModel) => {
     loadQuestionsList(rootStore);
     setupActionCable(rootStore);
-}
+};
 
-export const createQuestion = (content) => {
-    fetch(`questions`, {
+export const createQuestion = (content, lectureId) => {
+    fetch(getBaseRequestUrl(lectureId), {
         method: "POST",
         headers: HEADERS,
         body: JSON.stringify({
@@ -70,15 +74,15 @@ export const createQuestion = (content) => {
     });
 };
 
-export const resolveQuestionById = (id) => {
-    fetch(`questions/` + id + '/resolve', {
+export const resolveQuestionById = (id, lectureId) => {
+    fetch(getBaseRequestUrl(lectureId) + id + '/resolve', {
         method: "POST",
         headers: HEADERS
     });
 };
 
-export const upvoteQuestionById = (id) => {
-    fetch(`questions/` + id + '/upvote', {
+export const upvoteQuestionById = (id, lectureId) => {
+    fetch(getBaseRequestUrl(lectureId) + id + '/upvote', {
         method: "POST",
         headers: HEADERS
     });

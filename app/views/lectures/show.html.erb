@@ -21,7 +21,7 @@
 <div class="tab-content" id="lectureTabsContent">
   <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab"></div>
   <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
-    <%= react_component("QuestionsApp",  {user_id: current_user.id, is_student: current_user.is_student} ) %>
+    <%= react_component("QuestionsApp",  {user_id: current_user.id, is_student: current_user.is_student, lecture_id: @lecture.id} ) %>
   </div>
   <div class="tab-pane fade" id="polls" role="tabpanel" aria-labelledby="polls-tab">
     <h2>Polls</h2>

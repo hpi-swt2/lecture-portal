@@ -5,9 +5,10 @@ import { resolveQuestionById, upvoteQuestionById } from "../utils/QuestionsUtils
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject";
 
-const mapStore = ({ user_id, is_student }: QuestionsRootStoreModel) => ({
+const mapStore = ({ user_id, is_student, lecture_id }: QuestionsRootStoreModel) => ({
     user_id,
-    is_student
+    is_student,
+    lecture_id
 });
 
 type Props = {
@@ -15,21 +16,21 @@ type Props = {
 }
 
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
-    const { user_id, is_student } = useInject(mapStore);
+    const { user_id, is_student, lecture_id } = useInject(mapStore);
 
-    const canQuestionBeUpvoted : boolean =
+    const canQuestionBeUpvoted: boolean =
         question.author_id != user_id && is_student;
-    const isQuestionAlreadyUpvoted : boolean =
+    const isQuestionAlreadyUpvoted: boolean =
         question.already_upvoted && canQuestionBeUpvoted;
-    const canQuestionBeResolved : boolean =
+    const canQuestionBeResolved: boolean =
         user_id == question.author_id || !is_student;
 
     const onResolveClick = _ => {
-        canQuestionBeResolved && resolveQuestionById(question.id)
+        canQuestionBeResolved && resolveQuestionById(question.id, lecture_id)
     };
 
     const onUpvoteClick = _ => {
-        canQuestionBeUpvoted && upvoteQuestionById(question.id)
+        canQuestionBeUpvoted && upvoteQuestionById(question.id, lecture_id)
     };
 
     return (
@@ -42,10 +43,10 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
                 {question.content}
             </div>
 
-            { canQuestionBeResolved &&
+            {canQuestionBeResolved &&
                 <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg")} onClick={onResolveClick}>
                     mark as solved
-                </button> }
+                </button>}
         </li>
     );
 };
