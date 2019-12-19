@@ -48,6 +48,13 @@ class CoursesController < ApplicationController
   end
 
 
+  def join_course
+    @course.join_course(current_user)
+    @course.save
+    current_user.save
+    redirect_to @course, notice: "You successfully joined the lecture."
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
