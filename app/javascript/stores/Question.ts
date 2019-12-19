@@ -9,14 +9,14 @@ const Question = types
     author_id: types.integer,
     created_at: types.Date,
     upvotes: types.optional(types.integer, 0),
-    can_be_upvoted: types.boolean
+    already_upvoted: types.boolean
   })
   .actions(self => ({
     upvote() {
       self.upvotes++;
     },
     disallowUpvote() {
-      self.can_be_upvoted = false;
+      self.already_upvoted = true;
     }
   }));
 
