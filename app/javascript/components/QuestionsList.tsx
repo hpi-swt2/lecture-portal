@@ -12,12 +12,23 @@ const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
 const QuestionsList: React.FunctionComponent<{}> = observer(() => {
   const { is_student, questionsList } = useInject(mapStore);
 
+  const onSortingClick = e => {
+    questionsList.toggleSorting()
+  }
+
   return (
-    <ul className={"questionsList " + (is_student ? "" : "is_lecturer")}>
-      {questionsList.list.map(question => (
-        <Question question={question} key={question.id} />
-      ))}
-    </ul>
+    <div className="questionsList">
+      <div className="questionsFilter">
+        <div className="sorting" onClick={onSortingClick}>
+          {questionsList.is_sorted_by_time ? "time" : "votes"}
+        </div>
+      </div>
+      <ul className={(is_student ? "" : "is_lecturer")}>
+        {questionsList.list.map(question => (
+          <Question question={question} key={question.id} />
+        ))}
+      </ul>
+    </div>
   );
 });
 

@@ -20,6 +20,8 @@ const QuestionsRootStore = types.model("QuestionsRootStore", {
     },
     setIsStudent(is_student) {
         self.is_student = is_student;
+        //Default sorting shall be time based for student and upvote based for lecturers
+        self.questionsList.is_sorted_by_time = is_student;
     }
 }));
 
