@@ -12,8 +12,8 @@ const getBaseRequestUrl = (lectureId: number): string => {
     return `/lectures/` + lectureId + `/questions/`
 };
 
-const loadQuestionsList = (rootStore) => {
-    fetch(getBaseRequestUrl(rootStore.lectureId))
+const loadQuestionsList = (rootStore: QuestionsRootStoreModel) => {
+    fetch(getBaseRequestUrl(rootStore.lecture_id))
         .then(res => res.json())
         .then(questions => {
             rootStore.questionsList.setQuestionsList(questions);
@@ -24,7 +24,7 @@ const CableApp = {
     cable: ActionCable.createConsumer(`/cable`)
 };
 
-const setupActionCable = (rootStore) => {
+const setupActionCable = (rootStore: QuestionsRootStoreModel) => {
     CableApp.cable.subscriptions.create(
         { channel: "QuestionsChannel" },
         {
@@ -64,7 +64,7 @@ export const initQuestionsApp = (rootStore: QuestionsRootStoreModel) => {
     setupActionCable(rootStore);
 };
 
-export const createQuestion = (content, lectureId) => {
+export const createQuestion = (content: string, lectureId: number) => {
     fetch(getBaseRequestUrl(lectureId), {
         method: "POST",
         headers: HEADERS,
@@ -74,7 +74,7 @@ export const createQuestion = (content, lectureId) => {
     });
 };
 
-export const resolveQuestionById = (id, lectureId) => {
+export const resolveQuestionById = (id: number, lectureId: number) => {
     fetch(getBaseRequestUrl(lectureId) + id + '/resolve', {
         method: "POST",
         headers: HEADERS

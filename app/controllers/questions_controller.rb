@@ -1,13 +1,14 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
+  before_action :get_lecture
 
   # GET /questions
   def index
     if current_user.is_student
-      questions = Question.where(resolved: false).order(created_at: :DESC)
+      questions = Question.where(resolved: false, lecture: @lecture).order(created_at: :DESC)
     else
-      questions = Question.where(resolved: false)
+      questions = Question.where(resolved: false, lecture: @lecture)
         .left_joins(:upvoters)
         .group(:id)
         .order(Arel.sql("COUNT(users.id) DESC"), created_at: :DESC)
@@ -64,4 +65,10 @@ class QuestionsController < ApplicationController
       end
     end
   end
+
+  private
+
+    def get_lecture
+      @lecture = Lecture.find(params[:lecture_id])
+    end
 end
