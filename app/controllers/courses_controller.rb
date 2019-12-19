@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   before_action :set_course, only: [:show, :edit, :update, :destroy]
-  before_action :validate_owner, only: [:show, :edit]
+  #before_action :validate_owner, only: [:show, :edit]
 
   # GET /courses
   def index
@@ -49,6 +49,7 @@ class CoursesController < ApplicationController
 
 
   def join_course
+    @course = Course.find(params[:id])
     @course.join_course(current_user)
     @course.save
     current_user.save
