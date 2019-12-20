@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  # add additional routes later when needed
+  resources :uploaded_files, only: [:show, :index, :new, :create]
   get "/lectures/current", to: "lectures#current", as: "current_lectures"
   post "/lectures/start_lecture", to: "lectures#start_lecture", as: "start_lecture"
   post "/lectures/join_lecture", to: "lectures#join_lecture", as: "join_lecture"
