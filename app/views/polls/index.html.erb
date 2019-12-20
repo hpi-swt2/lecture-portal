@@ -19,9 +19,7 @@
       <td><%= poll.is_active %></td>
       <td><%= link_to 'Show', lecture_poll_path(@lecture, poll) %></td>
       <td><%= link_to 'Edit', edit_lecture_poll_path(@lecture, poll) %></td>
-      <% if !@is_student %>
       <td><%= link_to 'Destroy', [@lecture, poll], method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      <% end %>
     </tr>
     <% end %>
   </tbody>

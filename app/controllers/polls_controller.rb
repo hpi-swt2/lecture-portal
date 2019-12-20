@@ -7,6 +7,9 @@ class PollsController < ApplicationController
   # GET /polls
   def index
     @polls = @lecture.polls
+    if @is_student
+      render :index_students
+    end
   end
 
   # GET /polls/1
