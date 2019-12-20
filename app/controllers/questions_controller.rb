@@ -79,6 +79,6 @@ class QuestionsController < ApplicationController
       isStudent = current_user.is_student
       isJoinedStudent = isStudent && @lecture.participating_students.include?(current_user)
       isLectureOwner = !isStudent && @lecture.lecturer == current_user
-      return head :forbidden unless (isJoinedStudent || isLectureOwner)
+      return head :forbidden unless isJoinedStudent || isLectureOwner
     end
 end
