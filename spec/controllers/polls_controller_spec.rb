@@ -149,13 +149,13 @@ RSpec.describe PollsController, type: :controller do
     it "saves answer to active poll", :logged_student do
       poll = FactoryBot.create(:poll, :active)
       poll.update(poll_options: poll_options)
-      get :save_answers, params: { lecture_id: lecture.id, id: poll.id, answers: [true, false] }
+      get :save_answers, params: { lecture_id: lecture.id, id: poll.id, answers: [value: true, value: false], poll: valid_params }
       expect(Answer.where(poll_id: poll.id, option_id: poll.poll_options[0].id)).to exist
     end
     it "updates votes to option when submitting answer to poll", :logged_student do
       poll = FactoryBot.create(:poll, :active)
       poll.update(poll_options: poll_options)
-      get :save_answers, params: { lecture_id: lecture.id, id: poll.id, answers: [true, false] }
+      get :save_answers, params: { lecture_id: lecture.id, id: poll.id, answers: [value: true, value: false], poll: valid_params }
       poll.reload
       expect(poll.poll_options[0].votes).to eq(1)
     end
