@@ -26,8 +26,12 @@ class PollsController < ApplicationController
   # GET /polls/1/edit
   def edit
     if @is_student
-      get_users_answers
-      render :answer
+      if !@poll.is_active
+        redirect_to lecture_polls_path(@lecture), notice: "This poll is closed."
+      else
+        get_users_answers
+        render :answer
+      end
     end
   end
 
@@ -36,19 +40,22 @@ class PollsController < ApplicationController
     answer_params
     current_poll_answers = params[:answers]
     poll = Poll.find(params[:id])
+    if !poll.is_active
+        redirect_to lecture_polls_path(@lecture), notice: "This poll is closed."
+    else
+      # delete answers from student to poll
+      Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
 
-    # delete answers from student to poll
-    Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
+      # save new answers
+      current_poll_answers.each { |answer|
+        if answer[:value] == true
+          current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
+          current_answer.save
+        end
+      }
 
-    # save new answers
-    current_poll_answers.each { |answer|
-      if answer[:value] == true
-        current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
-        current_answer.save
-      end
-    }
-
-    redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
+      redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
+    end
   end
 
   # POST /polls
