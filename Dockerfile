@@ -11,11 +11,11 @@ RUN apt-get clean
 RUN git clone https://github.com/rbenv/rbenv.git ~/.rbenv
 RUN git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
 RUN /root/.rbenv/plugins/ruby-build/install.sh
-ENV PATH=/root/.rbenv/bin:/root/.rbenv/versions/2.5.1/bin/:$PATH
+ENV PATH=/root/.rbenv/bin:/root/.rbenv/versions/2.5.7/bin/:$PATH
 RUN echo 'eval "$(rbenv init -)"' >> /etc/profile.d/rbenv.sh # or /etc/profile
 RUN echo 'eval "$(rbenv init -)"' >> .bashrc
-RUN rbenv install 2.5.1 && \
-    rbenv global 2.5.1
+RUN rbenv install 2.5.7 && \
+    rbenv global 2.5.7
 
 ARG secret=wzfeguzwgfg8924rfgsdvf
 ENV SECRET_KEY_BASE=${secret}
