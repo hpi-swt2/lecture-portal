@@ -15,6 +15,8 @@ class UploadedFilesController < ApplicationController
   def create
     @uploaded_file = uploaded_file_params["attachment"]
     if @uploaded_file.nil? || !(@uploaded_file.is_a? ActionDispatch::Http::UploadedFile)
+      # so errors can be shown
+      @uploaded_file = UploadedFile.new
       render :new
     else
       filename = @uploaded_file.original_filename
@@ -22,6 +24,8 @@ class UploadedFilesController < ApplicationController
       data = @uploaded_file.read
       lecture_id = uploaded_file_params["lecture"]
       unless Lecture.exists?(lecture_id)
+        # so errors can be shown
+        @uploaded_file = UploadedFile.create(filename: filename, content_type: content_type, data: data)
         render :new
         return
       end

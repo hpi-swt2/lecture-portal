@@ -17,8 +17,12 @@
   </div>
 
   <div class="field">
-    <%= form.label :attachment %>
+    <%= form.label :attachment%>
     <%= form.file_field :attachment %>
+  </div>
+  <div class="field">
+    <%= form.label :uploadedFileType%>
+    <%= form.select :uploadedFileType, :collection => UploadedFile.uploadedFileTypes.keys.to_a  %>
   </div>
 
   <div class="actions">

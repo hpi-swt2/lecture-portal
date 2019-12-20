@@ -9,6 +9,7 @@ RSpec.describe UploadedFilesController, type: :controller do
     @file["uploaded_file"] = Hash.new
     @file["uploaded_file"]["attachment"] = file
     @file["uploaded_file"]["lecture"] = @lecture.id
+    @file["uploaded_file"]["uploadedFileType"] = "Notes"
     sign_in @lecturer
   end
   it "returns success" do
@@ -77,6 +78,7 @@ RSpec.describe UploadedFilesController, type: :controller do
       expect(UploadedFile.find(1).Lecture_Material?).to eq(true)
   end
   it "wont't accept a file without category" do
+    @file["uploaded_file"].except!("uploadedFileType")
     post :create, params: @file
     expect(response).to_not redirect_to(uploaded_files_url)
   end
