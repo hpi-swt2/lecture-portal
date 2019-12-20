@@ -31,7 +31,7 @@ class UploadedFilesController < ApplicationController
       end
       lecture = Lecture.find(lecture_id)
       @uploaded_file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: lecture)
-      add_type_to_file file:@uploaded_file, type: uploaded_file_params["uploadedFileType"]
+      add_type_to_file file: @uploaded_file, type: uploaded_file_params["uploadedFileType"]
       if @uploaded_file.save
         redirect_to (uploaded_files_url), notice: "Uploaded file was successfully saved."
       else
@@ -47,7 +47,7 @@ class UploadedFilesController < ApplicationController
       params.require(:uploaded_file).permit(:attachment, :lecture, :uploadedFileType)
     end
 
-    def add_type_to_file(file:UploadedFile,type:String)
+    def add_type_to_file(file: UploadedFile, type: String)
       if type == "Notes"
         file.Notes!
       end
@@ -60,6 +60,5 @@ class UploadedFilesController < ApplicationController
       if type == "Lecture_Material"
         file.Lecture_Material!
       end
-
     end
 end

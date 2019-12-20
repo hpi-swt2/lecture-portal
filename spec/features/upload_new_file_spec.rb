@@ -12,22 +12,22 @@ describe "Show uploaded files index page", type: :feature do
   end
 
   it "uploads a valid file" do
-    expect(UploadedFile.count).to be(0)
-    visit(new_uploaded_file_path)
-    find(:id, "uploaded_file_lecture").set(@lecture.id)
-    find(:id, "uploaded_file_attachment").set(@data)
-    select "Summary", from: "uploaded_file_uploadedFileType"
-    click_on("Create Uploaded file")
-    expect(UploadedFile.count).to be(1)
+      expect(UploadedFile.count).to be(0)
+      visit(new_uploaded_file_path)
+      find(:id, "uploaded_file_lecture").set(@lecture.id)
+      find(:id, "uploaded_file_attachment").set(@data)
+      select "Summary", from: "uploaded_file_uploadedFileType"
+      click_on("Create Uploaded file")
+      expect(UploadedFile.count).to be(1)
     end
 
   it "uploads no file without lecture" do
-  expect(UploadedFile.count).to be(0)
-  visit(new_uploaded_file_path)
-  find(:id, "uploaded_file_attachment").set(@data)
-  select "Summary", from: "uploaded_file_uploadedFileType"
-  click_on("Create Uploaded file")
-  expect(UploadedFile.count).to be(0)
+    expect(UploadedFile.count).to be(0)
+    visit(new_uploaded_file_path)
+    find(:id, "uploaded_file_attachment").set(@data)
+    select "Summary", from: "uploaded_file_uploadedFileType"
+    click_on("Create Uploaded file")
+    expect(UploadedFile.count).to be(0)
   end
 
   it "uploads no file without data" do

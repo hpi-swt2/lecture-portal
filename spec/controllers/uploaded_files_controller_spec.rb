@@ -49,33 +49,33 @@ RSpec.describe UploadedFilesController, type: :controller do
   end
 
   it "stores the file only if valid file provided" do
-      old_count = UploadedFile.count
-      @file["uploaded_file"].except!("attachment")
-      post :create, params: @file
-      expect(response).to_not redirect_to(uploaded_files_url)
-      expect(UploadedFile.count).to eq(old_count)
+        old_count = UploadedFile.count
+        @file["uploaded_file"].except!("attachment")
+        post :create, params: @file
+        expect(response).to_not redirect_to(uploaded_files_url)
+        expect(UploadedFile.count).to eq(old_count)
       end
 
   it "stores files with the Notes category" do
-      @file["uploaded_file"]["uploadedFileType"] = "Notes"
-      post :create, params: @file
-      expect(UploadedFile.find(1).Notes?).to eq(true)
+        @file["uploaded_file"]["uploadedFileType"] = "Notes"
+        post :create, params: @file
+        expect(UploadedFile.find(1).Notes?).to eq(true)
       end
 
   it "stores files with the Summary category" do
-      @file["uploaded_file"]["uploadedFileType"] = "Summary"
-      post :create, params: @file
-      expect(UploadedFile.find(1).Summary?).to eq(true)
+        @file["uploaded_file"]["uploadedFileType"] = "Summary"
+        post :create, params: @file
+        expect(UploadedFile.find(1).Summary?).to eq(true)
       end
   it "stores files with the Lecture_Slides category" do
-      @file["uploaded_file"]["uploadedFileType"] = "Lecture_Slides"
-      post :create, params: @file
-      expect(UploadedFile.find(1).Lecture_Slides?).to eq(true)
+        @file["uploaded_file"]["uploadedFileType"] = "Lecture_Slides"
+        post :create, params: @file
+        expect(UploadedFile.find(1).Lecture_Slides?).to eq(true)
       end
   it "stores files with the Lecture_Material category" do
-      @file["uploaded_file"]["uploadedFileType"] = "Lecture_Material"
-      post :create, params: @file
-      expect(UploadedFile.find(1).Lecture_Material?).to eq(true)
+    @file["uploaded_file"]["uploadedFileType"] = "Lecture_Material"
+    post :create, params: @file
+    expect(UploadedFile.find(1).Lecture_Material?).to eq(true)
   end
   it "wont't accept a file without category" do
     @file["uploaded_file"].except!("uploadedFileType")
