@@ -1,24 +1,7 @@
-<%= form_with(model: [@lecture, @poll], local: true, url:
-save_answers_lecture_poll_path(@lecture, @poll), id: "outer-form") do |form| %>
-
-<div class="field">
-
-  <% form_props = {title: @poll.title, is_multiselect: @poll.is_multiselect,
-  lecture_id: @poll.lecture_id, poll_id: @poll.id} %>
-  <% form_props[:options] =
-  @poll.poll_options.length>1 ? @poll.poll_options.map{|option|
-  option.description} : ["", ""] %>
-  <%= react_component("AnswerOption", form_props) %>
-  Old Answers
-  <ol>
-  <% for option in @poll.poll_options%>
-    <% if Answer.where(poll_id: @poll.id, student_id: current_user.id, option_id: option.id).empty? %>
-        <li> no </li>
-    <% else %>
-        <li> yes </li>
-    <% end %>
-  <% end %>
-  </ol>
-</div>
-
-<% end %>
+<% previous_answers = @answers.map{|answer| answer.option_id} %>
+<% form_props = {title: @poll.title, is_multiselect: @poll.is_multiselect, lecture_id: @poll.lecture_id,
+  poll_id: @poll.id, auth_token: form_authenticity_token, previous_answers: previous_answers} %>
+<% form_props[:options] = @poll.poll_options.length > 1 ? @poll.poll_options.map{|option|
+    {description: option.description, id: option.id}}
+    : [{description: "", id: 0}, {description: "", id: 1}] %>
+<%= react_component("AnswerOption", form_props) %>
