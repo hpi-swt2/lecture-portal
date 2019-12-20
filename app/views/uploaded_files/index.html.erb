@@ -7,6 +7,7 @@
     <tr>
       <th scope="col">Content type</th>
       <th scope="col">Filename</th>
+      <th scope="col">File type</th>
       <th scope="col">Data</th>
     </tr>
   </thead>
@@ -16,6 +17,7 @@
       <tr>
         <td><%= uploaded_file.content_type %></td>
         <td><%= uploaded_file.filename %></td>
+        <td><%= uploaded_file.uploadedFileType %></td>
         <td>
           <details>
             <summary>iFrame</summary>
