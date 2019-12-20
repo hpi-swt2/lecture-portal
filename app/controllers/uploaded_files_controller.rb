@@ -35,6 +35,12 @@ class UploadedFilesController < ApplicationController
     end
   end
 
+  # GET /uploaded_files/:id
+  def show
+    file = UploadedFile.find(params[:id])
+    send_data file.data, filename: file.filename, type: file.content_type, disposition: "attachment"
+  end
+
 
   private
     # Only allow a trusted parameter "white list" through.
