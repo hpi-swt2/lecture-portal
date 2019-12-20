@@ -14,7 +14,7 @@ gem "rails", "~> 5.2.3"
 # Use sqlite3 as the database for Active Record. https://www.sqlite.org/index.html
 gem "sqlite3"
 # Use Puma as the app server. https://github.com/puma/puma
-gem "puma", "~> 3.11"
+gem "puma", "~> 3.12"
 # Use Uglifier as compressor for JavaScript assets. https://github.com/lautis/uglifier
 gem "uglifier", ">= 1.3.0"
 # See https://github.com/rails/execjs#readme for more supported runtimes
@@ -115,6 +115,8 @@ group :test do
   # gem 'faker' # https://github.com/stympy/faker
   # Code coverage for Ruby
   # gem 'simplecov', require: false # https://github.com/colszowka/simplecov
+  # selectors in tables
+  gem "capybara_table"
 end
 
 group :production do
@@ -122,6 +124,7 @@ group :production do
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+# For some reason, heroku instance also needs it
 gem "tzinfo-data"
 gem "webpacker"
 gem "react-rails"
@@ -129,3 +132,5 @@ gem "react-rails"
 gem "active_model_serializers"
 # Adds support to test action-cable behaviour, see https://github.com/palkan/action-cable-testing
 gem "action-cable-testing"
+# I suspect this gem to be responsible for the illegal instruction crashes in heroku, so I explicitly request the latest version here.
+gem "ffi", "~> 1.11", ">= 1.11.3"
