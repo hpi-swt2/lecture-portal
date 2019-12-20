@@ -11,12 +11,10 @@ else
 fi
 #cleaner than vanilla docker command
 HEROKU_API_KEY="$APIKEY" heroku container:login
+HEROKU_API_KEY="$APIKEY" heroku git:remote --app ${APP}
 #herokucli always exits with 0, even if docker build failed, so build using vanilla docker command
-if sh -c ./build.sh;
+if git push heroku $TRAVIS_BRANCH:master;
 then
-  #so the previously built image can be used and heroku does not build it a second time like if I called heroku container:push
-  docker tag rails registry.heroku.com/${APP}/web:latest
-  docker push registry.heroku.com/${APP}/web:latest
   HEROKU_API_KEY="$APIKEY" heroku container:release --app $APP web
 else
   echo "Docker build failed!"
