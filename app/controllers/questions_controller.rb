@@ -31,6 +31,8 @@ class QuestionsController < ApplicationController
         QuestionsChannel.broadcast_to(@lecture, serialized_question)
         head :ok
       end
+    else
+      head :forbidden
     end
   end
 
@@ -48,6 +50,8 @@ class QuestionsController < ApplicationController
         })
         head :ok
       end
+    else
+      head :forbidden
     end
   end
   # POST /questions/:id/resolve
@@ -61,6 +65,8 @@ class QuestionsController < ApplicationController
         QuestionResolvingChannel.broadcast_to(@lecture, question.id)
         head :ok
       end
+    else
+      head :forbidden
     end
   end
 
@@ -71,12 +77,8 @@ class QuestionsController < ApplicationController
 
     def validate_joined_user_or_owner
       isStudent = current_user.is_student
-      isJoinedStudent = @lecture.participating_students.include?(current_user)
-      isLectureOwner = @lecture.lecturer == current_user
-      if isStudent && !isJoinedStudent
-        redirect_to current_lectures_url, notice: "You must join a lecture before you can view/edit it."
-      elsif !isStudent && !isLectureOwner
-        redirect_to lectures_url, notice: "You can only access your own lectures."
-      end
+      isJoinedStudent = isStudent && @lecture.participating_students.include?(current_user)
+      isLectureOwner = !isStudent && @lecture.lecturer == current_user
+      return head :forbidden unless (isJoinedStudent || isLectureOwner)
     end
 end
