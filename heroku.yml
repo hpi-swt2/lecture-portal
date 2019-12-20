@@ -1,4 +1,4 @@
 build:
   docker:
     web: Dockerfile
-run: sh ./cmd.sh
+run: "sh ./cmd.sh"
