@@ -13,7 +13,8 @@ fi
 gem install dpl --pre
 if dpl heroku git --api_key $APIKEY --app $APP;
 then
-  HEROKU_API_KEY="$APIKEY" heroku container:release --app $APP web
+  #HEROKU_API_KEY="$APIKEY" heroku container:release --app $APP web
+  echo "I would release now..."
 else
   echo "Docker build failed!"
   exit 1
