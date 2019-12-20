@@ -13,7 +13,7 @@ const Question = types
     upvotes: types.optional(types.integer, 0),
     already_upvoted: types.boolean
   })
-  .actions(self => ({
+  .views(self => ({
     canBeUpvoted(): boolean {
       const store = getQuestionsRootStore(self);
       return self.author_id != store.user_id && store.is_student;
@@ -25,7 +25,9 @@ const Question = types
     canBeResolved(): boolean {
       const store = getQuestionsRootStore(self);
       return store.user_id == self.author_id || !store.is_student;
-    },
+    }
+  }))
+  .actions(self => ({
     upvote() {
       self.upvotes++;
     },
