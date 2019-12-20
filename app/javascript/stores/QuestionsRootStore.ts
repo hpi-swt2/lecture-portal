@@ -11,7 +11,7 @@ export type QuestionsRootStoreEnv = {
 
 export const getQuestionsRootStore = (target: IAnyStateTreeNode): QuestionsRootStoreModel => {
     return getRoot(target) as QuestionsRootStoreModel
-}
+};
 
 const QuestionsRootStore = types.model("QuestionsRootStore", {
     user_id: types.optional(types.integer, -1),

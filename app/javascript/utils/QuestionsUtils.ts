@@ -1,13 +1,13 @@
-import ActionCable from "actioncable";
 import { createContext, useContext } from "react";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import { createStore } from "../stores/createStore";
 import { HEADERS } from "./constants";
+import {createQuestionsStore} from "../stores/createQuestionsStore";
+import {setupQuestionsActionCable} from "./QuestionsActionCable";
 
 const StoreContext = createContext<QuestionsRootStoreModel>(
   {} as QuestionsRootStoreModel
 );
-export const useStore = () => useContext(StoreContext);
+export const useQuestionsStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
 const getBaseRequestUrl = (lectureId: number): string => {
@@ -22,43 +22,24 @@ const loadQuestionsList = (rootStore: QuestionsRootStoreModel) => {
     });
 };
 
-const CableApp = {
-  cable: ActionCable.createConsumer(`/cable`)
-};
 
 const setupActionCable = (rootStore: QuestionsRootStoreModel) => {
-  CableApp.cable.subscriptions.create(
-    { channel: "QuestionsChannel", lecture_id: rootStore.lecture_id },
-    {
-      received: data => {
+  setupQuestionsActionCable(rootStore.lecture_id,
+      (data) => {
         const { question } = data;
         rootStore.questionsList.addQuestion(question);
-      }
-    }
-  );
-  CableApp.cable.subscriptions.create(
-    { channel: "QuestionResolvingChannel", lecture_id: rootStore.lecture_id },
-    {
-      received: id => {
+      }, id => {
         rootStore.questionsList.resolveQuestionById(id);
-      }
-    }
-  );
-  CableApp.cable.subscriptions.create(
-    { channel: "QuestionUpvotingChannel", lecture_id: rootStore.lecture_id },
-    {
-      received: data => {
+      }, data => {
         rootStore.questionsList.upvoteQuestionById(
-          data.question_id,
-          data.upvoter_id
-        );
-      }
-    }
+            data.question_id,
+            data.upvoter_id
+      )}
   );
 };
 
 export const createQuestionsRootStore = (): QuestionsRootStoreModel => {
-  return createStore();
+  return createQuestionsStore();
 };
 
 export const initQuestionsApp = (rootStore: QuestionsRootStoreModel) => {

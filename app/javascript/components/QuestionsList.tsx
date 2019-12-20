@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import Question from "./Question";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import useInject from "../hooks/useInject";
+import {useInjectQuestions} from "../hooks/useInject";
 
 const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
   is_student,
@@ -10,9 +10,9 @@ const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
 });
 
 const QuestionsList: React.FunctionComponent<{}> = observer(() => {
-  const { is_student, questionsList } = useInject(mapStore);
+  const { is_student, questionsList } = useInjectQuestions(mapStore);
 
-  const onSortingClick = e => {
+  const onSortingClick = () => {
     questionsList.toggleSorting();
   };
 

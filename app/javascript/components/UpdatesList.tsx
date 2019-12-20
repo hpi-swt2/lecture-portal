@@ -1,22 +1,30 @@
 import React from "react";
 import { observer } from "mobx-react";
-import Update from "./Update";
-import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import useInject from "../hooks/useInject"
+import {UpdatesRootStoreModel} from "../stores/UpdatesRootStore";
+import {useInjectUpdates} from "../hooks/useInject";
+import Question from "./Question";
 
-const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
+const mapStore = ({ is_student, updatesList }: UpdatesRootStoreModel) => ({
   is_student,
-  questionsList
+  updatesList
 });
 
 const UpdatesList: React.FunctionComponent<{}> = observer(() => {
-  const { is_student, questionsList } = useInject(mapStore);
+  const { is_student, updatesList } = useInjectUpdates(mapStore);
+
+  const getItemForUpdate = (update) => {
+      console.log(update);
+      if(update.type == "Question")
+          return <Question question={update.item} key={update.item.id} />;
+      else
+        return null;
+  };
 
   return (
     <div className="questionsList mt-1">
       <ul className={(is_student ? "" : "is_lecturer")}>
-        {questionsList.list.map(question => (
-          <Update update={question.createUpdate()} key={question.id} />
+        {updatesList.getList().map(update => (
+            getItemForUpdate(update)
         ))}
       </ul>
     </div>

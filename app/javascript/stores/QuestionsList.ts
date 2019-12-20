@@ -1,4 +1,4 @@
-import { destroy, Instance, types, getRoot } from "mobx-state-tree";
+import { destroy, Instance, types } from "mobx-state-tree";
 import Question, { QuestionModel } from "./Question";
 import { getQuestionsRootStore } from "./QuestionsRootStore";
 
@@ -46,7 +46,8 @@ const QuestionsList = types
             questionsListData.forEach(questionData => {
                 self.list.push(createQuestionFromData(questionData));
             });
-            self.list = sortQuestionsList(self.list, self.is_sorted_by_time)
+            self.list = sortQuestionsList(self.list, self.is_sorted_by_time);
+            console.log(self.list.slice());
         },
         resolveQuestionById(id: number) {
             let resolvedQuestion: QuestionModel;

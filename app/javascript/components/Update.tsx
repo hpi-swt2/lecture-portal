@@ -1,21 +1,10 @@
 import React from "react";
 import { observer } from "mobx-react";
-import { UpdateModel } from "../stores/Update";
-import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import useInject from "../hooks/useInject";
 
-const mapStore = ({ is_student }: QuestionsRootStoreModel) => ({
-    is_student
-});
+const UpdateView: React.FunctionComponent = () => {
+    /*const { is_student } = useInjectUpdates(mapStore);
 
-type Props = {
-    update: UpdateModel
-}
-
-const UpdateView: React.FunctionComponent<Props> = ({ update }) => {
-    const { is_student } = useInject(mapStore);
     const onClick = _ => { !is_student && update.onClick() }
-
     return (
         <li key={update.type + update.id} onClick={onClick}>
             <div className="questionContent p-4">
@@ -23,7 +12,8 @@ const UpdateView: React.FunctionComponent<Props> = ({ update }) => {
                 {update.content}
             </div>
         </li>
-    );
+    );*/
+    return null
 };
 
 export default observer(UpdateView)

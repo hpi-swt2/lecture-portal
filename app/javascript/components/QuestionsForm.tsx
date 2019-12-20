@@ -1,7 +1,7 @@
 import React, { createRef, useEffect } from "react";
 import { observer } from "mobx-react";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import useInject from "../hooks/useInject";
+import {useInjectQuestions} from "../hooks/useInject";
 
 const mapStore = ({
   is_student,
@@ -12,7 +12,7 @@ const mapStore = ({
 });
 
 const QuestionsForm: React.FunctionComponent<{}> = observer(() => {
-  const { is_student, current_question } = useInject(mapStore);
+  const { is_student, current_question } = useInjectQuestions(mapStore);
 
   if (is_student) {
     const formRef = createRef<HTMLFormElement>();

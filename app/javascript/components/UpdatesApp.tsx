@@ -1,8 +1,8 @@
 import React from "react";
 import UpdatesList from "./UpdatesList";
-import { StoreProvider, initQuestionsApp, createQuestionsRootStore } from "../utils/QuestionsUtils";
+import {createUpdatesRootStore, initUpdatesApp, StoreProvider} from "../utils/UpdatesUtils";
 
-const rootStore = createQuestionsRootStore();
+const rootStore = createUpdatesRootStore();
 
 interface IUpdatesAppProps {
     user_id: number,
@@ -14,7 +14,7 @@ const UpdatesApp: React.FunctionComponent<IUpdatesAppProps> = ({ user_id, is_stu
     rootStore.setUserId(user_id);
     rootStore.setIsStudent(is_student);
     rootStore.setLectureId(lecture_id);
-    initQuestionsApp(rootStore);
+    initUpdatesApp(rootStore);
     return (
         <StoreProvider value={rootStore}>
             <div className="UpdatesApp">

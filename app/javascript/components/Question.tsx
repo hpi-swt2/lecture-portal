@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { QuestionModel } from "../stores/Question";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import useInject from "../hooks/useInject";
+import {useInjectQuestions} from "../hooks/useInject";
 
 const mapStore = ({ is_student }: QuestionsRootStoreModel) => ({
     is_student
@@ -13,7 +13,7 @@ type Props = {
 }
 
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
-    const { is_student } = useInject(mapStore);
+    const { is_student } = useInjectQuestions(mapStore);
 
     const canQuestionBeUpvoted: boolean =
         question.canBeUpvoted();
