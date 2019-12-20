@@ -3,6 +3,8 @@ class Lecture < ApplicationRecord
   has_and_belongs_to_many :participating_students, class_name: :User
   has_many :polls, dependent: :destroy
   has_many :feedbacks
+  # do the same thing with course later
+  has_many :uploaded_files, as: :allowsUpload
   enum status: { created: "created", running: "running", ended: "ended" }
 
   validates :name, presence: true, length: { in: 2..40 }
