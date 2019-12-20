@@ -1,4 +1,4 @@
-import { types, Instance } from "mobx-state-tree"
+import { types, Instance, IAnyStateTreeNode, getRoot } from "mobx-state-tree"
 import questionsList, { QuestionsListModel } from "./QuestionsList";
 import currentQuestion, { CurrentQuestionModel } from "./CurrentQuestion";
 
@@ -7,6 +7,10 @@ export type QuestionsRootStoreModel = Instance<typeof QuestionsRootStore>
 export type QuestionsRootStoreEnv = {
     questionsList: QuestionsListModel,
     current_question: CurrentQuestionModel
+}
+
+export const getQuestionsRootStore = (target: IAnyStateTreeNode): QuestionsRootStoreModel => {
+    return getRoot(target) as QuestionsRootStoreModel
 }
 
 const QuestionsRootStore = types.model("QuestionsRootStore", {

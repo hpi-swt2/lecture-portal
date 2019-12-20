@@ -46,9 +46,7 @@ const setupActionCable = (rootStore: QuestionsRootStoreModel) => {
         { channel: "QuestionUpvotingChannel", lecture: rootStore.lecture_id },
         {
             received: data => {
-                const upvotedQuestion = rootStore.questionsList.upvoteQuestionById(data.question_id);
-                if (upvotedQuestion && data.upvoter_id == rootStore.user_id)
-                    upvotedQuestion.disallowUpvote();
+                rootStore.questionsList.upvoteQuestionById(data.question_id, data.upvoter_id);
             }
         }
     );

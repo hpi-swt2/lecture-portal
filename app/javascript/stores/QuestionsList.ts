@@ -1,5 +1,7 @@
-import { destroy, Instance, types } from "mobx-state-tree";
+import { destroy, Instance, types, getRoot } from "mobx-state-tree";
 import Question, { QuestionModel } from "./Question";
+import { upvoteQuestionById } from "../utils/QuestionsUtils";
+import { getQuestionsRootStore } from "./QuestionsRootStore";
 
 export type QuestionsListModel = Instance<typeof QuestionsList>
 
@@ -56,17 +58,17 @@ const QuestionsList = types
             if (resolvedQuestion)
                 destroy(resolvedQuestion)
         },
-        upvoteQuestionById(id): QuestionModel {
+        upvoteQuestionById(question_id, upvoter_id) {
             let upvoteQuestion: QuestionModel;
             self.list.forEach(question => {
-                if (question.id == id)
+                if (question.id == question_id)
                     upvoteQuestion = question
             });
             if (upvoteQuestion) {
                 upvoteQuestion.upvote();
-                !self.is_sorted_by_time && (self.list = sortQuestionsList(self.list, self.is_sorted_by_time))
+                !self.is_sorted_by_time && (self.list = sortQuestionsList(self.list, self.is_sorted_by_time));
+                upvoter_id == getQuestionsRootStore(self).user_id && upvoteQuestion.disallowUpvote();
             }
-            return upvoteQuestion;
         },
         toggleSorting() {
             self.is_sorted_by_time = !self.is_sorted_by_time;

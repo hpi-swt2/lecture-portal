@@ -2,7 +2,7 @@ import { Instance, types, getRoot } from "mobx-state-tree";
 import { UpdateModel } from "./Update";
 import Update from "./Update";
 import { resolveQuestionById, upvoteQuestionById } from "../utils/QuestionsUtils";
-import { QuestionsRootStoreModel } from "./QuestionsRootStore";
+import { QuestionsRootStoreModel, getQuestionsRootStore } from "./QuestionsRootStore";
 
 export type QuestionModel = Instance<typeof Question>
 
@@ -16,6 +16,18 @@ const Question = types
     already_upvoted: types.boolean
   })
   .actions(self => ({
+    canBeUpvoted(): boolean {
+      const store = getQuestionsRootStore(self);
+      return self.author_id != store.user_id && store.is_student;
+    },
+    isAlreadyUpvoted(): boolean {
+      const store = getQuestionsRootStore(self);
+      return self.already_upvoted && (self.author_id != store.user_id && store.is_student);
+    },
+    canBeResolved(): boolean {
+      const store = getQuestionsRootStore(self);
+      return store.user_id == self.author_id || !store.is_student;
+    },
     upvote() {
       self.upvotes++;
     },
@@ -33,13 +45,11 @@ const Question = types
       })
     },
     resolveClick() {
-      let lecture_id = (getRoot(self) as QuestionsRootStoreModel).lecture_id;
-      resolveQuestionById(self.id, lecture_id);
+      resolveQuestionById(self.id, getQuestionsRootStore(self).lecture_id);
 
     },
     upvoteClick() {
-      let lecture_id = (getRoot(self) as QuestionsRootStoreModel).lecture_id;
-      upvoteQuestionById(self.id, lecture_id)
+      upvoteQuestionById(self.id, getQuestionsRootStore(self).lecture_id);
     }
   }));
 
