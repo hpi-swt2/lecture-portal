@@ -2,17 +2,22 @@ import * as React from "react";
 import { ChangeEvent } from "react";
 import * as axios from "axios";
 
+interface IOption {
+  description: string;
+  id: number;
+}
+
 interface IAnswerOptionProps {
-  options: Array<string>;
+  options: Array<IOption>;
   title: string;
   is_multiselect: boolean;
   lecture_id: number;
   poll_id: number;
+  auth_token: string;
 }
 
 interface IAnswerOptionState {
-  numberOfOptions: number;
-  options: Array<string>;
+  showNoOptionSelectedError: boolean;
 }
 
 class AnswerOption extends React.Component<
@@ -22,11 +27,12 @@ class AnswerOption extends React.Component<
   answers = [];
   constructor(props) {
     super(props);
-    this.answers = new Array(props.options.length).fill(false);
-    console.log(this.answers);
+    this.answers = props.options.map(option => ({
+      value: false,
+      id: option.id
+    }));
     this.state = {
-      numberOfOptions: props.options.length,
-      options: props.options
+      showNoOptionSelectedError: false
     };
   }
 
@@ -36,6 +42,11 @@ class AnswerOption extends React.Component<
       <React.Fragment>
         <form onSubmit={this.submitAnswers}>
           <h1>{this.props.title}</h1>
+          {this.state.showNoOptionSelectedError ? (
+            <div className="alert alert-danger">
+              <h6 className="alert-heading">Please select an answer</h6>
+            </div>
+          ) : null}
           {allOptions}
 
           <div className="actions">
@@ -49,12 +60,10 @@ class AnswerOption extends React.Component<
   }
 
   renderAnswers() {
-    const { is_multiselect } = this.props;
-    const { options } = this.state;
+    const { is_multiselect, options } = this.props;
     const boxType = is_multiselect ? "checkbox" : "radio";
     const optionElements = [];
-    for (let index = 1; index <= options.length; index++) {
-      const option_name = is_multiselect ? `poll[option_${index}]` : "poll[";
+    for (let index = 0; index < options.length; index++) {
       const currentOption = (
         <React.Fragment key={`frag_${index}`}>
           <br key={`br_${index}`} />
@@ -66,9 +75,9 @@ class AnswerOption extends React.Component<
             onChange={(evt: ChangeEvent<HTMLInputElement>) =>
               this.handleOptionChange(index, evt.target.checked)
             }
-          />
+          />{" "}
           <label key={`option_${index}_label`}>
-            {index}. {options[index]}{" "}
+            {index + 1}. {options[index].description}{" "}
           </label>
         </React.Fragment>
       );
@@ -80,14 +89,15 @@ class AnswerOption extends React.Component<
   // Use anonymous methods so it is automatically bound to this.
   submitAnswers = async event => {
     event.preventDefault();
-    const { lecture_id, poll_id } = this.props;
-    const outerFormForSubmit = document.getElementById("outer-form");
-    const authenticity_token_elem: HTMLInputElement = outerFormForSubmit.querySelector(
-      "[name=authenticity_token]"
-    );
-    const authenticity_token = authenticity_token_elem.value;
+    if (!this.answers.some(answer => answer.value === true)) {
+      this.setState({ showNoOptionSelectedError: true });
+      return;
+    } else {
+      this.setState({ showNoOptionSelectedError: false });
+    }
+    const { lecture_id, poll_id, auth_token } = this.props;
     const data = {
-      authenticity_token,
+      authenticity_token: auth_token,
       lecture_id,
       id: poll_id,
       answers: this.answers
@@ -100,11 +110,14 @@ class AnswerOption extends React.Component<
     window.location.href = newUrl;
   };
 
-  handleOptionChange = (option_id: number, is_selected: boolean) => {
-    if(!this.props.is_multiselect){
-      this.answers = new Array(this.props.options.length).fill(false);
+  handleOptionChange = (option_index: number, is_selected: boolean) => {
+    if (!this.props.is_multiselect) {
+      this.answers.forEach(
+        (answer, index) => (answer.value = option_index === index)
+      );
+    } else {
+      this.answers[option_index].value = is_selected;
     }
-    this.answers[option_id - 1] = is_selected;
   };
 }
 
