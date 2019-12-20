@@ -11,7 +11,7 @@ else
 fi
 #script by travis that will take care of deployment (but needs alpha features)
 gem install dpl --pre
-if dpl heroku git --api_key ${$APIKEY} --app $APP;
+if dpl heroku git --api_key $APIKEY --app $APP;
 then
   HEROKU_API_KEY="$APIKEY" heroku container:release --app $APP web
 else
