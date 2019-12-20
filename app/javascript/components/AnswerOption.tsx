@@ -7,6 +7,11 @@ interface IOption {
   id: number;
 }
 
+interface IAnswer {
+  value: boolean;
+  id: number;
+}
+
 interface IAnswerOptionProps {
   options: Array<IOption>;
   title: string;
@@ -14,9 +19,11 @@ interface IAnswerOptionProps {
   lecture_id: number;
   poll_id: number;
   auth_token: string;
+  previous_answers: Array<number>;
 }
 
 interface IAnswerOptionState {
+  answers: Array<IAnswer>;
   showNoOptionSelectedError: boolean;
 }
 
@@ -24,15 +31,16 @@ class AnswerOption extends React.Component<
   IAnswerOptionProps,
   IAnswerOptionState
 > {
-  answers = [];
   constructor(props) {
     super(props);
-    this.answers = props.options.map(option => ({
-      value: false,
+    console.log(props);
+    const answers = props.options.map(option => ({
+      value: props.previous_answers.includes(option.id),
       id: option.id
     }));
     this.state = {
-      showNoOptionSelectedError: false
+      showNoOptionSelectedError: false,
+      answers
     };
   }
 
@@ -61,9 +69,10 @@ class AnswerOption extends React.Component<
 
   renderAnswers() {
     const { is_multiselect, options } = this.props;
+    const { answers } = this.state;
     const boxType = is_multiselect ? "checkbox" : "radio";
     const optionElements = [];
-    for (let index = 0; index < options.length; index++) {
+    answers.map((answer, index) => {
       const currentOption = (
         <React.Fragment key={`frag_${index}`}>
           <br key={`br_${index}`} />
@@ -71,25 +80,27 @@ class AnswerOption extends React.Component<
             id={`poll_option_${index}`}
             name={"poll[option]"}
             type={boxType}
+            checked={answer.value}
             key={`${index}`}
             onChange={(evt: ChangeEvent<HTMLInputElement>) =>
               this.handleOptionChange(index, evt.target.checked)
             }
           />{" "}
           <label key={`option_${index}_label`}>
-            {index + 1}. {options[index].description}{" "}
+            {index + 1}. {options[index].description}
           </label>
         </React.Fragment>
       );
       optionElements.push(currentOption);
-    }
+    });
     return optionElements;
   }
 
   // Use anonymous methods so it is automatically bound to this.
   submitAnswers = async event => {
     event.preventDefault();
-    if (!this.answers.some(answer => answer.value === true)) {
+    const { answers } = this.state;
+    if (!answers.some(answer => answer.value === true)) {
       this.setState({ showNoOptionSelectedError: true });
       return;
     } else {
@@ -100,7 +111,7 @@ class AnswerOption extends React.Component<
       authenticity_token: auth_token,
       lecture_id,
       id: poll_id,
-      answers: this.answers
+      answers
     };
     const response = await axios.post(
       `/lectures/${lecture_id}/polls/${poll_id}/save_answers`,
@@ -111,13 +122,19 @@ class AnswerOption extends React.Component<
   };
 
   handleOptionChange = (option_index: number, is_selected: boolean) => {
+    let newAnswers;
     if (!this.props.is_multiselect) {
-      this.answers.forEach(
-        (answer, index) => (answer.value = option_index === index)
-      );
+      newAnswers = this.state.answers.map((answer, index) => ({
+        value: option_index === index,
+        id: answer.id
+      }));
     } else {
-      this.answers[option_index].value = is_selected;
+      newAnswers = this.state.answers.map((answer, index) => ({
+        value: option_index === index ? is_selected : answer.value,
+        id: answer.id
+      }));
     }
+    this.setState({ answers: newAnswers });
   };
 }
 

@@ -24,6 +24,7 @@ class PollsController < ApplicationController
   # GET /polls/1/edit
   def edit
     if current_user.is_student
+      @answers = Answer.where(poll_id: @poll.id, student_id: current_user.id)
       render :answer
     end
   end
