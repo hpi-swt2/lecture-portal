@@ -1,11 +1,10 @@
 import { destroy, Instance, types, getRoot } from "mobx-state-tree";
 import Question, { QuestionModel } from "./Question";
-import { upvoteQuestionById } from "../utils/QuestionsUtils";
 import { getQuestionsRootStore } from "./QuestionsRootStore";
 
 export type QuestionsListModel = Instance<typeof QuestionsList>
 
-const sortQuestionsList = (questionsList, sortByTime) => {
+const sortQuestionsList = (questionsList, sortByTime: boolean) => {
     return questionsList.slice().sort(sortByTime ? timeSorting : upvoteSorting);
 };
 
@@ -49,7 +48,7 @@ const QuestionsList = types
             });
             self.list = sortQuestionsList(self.list, self.is_sorted_by_time)
         },
-        resolveQuestionById(id) {
+        resolveQuestionById(id: number) {
             let resolvedQuestion: QuestionModel;
             self.list.forEach(question => {
                 if (question.id == id)
@@ -58,7 +57,7 @@ const QuestionsList = types
             if (resolvedQuestion)
                 destroy(resolvedQuestion)
         },
-        upvoteQuestionById(question_id, upvoter_id) {
+        upvoteQuestionById(question_id: number, upvoter_id: number) {
             let upvoteQuestion: QuestionModel;
             self.list.forEach(question => {
                 if (question.id == question_id)

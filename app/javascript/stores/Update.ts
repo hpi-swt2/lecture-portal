@@ -1,6 +1,6 @@
 import { Instance, types, getRoot } from "mobx-state-tree";
 import { resolveQuestionById } from "../utils/QuestionsUtils";
-import { QuestionsRootStoreModel } from "./QuestionsRootStore";
+import { QuestionsRootStoreModel, getQuestionsRootStore } from "./QuestionsRootStore";
 
 export type UpdateModel = Instance<typeof Update>
 
@@ -17,7 +17,7 @@ const Update = types
       return self.type
     },
     onClick() {
-      let lecture_id = (getRoot(self) as QuestionsRootStoreModel).lecture_id;
+      let lecture_id = getQuestionsRootStore(self).lecture_id;
       switch (self.type) {
         case "Question": {
           resolveQuestionById(self.id, lecture_id);

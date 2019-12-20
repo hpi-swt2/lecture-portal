@@ -1,4 +1,4 @@
-import {Instance, types} from "mobx-state-tree";
+import { Instance, types } from "mobx-state-tree";
 
 export type CurrentQuestionModel = Instance<typeof CurrentQuestion>
 
@@ -7,13 +7,13 @@ const CurrentQuestion = types
         content: types.optional(types.string, ""),
     })
     .actions(self => ({
-        set(content) {
+        set(content: string) {
             self.content = content.replace(/[\r\n\v]+/g, "");
         },
-        get() {
+        get(): string {
             return self.content
         },
-        getTrimmed() {
+        getTrimmed(): string {
             return self.content.trim()
         },
         clear() {

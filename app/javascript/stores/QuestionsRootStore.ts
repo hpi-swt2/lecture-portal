@@ -20,15 +20,15 @@ const QuestionsRootStore = types.model("QuestionsRootStore", {
     current_question: currentQuestion,
     questionsList: questionsList,
 }).actions(self => ({
-    setUserId(user_id) {
+    setUserId(user_id: number) {
         self.user_id = user_id;
     },
-    setIsStudent(is_student) {
+    setIsStudent(is_student: boolean) {
         self.is_student = is_student;
         //Default sorting shall be time based for student and upvote based for lecturers
         self.questionsList.is_sorted_by_time = is_student;
     },
-    setLectureId(lecture_id) {
+    setLectureId(lecture_id: number) {
         self.lecture_id = lecture_id
     }
 }));
