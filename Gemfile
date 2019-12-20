@@ -131,3 +131,5 @@ gem "react-rails"
 gem "active_model_serializers"
 # Adds support to test action-cable behaviour, see https://github.com/palkan/action-cable-testing
 gem "action-cable-testing"
+# I suspect this gem to be responsible for the illegal instruction crashes in heroku, so I explicitly request the latest version here.
+gem 'ffi', '~> 1.11', '>= 1.11.3'
