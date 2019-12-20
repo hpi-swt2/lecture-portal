@@ -13,22 +13,22 @@ class UploadedFilesController < ApplicationController
 
   # POST /uploaded_files
   def create
-    file = uploaded_file_params["attachment"]
-    if file.nil? || !(file.is_a? ActionDispatch::Http::UploadedFile)
+    @uploaded_file = uploaded_file_params["attachment"]
+    if @uploaded_file.nil? || !(@uploaded_file.is_a? ActionDispatch::Http::UploadedFile)
       render :new
     else
-      filename = file.original_filename
-      content_type = file.content_type
-      data = file.read
+      filename = @uploaded_file.original_filename
+      content_type = @uploaded_file.content_type
+      data = @uploaded_file.read
       lecture_id = uploaded_file_params["lecture"]
       unless Lecture.exists?(lecture_id)
         render :new
         return
       end
       lecture = Lecture.find(lecture_id)
-      file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: lecture)
-      add_type_to_file file:file, type: uploaded_file_params["uploadedFileType"]
-      if file.save
+      @uploaded_file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: lecture)
+      add_type_to_file file:@uploaded_file, type: uploaded_file_params["uploadedFileType"]
+      if @uploaded_file.save
         redirect_to (uploaded_files_url), notice: "Uploaded file was successfully saved."
       else
         render :new
