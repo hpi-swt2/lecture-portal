@@ -61,6 +61,16 @@ RSpec.describe QuestionsController, type: :controller do
         get :index, params: { lecture_id: @lecture.id }, session: valid_session
         expect(response.body).to eq(expected.to_json)
       end
+
+      it "should only show questions belonging to the requested lecture" do
+        another_lecture = FactoryBot.create(:lecture)
+        another_lecture.join_lecture(@student)
+        another_question = FactoryBot.create(:question, author: @student, lecture: another_lecture)
+
+        expected = [ QuestionSerializer.new(@question, scope: @student, scope_name: :current_user).as_json ]
+        get :index, params: { lecture_id: @lecture.id }, session: valid_session
+        expect(response.body).to eq(expected.to_json)
+      end
     end
 
     describe "POST #upvote" do

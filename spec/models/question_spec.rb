@@ -16,6 +16,11 @@ RSpec.describe Question, type: :model do
     expect(question).to_not be_valid
   end
 
+  it "is not valid without a lecture" do
+    question = FactoryBot.build(:question, lecture: nil)
+    expect(question).to_not be_valid
+  end
+
   it "can have upvoting users" do
     question = FactoryBot.build(:question)
     user1 = FactoryBot.create(:user, :student, email: "test1@hpi.de")
