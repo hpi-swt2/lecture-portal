@@ -26,11 +26,11 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
         user_id == question.author_id || !is_student;
 
     const onResolveClick = _ => {
-        canQuestionBeResolved && resolveQuestionById(question.id, lecture_id)
+        canQuestionBeResolved && question.resolveClick(lecture_id)
     };
 
     const onUpvoteClick = _ => {
-        canQuestionBeUpvoted && upvoteQuestionById(question.id, lecture_id)
+        canQuestionBeUpvoted && question.upvoteClick(lecture_id)
     };
 
     return (

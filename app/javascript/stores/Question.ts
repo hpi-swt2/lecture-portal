@@ -1,6 +1,7 @@
 import { Instance, types } from "mobx-state-tree";
 import { UpdateModel } from "./Update";
 import Update from "./Update";
+import { resolveQuestionById, upvoteQuestionById } from "../utils/QuestionsUtils";
 
 export type QuestionModel = Instance<typeof Question>
 
@@ -23,12 +24,18 @@ const Question = types
     createUpdate(): UpdateModel {
       return Update.create({
         id: self.id,
-        title: "Question",
+        type: "Question",
         content: self.content,
         author_id: self.author_id,
         created_at: self.created_at,
         upvotes: self.upvotes
       })
+    },
+    resolveClick(lecture_id) {
+      resolveQuestionById(self.id, lecture_id)
+    },
+    upvoteClick(lecture_id) {
+      upvoteQuestionById(self.id, lecture_id)
     }
   }));
 

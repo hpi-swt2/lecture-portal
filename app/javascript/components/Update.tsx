@@ -4,8 +4,9 @@ import { UpdateModel } from "../stores/Update";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject";
 
-const mapStore = ({ is_student }: QuestionsRootStoreModel) => ({
-    is_student
+const mapStore = ({ is_student, lecture_id }: QuestionsRootStoreModel) => ({
+    is_student,
+    lecture_id
 });
 
 type Props = {
@@ -13,12 +14,13 @@ type Props = {
 }
 
 const UpdateView: React.FunctionComponent<Props> = ({ update }) => {
-    const { is_student } = useInject(mapStore);
+    const { is_student, lecture_id } = useInject(mapStore);
+    const onClick = _ => { !is_student && update.onClick(lecture_id) }
 
     return (
-        <li key={update.title + update.id} >
+        <li key={update.type + update.id} onClick={onClick}>
             <div className="questionContent p-4">
-                {is_student && <span><b>{update.title}</b><br /></span>}
+                {is_student && <span><b>{update.getTitle()}</b><br /></span>}
                 {update.content}
             </div>
         </li>
