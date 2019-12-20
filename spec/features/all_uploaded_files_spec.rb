@@ -1,5 +1,6 @@
 require "rails_helper"
 
+describe "The uploaded files index page", type: :feature do
   # Include Devise helpers that allow usage of `sign_in`
   include Devise::Test::IntegrationHelpers
 
@@ -39,3 +40,4 @@ require "rails_helper"
       expect(page.response_headers["Content-Type"]).to eql @file.content_type
     end
   end
+end
