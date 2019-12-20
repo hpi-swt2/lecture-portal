@@ -15,11 +15,23 @@
 
 <h2>Options</h2>
 <ol>
-<% for option in @poll.poll_options %>
+  <% for option in @poll.poll_options %>
 
-    <li><%= option.description %></li>
-<% end %>
+  <li><%= option.description %>
+    <% if @answers.any? %>
+    <% if @answers.any? {|answer| answer.option_id == option.id} %>
+    <span class="green-checkmark">&#x2714;</span>
+    <% else %>
+    <span class="red-cross">&#x2716;</span>
+    <% end %>
+    <% end %>
+  </li>
+  <% end %>
 </ol>
 
+<% if @is_student %>
+<%= link_to 'Answer', edit_lecture_poll_path(@lecture, @poll) %> |
+<% else %>
 <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
-<%= link_to 'Back', lecture_polls_path(@lecture) %>
+<% end %>
+<%= link_to 'Show all polls', lecture_polls_path(@lecture) %>

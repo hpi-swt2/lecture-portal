@@ -2,6 +2,7 @@ class PollsController < ApplicationController
   before_action :set_poll, only: [:show, :edit, :update, :destroy]
   before_action :get_lecture
   before_action :authenticate_user!
+  before_action :set_is_student
 
   # GET /polls
   def index
@@ -10,11 +11,12 @@ class PollsController < ApplicationController
 
   # GET /polls/1
   def show
+    get_users_answers
   end
 
   # GET /polls/new
   def new
-    if current_user.is_student
+    if @is_student
       redirect_to lecture_polls_path(@lecture), notice: "You are a student. You can not create polls."
     else
       @poll = @lecture.polls.build
@@ -23,8 +25,8 @@ class PollsController < ApplicationController
 
   # GET /polls/1/edit
   def edit
-    if current_user.is_student
-      @answers = Answer.where(poll_id: @poll.id, student_id: current_user.id)
+    if @is_student
+      get_users_answers
       render :answer
     end
   end
@@ -70,7 +72,7 @@ class PollsController < ApplicationController
     current_poll_params = poll_params
     if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
-      PollOption.where(poll_id: @poll.id).destroy_all
+      existingOptions = PollOption.where(poll_id: @poll.id)
       poll_options = current_poll_params[:poll_options]
       for poll_option in poll_options do
         poll_option_description = poll_option.values_at(1)
@@ -109,5 +111,13 @@ class PollsController < ApplicationController
 
     def answer_params
       params.require(:poll).permit(:answers)
+    end
+
+    def get_users_answers
+      @answers = Answer.where(poll_id: @poll.id, student_id: current_user.id)
+    end
+
+    def set_is_student
+      @is_student = current_user.is_student
     end
 end
