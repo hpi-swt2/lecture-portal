@@ -47,7 +47,6 @@ const QuestionsList = types
                 self.list.push(createQuestionFromData(questionData));
             });
             self.list = sortQuestionsList(self.list, self.is_sorted_by_time);
-            console.log(self.list.slice());
         },
         resolveQuestionById(id: number) {
             let resolvedQuestion: QuestionModel;
