@@ -5,10 +5,9 @@ import { resolveQuestionById, upvoteQuestionById } from "../utils/QuestionsUtils
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
 import useInject from "../hooks/useInject";
 
-const mapStore = ({ user_id, is_student, lecture_id }: QuestionsRootStoreModel) => ({
+const mapStore = ({ user_id, is_student }: QuestionsRootStoreModel) => ({
     user_id,
-    is_student,
-    lecture_id
+    is_student
 });
 
 type Props = {
@@ -16,7 +15,7 @@ type Props = {
 }
 
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
-    const { user_id, is_student, lecture_id } = useInject(mapStore);
+    const { user_id, is_student } = useInject(mapStore);
 
     const canQuestionBeUpvoted: boolean =
         question.author_id != user_id && is_student;
@@ -26,11 +25,11 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
         user_id == question.author_id || !is_student;
 
     const onResolveClick = _ => {
-        canQuestionBeResolved && question.resolveClick(lecture_id)
+        canQuestionBeResolved && question.resolveClick()
     };
 
     const onUpvoteClick = _ => {
-        canQuestionBeUpvoted && question.upvoteClick(lecture_id)
+        canQuestionBeUpvoted && question.upvoteClick()
     };
 
     return (
