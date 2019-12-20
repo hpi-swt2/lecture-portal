@@ -11,8 +11,11 @@ else
 fi
 #cleaner than vanilla docker command
 HEROKU_API_KEY="$APIKEY" heroku container:login
+#so we can just push to heroku
+HEROKU_API_KEY="$APIKEY" heroku stack:set container --app ${APP}
 HEROKU_API_KEY="$APIKEY" heroku git:remote --app ${APP}
 #herokucli always exits with 0, even if docker build failed, so build using vanilla docker command
+echo "Running git push heroku $TRAVIS_BRANCH:master"
 if git push heroku $TRAVIS_BRANCH:master;
 then
   HEROKU_API_KEY="$APIKEY" heroku container:release --app $APP web
