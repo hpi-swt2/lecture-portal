@@ -12,5 +12,4 @@ class HomeController < ApplicationController
     current_user.save
     redirect_to @course, notice: "You successfully joined the lecture."
   end
-
 end

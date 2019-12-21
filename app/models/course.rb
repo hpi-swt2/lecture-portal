@@ -9,5 +9,4 @@ class Course < ApplicationRecord
       self.participating_students << student
     end
   end
-
 end
