@@ -34,8 +34,7 @@
 
           <tr>
               <td><%= course.name %></td>
-            <%#= button_to "Join", {action: "join_course", params: {id: course.id}}, {class:"btn btn-primary"} %>
-              <td class="text-right"> <%= link_to 'View', course, {class:"btn btn-primary"} %></td>
+              <td><%= button_to "Join", {action: "join_course", params: {id: course.id}}, {class:"btn btn-primary"} %></td>
           </tr>
 
 
