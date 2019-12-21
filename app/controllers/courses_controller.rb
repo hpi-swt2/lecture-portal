@@ -68,7 +68,6 @@ class CoursesController < ApplicationController
       params.require(:course).permit(:name, :description, :status)
     end
 
-
     def validate_owner
       if @course.creator != current_user
         redirect_to lectures_url, notice: "You can only access your own courses."
