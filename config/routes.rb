@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   post "/courses/join_course", to: "courses#join_course", as: "join_course"
   post "/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
 
-  resources :courses
+  resources :courses do
     resources :lectures do
       resources :polls
       resources :feedbacks
