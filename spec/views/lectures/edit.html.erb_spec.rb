@@ -32,3 +32,27 @@ RSpec.describe "lectures/edit", type: :view do
     assert_select "[data-method=delete]"
   end
 end
+
+RSpec.describe "lectures/edit", type: :view do
+  before(:each) do
+    @lecture = assign(:lecture, Lecture.create!(
+                                  name: "MyString",
+                                  enrollment_key: "MyString",
+                                  status: "ended",
+                                  lecturer: FactoryBot.create(:user, :lecturer, email: "123test@gmail.com")
+    ))
+  end
+
+  it " should be disabled if the lecture is archived" do
+    render
+    assert_select "form[action=?][method=?]", lecture_path(@lecture), "post" do
+      assert_select "input[name=?][readonly]", "lecture[name]"
+
+      assert_select "input[name=?][readonly]", "lecture[description]"
+
+      assert_select "input[name=?][disabled]", "lecture[questions_enabled]"
+
+      assert_select "input[name=?][disabled]", "lecture[polls_enabled]"
+    end
+  end
+end

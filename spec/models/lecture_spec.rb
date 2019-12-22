@@ -50,4 +50,11 @@ RSpec.describe Lecture, type: :model do
     @lecture.leave_lecture(user)
     expect(@lecture.participating_students.length).to be 0
   end
+
+  it "is cannot be changed  when it ended" do
+    @lecture.set_inactive
+    @lecture.save
+    @lecture.description = @lecture.description + " new"
+    expect(@lecture).not_to be_valid
+  end
 end
