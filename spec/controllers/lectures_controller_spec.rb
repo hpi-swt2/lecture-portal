@@ -59,7 +59,7 @@ RSpec.describe LecturesController, type: :controller do
     end
 
     it "returns a success response for joined students", :logged_lecturer do
-      lecture = Lecture.create! valid_attributes_with_lecturer
+      lecture = FactoryBot.create(:lecture, valid_attributes_with_lecturer)
       student = FactoryBot.create(:user, :student)
       lecture.join_lecture(student)
       login_student(student)
@@ -167,7 +167,7 @@ RSpec.describe LecturesController, type: :controller do
 
       it "redirects to the lecture" do
         put :update, params: { id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(@lecture)
+        expect(response).to redirect_to(lecture_path(@lecture))
       end
     end
 
@@ -214,7 +214,7 @@ RSpec.describe LecturesController, type: :controller do
     it "redirects to the lectures overview for students" do
       login_student
       post :join_lecture, params: { id: @lecture.id }, session: valid_session
-      expect(response).to redirect_to(@lecture)
+      expect(response).to redirect_to(lecture_path(@lecture))
     end
 
     it "redirects to overview for other lecturers" do
