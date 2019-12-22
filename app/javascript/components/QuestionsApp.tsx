@@ -1,9 +1,9 @@
 import React from "react";
 import QuestionsForm from "./QuestionsForm";
 import QuestionsList from "./QuestionsList";
-import initQuestionsApp, {StoreProvider} from "../utils/QuestionsUtils";
+import { StoreProvider, initQuestionsApp, createQuestionsRootStore } from "../utils/QuestionsUtils";
 
-const rootStore = initQuestionsApp();
+const rootStore = createQuestionsRootStore();
 //onSnapshot(rootStore, console.log);
 
 interface IQuestionsAppProps {
@@ -11,14 +11,15 @@ interface IQuestionsAppProps {
     is_student: boolean
 }
 
-const QuestionsApp: React.FunctionComponent<IQuestionsAppProps> = ({user_id, is_student}) => {
+const QuestionsApp: React.FunctionComponent<IQuestionsAppProps> = ({ user_id, is_student }) => {
     rootStore.setUserId(user_id);
     rootStore.setIsStudent(is_student);
+    initQuestionsApp(rootStore);
     return (
         <StoreProvider value={rootStore}>
             <div className="QuestionsApp">
-                <QuestionsForm/>
-                <QuestionsList/>
+                <QuestionsForm />
+                <QuestionsList />
             </div>
         </StoreProvider>
     )

@@ -1,4 +1,4 @@
-<%= form_with(model: lecture, local: true) do |form| %>
+<%= form_with(model: lecture, local: true, params: render_enrolment_key) do |form| %>
   <% if lecture.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</h2>
@@ -11,48 +11,53 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
+  <div class="name row">
+    <%= form.label :name, class: "col-sm-3 col-form-label" %>
     <% if lecture.ended? %>
-      <%= form.text_field :name, :readonly => true %>
+      <%= form.text_field :name, :readonly => true, class: "col-sm-9" %>
     <% else %>
-      <%= form.text_field :name %>
+      <%= form.text_field :name, class: "col-sm-9" %>
     <% end %>
   </div>
 
-  <div class="field">
-    <%= form.label :description%>
+  <div class="description row">
+    <%= form.label :description, class: "col-sm-3 col-form-label" %>
     <% if lecture.ended? %>
-      <%= form.text_field :description, :readonly => true %>
+      <%= form.text_field :description, :readonly => true, class: "col-sm-9" %>
     <% else %>
-      <%= form.text_field :description %>
+      <%= form.text_field :description, class: "col-sm-9" %>
+    <% end %>
+  </div>
+  <!-- Should not be able to be edited after the lecture has started.-->
+  <% if render_enrolment_key==true %>
+    <div class="enrollment-key row">
+      <%= form.label :enrollment_key, class: "col-sm-3 col-form-label" %>
+      <% if lecture.ended? %>
+        <%= form.text_field :enrollment_key, :readonly => true, class: "col-sm-9" %>
+      <% else %>
+        <%= form.text_field :enrollment_key, class: "col-sm-9" %>
+      <% end %>
+  </div>
+  <% end %>
+  <div class="enable-questions row checkbox">
+    <%= form.label "Enable Questions", class: "col-sm-3 col-form-label"%>
+    <% if lecture.ended? %>
+      <div class="checkbox disabled">
+        <%= form.check_box :questions_enabled, :disabled => true, class: "form-check-input" %>
+      </div>
+    <% else %>
+      <%= form.check_box :questions_enabled, class: "form-check-input" %>
     <% end %>
   </div>
 
-  <div class="field">
-    <%= form.label :enrollment_key %>
+  <div class="enable-polls row checkbox">
+    <%= form.label "Enable Polls", class: "col-sm-3 col-form-label" %>
     <% if lecture.ended? %>
-      <%= form.text_field :enrollment_key, :readonly => true %>
+      <div class="checkbox disabled">
+        <%= form.check_box :polls_enabled, :disabled => true, class: "form-check-input" %>
+      </div>
     <% else %>
-      <%= form.text_field :enrollment_key %>
-    <% end %>
-  </div>
-
-  <div class="field">
-    <%= form.label "Enable Questions"%>
-    <% if lecture.ended? %>
-      <%= form.check_box :questions_enabled, :disabled => true %>
-    <% else %>
-      <%= form.check_box :questions_enabled %>
-    <% end %>
-  </div>
-
-  <div class="field">
-    <%= form.label "Enable Polls"%>
-    <% if lecture.ended? %>
-    <%= form.check_box :polls_enabled, :disabled => true %>
-    <% else %>
-      <%= form.check_box :polls_enabled %>
+      <%= form.check_box :polls_enabled, class: "form-check-input" %>
     <% end %>
   </div>
 

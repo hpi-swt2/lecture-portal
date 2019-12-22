@@ -18,7 +18,9 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
     const { user_id, is_student } = useInject(mapStore);
 
     const canQuestionBeUpvoted : boolean =
-        question.can_be_upvoted && question.author_id != user_id && is_student;
+        question.author_id != user_id && is_student;
+    const isQuestionAlreadyUpvoted : boolean =
+        question.already_upvoted && canQuestionBeUpvoted;
     const canQuestionBeResolved : boolean =
         user_id == question.author_id || !is_student;
 
@@ -32,7 +34,7 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
 
     return (
         <li key={question.id}>
-            <div className={"questionUpvotes " + (!canQuestionBeUpvoted ? "disabled" : "")}>
+            <div className={"questionUpvotes " + (!canQuestionBeUpvoted ? "disabled" : "") + (isQuestionAlreadyUpvoted ? " upvoted" : "")}>
                 <div className="arrow" onClick={onUpvoteClick} />
                 <p className="count">{question.upvotes}</p>
             </div>
