@@ -5,8 +5,8 @@ class LectureValidator < ActiveModel::Validator
     if lecture.ended?
       db_lecture = Lecture.find_by_lecturer_id(lecture.id)
       attributes_changed = lecture != db_lecture
-      if attributes_changed
-        lecture_set_from_running_to_ended = lecture.ended? and db_lecture.running?
+      if attributes_changed && lecture.id == db_lecture.id
+        (lecture_set_from_running_to_ended = lecture.ended?) && db_lecture.running?
         other_attributes_than_status_changed = !lecture.compareIgnoreStatus(db_lecture)
         # allow changing the lecture from running to ended
         if !lecture_set_from_running_to_ended || other_attributes_than_status_changed
@@ -53,17 +53,20 @@ class Lecture < ApplicationRecord
   end
 
   def compareIgnoreStatus(other_lecture)
-    return name == other_lecture.name && polls_enabled == other_lecture.polls_enabled && questions_enabled == other_lecture.questions_enabled \
+    name == other_lecture.name && polls_enabled == other_lecture.polls_enabled && questions_enabled == other_lecture.questions_enabled \
     && description == other_lecture.description && enrollment_key == other_lecture.enrollment_key && id == other_lecture.id
   end
 
   def ==(other_lecture)
-    return status == other_lecture.status && compareIgnoreStatus(other_lecture)
+    status == other_lecture.status && compareIgnoreStatus(other_lecture)
   end
 
   def !=(other_lecture)
-    return !(self == other_lecture)
+    !(self == other_lecture)
+  end
+
+  def to_s
+    "{ id:" + id.to_s + " status: " + status.to_s + " name: " + name + " description: " + description +
+        " enrollment_key : " + enrollment_key + " polls_enabled " + polls_enabled.to_s + " questions_enabled " + questions_enabled.to_s + "}"
   end
 end
-
-
