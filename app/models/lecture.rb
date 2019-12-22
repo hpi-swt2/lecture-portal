@@ -5,6 +5,7 @@ class LectureValidator < ActiveModel::Validator
     if lecture.ended?
       db_lecture = Lecture.find_by_lecturer_id(lecture.id)
       attributes_changed = lecture != db_lecture
+      # Additional id comparison is needed since you get the first entry in the db if the lecture has no id
       if attributes_changed && lecture.id == db_lecture.id
         (lecture_set_from_running_to_ended = lecture.ended?) && db_lecture.running?
         other_attributes_than_status_changed = !lecture.compareIgnoreStatus(db_lecture)
