@@ -44,13 +44,13 @@ class PollsController < ApplicationController
       if @poll.update(is_active: false)
         redirect_to lecture_poll_path(@lecture, @poll), notice: "You stopped the poll!"
       else
-        redirect_to lecture_poll_path(@lecture, @poll), notice: "This did not work :("
+        redirect_to lecture_poll_path(@lecture, @poll), notice: "Stopping the poll did not work :("
       end
     else
       if @poll.update(is_active: true)
         redirect_to lecture_poll_path(@lecture, @poll), notice: "You started the poll!"
       else
-        redirect_to lecture_poll_path(@lecture, @poll), notice: "This did not work :("
+        redirect_to lecture_poll_path(@lecture, @poll), notice: "Starting the poll did not work :("
       end
     end
   end
@@ -61,14 +61,12 @@ class PollsController < ApplicationController
     current_poll_answers = params[:answers]
     poll = Poll.find(params[:id])
     if !poll.is_active
-        redirect_to lecture_polls_path(@lecture), notice: "This poll is closed."
+        redirect_to lecture_polls_path(@lecture), notice: "This poll is closed, you cannot answer it."
     else
       # delete answers from student to poll
       Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
       # save new answers
       current_poll_answers.each { |answer|
-        puts(answer[:value])
-        puts(!!answer[:value]==true)
         if answer[:value] == true
           current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
           current_answer.save
@@ -77,7 +75,7 @@ class PollsController < ApplicationController
 
       # gather votes for poll
       @poll.gather_vote_results
-      redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
+      redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered the poll successfully ;-)"
     end
   end
 
