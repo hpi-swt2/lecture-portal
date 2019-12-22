@@ -1,9 +1,10 @@
 import { destroy, Instance, types } from "mobx-state-tree";
 import Question, { QuestionModel } from "./Question";
+import { getQuestionsRootStore } from "./QuestionsRootStore";
 
 export type QuestionsListModel = Instance<typeof QuestionsList>
 
-const sortQuestionsList = (questionsList, sortByTime) => {
+const sortQuestionsList = (questionsList, sortByTime: boolean) => {
     return questionsList.slice().sort(sortByTime ? timeSorting : upvoteSorting);
 };
 
@@ -45,9 +46,9 @@ const QuestionsList = types
             questionsListData.forEach(questionData => {
                 self.list.push(createQuestionFromData(questionData));
             });
-            self.list = sortQuestionsList(self.list, self.is_sorted_by_time)
+            self.list = sortQuestionsList(self.list, self.is_sorted_by_time);
         },
-        resolveQuestionById(id) {
+        resolveQuestionById(id: number) {
             let resolvedQuestion: QuestionModel;
             self.list.forEach(question => {
                 if (question.id == id)
@@ -56,17 +57,17 @@ const QuestionsList = types
             if (resolvedQuestion)
                 destroy(resolvedQuestion)
         },
-        upvoteQuestionById(id): QuestionModel {
+        upvoteQuestionById(question_id: number, upvoter_id: number) {
             let upvoteQuestion: QuestionModel;
             self.list.forEach(question => {
-                if (question.id == id)
+                if (question.id == question_id)
                     upvoteQuestion = question
             });
             if (upvoteQuestion) {
                 upvoteQuestion.upvote();
-                !self.is_sorted_by_time && (self.list = sortQuestionsList(self.list, self.is_sorted_by_time))
+                !self.is_sorted_by_time && (self.list = sortQuestionsList(self.list, self.is_sorted_by_time));
+                upvoter_id == getQuestionsRootStore(self).user_id && upvoteQuestion.disallowUpvote();
             }
-            return upvoteQuestion;
         },
         toggleSorting() {
             self.is_sorted_by_time = !self.is_sorted_by_time;
