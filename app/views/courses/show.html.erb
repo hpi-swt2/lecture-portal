@@ -19,17 +19,19 @@
   <%= @course.status %>
 </p>
 
+<p>----------------------</p>
+
 <% @course.lectures.each do |lecture| %>
   <p>
     <strong>Name</strong>
     <%= lecture.name %>
   </p>
   <p>
-    <strong>Descrition</strong>
-    <%= lecture.description %>
+    <strong>Status</strong>
+    <%= lecture.status %>
   </p>
   <p>
-    <strong>Created at</strong>
+    <strong>Status</strong>
     <%= lecture.created_at %>
   </p>
 <% end %>

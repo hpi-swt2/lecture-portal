@@ -1,5 +1,6 @@
 class LecturesController < ApplicationController
   before_action :authenticate_user!
+  before_action :get_course
   before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :validate_joined_user_or_owner, only: [:show]
@@ -21,7 +22,6 @@ class LecturesController < ApplicationController
     if current_user.is_student
       redirect_to course_lecture_path(@lecture), notice: "You are a student. You can not create polls."
     else
-      @course = Course.find(params[:course_id])
       @lecture = @course.lectures.build
       @lecture.lecturer = current_user
     end
@@ -33,10 +33,10 @@ class LecturesController < ApplicationController
 
   # POST /lectures
   def create
-    @lecture = Lecture.new(lecture_params)
+    @lecture = @course.lectures.build(lecture_params)
     @lecture.lecturer = current_user
     if @lecture.save
-      redirect_to lectures_url, notice: "Lecture was successfully created."
+      redirect_to course_lectures_url, notice: "Lecture was successfully created."
     else
       render :new
     end
@@ -125,4 +125,8 @@ class LecturesController < ApplicationController
         redirect_to current_lectures_url, notice: "You can't access this site as a student."
       end
     end
+
+  def get_course
+    @course = Course.find(params[:course_id])
+  end
 end
