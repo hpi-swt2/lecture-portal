@@ -1,5 +1,9 @@
 <p id="notice"><%= notice %></p>
 
+<div class="d-flex justify-content-center my-5">
+  <%= link_to 'Create Lecture', new_course_lecture_path(@course), :class => "btn btn-primary btn-lg"%>
+</div>
+
 <p>
   <strong>Name:</strong>
   <%= @course.name %>
@@ -14,6 +18,21 @@
   <strong>Status:</strong>
   <%= @course.status %>
 </p>
+
+<% @course.lectures.each do |lecture| %>
+  <p>
+    <strong>Name</strong>
+    <%= lecture.name %>
+  </p>
+  <p>
+    <strong>Descrition</strong>
+    <%= lecture.description %>
+  </p>
+  <p>
+    <strong>Created at</strong>
+    <%= lecture.created_at %>
+  </p>
+<% end %>
 
 <%= link_to 'Edit', edit_course_path(@course) %> |
 <%= link_to 'Back', courses_path %>
