@@ -3,7 +3,7 @@ class LecturesController < ApplicationController
   before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :validate_joined_user_or_owner, only: [:show]
-  before_action :require_lecturer, except: [:current, :join_lecture, :show]
+  #before_action :require_lecturer, except: [:current, :join_lecture, :show]
   before_action :require_student, only: [:join_lecture]
 
   # GET /lectures
@@ -18,8 +18,13 @@ class LecturesController < ApplicationController
 
   # GET /lectures/new
   def new
-    @lecture = Lecture.new
-    @lecture.lecturer = current_user
+    if current_user.is_student
+      redirect_to course_lecture_path(@lecture), notice: "You are a student. You can not create polls."
+    else
+      @course = Course.find(params[:course_id])
+      @lecture = @course.lectures.build
+      @lecture.lecturer = current_user
+    end
   end
 
   # GET /lectures/1/edit
