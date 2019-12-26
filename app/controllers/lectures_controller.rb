@@ -70,7 +70,7 @@ class LecturesController < ApplicationController
   def start_lecture
     @lecture.set_active
     @lecture.save
-    redirect_to lecture_path(@lecture)
+    redirect_to course_lecture_path(@course, @lecture)
   end
 
   def join_lecture
@@ -83,7 +83,7 @@ class LecturesController < ApplicationController
   def end_lecture
     @lecture.set_inactive
     @lecture.save
-    redirect_to lecture_path(@lecture), notice: "You successfully ended the lecture."
+    redirect_to course_lecture_path(@course, @lecture), notice: "You successfully ended the lecture."
   end
 
   private

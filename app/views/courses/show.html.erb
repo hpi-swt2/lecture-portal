@@ -39,6 +39,15 @@
       <td class="text-right">
         <%= link_to 'View', course_lecture_path(lecture), {class:"btn btn-primary"} %>
       </td>
+      <td class="text-right">
+        <%= link_to 'Start', start_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post%>
+      </td>
+      <td class="text-right">
+        <%= link_to 'End', end_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post %>
+      </td>
+      <td class="text-right">
+        <%= link_to 'Edit', edit_course_lecture_path(lecture), {class:"btn btn-primary"} %>
+      </td>
     </tr>
   <% end %>
   </tbody>
