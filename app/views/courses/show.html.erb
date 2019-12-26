@@ -19,22 +19,30 @@
   <%= @course.status %>
 </p>
 
-<p>----------------------</p>
 
-<% @course.lectures.each do |lecture| %>
-  <p>
-    <strong>Name</strong>
-    <%= lecture.name %>
-  </p>
-  <p>
-    <strong>Status</strong>
-    <%= lecture.status %>
-  </p>
-  <p>
-    <strong>Status</strong>
-    <%= lecture.created_at %>
-  </p>
-<% end %>
+<table class="table .table-sm table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Name</th>
+    <th scope="col">Enrollment key</th>
+    <th scope="col">Status</th>
+    <th scope="col" colspan="2"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @course.lectures.each do |lecture| %>
+    <tr>
+      <td><%= lecture.name %></td>
+      <td><%= lecture.enrollment_key %></td>
+      <td><%= lecture.status%></td>
+      <td class="text-right">
+        <%= link_to 'View', course_lecture_path(lecture), {class:"btn btn-primary"} %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
 
 <%= link_to 'Edit', edit_course_path(@course) %> |
 <%= link_to 'Back', courses_path %>
