@@ -1,6 +1,7 @@
 class QuestionResolvingChannel < ApplicationCable::Channel
   def subscribed
-    stream_from "question_resolving_channel"
+    lecture = Lecture.find(params[:lecture_id])
+    stream_for lecture
   end
 
   def unsubscribed

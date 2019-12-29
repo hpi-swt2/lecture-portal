@@ -1,16 +1,18 @@
 import React, { createRef, useEffect } from "react";
 import { observer } from "mobx-react";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import useInject from "../hooks/useInject"
-import { createQuestion } from "../utils/QuestionsUtils";
+import {useInjectQuestions} from "../hooks/useInject";
 
-const mapStore = ({ is_student, current_question }: QuestionsRootStoreModel) => ({
+const mapStore = ({
+  is_student,
+  current_question
+}: QuestionsRootStoreModel) => ({
   is_student,
   current_question
 });
 
 const QuestionsForm: React.FunctionComponent<{}> = observer(() => {
-  const { is_student, current_question } = useInject(mapStore);
+  const { is_student, current_question } = useInjectQuestions(mapStore);
 
   if (is_student) {
     const formRef = createRef<HTMLFormElement>();
@@ -33,10 +35,7 @@ const QuestionsForm: React.FunctionComponent<{}> = observer(() => {
     };
 
     const handleSubmit = e => {
-      if (current_question.getTrimmed() != "") {
-        createQuestion(current_question.getTrimmed());
-        current_question.clear();
-      }
+      current_question.createQuestion();
       e.preventDefault();
     };
 
@@ -52,13 +51,10 @@ const QuestionsForm: React.FunctionComponent<{}> = observer(() => {
         />
         <button type="submit" className="btn btn-secondary">
           Ask Question
-          </button>
+        </button>
       </form>
     );
   }
-
 });
-
-
 
 export default QuestionsForm;

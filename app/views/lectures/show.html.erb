@@ -19,8 +19,19 @@
 </ul>
 
 <div class="tab-content" id="lectureTabsContent">
-  <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab"></div>
-  <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab"></div>
+  <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
+    <div id="updates">
+      <% if @current_user.is_student %>
+        <h5>Updates</h5>
+      <% else %>
+        <h5>Questions</h5>
+      <% end %>
+      <%= react_component("UpdatesApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id} ) %>
+    </div>
+  </div>
+  <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
+    <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id} ) %>
+  </div>
   <div class="tab-pane fade" id="polls" role="tabpanel" aria-labelledby="polls-tab">
     <h2>Polls</h2>
     <% for poll in @lecture.polls %>
@@ -56,7 +67,9 @@
 
   </div>
   <% if !@current_user.is_student %>
-    <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab"></div>
+    <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+      <%= render 'form', lecture: @lecture, render_enrolment_key: false %>
+    </div>
   <% end %>
 </div>
 
@@ -66,7 +79,6 @@
     <% if @current_user.is_student %>
       <td><%= button_to "Leave Lecture", {action: "leave_lecture", params: {id: @lecture.id}}, {class:"btn btn-link"} %> </td>
     <% else %>
-      <td><%= link_to 'Edit', edit_lecture_path(@lecture), {class:"btn btn-link"} %> | </td>
       <% if @lecture.status == "running" %>
         <td><%= link_to 'New Poll', new_lecture_poll_path(@lecture), {class:"btn btn-link"} %> | </td>
         <td><%= button_to "End", {action: "end_lecture", params: {id: @lecture.id}}, {class:"btn btn-link"} %> </td>
