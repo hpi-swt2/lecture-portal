@@ -12,6 +12,15 @@
 
 ActiveRecord::Schema.define(version: 2019_12_19_102226) do
 
+  create_table "answers", force: :cascade do |t|
+    t.integer "student_id"
+    t.integer "option_id"
+    t.integer "poll_id"
+    t.index ["option_id"], name: "index_answers_on_option_id"
+    t.index ["poll_id"], name: "index_answers_on_poll_id"
+    t.index ["student_id"], name: "index_answers_on_student_id"
+  end
+
   create_table "feedbacks", force: :cascade do |t|
     t.text "content"
     t.integer "lecture_id"

@@ -13,13 +13,39 @@
   <%= @poll.is_active %>
 </p>
 
-<h2>Options</h2>
-<ol>
-<% for option in @poll.poll_options %>
+<h3>Options</h3>
+<table class="table .table-sm table-striped">
+  <thead>
+    <tr>
+      <th>Description</th>
+      <% if !@poll.is_active? %>
+        <th class="text-right">Votes</th>
+        <th class="text-right">Percentage</th>
+      <% end %>
+    </tr>
+  </thead>
 
-    <li><%= option.description %></li>
+  <tbody>
+    <% for option in @poll.poll_options %>
+      <tr>
+        <td><%= option.description %></td>
+        <% if !@poll.is_active? %>
+          <td class="text-right">
+            <%= option.votes %>
+          </td>
+          <td class="text-right">
+            <%= (option.votes.to_f / PollOption.where(poll_id: @poll.id).sum(:votes)).round(2) %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<% if !@poll.is_active? %>
+  <p><strong>Total Number of Participants: </strong><%= Answer.where(poll_id: @poll.id).distinct.count(:student_id) %></p>
 <% end %>
-</ol>
+
 
 <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
 <%= link_to 'Back', lecture_polls_path(@lecture) %>
