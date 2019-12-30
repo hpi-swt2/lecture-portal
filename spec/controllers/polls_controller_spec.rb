@@ -11,7 +11,7 @@ RSpec.describe PollsController, type: :controller do
     { option_1: "", option_2: "" }
   }
   let(:poll_options) {
-    [PollOption.create(id: 1, description: ""), PollOption.create(id: 2, description: "")]
+    [PollOption.new(id: 1, description: ""), PollOption.new(id: 2, description: "")]
   }
   let(:valid_attributes) { {
     title: "Example Title",

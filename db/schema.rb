@@ -74,7 +74,9 @@ ActiveRecord::Schema.define(version: 2019_12_19_102226) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "resolved", default: false, null: false
+    t.integer "lecture_id"
     t.index ["author_id"], name: "index_questions_on_author_id"
+    t.index ["lecture_id"], name: "index_questions_on_lecture_id"
   end
 
   create_table "questions_users", id: false, force: :cascade do |t|

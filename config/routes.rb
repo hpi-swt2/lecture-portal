@@ -19,8 +19,7 @@ Rails.application.routes.draw do
     resources :feedbacks
   end
 
-  resources :questions, only: [:index]
-  namespace :api do
+
     resources :questions, only: [:index, :create] do
       post "upvote", on: :member
       post "resolve", on: :member
