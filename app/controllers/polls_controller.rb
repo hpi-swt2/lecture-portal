@@ -63,18 +63,8 @@ class PollsController < ApplicationController
     if !poll.is_active
       redirect_to lecture_polls_path(@lecture), notice: "This poll is closed, you cannot answer it."
     else
-      # delete answers from student to poll
       Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
-      # save new answers
-      current_poll_answers.each { |answer|
-        puts(answer[:value])
-        puts(!!(answer[:value]==true))
-        if answer[:value] == true
-          current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
-          current_answer.save
-        end
-      }
-      # gather votes for poll
+      save_given_answers(current_poll_answers)
       @poll.gather_vote_results
       redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
     end
@@ -148,4 +138,14 @@ class PollsController < ApplicationController
     def set_is_student
       @is_student = current_user.is_student
     end
+
+    def save_given_answers(current_poll_answers)
+      current_poll_answers.each { |answer|
+        if answer[:value] == true
+          current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
+          current_answer.save
+        end
+      }
+    end
+
 end
