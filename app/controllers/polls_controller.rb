@@ -61,12 +61,14 @@ class PollsController < ApplicationController
     current_poll_answers = params[:answers]
     poll = Poll.find(params[:id])
     if !poll.is_active
-        redirect_to lecture_polls_path(@lecture), notice: "This poll is closed, you cannot answer it."
+      redirect_to lecture_polls_path(@lecture), notice: "This poll is closed, you cannot answer it."
     else
       # delete answers from student to poll
       Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
       # save new answers
       current_poll_answers.each { |answer|
+        puts(answer[:value])
+        puts(!!(answer[:value]==true))
         if answer[:value] == true
           current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
           current_answer.save
@@ -99,7 +101,6 @@ class PollsController < ApplicationController
     current_poll_params = poll_params
     if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
-      existingOptions = PollOption.where(poll_id: @poll.id)
       poll_options = current_poll_params[:poll_options]
       for poll_option in poll_options do
         poll_option_description = poll_option.values_at(1)
