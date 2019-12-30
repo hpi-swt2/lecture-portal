@@ -115,10 +115,7 @@ group :test do
   # gem 'faker' # https://github.com/stympy/faker
   # Code coverage for Ruby
   # gem 'simplecov', require: false # https://github.com/colszowka/simplecov
-<<<<<<< HEAD
   # selectors in tables
-=======
->>>>>>> feature/#21-show-poll-results
   gem "capybara_table"
 end
 
