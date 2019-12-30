@@ -12,15 +12,15 @@
 
   <tbody>
     <% @polls.each do |poll| %>
-      <tr>
-        <td><%= poll.lecture.name %></td>
-        <td><%= poll.title %></td>
-        <td><%= poll.is_multiselect %></td>
-        <td><%= poll.is_active %></td>
-        <td><%= link_to 'Show', lecture_poll_path(@lecture, poll) %></td>
-        <td><%= link_to 'Edit', edit_lecture_poll_path(@lecture, poll) %></td>
-        <td><%= link_to 'Destroy', [@lecture, poll], method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
+    <tr>
+      <td><%= poll.lecture.name %></td>
+      <td><%= poll.title %></td>
+      <td><%= poll.is_multiselect %></td>
+      <td><%= poll.is_active %></td>
+      <td><%= link_to 'Show', lecture_poll_path(@lecture, poll) %></td>
+      <td><%= link_to 'Edit', edit_lecture_poll_path(@lecture, poll) %></td>
+      <td><%= link_to 'Destroy', [@lecture, poll], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+    </tr>
     <% end %>
   </tbody>
 </table>

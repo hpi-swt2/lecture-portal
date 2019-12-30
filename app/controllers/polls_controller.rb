@@ -2,20 +2,25 @@ class PollsController < ApplicationController
   before_action :set_poll, only: [:show, :edit, :update, :destroy]
   before_action :get_lecture
   before_action :authenticate_user!
+  before_action :set_is_student
 
   # GET /polls
   def index
     @polls = @lecture.polls
+    if @is_student
+      render :index_students
+    end
   end
 
   # GET /polls/1
   def show
+    get_users_answers
   end
 
   # GET /polls/new
   def new
-    if current_user.is_student
-      redirect_to lecture_polls_path(@lecture), notice: "You are a student. You cannot create polls."
+    if @is_student
+      redirect_to lecture_polls_path(@lecture), notice: "You are a student. You can not create polls."
     else
       @poll = @lecture.polls.build
     end
@@ -23,14 +28,37 @@ class PollsController < ApplicationController
 
   # GET /polls/1/edit
   def edit
-    if current_user.is_student
-      render :answer
+    if @is_student
+      if !@poll.is_active
+        redirect_to lecture_polls_path(@lecture), notice: "This poll is closed."
+      else
+        get_users_answers
+        render :answer
+      end
     end
   end
 
+  # PATCH/PUT /polls/id/save_answers
   def save_answers
-    puts(params)
-    redirect_to lecture_poll_path(@lecture, params[:id])
+    answer_params
+    current_poll_answers = params[:answers]
+    poll = Poll.find(params[:id])
+    if !poll.is_active
+        redirect_to lecture_polls_path(@lecture), notice: "This poll is closed."
+    else
+      # delete answers from student to poll
+      Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
+
+      # save new answers
+      current_poll_answers.each { |answer|
+        if answer[:value] == true
+          current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
+          current_answer.save
+        end
+      }
+
+      redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
+    end
   end
 
   # POST /polls
@@ -54,7 +82,7 @@ class PollsController < ApplicationController
     current_poll_params = poll_params
     if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
-      PollOption.where(poll_id: @poll.id).destroy_all
+      existingOptions = PollOption.where(poll_id: @poll.id)
       poll_options = current_poll_params[:poll_options]
       for poll_option in poll_options do
         poll_option_description = poll_option.values_at(1)
@@ -89,5 +117,17 @@ class PollsController < ApplicationController
 
     def get_lecture
       @lecture = Lecture.find(params[:lecture_id])
+    end
+
+    def answer_params
+      params.require(:poll).permit(:answers)
+    end
+
+    def get_users_answers
+      @answers = Answer.where(poll_id: @poll.id, student_id: current_user.id)
+    end
+
+    def set_is_student
+      @is_student = current_user.is_student
     end
 end

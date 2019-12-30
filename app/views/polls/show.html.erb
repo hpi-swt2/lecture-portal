@@ -13,39 +13,25 @@
   <%= @poll.is_active %>
 </p>
 
-<h3>Options</h3>
-<table class="table .table-sm table-striped">
-  <thead>
-    <tr>
-      <th>Description</th>
-      <% if !@poll.is_active? %>
-        <th class="text-right">Votes</th>
-        <th class="text-right">Percentage</th>
-      <% end %>
-    </tr>
-  </thead>
+<h2>Options</h2>
+<ol>
+  <% for option in @poll.poll_options %>
 
-  <tbody>
-    <% for option in @poll.poll_options %>
-      <tr>
-        <td><%= option.description %></td>
-        <% if !@poll.is_active? %>
-          <td class="text-right">
-            <%= option.votes %>
-          </td>
-          <td class="text-right">
-            <%= (option.votes.to_f / PollOption.where(poll_id: @poll.id).sum(:votes)).round(2) %>
-          </td>
-        <% end %>
-      </tr>
+  <li><%= option.description %>
+    <% if @answers.any? %>
+    <% if @answers.any? {|answer| answer.option_id == option.id} %>
+    <span class="green-checkmark">&#x2714;</span>
+    <% else %>
+    <span class="red-cross">&#x2716;</span>
     <% end %>
-  </tbody>
-</table>
+    <% end %>
+  </li>
+  <% end %>
+</ol>
 
-<% if !@poll.is_active? %>
-  <p><strong>Total Number of Participants: </strong><%= Answer.where(poll_id: @poll.id).distinct.count(:student_id) %></p>
-<% end %>
-
-
+<% if @is_student %>
+<%= link_to 'Answer', edit_lecture_poll_path(@lecture, @poll) %> |
+<% else %>
 <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
-<%= link_to 'Back', lecture_polls_path(@lecture) %>
+<% end %>
+<%= link_to 'Show all polls', lecture_polls_path(@lecture) %>
