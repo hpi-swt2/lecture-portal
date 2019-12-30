@@ -17,14 +17,13 @@ Rails.application.routes.draw do
     end
 
     resources :feedbacks
-  end
-
 
     resources :questions, only: [:index, :create] do
       post "upvote", on: :member
       post "resolve", on: :member
     end
   end
+
 
   devise_for :users, controllers: {
       confirmations: "users/confirmations",
