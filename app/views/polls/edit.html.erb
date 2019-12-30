@@ -1,6 +1,6 @@
 <h1>Editing Poll</h1>
 
-<%= render 'form', lecture: @lecture %>
+<%= render 'form', poll: @poll %>
 
-<%= link_to 'Back', lecture_polls_path(@lecture) %> |
-<%= link_to 'Delete', lecture_polls_path(@lecture), method: :delete, data: { confirm: 'Are you sure?' } %>
+<%= link_to 'Back', lecture_polls_path(@lecture, @poll) %> |
+<%= link_to 'Delete', @lecture, method: :delete, data: { confirm: 'Are you sure?' } %>

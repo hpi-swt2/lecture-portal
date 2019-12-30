@@ -72,10 +72,9 @@ class PollsController < ApplicationController
           current_answer.save
         end
       }
-
       # gather votes for poll
       @poll.gather_vote_results
-      redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered the poll successfully ;-)"
+      redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
     end
   end
 

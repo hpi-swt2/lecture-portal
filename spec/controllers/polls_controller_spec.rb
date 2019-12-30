@@ -21,6 +21,13 @@ RSpec.describe PollsController, type: :controller do
     is_active: false,
     poll_options: poll_options
   }}
+  let(:valid_attributes_with_active) { {
+    title: "Example Title",
+    is_multiselect: true,
+    lecture_id: lecture.id,
+    is_active: true,
+    poll_options: poll_options
+  }}
   # we need the distinction between params and attributes because
   # we use a react component to dynamically generate the options
   # from input
@@ -103,6 +110,20 @@ RSpec.describe PollsController, type: :controller do
   describe "GET #edit" do
     it "returns a success response for lecturers", :logged_lecturer do
       poll = Poll.create! valid_attributes
+      get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      expect(response).to be_successful
+    end
+
+    it "returns a failure response for students for not active polls", :logged_student do
+      poll = Poll.create! valid_attributes
+      poll.is_active = false
+      get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      expect(response).not_to be_successful
+    end
+
+    it "returns a success response for students for active polls", :logged_student do
+      poll = Poll.create! valid_attributes_with_active
+      poll.is_active = true
       get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
