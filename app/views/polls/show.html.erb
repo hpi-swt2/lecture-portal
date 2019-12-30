@@ -13,7 +13,7 @@
   <%= @poll.is_active %>
 </p>
 
-<h3>Options</h3>
+<h3>Voting Results</h3>
 <table class="table .table-sm table-striped">
   <thead>
     <tr>
@@ -46,6 +46,10 @@
   <p><strong>Total Number of Participants: </strong><%= Answer.where(poll_id: @poll.id).distinct.count(:student_id) %></p>
 <% end %>
 
+
+<div class="field">
+  <%= react_component("PollResultApp",  {lecture_id: @lecture.id, poll_id: @poll.id, poll_options_ids: @poll.poll_options.map{|option| option.id}} ) %>
+</div>
 
 <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
 <%= link_to 'Back', lecture_polls_path(@lecture) %>

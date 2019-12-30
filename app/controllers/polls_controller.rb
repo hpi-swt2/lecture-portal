@@ -19,6 +19,7 @@ class PollsController < ApplicationController
     else
       @poll = @lecture.polls.build
     end
+    broadcast_options
   end
 
   # GET /polls/1/edit
@@ -26,11 +27,13 @@ class PollsController < ApplicationController
     if current_user.is_student
       render :answer
     end
+    broadcast_options
   end
 
   def save_answers
     puts(params)
     redirect_to lecture_poll_path(@lecture, params[:id])
+    broadcast_options
   end
 
   # POST /polls
@@ -47,6 +50,7 @@ class PollsController < ApplicationController
     else
       render :new
     end
+    broadcast_options
   end
 
   # PATCH/PUT /polls/1
@@ -68,6 +72,7 @@ class PollsController < ApplicationController
     else
       render :edit
     end
+    broadcast_options
   end
 
   # DELETE /polls/1
@@ -85,6 +90,21 @@ class PollsController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def poll_params
       params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
+    end
+
+    # Send belonging poll_options to subscribers so they can update their data
+    def broadcast_options
+      poll = Poll.find(params[:id])
+      # only allow lecturer to resolve the poll options
+      if poll.lecture == @lecture
+        poll_options = poll.poll_options
+        serialized_poll_options = poll_options.map{|option| ActiveModelSerializers::Adapter::Json.new(
+            PollOptionSerializer.new(option)
+        ).serializable_hash}
+        # broadcast update via ActionCable
+        PollOptionsChannel.broadcast_to(poll, serialized_poll_options)
+        head :ok
+      end
     end
 
     def get_lecture
