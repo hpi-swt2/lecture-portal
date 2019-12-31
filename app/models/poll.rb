@@ -14,12 +14,17 @@ class Poll < ApplicationRecord
   end
 
   def gather_vote_results
-    # reset number of votes for options
+    reset_votes(poll_options)
+    gather_votes(answers)
+  end
+
+  def reset_votes(poll_options)
     poll_options.each do |option|
       option.update(votes: 0)
     end
+  end
 
-    # gather votes for options from answers
+  def gather_votes(answers)
     answers.each do |answer|
       current_option = PollOption.find(answer.option_id)
       current_option.votes += 1
