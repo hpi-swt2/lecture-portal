@@ -147,5 +147,4 @@ class PollsController < ApplicationController
         end
       }
     end
-
 end
