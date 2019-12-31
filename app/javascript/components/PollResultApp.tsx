@@ -1,13 +1,8 @@
 import * as React from "react";
 import {StoreProvider, createPollOptionsRootStore, initPollOptionsApp} from "../utils/PollOptionUtils";
-import {useInjectPollOptions} from "../hooks/useInject";
-import {PollOptionsRootStoreModel} from "../stores/PollOptionsRootStore";
+import PollResultTable from "./PollResultTable";
 
 const rootStore = createPollOptionsRootStore();
-
-const mapStore = ({ poll_options }: PollOptionsRootStoreModel) => ({
-    poll_options
-});
 
 interface IPollResultAppData {
     lecture_id: number,
@@ -21,20 +16,10 @@ const PollResultApp: React.FunctionComponent<IPollResultAppData> = ({ lecture_id
     rootStore.setPollOptionIds(poll_option_ids);
     initPollOptionsApp(rootStore);
 
-    const {poll_options} = useInjectPollOptions(mapStore);
-
     return (
         <StoreProvider value={rootStore}>
             <div className="PollResultApp">
-                <div className="PollResultApp">
-                    <p>This is a test</p>
-                    <ul>
-                        {poll_options.poll_options.map(option => (
-                            <p>{option.description}</p>
-                        ))}
-                    </ul>
-
-                </div>
+                    <PollResultTable />
             </div>
         </StoreProvider>
     )

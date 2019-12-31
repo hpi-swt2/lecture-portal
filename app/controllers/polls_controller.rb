@@ -19,21 +19,20 @@ class PollsController < ApplicationController
     else
       @poll = @lecture.polls.build
     end
-    broadcast_options
   end
 
   # GET /polls/1/edit
   def edit
     if current_user.is_student
+      broadcast_options
       render :answer
     end
-    broadcast_options
   end
 
   def save_answers
     puts(params)
-    redirect_to lecture_poll_path(@lecture, params[:id])
     broadcast_options
+    redirect_to lecture_poll_path(@lecture, params[:id])
   end
 
   # POST /polls
@@ -50,7 +49,6 @@ class PollsController < ApplicationController
     else
       render :new
     end
-    broadcast_options
   end
 
   # PATCH/PUT /polls/1
@@ -78,7 +76,14 @@ class PollsController < ApplicationController
   # DELETE /polls/1
   def destroy
     @poll.destroy
+    broadcast_options
     redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully destroyed."
+  end
+
+  # GET /polls/:id/serializedOptions
+  def serialized_options
+    get_serialized_options
+    render json: @poll_options
   end
 
   private
@@ -95,16 +100,19 @@ class PollsController < ApplicationController
     # Send belonging poll_options to subscribers so they can update their data
     def broadcast_options
       poll = Poll.find(params[:id])
-      # only allow lecturer to resolve the poll options
       if poll.lecture == @lecture
-        poll_options = poll.poll_options
-        serialized_poll_options = poll_options.map{|option| ActiveModelSerializers::Adapter::Json.new(
-            PollOptionSerializer.new(option)
-        ).serializable_hash}
+        get_serialized_options
         # broadcast update via ActionCable
-        PollOptionsChannel.broadcast_to(poll, serialized_poll_options)
-        head :ok
+        PollOptionsChannel.broadcast_to(poll, @serialized_poll_options)
       end
+    end
+
+    def get_serialized_options
+      poll = Poll.find(params[:id])
+      @poll_options = poll.poll_options
+      @serialized_poll_options = @poll_options.map{|option| ActiveModelSerializers::Adapter::Json.new(
+          PollOptionSerializer.new(option)
+      ).serializable_hash}
     end
 
     def get_lecture

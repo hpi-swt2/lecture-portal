@@ -9,12 +9,13 @@ const StoreContext = createContext<UpdatePollOptionsRootStoreModel>(
 export const useUpdatePollOptionsStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
-const getBaseRequestUrl = (lectureId: number): string => {
-    return `/lectures/` + lectureId + `/polls/`;
+const getBaseRequestUrl = (lectureId: number, pollId: number): string => {
+    return `/lectures/` + lectureId + `/polls/` + pollId + `/`;
 };
 
 const loadPollOptions = (rootStore: UpdatePollOptionsRootStoreModel) => {
-    fetch(getBaseRequestUrl(rootStore.lecture_id))
+    const url: string = getBaseRequestUrl(rootStore.lecture_id, rootStore.poll_id) + `serialized_options`
+    fetch(url)
         .then(res => res.json())
         .then(pollOptions => {
             rootStore.poll_options.setPollOptions(pollOptions);

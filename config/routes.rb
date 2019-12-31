@@ -13,6 +13,7 @@ Rails.application.routes.draw do
       member do
         patch :save_answers
         put :save_answers
+        get :serialized_options
       end
     end
 
