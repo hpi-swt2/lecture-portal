@@ -1,6 +1,6 @@
 import * as React from "react";
 import { ChangeEvent } from "react";
-import * as axios from "axios";
+import axios from "axios";
 
 interface IOption {
   description: string;
