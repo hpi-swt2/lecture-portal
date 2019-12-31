@@ -7,6 +7,11 @@ interface IOption {
   id: number;
 }
 
+interface IAnswer {
+  id: number;
+  value: boolean;
+}
+
 interface IAnswerOptionProps {
   options: Array<IOption>;
   title: string;
