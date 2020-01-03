@@ -1,7 +1,7 @@
 language: ruby
 branches:
   only:
-    - ab-sassc-platform-independent
+    - dev
     - master
 cache:
   bundler: true
@@ -33,4 +33,4 @@ deploy:
   script: ./deployment.sh
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^(ab-sassc-platform-independent|master)$
+    condition: $TRAVIS_BRANCH =~ ^(dev|master)$
