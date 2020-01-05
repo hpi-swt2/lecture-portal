@@ -9,11 +9,11 @@ RSpec.describe "home/index", type: :view do
   end
 
   it "displays all open courses for a student" do
-    FactoryBot.create(:course)
-    FactoryBot.create(:course)
+    FactoryBot.create(:course, name: "index_test")
+    FactoryBot.create(:course, name: "index_test")
     @current_user = FactoryBot.create(:user, :student)
     sign_in @current_user
     visit root_path
-    expect(page).to have_selector("td", text: "SWT2", count: 2)
+    expect(page).to have_selector("td", text: "index_test", count: 2)
   end
 end
