@@ -20,7 +20,7 @@ class LecturesController < ApplicationController
   # GET /lectures/new
   def new
     if current_user.is_student
-      redirect_to course_lecture_path(@lecture), notice: "You are a student. You can not create polls."
+      redirect_to course_lecture_path(@course, @lecture), notice: "You are a student. You can not create courses."
     else
       @lecture = @course.lectures.build
       @lecture.lecturer = current_user
@@ -45,7 +45,7 @@ class LecturesController < ApplicationController
   # PATCH/PUT /lectures/1
   def update
     if @lecture.update(lecture_params)
-      redirect_to @lecture, notice: "Lecture was successfully updated."
+      redirect_to course_lecture_path(@course, @lecture), notice: "Lecture was successfully updated."
     else
       render :edit
     end
@@ -77,7 +77,7 @@ class LecturesController < ApplicationController
     @lecture.join_lecture(current_user)
     @lecture.save
     current_user.save
-    redirect_to @lecture, notice: "You successfully joined the lecture."
+    redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
   end
 
   def end_lecture
@@ -94,7 +94,7 @@ class LecturesController < ApplicationController
 
     def validate_lecture_owner
       if @lecture.lecturer != current_user
-        redirect_to lectures_url, notice: "You can only access your own lectures."
+        redirect_to root_path, notice: "You can only access your own lectures."
       end
     end
 
@@ -103,15 +103,15 @@ class LecturesController < ApplicationController
       isJoinedStudent = @lecture.participating_students.include?(current_user)
       isLectureOwner = @lecture.lecturer == current_user
       if isStudent && !isJoinedStudent
-        redirect_to current_lectures_url, notice: "You must join a lecture before you can view it."
+        redirect_to course_path(@course), notice: "You must join a lecture before you can view it."
       elsif !isStudent && !isLectureOwner
-        redirect_to lectures_url, notice: "You can only access your own lectures."
+        redirect_to course_path(@course), notice: "You can only access your own lectures."
       end
     end
 
     def require_student
       if !current_user.is_student
-        redirect_to lectures_url, notice: "Only students can join a lecture."
+        redirect_to join_course_path(@course), notice: "Only students can join a lecture."
       end
     end
 
