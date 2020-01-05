@@ -1,0 +1,7 @@
+<%= form_with(model: [@lecture, @poll], local: true, url: save_answers_lecture_poll_path(@lecture, @poll)) do |form| %>
+
+  <div class="field">
+    <%= react_component("AnswerOption", @poll.poll_options.length>1 ? {options: @poll.poll_options.map{|option| option.description}, is_multiselect: @poll.is_multiselect, title: @poll.title} : {options: ["", ""], title: @poll.title, is_multiselect: @poll.is_multiselect}) %>
+  </div>
+
+<% end %>

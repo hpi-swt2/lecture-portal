@@ -8,12 +8,15 @@ Rails.application.routes.draw do
   post "/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
 
   resources :lectures do
-    resources :polls
     resources :feedbacks
-  end
+    resources :polls do
+      member do
+        patch :save_answers
+        put :save_answers
+      end
+    end
 
-  resources :questions, only: [:index]
-  namespace :api do
+
     resources :questions, only: [:index, :create] do
       post "upvote", on: :member
       post "resolve", on: :member

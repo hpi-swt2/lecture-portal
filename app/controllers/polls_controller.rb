@@ -15,7 +15,7 @@ class PollsController < ApplicationController
   # GET /polls/new
   def new
     if current_user.is_student
-      redirect_to lecture_polls_path(@lecture), notice: "You are a student. You can not create polls."
+      redirect_to lecture_polls_path(@lecture), notice: "You are a student. You cannot create polls."
     else
       @poll = @lecture.polls.build
     end
@@ -24,8 +24,13 @@ class PollsController < ApplicationController
   # GET /polls/1/edit
   def edit
     if current_user.is_student
-      redirect_to lecture_poll_path(@lecture, @poll)
+      render :answer
     end
+  end
+
+  def save_answers
+    puts(params)
+    redirect_to lecture_poll_path(@lecture, params[:id])
   end
 
   # POST /polls
