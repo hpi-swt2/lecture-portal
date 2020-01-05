@@ -2,4 +2,4 @@
 
 <%= render 'form', lecture: @lecture %>
 
-<%= link_to 'Back', course_lectures_path, :class => "btn btn-outline-secondary" %>
+<%= link_to 'Back', course_lectures_path(course_id:@lecture.course.id, id:@lecture.id), :class => "btn btn-outline-secondary" %>
