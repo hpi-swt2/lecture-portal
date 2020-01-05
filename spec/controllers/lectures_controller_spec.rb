@@ -103,7 +103,8 @@ RSpec.describe LecturesController, type: :controller do
         expect(response).to redirect_to(lectures_path)
       end
       it "ended lecture redirects to overview" do
-        lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "ended")
+        # lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "ended")
+        lecture = FactoryBot.create(:lecture, valid_attributes_with_lecturer.merge(status: "ended"))
         login_lecturer(lecture.lecturer)
         get :edit, params: { id: lecture.to_param }, session: valid_session
         expect(response).to redirect_to(lectures_path)
