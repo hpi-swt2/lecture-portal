@@ -17,9 +17,10 @@
         <td><%= poll.title %></td>
         <td><%= poll.is_multiselect %></td>
         <td><%= poll.is_active %></td>
-        <td><%= link_to 'Show', lecture_poll_path(@lecture, poll) %></td>
-        <td><%= link_to 'Edit', edit_lecture_poll_path(@lecture, poll) %></td>
-        <td><%= link_to 'Destroy', [@lecture, poll], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        <td><%= link_to 'Show', course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: poll.id) %></td>
+        <td><%= link_to 'Edit', edit_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: poll.id) %></td>
+<!--        <td><%#= link_to 'Destroy', [@lecture, poll], method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
+        <td><%= link_to 'Destroy', course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: poll.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
   </tbody>
@@ -27,5 +28,7 @@
 
 <br>
 
-<%= link_to 'New Poll', new_lecture_poll_path(@lecture) %> |
-<%= link_to 'Back', [@lecture] %>
+<%= link_to 'New Poll', new_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id) %> |
+<%#= link_to 'Back', [@lecture]  ### I don't quite know how this works, so i replaced it with the explicit version down below. ### %>
+
+<%= link_to 'Back', course_lecture_path(course_id:@lecture.course.id, id:@lecture.id) %>

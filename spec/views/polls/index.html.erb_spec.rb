@@ -19,7 +19,7 @@ RSpec.describe "polls/index", type: :view do
   end
 
   it "renders a list of polls" do
-    visit lecture_polls_path(@lecture)
+    visit course_lecture_polls_path(course_id:@lecture.course.id, lecture_id:@lecture.id)
     expect(page).to have_text("Title1")
     expect(page).to have_text("Title2")
   end
