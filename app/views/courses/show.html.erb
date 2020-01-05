@@ -1,5 +1,9 @@
 <p id="notice"><%= notice %></p>
 
+<div class="d-flex justify-content-center my-5">
+  <%= link_to 'Create Lecture', new_course_lecture_path(@course), :class => "btn btn-primary btn-lg"%>
+</div>
+
 <p>
   <strong>Name:</strong>
   <%= @course.name %>
@@ -14,6 +18,40 @@
   <strong>Status:</strong>
   <%= @course.status %>
 </p>
+
+
+<table class="table .table-sm table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Name</th>
+    <th scope="col">Enrollment key</th>
+    <th scope="col">Status</th>
+    <th scope="col" colspan="2"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @course.lectures.each do |lecture| %>
+    <tr>
+      <td><%= lecture.name %></td>
+      <td><%= lecture.enrollment_key %></td>
+      <td><%= lecture.status%></td>
+      <td class="text-right">
+        <%= link_to 'View', course_lecture_path(lecture), {class:"btn btn-primary"} %>
+      </td>
+      <td class="text-right">
+        <%= link_to 'Start', start_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post%>
+      </td>
+      <td class="text-right">
+        <%= link_to 'End', end_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post %>
+      </td>
+      <td class="text-right">
+        <%= link_to 'Edit', edit_course_lecture_path(lecture), {class:"btn btn-primary"} %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
 
 <%= link_to 'Edit', edit_course_path(@course) %> |
 <%= link_to 'Back', courses_path %>
