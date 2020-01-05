@@ -36,10 +36,11 @@
       <td><%= lecture.name %></td>
       <td><%= lecture.enrollment_key %></td>
       <td><%= lecture.status%></td>
+      <% if lecture.status == "running" %>
       <td class="text-right">
         <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
       </td>
-
+      <% end %>
       <% if !@current_user.is_student%>
       <td class="text-right">
         <%= link_to 'Start', start_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post%>

@@ -10,6 +10,9 @@ class CoursesController < ApplicationController
   # GET /courses/1
   def show
     @current_user = current_user
+    if (current_user.is_student)
+      redirect_to current_lectures_path(@course)
+    end
   end
 
   # GET /courses/new
