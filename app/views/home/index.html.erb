@@ -28,6 +28,19 @@
     <% end %>
 
     <% if user_signed_in? && @current_user.is_student %>
+      <p class="lead">My Courses</p>
+      <table>
+        <% @participating_courses.each do |course| %>
+
+          <tr>
+            <td><%= course.name %></td>
+            <td><%= link_to "View", course_path(id: course.id) %></td>
+          </tr>
+
+
+        <% end %>
+      </table>
+
       <p class="lead">Available Courses</p>
       <table>
         <% @open_courses.each do |course| %>

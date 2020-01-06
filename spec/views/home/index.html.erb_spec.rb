@@ -16,4 +16,14 @@ RSpec.describe "home/index", type: :view do
     visit root_path
     expect(page).to have_selector("td", text: "SWT2", count: 2)
   end
+
+  it "display the courses that a student is enrolled in with link" do
+    @course = FactoryBot.create(:course)
+    @current_user = FactoryBot.create(:user, :student)
+    @course.join_course(@current_user)
+    sign_in @current_user
+    visit root_path
+    save_and_open_page
+    expect(page).to have_link(course_path(@course))
+  end
 end
