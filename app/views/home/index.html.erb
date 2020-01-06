@@ -42,7 +42,12 @@
       </table>
 
       <p class="lead">Available Courses</p>
-      <table>
+      <table class="table .table-sm table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Name</th>
+        </tr>
+        </thead>
         <% @open_courses.each do |course| %>
 
           <tr>

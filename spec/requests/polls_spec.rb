@@ -8,7 +8,7 @@ RSpec.describe "Polls", type: :request do
 
   describe "GET /polls" do
     it "redirects when not logged in" do
-      get lecture_polls_path(@lecture)
+      get course_lecture_polls_path(course_id:@lecture.course.id, lecture_id:@lecture.id)
       expect(response).to have_http_status(302)
     end
   end

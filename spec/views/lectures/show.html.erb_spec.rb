@@ -3,12 +3,14 @@ require "rails_helper"
 RSpec.describe "lectures/show", type: :view do
   let(:valid_session) { {} }
   before(:each) do
+    @course = FactoryBot.create(:course)
     @lecture = assign(:lecture, Lecture.create!(
                                   name: "Name",
                                   description: "Test",
                                   enrollment_key: "Enrollment Key",
                                   status: "created",
-                                  lecturer: FactoryBot.create(:user, :lecturer, email: "bp@hpi.de")
+                                  lecturer: FactoryBot.create(:user, :lecturer, email: "bp@hpi.de"),
+                                  course: @course
     ))
   end
 

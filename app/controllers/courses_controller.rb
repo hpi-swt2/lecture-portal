@@ -9,6 +9,10 @@ class CoursesController < ApplicationController
 
   # GET /courses/1
   def show
+    @current_user = current_user
+    if (current_user.is_student)
+      redirect_to current_lectures_path(@course)
+    end
   end
 
   # GET /courses/new
@@ -53,7 +57,7 @@ class CoursesController < ApplicationController
     @course.join_course(current_user)
     @course.save
     current_user.save
-    redirect_to @course, notice: "You successfully joined the lecture."
+    redirect_to @course, notice: "You successfully joined the course."
   end
 
 

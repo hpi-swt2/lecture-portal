@@ -9,7 +9,7 @@ RSpec.describe "courses/edit", type: :view do
     render
     assert_select "form[action=?][method=?]", course_path(@course), "post" do
       assert_select "input[name=?]", "course[name]"
-      assert_select "textarea[name=?]", "course[description]"
+      assert_select "input[name=?]", "course[description]"
     end
   end
 end
