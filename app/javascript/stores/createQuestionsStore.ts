@@ -2,7 +2,7 @@ import QuestionsRootStore, { QuestionsRootStoreEnv, QuestionsRootStoreModel } fr
 import QuestionsList from "./QuestionsList";
 import CurrentQuestion from "./CurrentQuestion";
 
-export const createStore = (): QuestionsRootStoreModel => {
+export const createQuestionsStore = (): QuestionsRootStoreModel => {
     const questionsList = QuestionsList.create({
         list: []
     });
