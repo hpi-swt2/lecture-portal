@@ -8,7 +8,8 @@ RSpec.describe "polls/index", type: :view do
       Poll.create!(
         title: "Title1",
         is_multiselect: false,
-        lecture_id: @lecture.id
+        lecture_id: @lecture.id,
+        is_active: false
       ),
       Poll.create!(
         title: "Title2",

@@ -64,7 +64,7 @@ ActiveRecord::Schema.define(version: 2019_12_19_102226) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "lecture_id"
-    t.boolean "is_active", default: false, null: false
+    t.boolean "is_active", default: true, null: false
     t.index ["lecture_id"], name: "index_polls_on_lecture_id"
   end
 
