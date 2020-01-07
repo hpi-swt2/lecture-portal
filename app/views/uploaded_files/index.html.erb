@@ -9,6 +9,7 @@
       <th scope="col">Filename</th>
       <th scope="col">File type</th>
       <th scope="col">Data</th>
+      <th scope="col"></th>
     </tr>
   </thead>
 
@@ -28,6 +29,7 @@
             <pre style="width: 50vw; min-width: 300px;"><%= uploaded_file.data %></pre>
           </details>
         </td>
+        <td><%= link_to "Download", uploaded_file_path(uploaded_file), target: "_self", class:"btn btn-link" %> </td>
       </tr>
     <% end %>
   </tbody>

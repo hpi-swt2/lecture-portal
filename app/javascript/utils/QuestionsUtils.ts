@@ -1,85 +1,72 @@
-import ActionCable from "actioncable";
 import { createContext, useContext } from "react";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import { createStore } from "../stores/createStore";
 import { HEADERS } from "./constants";
+import {createQuestionsStore} from "../stores/createQuestionsStore";
+import {setupQuestionsActionCable} from "./QuestionsActionCable";
 
-const StoreContext = createContext<QuestionsRootStoreModel>({} as QuestionsRootStoreModel);
-export const useStore = () => useContext(StoreContext);
+const StoreContext = createContext<QuestionsRootStoreModel>(
+  {} as QuestionsRootStoreModel
+);
+export const useQuestionsStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
-const loadQuestionsList = (rootStore) => {
-    fetch(`/api/questions`)
-        .then(res => res.json())
-        .then(questions => {
-            rootStore.questionsList.setQuestionsList(questions);
-        });
+const getBaseRequestUrl = (lectureId: number): string => {
+  return `/lectures/` + lectureId + `/questions/`;
 };
 
-const CableApp = {
-    cable: ActionCable.createConsumer(`/cable`)
+const loadQuestionsList = (rootStore: QuestionsRootStoreModel) => {
+  fetch(getBaseRequestUrl(rootStore.lecture_id))
+    .then(res => res.json())
+    .then(questions => {
+      rootStore.questionsList.setQuestionsList(questions);
+    });
 };
 
-const setupActionCable = (rootStore) => {
-    CableApp.cable.subscriptions.create(
-        { channel: "QuestionsChannel" },
-        {
-            received: data => {
-                const { question } = data;
-                rootStore.questionsList.addQuestion(question);
-            }
-        }
-    );
-    CableApp.cable.subscriptions.create(
-        { channel: "QuestionResolvingChannel" },
-        {
-            received: id => {
-                rootStore.questionsList.resolveQuestionById(id)
-            }
-        }
-    );
-    CableApp.cable.subscriptions.create(
-        { channel: "QuestionUpvotingChannel" },
-        {
-            received: data => {
-                const upvotedQuestion = rootStore.questionsList.upvoteQuestionById(data.question);
-                if (upvotedQuestion && data.upvoter == rootStore.user_id)
-                    upvotedQuestion.disallowUpvote();
-            }
-        }
-    );
+
+const setupActionCable = (rootStore: QuestionsRootStoreModel) => {
+  setupQuestionsActionCable(rootStore.lecture_id,
+      (data) => {
+        const { question } = data;
+        rootStore.questionsList.addQuestion(question);
+      }, (id) => {
+        rootStore.questionsList.resolveQuestionById(id);
+      }, (question_id, upvoter_id) => {
+        rootStore.questionsList.upvoteQuestionById(
+            question_id,
+            upvoter_id
+      )}
+  );
 };
 
 export const createQuestionsRootStore = (): QuestionsRootStoreModel => {
-    const rootStore = createStore();
-    return rootStore;
+  return createQuestionsStore();
 };
 
 export const initQuestionsApp = (rootStore: QuestionsRootStoreModel) => {
-    loadQuestionsList(rootStore);
-    setupActionCable(rootStore);
-}
-
-export const createQuestion = (content) => {
-    fetch(`/api/questions`, {
-        method: "POST",
-        headers: HEADERS,
-        body: JSON.stringify({
-            content: content
-        })
-    });
+  loadQuestionsList(rootStore);
+  setupActionCable(rootStore);
 };
 
-export const resolveQuestionById = (id) => {
-    fetch(`/api/questions/` + id + '/resolve', {
-        method: "POST",
-        headers: HEADERS
-    });
+export const createQuestion = (content: string, lectureId: number) => {
+  fetch(getBaseRequestUrl(lectureId), {
+    method: "POST",
+    headers: HEADERS,
+    body: JSON.stringify({
+      content: content
+    })
+  });
 };
 
-export const upvoteQuestionById = (id) => {
-    fetch(`/api/questions/` + id + '/upvote', {
-        method: "POST",
-        headers: HEADERS
-    });
+export const resolveQuestionById = (id: number, lectureId: number) => {
+  fetch(getBaseRequestUrl(lectureId) + id + "/resolve", {
+    method: "POST",
+    headers: HEADERS
+  });
+};
+
+export const upvoteQuestionById = (id, lectureId) => {
+  fetch(getBaseRequestUrl(lectureId) + id + "/upvote", {
+    method: "POST",
+    headers: HEADERS
+  });
 };

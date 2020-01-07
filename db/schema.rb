@@ -12,23 +12,21 @@
 
 ActiveRecord::Schema.define(version: 2019_12_20_104907) do
 
+  create_table "answers", force: :cascade do |t|
+    t.integer "student_id"
+    t.integer "option_id"
+    t.integer "poll_id"
+    t.index ["option_id"], name: "index_answers_on_option_id"
+    t.index ["poll_id"], name: "index_answers_on_poll_id"
+    t.index ["student_id"], name: "index_answers_on_student_id"
+  end
+
   create_table "feedbacks", force: :cascade do |t|
     t.text "content"
     t.integer "lecture_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
-  end
-
-  create_table "files", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "allowsUpload_type"
-    t.integer "allowsUpload_id"
-    t.string "filename"
-    t.string "content_type"
-    t.binary "data"
-    t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_files_on_allowsUpload_type_and_allowsUpload_id"
   end
 
   create_table "lectures", force: :cascade do |t|
@@ -66,7 +64,7 @@ ActiveRecord::Schema.define(version: 2019_12_20_104907) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "lecture_id"
-    t.boolean "is_active", default: false, null: false
+    t.boolean "is_active", default: true, null: false
     t.index ["lecture_id"], name: "index_polls_on_lecture_id"
   end
 
@@ -76,7 +74,9 @@ ActiveRecord::Schema.define(version: 2019_12_20_104907) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "resolved", default: false, null: false
+    t.integer "lecture_id"
     t.index ["author_id"], name: "index_questions_on_author_id"
+    t.index ["lecture_id"], name: "index_questions_on_lecture_id"
   end
 
   create_table "questions_users", id: false, force: :cascade do |t|
@@ -90,10 +90,10 @@ ActiveRecord::Schema.define(version: 2019_12_20_104907) do
     t.string "content_type"
     t.string "filename"
     t.binary "data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
     t.string "allowsUpload_type"
     t.integer "allowsUpload_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.string "uploadedFileType"
     t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
   end
