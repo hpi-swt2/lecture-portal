@@ -8,20 +8,22 @@ Rails.application.routes.draw do
   post "/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
 
   resources :lectures do
-    resources :feedbacks
     resources :polls do
       member do
         patch :save_answers
-        put :save_answers
+        post :save_answers
+        get :stop_start
       end
     end
 
+    resources :feedbacks
 
     resources :questions, only: [:index, :create] do
       post "upvote", on: :member
       post "resolve", on: :member
     end
   end
+
 
   devise_for :users, controllers: {
       confirmations: "users/confirmations",

@@ -12,4 +12,23 @@ class Poll < ApplicationRecord
       errors.add(:only_one_poll_can_be_active, "There can be only one poll active for one lecture.")
     end
   end
+
+  def gather_vote_results
+    reset_votes(poll_options)
+    gather_votes(answers)
+  end
+
+  def reset_votes(poll_options)
+    poll_options.each do |option|
+      option.update(votes: 0)
+    end
+  end
+
+  def gather_votes(answers)
+    answers.each do |answer|
+      current_option = PollOption.find(answer.option_id)
+      current_option.votes += 1
+      current_option.save
+    end
+  end
 end
