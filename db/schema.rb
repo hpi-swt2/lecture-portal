@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_19_102226) do
+ActiveRecord::Schema.define(version: 2019_12_20_104907) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -94,6 +94,7 @@ ActiveRecord::Schema.define(version: 2019_12_19_102226) do
     t.integer "allowsUpload_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "uploadedFileType"
     t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
   end
 
