@@ -1,7 +1,7 @@
-<%= form_with(model: [@lecture, @poll], local: true, url: save_answers_lecture_poll_path(@lecture, @poll)) do |form| %>
-
-  <div class="field">
-    <%= react_component("AnswerOption", @poll.poll_options.length>1 ? {options: @poll.poll_options.map{|option| option.description}, is_multiselect: @poll.is_multiselect, title: @poll.title} : {options: ["", ""], title: @poll.title, is_multiselect: @poll.is_multiselect}) %>
-  </div>
-
-<% end %>
+<% previous_answers = @answers.map{|answer| answer.option_id} %>
+<% form_props = {title: @poll.title, is_multiselect: @poll.is_multiselect, lecture_id: @poll.lecture_id,
+  poll_id: @poll.id, auth_token: form_authenticity_token, previous_answers: previous_answers} %>
+<% form_props[:options] = @poll.poll_options.length > 1 ? @poll.poll_options.map{|option|
+    {description: option.description, id: option.id}}
+    : [{description: "", id: 0}, {description: "", id: 1}] %>
+<%= react_component("AnswerOption", form_props) %>

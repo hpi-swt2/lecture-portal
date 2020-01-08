@@ -15,9 +15,17 @@ RSpec.describe PollsController, type: :controller do
   }
   let(:valid_attributes) { {
     title: "Example Title",
+    lecture: FactoryBot.create(:lecture),
     is_multiselect: true,
     lecture_id: lecture.id,
     is_active: false,
+    poll_options: poll_options
+  }}
+  let(:valid_attributes_with_active) { {
+    title: "Example Title",
+    is_multiselect: true,
+    lecture_id: lecture.id,
+    is_active: true,
     poll_options: poll_options
   }}
   # we need the distinction between params and attributes because
@@ -129,6 +137,47 @@ RSpec.describe PollsController, type: :controller do
     end
   end
 
+  describe "#stop_start" do
+    it "starts an inactive poll", :logged_student do
+      poll = FactoryBot.create(:poll, :inactive)
+      get :stop_start, params: { lecture_id: lecture.id, id: poll.id }, session: valid_session
+      poll.reload
+      expect(poll.is_active).to eq(true)
+    end
+    it "stops an active poll", :logged_student do
+      poll = FactoryBot.create(:poll, :active)
+      get :stop_start, params: { lecture_id: lecture.id, id: poll.id }, session: valid_session
+      poll.reload
+      expect(poll.is_active).to eq(false)
+    end
+  end
+
+  describe "#save_answers" do
+=begin
+    Find out, how to send booleans as params so that they are properly appraised.
+    Up until now the value is true, but does not evaluate to true when compared
+    via == true.
+
+    it "saves answer to active poll", :logged_student do
+      poll = FactoryBot.create(:poll, :active)
+      poll.update(poll_options: poll_options)
+      answers = [{id: poll_options[0].id, :value => true}, {id: poll_options[1].id, :value => false}]
+      puts(answers[0].inspect)
+      get :save_answers, params: { lecture_id: lecture.id, id: poll.id, answers: answers, poll: valid_params }
+      puts(Answer.all)
+      expect(Answer.where(poll_id: poll.id, option_id: poll.poll_options[0].id)).to exist
+    end
+    it "updates votes to option when submitting answer to poll", :logged_student do
+      poll = FactoryBot.create(:poll, :active)
+      poll.update(poll_options: poll_options)
+      answers = [{id: poll_options[0].id, value: true}, {id: poll_options[1].id, value: false}]
+      get :save_answers, params: { lecture_id: lecture.id, id: poll.id, answers: answers, poll: valid_params }
+      poll.reload
+      expect(poll.poll_options[0].votes).to eq(1)
+    end
+
+=end
+  end
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) { {

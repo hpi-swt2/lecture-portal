@@ -36,7 +36,13 @@
     <h2>Polls</h2>
     <% for poll in @lecture.polls %>
       <ul>
-        <li><%= poll.title %></li>
+        <li>
+          <%= poll.title%>
+          <% if poll.is_active and @current_user.is_student %>
+            <%= link_to 'Vote', edit_lecture_poll_path(@lecture, poll) %>
+          <% end %>
+
+        </li>
       </ul>
     <% end %>
   </div>

@@ -1,3 +1,4 @@
+
 <p>
   <strong>Title:</strong>
   <%= @poll.title %>
@@ -14,7 +15,7 @@
 </p>
 
 <h3>Voting Results</h3>
-<!-- <% if Answer.where(poll_id: @poll.id).count(:student_id) != 0 %>--> 
+<!-- <% if Answer.where(poll_id: @poll.id).count(:student_id) != 0 %>-->
   <div>
     <%= react_component("PollResultApp",  {lecture_id: @lecture.id, poll_id: @poll.id, poll_option_ids: @poll.poll_options.map{|option| option.id}} ) %>
   </div>
@@ -24,5 +25,4 @@
 <!-- <% end %> -->
 
 
-<%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
-<%= link_to 'Back', lecture_polls_path(@lecture) %>
+<%= link_to 'Show all polls', lecture_polls_path(@lecture) %>

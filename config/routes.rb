@@ -8,6 +8,14 @@ Rails.application.routes.draw do
   post "/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
 
   resources :lectures do
+    resources :polls do
+      member do
+        patch :save_answers
+        post :save_answers
+        get :stop_start
+      end
+    end
+
     resources :feedbacks
     resources :polls do
       member do
@@ -23,6 +31,7 @@ Rails.application.routes.draw do
       post "resolve", on: :member
     end
   end
+
 
   devise_for :users, controllers: {
       confirmations: "users/confirmations",
