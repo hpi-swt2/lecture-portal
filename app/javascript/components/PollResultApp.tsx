@@ -1,6 +1,8 @@
 import * as React from "react";
 import {StoreProvider, createPollOptionsRootStore, initPollOptionsApp} from "../utils/PollOptionUtils";
 import PollResultTable from "./PollResultTable";
+import PollResultPieChart from "./PollResultPieChart";
+import PollResultBarChart from "./PollResultBarChart";
 
 const rootStore = createPollOptionsRootStore();
 
@@ -20,6 +22,8 @@ const PollResultApp: React.FunctionComponent<IPollResultAppData> = ({ lecture_id
         <StoreProvider value={rootStore}>
             <div className="PollResultApp">
                     <PollResultTable />
+                    <PollResultBarChart />
+                    <PollResultPieChart />
             </div>
         </StoreProvider>
     )
