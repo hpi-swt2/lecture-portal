@@ -15,14 +15,12 @@
 </p>
 
 <h3>Voting Results</h3>
-<!-- <% if Answer.where(poll_id: @poll.id).count(:student_id) != 0 %>-->
   <div>
     <%= react_component("PollResultApp",  {lecture_id: @lecture.id, poll_id: @poll.id, poll_option_ids: @poll.poll_options.map{|option| option.id}} ) %>
   </div>
   <% if !@poll.is_active? %>
     <p><strong>Total Number of Participants: </strong><%= Answer.where(poll_id: @poll.id).distinct.count(:student_id) %></p>
   <% end %>
-<!-- <% end %> -->
 
 
 <%= link_to 'Show all polls', lecture_polls_path(@lecture) %>

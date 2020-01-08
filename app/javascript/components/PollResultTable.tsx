@@ -9,7 +9,8 @@ const mapStore = ({ poll_options }: PollOptionsRootStoreModel) => ({
 
 const PollResultTable: React.FunctionComponent<{}> = observer(() => {
     const { poll_options } = useInjectPollOptions(mapStore);
-    const allVotes = poll_options.poll_options.map(option => option.votes).reduce((a, b) => a + b, 0);
+    let allVotes = poll_options.poll_options.map(option => option.votes).reduce((a, b) => a + b, 0);
+    allVotes = (allVotes === 0) ? 1 : allVotes;
 
         return (
             <table className="table .table-sm table-striped">

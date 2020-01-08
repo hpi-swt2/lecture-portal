@@ -66,6 +66,7 @@ class PollsController < ApplicationController
       Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
       save_given_answers(current_poll_answers, poll)
       @poll.gather_vote_results
+      broadcast_options
       redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
     end
   end
