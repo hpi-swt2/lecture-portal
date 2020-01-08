@@ -115,8 +115,7 @@ class PollsController < ApplicationController
 
   # GET /polls/:id/serializedOptions
   def serialized_options
-    get_serialized_options
-    render json: @poll_options
+    render json: get_serialized_options
   end
 
   private
@@ -124,17 +123,16 @@ class PollsController < ApplicationController
   # Send belonging poll_options to subscribers so they can update their data
   def broadcast_options
     poll = Poll.find(params[:id])
-    if poll.lecture == @lecture
-      get_serialized_options
+    if @poll.lecture == @lecture
       # broadcast update via ActionCable
-      PollOptionsChannel.broadcast_to(poll, @serialized_poll_options)
+      PollOptionsChannel.broadcast_to(poll, get_serialized_options)
     end
   end
 
   def get_serialized_options
     poll = Poll.find(params[:id])
-    @poll_options = poll.poll_options
-    @serialized_poll_options = @poll_options.map{|option| ActiveModelSerializers::Adapter::Json.new(
+    poll_options = poll.poll_options
+    return poll_options.map{|option| ActiveModelSerializers::Adapter::Json.new(
         PollOptionSerializer.new(option)
     ).serializable_hash}
   end
