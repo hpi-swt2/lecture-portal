@@ -22,7 +22,8 @@ const PollOptions = types
         setPollOptions(pollOptionsData) {
             self.poll_options.clear();
             pollOptionsData.forEach(pollOptionData => {
-                self.poll_options.push(createPollOptionFromData(pollOptionData));
+                const pollOption = pollOptionData.poll_option === undefined? pollOptionData : pollOptionData.poll_option;
+                self.poll_options.push(createPollOptionFromData(pollOption));
             });
         }
     }));

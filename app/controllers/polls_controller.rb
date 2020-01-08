@@ -70,12 +70,6 @@ class PollsController < ApplicationController
     end
   end
 
-  def save_answers
-    puts(params)
-    broadcast_options
-    redirect_to lecture_poll_path(@lecture, params[:id])
-  end
-
   # POST /polls
   def create
     current_poll_params = poll_params
@@ -110,13 +104,11 @@ class PollsController < ApplicationController
     else
       render :edit
     end
-    broadcast_options
   end
 
   # DELETE /polls/1
   def destroy
     @poll.destroy
-    broadcast_options
     redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully destroyed."
   end
 
@@ -127,56 +119,57 @@ class PollsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_poll
-      @poll = Poll.find(params[:id])
-    end
 
-    # Only allow a trusted parameter "white list" through.
-    def poll_params
-      params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
+  # Send belonging poll_options to subscribers so they can update their data
+  def broadcast_options
+    poll = Poll.find(params[:id])
+    if poll.lecture == @lecture
+      get_serialized_options
+      # broadcast update via ActionCable
+      PollOptionsChannel.broadcast_to(poll, @serialized_poll_options)
     end
+  end
 
-    # Send belonging poll_options to subscribers so they can update their data
-    def broadcast_options
-      poll = Poll.find(params[:id])
-      if poll.lecture == @lecture
-        get_serialized_options
-        # broadcast update via ActionCable
-        PollOptionsChannel.broadcast_to(poll, @serialized_poll_options)
+  def get_serialized_options
+    poll = Poll.find(params[:id])
+    @poll_options = poll.poll_options
+    @serialized_poll_options = @poll_options.map{|option| ActiveModelSerializers::Adapter::Json.new(
+        PollOptionSerializer.new(option)
+    ).serializable_hash}
+  end
+
+  # Use callbacks to share common setup or constraints between actions.
+  def set_poll
+    @poll = Poll.find(params[:id])
+  end
+
+  # Only allow a trusted parameter "white list" through.
+  def poll_params
+    params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
+  end
+
+  def get_lecture
+    @lecture = Lecture.find(params[:lecture_id])
+  end
+
+  def answer_params
+    params.require(:poll).permit(:answers)
+  end
+
+  def get_users_answers
+    @answers = Answer.where(poll_id: @poll.id, student_id: current_user.id)
+  end
+
+  def set_is_student
+    @is_student = current_user.is_student
+  end
+
+  def save_given_answers(current_poll_answers, poll)
+    current_poll_answers.each { |answer|
+      if answer[:value] == true
+        current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
+        current_answer.save
       end
-    end
-
-    def get_serialized_options
-      poll = Poll.find(params[:id])
-      @poll_options = poll.poll_options
-      @serialized_poll_options = @poll_options.map{|option| ActiveModelSerializers::Adapter::Json.new(
-          PollOptionSerializer.new(option)
-      ).serializable_hash}
-    end
-
-    def get_lecture
-      @lecture = Lecture.find(params[:lecture_id])
-    end
-
-    def answer_params
-      params.require(:poll).permit(:answers)
-    end
-
-    def get_users_answers
-      @answers = Answer.where(poll_id: @poll.id, student_id: current_user.id)
-    end
-
-    def set_is_student
-      @is_student = current_user.is_student
-    end
-
-    def save_given_answers(current_poll_answers, poll)
-      current_poll_answers.each { |answer|
-        if answer[:value] == true
-          current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
-          current_answer.save
-        end
-      }
-    end
+    }
+  end
 end

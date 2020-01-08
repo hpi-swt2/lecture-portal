@@ -15,9 +15,7 @@ const mapStore = ({ poll_options }: PollOptionsRootStoreModel) => ({
 const PollResultBarChart: React.FunctionComponent<{}> = observer(() => {
     const { poll_options } = useInjectPollOptions(mapStore);
     const allVotes = poll_options.poll_options.map(option => option.votes).reduce((a, b) => a + b, 0);
-    const poll_data = poll_options.poll_options.map(option => ({y: option.votes, label: option.description}))
-    console.log("poll_data: ", poll_data)
-    console.log(poll_options.poll_options)
+    const poll_data = poll_options.poll_options.map(option => ({y: option.votes, label: option.description}));
     const options = {
         // exportEnabled: true,
         animationEnabled: true,

@@ -45,16 +45,12 @@ RSpec.describe "polls/show", type: :view do
   end
 
   it "displays description, corresponding vote count and percentage for each poll option" do
-    @poll.is_active = false
-    @poll.save
     visit lecture_poll_path(@lecture, @poll)
     expect(find(:table_row, { "Description" => "abc", "Votes" => "2", "Percentage" => "0.4" }, {}))
     expect(find(:table_row, { "Description" => "def", "Votes" => "3", "Percentage" => "0.6" }, {}))
   end
 
   it "counts the number of total participants correctly" do
-    @poll.is_active = false
-    @poll.save
     @answers = assign(:answers, [
       Answer.create!(
         poll_id: @poll.id,
