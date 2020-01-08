@@ -34,17 +34,18 @@
   </div>
   <div class="tab-pane fade" id="polls" role="tabpanel" aria-labelledby="polls-tab">
     <h2>Polls</h2>
-    <% for poll in @lecture.polls %>
+<!--    <%# for poll in @lecture.polls %>
       <ul>
         <li>
-          <%= poll.title%>
-          <% if poll.is_active and @current_user.is_student %>
-            <%= link_to 'Vote', edit_lecture_poll_path(@lecture, poll) %>
-          <% end %>
+          <%#= poll.title%>
+          <%# if poll.is_active and @current_user.is_student %>
+            <%#= link_to 'Vote', edit_lecture_poll_path(@lecture, poll) %>
+          <%# end %>
 
         </li>
       </ul>
-    <% end %>
+    <%# end %>-->
+    <%= react_component("PollsApp",  {id: @lecture.id} ) %>
   </div>
   <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
 

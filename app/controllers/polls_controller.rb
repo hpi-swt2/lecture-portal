@@ -1,5 +1,5 @@
 class PollsController < ApplicationController
-  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start]
+  before_action :set_poll, only: [:show, :edit, :update, :destroy, :save_answers, :stop_start]
   before_action :get_lecture
   before_action :authenticate_user!
   before_action :set_is_student

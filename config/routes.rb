@@ -8,6 +8,9 @@ Rails.application.routes.draw do
   post "/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
 
   resources :lectures do
+    member do
+      get :get_all_serialized_polls
+    end
     resources :polls do
       member do
         patch :save_answers

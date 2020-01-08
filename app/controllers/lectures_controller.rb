@@ -1,6 +1,6 @@
 class LecturesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture]
+  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture, :get_all_serialized_polls]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :validate_joined_user_or_owner, only: [:show]
   before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show]
@@ -24,6 +24,11 @@ class LecturesController < ApplicationController
   def new
     @lecture = Lecture.new
     @lecture.lecturer = current_user
+  end
+
+  # GET
+  def get_all_serialized_polls
+    render json: get_serialized_polls
   end
 
   # GET /lectures/1/edit
@@ -133,5 +138,15 @@ class LecturesController < ApplicationController
       if current_user.is_student?
         redirect_to current_lectures_url, notice: "You can't access this site as a student."
       end
+    end
+
+    def get_serialized_polls
+      polls = Poll.where(lecture_id: @lecture.id)
+      return polls.map{|poll|
+        ActiveModelSerializers::Adapter::Json.new(PollSerializer.new(poll)).serializable_hash}
+    end
+
+    def broadcast_polls
+      PollsChannel.broadcast_to(@lecture, get_serialized_polls)
     end
 end
