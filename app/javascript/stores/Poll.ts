@@ -7,9 +7,8 @@ const Poll = types
     id: types.integer,
     lecture_id: types.integer,
     title: types.string,
-    poll_options: types.array(types.string),
-    created_at: types.Date,
-    is_active: types.boolean,
+    poll_options: types.array(types.model("Option", {id: types.number, description: types.string, poll_id: types.number, created_at: types.string, updated_at: types.string,votes: types.number})),
+    created_at: types.string
   });
 
 

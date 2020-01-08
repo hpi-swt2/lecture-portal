@@ -18,9 +18,10 @@ const PollsList: React.FunctionComponent<{}> = observer(() => {
   return (
     <div className={"pollsList"}>
       <ol className={"is_lecturer"}>
+          {console.log(pollsList.list.map(poll => (poll.id)))}
         {pollsList.list.map(poll => (
           // <Poll poll={poll} key={poll.id} />
-            <li> {poll.id} , {poll.title}</li>
+            <li> {poll.title} key={poll.id} </li>
         ))}
       </ol>
     </div>

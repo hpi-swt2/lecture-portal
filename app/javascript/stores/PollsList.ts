@@ -5,15 +5,18 @@ import  { getPollsRootStore } from "./PollsRootStore";
 export type PollsListModel = Instance<typeof PollsList>
 
 const sortPollsList = (pollsList) => {
-    return pollsList.slice().sort(timeSorting);
+    // return pollsList.slice().sort(timeSorting);
+    return pollsList
 };
 
+/*
 const timeSorting = (a: PollModel, b: PollModel): number => {
     return (
         b.created_at.getTime() -
         a.created_at.getTime()
     );
 };
+*/
 
 const createPollFromData = (pollData) => {
     console.log(pollData);
@@ -22,8 +25,7 @@ const createPollFromData = (pollData) => {
         lecture_id: pollData.lecture_id,
         title: pollData.title,
         poll_options: pollData.poll_options,
-        created_at: pollData.created_at,
-        is_active: pollData.boolean
+        created_at: pollData.created_at
     });
 };
 
