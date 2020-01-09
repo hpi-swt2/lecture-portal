@@ -20,4 +20,10 @@ form.button_to {
 
 .tab-pane {
   padding-top: 20px;
+
+  &::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
 }

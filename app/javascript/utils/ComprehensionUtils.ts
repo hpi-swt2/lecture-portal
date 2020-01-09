@@ -14,6 +14,12 @@ const getBaseRequestUrl = (lectureId: number): string => {
   return `/lectures/` + lectureId + `/`;
 };
 
+export const formatDate = (date: Date): string => {
+  return (date.getHours() < 10 ? "0" + date.getHours() : date.getHours())
+    + ":"
+    + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes())
+};
+
 const loadComprehensionState = (rootStore: ComprehensionRootStoreModel) => {
   /*fetch(getBaseRequestUrl(rootStore.lecture_id) + `comprehension_stamps`)
     .then(res => res.json())
