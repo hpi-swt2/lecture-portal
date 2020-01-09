@@ -29,12 +29,18 @@
 
     <% if user_signed_in? && @current_user.is_student %>
       <p class="lead">My Courses</p>
-      <table>
+      <table class="table .table-sm table-striped">
+        <thead>
+        <tr>
+          <th scope="col">Name</th>
+        </tr>
+        </thead>
+
         <% @participating_courses.each do |course| %>
 
           <tr>
             <td><%= course.name %></td>
-            <td><%= link_to "View", course_path(id: course.id) %></td>
+            <td><%= button_to "View", course_path(id: course.id), :method => "get", class:"btn btn-primary" %></td>
           </tr>
 
 
