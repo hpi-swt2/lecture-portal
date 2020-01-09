@@ -29,7 +29,7 @@ RSpec.describe "polls/show", type: :view do
   it "shows votes for an inactive poll" do
     @poll.is_active = false
     @poll.save!
-    visit lecture_poll_path(@lecture, @poll)
+    visit course_lecture_poll_path(@lecture.course, @lecture, @poll)
     within "table" do
        expect(page).to have_text("Votes")
      end
@@ -38,7 +38,7 @@ RSpec.describe "polls/show", type: :view do
   it "does not show votes for an active poll" do
     @poll.is_active = true
     @poll.save!
-    visit lecture_poll_path(@lecture, @poll)
+    visit course_lecture_poll_path(@lecture.course, @lecture, @poll)
     within "table" do
       expect(page).to have_no_text("Votes")
     end
@@ -47,7 +47,7 @@ RSpec.describe "polls/show", type: :view do
   it "displays description, corresponding vote count and percentage for each poll option" do
     @poll.is_active = false
     @poll.save
-    visit lecture_poll_path(@lecture, @poll)
+    visit course_lecture_poll_path(@lecture.course, @lecture, @poll)
     expect(find(:table_row, { "Description" => "abc", "Votes" => "2", "Percentage" => "0.4" }, {}))
     expect(find(:table_row, { "Description" => "def", "Votes" => "3", "Percentage" => "0.6" }, {}))
   end
@@ -73,7 +73,7 @@ RSpec.describe "polls/show", type: :view do
       )
      ])
 
-    visit lecture_poll_path(@lecture, @poll)
+    visit course_lecture_poll_path(@lecture.course, @lecture, @poll)
     expect(page).to have_text("Participants: 2")
   end
 

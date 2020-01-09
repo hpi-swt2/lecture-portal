@@ -1,4 +1,3 @@
-
 <p>
   <strong>Title:</strong>
   <%= @poll.title %>
@@ -66,10 +65,10 @@
     <p><strong>Total Number of Participants: </strong><%= Answer.where(poll_id: @poll.id).distinct.count(:student_id) %></p>
   <% end %>
 
-  <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
-  <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_lecture_poll_path(@lecture, @poll) %> |
-  <%= link_to 'Back', lecture_polls_path(@lecture) %>
+  <%= link_to 'Edit', edit_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %> |
+  <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %> |
+  <%= link_to 'Back', course_lecture_polls_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %>
 
 <% end %>
 
-<%= link_to 'Show all polls', lecture_polls_path(@lecture) %>
+<%= link_to 'Show all polls', course_lecture_polls_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %>

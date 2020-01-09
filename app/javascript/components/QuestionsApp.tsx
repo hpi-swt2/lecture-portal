@@ -8,13 +8,15 @@ const rootStore = createQuestionsRootStore();
 interface IQuestionsAppProps {
     user_id: number,
     is_student: boolean,
-    lecture_id: number
+    lecture_id: number,
+    course_id: number
 }
 
-const QuestionsApp: React.FunctionComponent<IQuestionsAppProps> = ({ user_id, is_student, lecture_id }) => {
+const QuestionsApp: React.FunctionComponent<IQuestionsAppProps> = ({ user_id, is_student, lecture_id, course_id }) => {
     rootStore.setUserId(user_id);
     rootStore.setIsStudent(is_student);
     rootStore.setLectureId(lecture_id);
+    rootStore.setCourseId(course_id);
     initQuestionsApp(rootStore);
     return (
         <StoreProvider value={rootStore}>

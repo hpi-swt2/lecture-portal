@@ -16,6 +16,7 @@ interface IAnswerOptionProps {
   options: Array<IOption>;
   title: string;
   is_multiselect: boolean;
+  course_id: number;
   lecture_id: number;
   poll_id: number;
   auth_token: string;
@@ -106,9 +107,10 @@ class AnswerOption extends React.Component<
     } else {
       this.setState({ showNoOptionSelectedError: false });
     }
-    const { lecture_id, poll_id, auth_token } = this.props;
+    const { course_id, lecture_id, poll_id, auth_token } = this.props;
     const data = {
       authenticity_token: auth_token,
+      course_id,
       lecture_id,
       id: poll_id,
       answers
