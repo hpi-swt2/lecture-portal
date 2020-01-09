@@ -1,5 +1,3 @@
-<p id="notice"><%= notice %></p>
-
 <% if !@current_user.is_student %>
   <div class="d-flex justify-content-center my-5">
     <%= link_to 'Create Lecture', new_course_lecture_path(@course), :class => "btn btn-primary btn-lg"%>

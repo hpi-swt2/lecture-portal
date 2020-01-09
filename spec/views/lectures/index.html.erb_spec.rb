@@ -24,7 +24,6 @@ RSpec.describe "lectures/index", type: :view do
     ])
     render
     assert_select "[value='Start']", count: 1
-
   end
 
   it "renders View and End button for running lectures" do
