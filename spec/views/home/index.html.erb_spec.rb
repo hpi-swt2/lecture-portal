@@ -23,7 +23,6 @@ RSpec.describe "home/index", type: :view do
     @course.join_course(@current_user)
     sign_in @current_user
     visit root_path
-    save_and_open_page
-    expect(page).to have_link("View")
+    expect(page).to have_button("View")
   end
 end
