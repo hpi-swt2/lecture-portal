@@ -1,3 +1,4 @@
+
 <p>
   <strong>Title:</strong>
   <%= @poll.title %>
@@ -13,13 +14,62 @@
   <%= @poll.is_active %>
 </p>
 
-<h2>Options</h2>
-<ol>
-<% for option in @poll.poll_options %>
+<%if @is_student%>
+  <h2>Options</h2>
+  <ol>
+    <% for option in @poll.poll_options %>
 
-    <li><%= option.description %></li>
+    <li><%= option.description %>
+      <% if @answers.any? %>
+      <% if @answers.any? {|answer| answer.option_id == option.id} %>
+      <span class="green-checkmark">&#x2714;</span>
+      <% else %>
+      <span class="red-cross">&#x2716;</span>
+      <% end %>
+      <% end %>
+    </li>
+    <% end %>
+  </ol>
+  <%= link_to 'Answer', edit_lecture_poll_path(@lecture, @poll) %> |
+
+<% else %>
+  <h3>Options</h3>
+  <table class="table .table-sm table-striped">
+    <thead>
+    <tr>
+      <th>Description</th>
+      <% if !@poll.is_active? %>
+        <th class="text-right">Votes</th>
+        <th class="text-right">Percentage</th>
+      <% end %>
+    </tr>
+    </thead>
+
+    <tbody>
+      <% for option in @poll.poll_options %>
+        <tr>
+        <td><%= option.description %></td>
+        <% if !@poll.is_active? %>
+          <td class="text-right">
+            <%= option.votes %>
+          </td>
+          <td class="text-right">
+            <%= (option.votes.to_f / PollOption.where(poll_id: @poll.id).sum(:votes)).round(2) %>
+          </td>
+        <% end %>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <% if !@poll.is_active? %>
+    <p><strong>Total Number of Participants: </strong><%= Answer.where(poll_id: @poll.id).distinct.count(:student_id) %></p>
+  <% end %>
+
+  <%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
+  <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_lecture_poll_path(@lecture, @poll) %> |
+  <%= link_to 'Back', lecture_polls_path(@lecture) %>
+
 <% end %>
-</ol>
 
-<%= link_to 'Edit', edit_lecture_poll_path(@lecture, @poll) %> |
-<%= link_to 'Back', lecture_polls_path(@lecture) %>
+<%= link_to 'Show all polls', lecture_polls_path(@lecture) %>

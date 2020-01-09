@@ -4,6 +4,9 @@ RSpec.describe LecturesController, type: :controller do
   let(:valid_attributes) {
     { name: "SWT", enrollment_key: "swt", status: "created", questions_enabled: true, polls_enabled: true }
   }
+  let(:valid_attributes_with_description) {
+    { name: "SWT", enrollment_key: "swt", status: "created", questions_enabled: true, polls_enabled: true, description: "description" }
+  }
   let(:valid_attributes_with_lecturer) {
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
   }
@@ -48,11 +51,34 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #show" do
-    it "returns a success response", :logged_lecturer do
+    it "returns a success response for owner", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer
       login_lecturer(lecture.lecturer)
       get :show, params: { id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
+    end
+
+    it "returns a success response for joined students", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer
+      student = FactoryBot.create(:user, :student)
+      lecture.join_lecture(student)
+      login_student(student)
+      get :show, params: { id: lecture.to_param }, session: valid_session
+      expect(response).to be_successful
+    end
+
+    it "redirects to overview for not joined students", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer
+      login_student()
+      get :show, params: { id: lecture.to_param }, session: valid_session
+      expect(response).to redirect_to(current_lectures_path)
+    end
+
+    it "redirects to overview for other lecturers", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer
+      login_lecturer()
+      get :show, params: { id: lecture.to_param }, session: valid_session
+      expect(response).to redirect_to(lectures_path)
     end
   end
 
@@ -69,6 +95,20 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #edit" do
+    describe "is only accessible before a lecture was started:" do
+      it "running lecture redirects to overview" do
+        lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "running")
+        login_lecturer(lecture.lecturer)
+        get :edit, params: { id: lecture.to_param }, session: valid_session
+        expect(response).to redirect_to(lectures_path)
+      end
+      it "ended lecture redirects to overview" do
+        lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "ended")
+        login_lecturer(lecture.lecturer)
+        get :edit, params: { id: lecture.to_param }, session: valid_session
+        expect(response).to redirect_to(lectures_path)
+      end
+    end
     it "returns a success response for lecturer" do
       lecture = Lecture.create! valid_attributes_with_lecturer
       login_lecturer(lecture.lecturer)
@@ -85,9 +125,15 @@ RSpec.describe LecturesController, type: :controller do
         }.to change(Lecture, :count).by(1)
       end
 
-      it "redirects to the created lecture", :logged_lecturer do
+      it "creates a new Lecture with description", :logged_lecturer do
+        expect {
+          post :create, params: { lecture: valid_attributes_with_description }, session: valid_session
+        }.to change(Lecture, :count).by(1)
+      end
+
+      it "redirects to the lectures overview", :logged_lecturer do
         post :create, params: { lecture: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(Lecture.last)
+        expect(response).to redirect_to(lectures_url)
       end
     end
 
@@ -102,11 +148,10 @@ RSpec.describe LecturesController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        { name: "SWT2", enrollment_key: "epic", status: "running" }
+        { name: "SWT2", enrollment_key: "epic", status: "running", description: "new description" }
       }
       before(:each) do
         @lecture = Lecture.create! valid_attributes_with_lecturer
-        # login lecturer
         login_lecturer(@lecture.lecturer)
       end
 
@@ -116,6 +161,7 @@ RSpec.describe LecturesController, type: :controller do
         expect(@lecture.name).to eq("SWT2")
         expect(@lecture.enrollment_key).to eq("epic")
         expect(@lecture.running?).to eq(true)
+        expect(@lecture.description).to eq("new description")
         expect(@lecture.status).to eq("running")
       end
 
@@ -156,6 +202,57 @@ RSpec.describe LecturesController, type: :controller do
     it "redirects to the lectures list" do
       delete :destroy, params: { id: @lecture.to_param }, session: valid_session
       expect(response).to redirect_to(lectures_url)
+    end
+  end
+
+  describe "POST #join_lecture" do
+    before(:each) do
+      # login user
+      @lecture = FactoryBot.create(:lecture, status: "running")
+    end
+
+    it "redirects to the lectures overview for students" do
+      login_student
+      post :join_lecture, params: { id: @lecture.id }, session: valid_session
+      expect(response).to redirect_to(@lecture)
+    end
+
+    it "redirects to overview for other lecturers" do
+      login_lecturer
+      post :join_lecture, params: { id: @lecture.id }, session: valid_session
+      expect(response).to redirect_to(lectures_url)
+    end
+  end
+
+  describe "POST #leave_lecture" do
+    before(:each) do
+      # login user
+      @lecture = FactoryBot.create(:lecture, status: "running")
+      login_student
+      post :join_lecture, params: { id: @lecture.id }, session: valid_session
+    end
+
+    it "redirects to the lectures overview" do
+      post :leave_lecture, params: { id: @lecture.id }, session: valid_session
+      expect(response).to redirect_to(current_lectures_path)
+    end
+  end
+
+  describe "POST #start_lecture" do
+    before(:each) do
+      @lecturer = FactoryBot.create(:user, :lecturer)
+      @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+      sign_in(@lecturer, scope: :user)
+    end
+
+    it "should not be possible to restart an ended lecture" do
+      @lecture.set_inactive
+      @lecture.save
+      expect(@lecture.status).to eq "ended"
+
+      post :start_lecture, params: { id: @lecture.id }, session: valid_session
+      @lecture.reload
+      expect(@lecture.status).to eq "ended"
     end
   end
 

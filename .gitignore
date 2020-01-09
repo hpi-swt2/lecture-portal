@@ -65,3 +65,4 @@ yarn-debug.log*
 
 # ignore assets
 public/assets/
+.vscode/settings.json

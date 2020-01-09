@@ -1,3 +1,21 @@
 // Place all the styles related to the lectures controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
+@import 'lecture_updates';
+@import 'questions';
+
+.text-right {
+  a,
+  form,
+  form > input {
+    display: inline-block;
+  }
+}
+form.button_to {
+  display: inline-block;
+}
+
+.tab-pane {
+  padding-top: 20px;
+}
