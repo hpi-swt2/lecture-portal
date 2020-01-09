@@ -3,6 +3,7 @@ Rails.application.routes.draw do
   post "/courses/:course_id/lectures/start_lecture", to: "lectures#start_lecture", as: "start_lecture"
   post "/courses/:course_id/lectures/join_lecture", to: "lectures#join_lecture", as: "join_lecture"
   post "/courses/join_course", to: "courses#join_course", as: "join_course"
+  post "/courses/leave_course", to: "courses#leave_course", as: "leave_course"
   post "/courses/:course_id/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
 
   resources :courses do

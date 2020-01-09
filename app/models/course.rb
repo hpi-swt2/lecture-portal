@@ -10,4 +10,10 @@ class Course < ApplicationRecord
       self.participating_students << student
     end
   end
+
+  def leave_course(student)
+    if self.participating_students.include?(student)
+      self.participating_students.delete(User.find(student.id))
+    end
+  end
 end

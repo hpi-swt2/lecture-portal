@@ -60,6 +60,14 @@ class CoursesController < ApplicationController
     redirect_to @course, notice: "You successfully joined the course."
   end
 
+  def leave_course
+    @course = Course.find(params[:id])
+    @course.leave_course(current_user)
+    @course.save
+    current_user.save
+    redirect_to root_path, notice: "You successfully leaved the course."
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
