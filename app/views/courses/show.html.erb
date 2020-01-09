@@ -41,19 +41,22 @@
       <td><%= lecture.name %></td>
       <td><%= lecture.enrollment_key %></td>
       <td><%= lecture.status%></td>
-      <td class="text-right">
-        <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
-      </td>
+
       <% if !@current_user.is_student%>
         <% if lecture.status == "running" %>
           <td></td>
           <td class="text-right">
+            <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+          </td>
+          <td class="text-right">
             <%= link_to 'End', end_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
           </td>
         <% else %>
+          <% if lecture.status == "created" %>
           <td class="text-right">
             <%= link_to 'Start', start_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary"%>
           </td>
+            <% end %>
           <td></td>
         <% end %>
         <td class="text-right">
@@ -61,7 +64,10 @@
         </td>
       <% end %>
       <% if @current_user.is_student%>
-        <% if lecture.status == "running" %>
+        <% if lecture.status == "running"%>
+          <td class="text-right">
+            <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+          </td>
           <td class="text-right">
             <%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
           </td>
