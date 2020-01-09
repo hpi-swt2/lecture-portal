@@ -5,11 +5,11 @@ describe "The show lecture page", type: :feature do
   include Devise::Test::IntegrationHelpers
 
   describe "as a lecturer" do
-    before(:each) do
-      @lecturer = FactoryBot.create(:user, :lecturer)
-      @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
-      sign_in @lecturer
-    end
+  before(:each) do
+    @lecturer = FactoryBot.create(:user, :lecturer)
+    @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+    sign_in @lecturer
+  end
 
   it "should have no end button if the lecture is not running" do
     visit(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
@@ -17,11 +17,11 @@ describe "The show lecture page", type: :feature do
   end
 
 
-    it "should have an end button if the lecture is running" do
-      @lecture.update(status: "running")
-      visit(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
-      expect(page).to have_link("End")
-    end
+  it "should have an end button if the lecture is running" do
+    @lecture.update(status: "running")
+    visit(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
+    expect(page).to have_link("End")
+  end
 
   it "should end the lecture if the end button is clicked" do
     @lecture.update(status: "running")

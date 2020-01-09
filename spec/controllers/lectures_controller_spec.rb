@@ -95,13 +95,13 @@ RSpec.describe LecturesController, type: :controller do
       it "running lecture redirects to overview" do
         lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "running")
         login_lecturer(lecture.lecturer)
-        get :edit, params: {course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
+        get :edit, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
       end
       it "ended lecture redirects to overview" do
         lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "ended")
         login_lecturer(lecture.lecturer)
-        get :edit, params: {course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
+        get :edit, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
       end
     end
@@ -195,7 +195,6 @@ RSpec.describe LecturesController, type: :controller do
 
   describe "DELETE #destroy" do
     before(:each) do
-
       @lecturer = FactoryBot.create(:user, :lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
       sign_in(@lecturer, scope: :user)
@@ -234,11 +233,11 @@ RSpec.describe LecturesController, type: :controller do
     before(:each) do
       @lecture = FactoryBot.create(:lecture, status: "running")
       login_student
-      post :join_lecture, params: {course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
     end
 
     it "redirects to the lectures overview" do
-      post :leave_lecture, params: {course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      post :leave_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
       expect(response).to redirect_to(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
     end
   end
@@ -255,7 +254,7 @@ RSpec.describe LecturesController, type: :controller do
       @lecture.save
       expect(@lecture.status).to eq "ended"
 
-      post :start_lecture, params: {course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      post :start_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
       @lecture.reload
       expect(@lecture.status).to eq "ended"
     end

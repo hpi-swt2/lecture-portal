@@ -25,8 +25,8 @@ class LecturesController < ApplicationController
 
   # GET courses/:course_id/lectures/new
   def new
-      @lecture = @course.lectures.build
-      @lecture.lecturer = current_user
+    @lecture = @course.lectures.build
+    @lecture.lecturer = current_user
   end
 
   # GET courses/:course_id/lectures/1/edit

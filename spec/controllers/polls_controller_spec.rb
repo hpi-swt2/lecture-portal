@@ -156,13 +156,13 @@ RSpec.describe PollsController, type: :controller do
   describe "#stop_start" do
     it "starts an inactive poll", :logged_student do
       poll = FactoryBot.create(:poll, :inactive)
-      get :stop_start, params: {course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
+      get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
       poll.reload
       expect(poll.is_active).to eq(true)
     end
     it "stops an active poll", :logged_student do
       poll = FactoryBot.create(:poll, :active)
-      get :stop_start, params: {course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
+      get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
       poll.reload
       expect(poll.is_active).to eq(false)
     end

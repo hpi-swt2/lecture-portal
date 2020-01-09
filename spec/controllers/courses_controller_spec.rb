@@ -29,15 +29,15 @@ RSpec.describe CoursesController, type: :controller do
   # adjust the attributes here as well
 
   let(:valid_attributes) {
-    {name: "Name", description: "Description", creator: FactoryBot.create(:user, :lecturer) }
+    { name: "Name", description: "Description", creator: FactoryBot.create(:user, :lecturer) }
   }
 
   let(:valid_attributes_with_creator) {
-    {name: "Name", description: "Description", creator: @creator }
+    { name: "Name", description: "Description", creator: @creator }
   }
 
   let(:invalid_attributes) {
-    {name: "", description: 1, creator: FactoryBot.create(:user, :student) }
+    { name: "", description: 1, creator: FactoryBot.create(:user, :student) }
   }
 
   # This should return the minimal set of values that should be in the session
@@ -46,7 +46,6 @@ RSpec.describe CoursesController, type: :controller do
   let(:valid_session) { {} }
 
   before(:each) do |test|
-
     @creator = FactoryBot.create(:user, :lecturer)
 
     if test.metadata[:logged_student]
@@ -117,7 +116,7 @@ RSpec.describe CoursesController, type: :controller do
 
   describe "PUT #update", :logged_creator  do
     context "with valid params" do
-      let(:new_attributes) { {name: "New Name", description: "New Desc"} }
+      let(:new_attributes) { { name: "New Name", description: "New Desc" } }
 
       it "updates the requested course" do
         course = Course.create! valid_attributes_with_creator
