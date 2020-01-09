@@ -10,7 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_12_06_144904) do
+ActiveRecord::Schema.define(version: 2019_12_23_173438) do
+
+  create_table "courses", force: :cascade do |t|
+    t.string "name"
+    t.text "description"
+    t.string "status", default: "open"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "creator_id"
+    t.integer "lecture_id"
+    t.index ["creator_id"], name: "index_courses_on_creator_id"
+    t.index ["lecture_id"], name: "index_courses_on_lecture_id"
+  end
+
+  create_table "courses_users", id: false, force: :cascade do |t|
+    t.integer "course_id", null: false
+    t.integer "user_id", null: false
+    t.index ["course_id", "user_id"], name: "index_courses_users_on_course_id_and_user_id"
+    t.index ["user_id", "course_id"], name: "index_courses_users_on_user_id_and_course_id"
+  end
 
   create_table "feedbacks", force: :cascade do |t|
     t.text "content"
@@ -30,6 +49,8 @@ ActiveRecord::Schema.define(version: 2019_12_06_144904) do
     t.boolean "polls_enabled", default: true
     t.string "status", default: "created"
     t.integer "lecturer_id"
+    t.integer "course_id"
+    t.index ["course_id"], name: "index_lectures_on_course_id"
     t.index ["lecturer_id"], name: "index_lectures_on_lecturer_id"
   end
 
@@ -66,13 +87,6 @@ ActiveRecord::Schema.define(version: 2019_12_06_144904) do
     t.datetime "updated_at", null: false
     t.boolean "resolved", default: false, null: false
     t.index ["author_id"], name: "index_questions_on_author_id"
-  end
-
-  create_table "questions_users", id: false, force: :cascade do |t|
-    t.integer "question_id", null: false
-    t.integer "user_id", null: false
-    t.index ["question_id", "user_id"], name: "index_questions_users_on_question_id_and_user_id"
-    t.index ["user_id", "question_id"], name: "index_questions_users_on_user_id_and_question_id"
   end
 
   create_table "users", force: :cascade do |t|
