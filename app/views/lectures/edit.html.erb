@@ -2,5 +2,5 @@
 
 <%= render 'form', lecture: @lecture, render_enrolment_key: true %>
 
-<%= link_to 'Back', course_lectures_path(course_id:@lecture.course.id, id: @lecture.id) %> |
+<%= link_to 'Back', course_lecture_path(course_id:@lecture.course.id, id: @lecture.id) %> |
 <%= link_to 'Delete', course_lecture_path(course_id:@lecture.course.id, id: @lecture.id), method: :delete, data: { confirm: 'Are you sure?' } %>
