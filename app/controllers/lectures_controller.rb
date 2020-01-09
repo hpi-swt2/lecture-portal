@@ -1,10 +1,10 @@
 class LecturesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture]
+  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture, :update_comprehension_stamp]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
-  before_action :validate_joined_user_or_owner, only: [:show]
-  before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show]
-  before_action :require_student, only: [:join_lecture, :leave_lecture]
+  before_action :validate_joined_user_or_owner, only: [:show, :update_comprehension_stamp]
+  before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show, :update_comprehension_stamp]
+  before_action :require_student, only: [:join_lecture, :leave_lecture, :update_comprehension_stamp]
 
   # GET /lectures
   def index
@@ -93,6 +93,10 @@ class LecturesController < ApplicationController
     @lecture.set_inactive
     @lecture.save
     redirect_to lecture_path(@lecture), notice: "You successfully ended the lecture."
+  end
+
+  def update_comprehension_stamp
+    @lecture.lecture_comprehension_stamps << LectureComprehensionStamp.new(:user => current_user, :status => 2)
   end
 
   private
