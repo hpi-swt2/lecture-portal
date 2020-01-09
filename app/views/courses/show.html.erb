@@ -1,9 +1,9 @@
 <p id="notice"><%= notice %></p>
-
+<% if !@current_user.is_student %>
 <div class="d-flex justify-content-center my-5">
   <%= link_to 'Create Lecture', new_course_lecture_path(@course), :class => "btn btn-primary btn-lg"%>
 </div>
-
+<% end %>
 <p>
   <strong>Name:</strong>
   <%= @course.name %>
@@ -23,10 +23,10 @@
 <table class="table .table-sm table-striped">
   <thead>
   <tr>
-    <th scope="col">Name</th>
-    <th scope="col">Enrollment key</th>
-    <th scope="col">Status</th>
-    <th scope="col" colspan="2"></th>
+    <th  scope="col">Name</th>
+    <th  scope="col">Enrollment key</th>
+    <th  class="col-sm" scope="col">Status</th>
+    <th  scope="col" colspan="2"></th>
   </tr>
   </thead>
 
@@ -40,20 +40,22 @@
       <td class="text-right">
         <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
       </td>
+      <% else %>
+        <td></td>
       <% end %>
       <% if !@current_user.is_student%>
       <td class="text-right">
-        <%= link_to 'Start', start_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post%>
+        <%= link_to 'Start', start_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary"%>
       </td>
       <td class="text-right">
-        <%= link_to 'End', end_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post %>
+        <%= link_to 'End', end_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
       </td>
       <td class="text-right">
         <%= link_to 'Edit', edit_course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
       </td>
       <% end %>
       <% if @current_user.is_student%>
-      <td><%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post %></td>
+      <td><%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %></td>
       <% end %>
     </tr>
   <% end %>
