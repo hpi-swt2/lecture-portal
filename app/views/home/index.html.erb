@@ -11,7 +11,7 @@
       <%= link_to (fa_icon 'graduation-cap', text: 'New Course'), new_course_path, class: 'btn btn-secondary btn-lg' %>
     <br>
     <p class="lead">My Courses</p>
-      <table>
+      <table class="table .table-sm table-striped">
       <% @courses.each do |course| %>
 
         <tr>
