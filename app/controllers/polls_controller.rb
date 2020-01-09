@@ -20,7 +20,7 @@ class PollsController < ApplicationController
   # GET /polls/new
   def new
     if @is_student
-      redirect_to lecture_polls_path(@lecture), notice: "You are a student. You can not create polls."
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You are a student. You can not create polls."
     else
       @poll = @lecture.polls.build
     end
@@ -30,7 +30,7 @@ class PollsController < ApplicationController
   def edit
     if @is_student
       if !@poll.is_active
-        redirect_to lecture_polls_path(@lecture), notice: "This poll is closed."
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "This poll is closed."
       else
         get_users_answers
         render :answer
@@ -42,15 +42,15 @@ class PollsController < ApplicationController
   def stop_start
     if @poll.is_active
       if @poll.update(is_active: false)
-        redirect_to lecture_poll_path(@lecture, @poll), notice: "You stopped the poll!"
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "You stopped the poll!"
       else
-        redirect_to lecture_poll_path(@lecture, @poll), notice: "Stopping the poll did not work :("
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "Stopping the poll did not work :("
       end
     else
       if @poll.update(is_active: true)
-        redirect_to lecture_poll_path(@lecture, @poll), notice: "You started the poll!"
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "You started the poll!"
       else
-        redirect_to lecture_poll_path(@lecture, @poll), notice: "Starting the poll did not work :("
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "Starting the poll did not work :("
       end
     end
   end
@@ -61,12 +61,12 @@ class PollsController < ApplicationController
     current_poll_answers = params[:answers]
     poll = Poll.find(params[:id])
     if !poll.is_active
-      redirect_to lecture_polls_path(@lecture), notice: "This poll is closed, you cannot answer it."
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "This poll is closed, you cannot answer it."
     else
       Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
       save_given_answers(current_poll_answers, poll)
       @poll.gather_vote_results
-      redirect_to lecture_poll_path(@lecture, params[:id]), notice: "You answered successfully ;-)"
+      redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "You answered successfully ;-)"
     end
   end
 
@@ -80,7 +80,7 @@ class PollsController < ApplicationController
       @poll.poll_options.build(description: poll_option_description.to_param)
     end
     if @poll.save
-      redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully created."
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully created."
     else
       render :new
     end
@@ -97,7 +97,7 @@ class PollsController < ApplicationController
         @poll.poll_options.build(description: poll_option_description.to_param)
       end
       if @poll.save
-        redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully updated."
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully updated."
       else
         render :edit
       end
@@ -109,7 +109,7 @@ class PollsController < ApplicationController
   # DELETE /polls/1
   def destroy
     @poll.destroy
-    redirect_to lecture_polls_path(@lecture), notice: "Poll was successfully destroyed."
+    redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully destroyed."
   end
 
   private

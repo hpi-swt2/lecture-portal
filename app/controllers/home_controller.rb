@@ -1,11 +1,10 @@
 class HomeController < ApplicationController
   def index
-    if current_user
-      if current_user.is_student
-        redirect_to current_lectures_url
-      else
-        redirect_to lectures_url
-      end
+    @current_user = current_user
+    @courses = Course.where(creator: current_user)
+    unless current_user.nil?
+      @participating_courses = current_user.participating_courses
+      @open_courses = Course.where(status: "open") - @participating_courses
     end
   end
 end

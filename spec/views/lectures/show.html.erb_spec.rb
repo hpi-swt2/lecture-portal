@@ -3,12 +3,14 @@ require "rails_helper"
 RSpec.describe "lectures/show", type: :view do
   let(:valid_session) { {} }
   before(:each) do
+    @course = FactoryBot.create(:course)
     @lecture = assign(:lecture, Lecture.create!(
                                   name: "Name",
                                   description: "Test",
                                   enrollment_key: "Enrollment Key",
                                   status: "running",
-                                  lecturer: FactoryBot.create(:user, :lecturer, email: "bp@hpi.de")
+                                  lecturer: FactoryBot.create(:user, :lecturer),
+                                  course: @course
     ))
   end
 
@@ -37,7 +39,7 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_css("#settings-tab")
     end
     it "renders end button" do
-      expect(rendered).to have_css("[value='End']")
+      expect(rendered).to have_link("End")
     end
     it "renders a leave lecture button" do
       expect(rendered).not_to have_css("[value='Leave Lecture']")
@@ -58,7 +60,7 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).not_to have_css("[value='End']")
     end
     it "renders a leave lecture button" do
-      expect(rendered).to have_css("[value='Leave Lecture']")
+      expect(rendered).to have_link("Leave Lecture")
     end
   end
 
