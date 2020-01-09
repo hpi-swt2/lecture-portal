@@ -39,7 +39,7 @@
         <li>
           <%= poll.title%>
           <% if poll.is_active and @current_user.is_student %>
-            <%= link_to 'Vote', edit_course_lecture_poll_path(@lecture.course, @lecture, poll) %>
+            <%= link_to 'Vote', edit_course_lecture_poll_path(@lecture.course, @lecture, poll), class:"btn btn-primary" %>
           <% end %>
 
         </li>
