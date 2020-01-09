@@ -26,9 +26,14 @@ require "rails_helper"
 RSpec.describe CoursesController, type: :controller do
   # This should return the minimal set of attributes required to create a valid
   # Course. As you add validations to Course, be sure to
-  # adjust the attributes here as well.
+  # adjust the attributes here as well
+
   let(:valid_attributes) {
     {name: "Name", description: "Description", creator: FactoryBot.create(:user, :lecturer) }
+  }
+
+  let(:valid_attributes_with_creator) {
+    {name: "Name", description: "Description", creator: @creator }
   }
 
   let(:invalid_attributes) {
@@ -41,11 +46,17 @@ RSpec.describe CoursesController, type: :controller do
   let(:valid_session) { {} }
 
   before(:each) do |test|
+
+    @creator = FactoryBot.create(:user, :lecturer)
+
     if test.metadata[:logged_student]
       login_student
     end
     if test.metadata[:logged_lecturer]
       login_lecturer
+    end
+    if test.metadata[:logged_creator]
+      login_creator
     end
   end
 
@@ -104,12 +115,12 @@ RSpec.describe CoursesController, type: :controller do
     end
   end
 
-  describe "PUT #update", :logged_lecturer  do
+  describe "PUT #update", :logged_creator  do
     context "with valid params" do
       let(:new_attributes) { {name: "New Name", description: "New Desc"} }
 
       it "updates the requested course" do
-        course = Course.create! valid_attributes
+        course = Course.create! valid_attributes_with_creator
         put :update, params: { id: course.to_param, course: new_attributes }, session: valid_session
         course.reload
         expect(course.name).to eq("New Name")
@@ -117,7 +128,7 @@ RSpec.describe CoursesController, type: :controller do
       end
 
       it "redirects to the course" do
-        course = Course.create! valid_attributes
+        course = Course.create! valid_attributes_with_creator
         put :update, params: { id: course.to_param, course: valid_attributes }, session: valid_session
         expect(response).to redirect_to(course)
       end
@@ -125,23 +136,23 @@ RSpec.describe CoursesController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)" do
-        course = Course.create! valid_attributes
+        course = Course.create! valid_attributes_with_creator
         put :update, params: { id: course.to_param, course: invalid_attributes }, session: valid_session
         expect(response).to be_successful
       end
     end
   end
 
-  describe "DELETE #destroy",  :logged_lecturer do
+  describe "DELETE #destroy",  :logged_creator do
     it "destroys the requested course" do
-      course = Course.create! valid_attributes
+      course = Course.create! valid_attributes_with_creator
       expect {
         delete :destroy, params: { id: course.to_param }, session: valid_session
       }.to change(Course, :count).by(-1)
     end
 
     it "redirects to the courses list" do
-      course = Course.create! valid_attributes
+      course = Course.create! valid_attributes_with_creator
       delete :destroy, params: { id: course.to_param }, session: valid_session
       expect(response).to redirect_to(courses_url)
     end
@@ -164,5 +175,8 @@ RSpec.describe CoursesController, type: :controller do
   end
   def login_lecturer(user = FactoryBot.create(:user, :lecturer))
     sign_in(user, scope: :user)
+  end
+  def login_creator
+    sign_in(@creator, scope: :user)
   end
 end
