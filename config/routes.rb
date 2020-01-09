@@ -18,12 +18,13 @@ Rails.application.routes.draw do
         end
       end
       resources :feedbacks
-    end
-  end
+
+
 
     resources :questions, only: [:index, :create] do
       post "upvote", on: :member
       post "resolve", on: :member
+    end
     end
   end
 
