@@ -9,7 +9,11 @@ export const getComprehensionRootStore = (target: IAnyStateTreeNode): Comprehens
 const ComprehensionRootStore = types.model("ComprehensionRootStore", {
     user_id: types.optional(types.integer, -1),
     lecture_id: types.optional(types.integer, -1),
-    is_student: types.optional(types.boolean, true)
+    is_student: types.optional(types.boolean, true),
+
+    results: types.optional(types.array(types.number), []),
+    participants: types.optional(types.integer, 0),
+    last_updated: types.optional(types.Date, null)
 }).actions(self => ({
     setUserId(user_id: number) {
         self.user_id = user_id;

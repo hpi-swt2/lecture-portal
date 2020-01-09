@@ -3,15 +3,20 @@ import { observer } from "mobx-react";
 import {ComprehensionRootStoreModel} from "../stores/ComprehensionRootStore";
 import {useInjectComprehension} from "../hooks/useInject";
 
-const mapStore = ({ is_student }: ComprehensionRootStoreModel) => ({
-    is_student
+const mapStore = ({ last_updated }: ComprehensionRootStoreModel) => ({
+    last_updated
 });
 
 const ComprehensionStudent: React.FunctionComponent<{}> = observer(() => {
-    const { is_student } = useInjectComprehension(mapStore);
+    const { last_updated } = useInjectComprehension(mapStore);
 
     return (
-        <div />
+        <div>
+            <p>Last Updated: {last_updated}</p>
+            <div className="comprehensionBox">
+
+            </div>
+        </div>
     );
 });
 

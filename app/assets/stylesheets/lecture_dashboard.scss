@@ -1,0 +1,18 @@
+#updates, #materials, #comprehension {
+  width: 33.33%;
+
+  > h5 {
+    border-bottom: 1px solid #555;
+  }
+}
+
+@media(max-width: 800px) {
+  #updates, #materials, #comprehension {
+    width: 50%;
+  }
+}
+@media(max-width: 500px) {
+  #updates, #materials, #comprehension {
+    width: 100%;
+  }
+}
