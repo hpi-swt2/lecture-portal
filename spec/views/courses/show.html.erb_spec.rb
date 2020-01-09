@@ -5,7 +5,6 @@ RSpec.describe "courses/show", type: :view do
   before(:each) do
     @lecturer = FactoryBot.create(:user, :lecturer)
     @course = FactoryBot.create(:course, creator: @lecturer)
-
     @lecture = FactoryBot.create(:lecture, name: "Name", enrollment_key: "Enrollment", status: "created",  course: @course, lecturer: @lecturer)
     @current_user = FactoryBot.create(:user, :lecturer)
     sign_in @lecturer
@@ -33,7 +32,6 @@ RSpec.describe "courses/show", type: :view do
 
   it "should not have a \"View\" link for not started lecture" do
     visit(course_path(id: @lecture.course.id))
-    save_and_open_page
     expect(page).to_not have_link("View", href: course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
   end
 

@@ -9,6 +9,7 @@ RSpec.describe "home/index", type: :view do
   end
 
   it "displays all open courses for a student" do
+    # Using hard coded string and not factory default name cause a unique name is needed for this test
     FactoryBot.create(:course, name: "index_test")
     FactoryBot.create(:course, name: "index_test")
     @current_user = FactoryBot.create(:user, :student)

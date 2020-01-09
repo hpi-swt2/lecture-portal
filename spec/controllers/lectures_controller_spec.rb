@@ -78,7 +78,7 @@ RSpec.describe LecturesController, type: :controller do
       course = FactoryBot.create(:course)
       login_student
       get :new, params: { course_id: (course.id) }, session: valid_session
-      expect(response).to redirect_to(current_lectures_path(course_id: (course.id)))
+      expect(response).to redirect_to(course_path(id: (course.id)))
     end
     it "returns a success response for lecturer", :logged_lecturer do
       course = FactoryBot.create(:course)
@@ -105,6 +105,13 @@ RSpec.describe LecturesController, type: :controller do
         }.to change(Lecture, :count).by(1)
       end
 
+      it "should not create a new Lecture if logged in as student", :logged_student do
+        course = FactoryBot.create(:course)
+        expect {
+          post :create, params: { course_id: (course.id), lecture: valid_attributes }, session: valid_session
+        }.to change(Lecture, :count).by(0)
+      end
+
       it "redirects to the lecture dashboard", :logged_lecturer do
         course = FactoryBot.create(:course)
         post :create, params: { course_id: (course.id), lecture: valid_attributes }, session: valid_session
@@ -128,7 +135,6 @@ RSpec.describe LecturesController, type: :controller do
       }
       before(:each) do
         @lecture = Lecture.create! valid_attributes_with_lecturer_with_course
-        # login lecturer
         login_lecturer(@lecture.lecturer)
       end
 
@@ -164,7 +170,7 @@ RSpec.describe LecturesController, type: :controller do
 
   describe "DELETE #destroy" do
     before(:each) do
-      # login user
+
       @lecturer = FactoryBot.create(:user, :lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
       sign_in(@lecturer, scope: :user)
@@ -183,7 +189,7 @@ RSpec.describe LecturesController, type: :controller do
 
   describe "POST #join_lecture" do
     before(:each) do
-      # login user
+
       @lecture = FactoryBot.create(:lecture, status: "running")
     end
 

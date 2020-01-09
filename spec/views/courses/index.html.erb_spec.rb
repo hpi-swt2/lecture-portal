@@ -2,10 +2,7 @@ require "rails_helper"
 
 RSpec.describe "courses/index", type: :view do
   before(:each) do
-    assign(:courses, [
-      FactoryBot.create(:course),
-      FactoryBot.create(:course)
-    ])
+    assign(:courses, FactoryBot.create_list(:course, 2))
   end
 
   it "renders a list of courses" do

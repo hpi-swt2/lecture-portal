@@ -2,6 +2,7 @@ class CoursesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_course, only: [:show, :edit, :update, :destroy]
   before_action :validate_owner, only: [:show, :edit]
+  before_action :require_lecturer, except: [:join_course, :leave_course, :show]
 
   # GET /courses
   def index
@@ -81,6 +82,12 @@ class CoursesController < ApplicationController
     def validate_owner
       if @course.creator != current_user
         redirect_to courses_url, notice: "You can only access your own courses."
+      end
+    end
+
+    def require_lecturer
+      if current_user.is_student?
+        redirect_to root_path, notice: "You can't access this site as a student."
       end
     end
 end

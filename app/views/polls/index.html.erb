@@ -19,7 +19,6 @@
         <td><%= poll.is_active %></td>
         <td><%= link_to 'Show', course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: poll.id) %></td>
         <td><%= link_to 'Edit', edit_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: poll.id) %></td>
-<!--        <td><%#= link_to 'Destroy', [@lecture, poll], method: :delete, data: { confirm: 'Are you sure?' } %></td>-->
         <td><%= link_to 'Destroy', course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: poll.id), method: :delete, data: { confirm: 'Are you sure?' } %></td>
       </tr>
     <% end %>
@@ -29,6 +28,5 @@
 <br>
 
 <%= link_to 'New Poll', new_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id) %> |
-<%#= link_to 'Back', [@lecture]  ### I don't quite know how this works, so i replaced it with the explicit version down below. ### %>
 
 <%= link_to 'Back', course_lecture_path(course_id:@lecture.course.id, id:@lecture.id) %>

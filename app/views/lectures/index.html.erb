@@ -15,14 +15,14 @@
   </thead>
 
   <tbody>
-    <% @lectures.each do |lecture| %>
+    <% @course.lectures.each do |lecture| %>
       <tr>
         <td><%= lecture.name %></td>
         <td><%= lecture.enrollment_key %></td>
         <td><%= lecture.status%></td>
         <td class="text-right">
         <% if lecture.status == "running" %>
-          <%= link_to 'View', lecture, {class:"btn btn-primary"} %>
+          <%= link_to 'View', course_lecture_path(course_id:lecture.course.id, id:lecture.id), {class:"btn btn-primary"} %>
         <% else %>
           <%= button_to "Start", {action: "start_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
         <%end %>

@@ -7,7 +7,7 @@ RSpec.describe "lectures/edit", type: :view do
                                   name: "MyString",
                                   enrollment_key: "MyString",
                                   status: "created",
-                                  lecturer: FactoryBot.create(:user, :lecturer, email: "123test@gmail.com"),
+                                  lecturer: FactoryBot.create(:user, :lecturer),
                                   course: @course
     ))
   end

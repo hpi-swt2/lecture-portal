@@ -28,11 +28,11 @@ RSpec.describe CoursesController, type: :controller do
   # Course. As you add validations to Course, be sure to
   # adjust the attributes here as well.
   let(:valid_attributes) {
-    skip("Add a hash of attributes valid for your model")
+    {name: "Name", description: "Description", creator: FactoryBot.create(:user, :lecturer) }
   }
 
   let(:invalid_attributes) {
-    skip("Add a hash of attributes invalid for your model")
+    {name: "", description: 1, creator: FactoryBot.create(:user, :student) }
   }
 
   # This should return the minimal set of values that should be in the session
@@ -50,7 +50,7 @@ RSpec.describe CoursesController, type: :controller do
   end
 
   describe "GET #index" do
-    it "returns a success response", :logged_student do
+    it "returns a success response", :logged_lecturer do
       Course.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(response).to be_successful
@@ -58,8 +58,9 @@ RSpec.describe CoursesController, type: :controller do
   end
 
   describe "GET #show" do
-    it "returns a success response", :logged_student do
+    it "returns a success response", :logged_lecturer do
       course = Course.create! valid_attributes
+      login_lecturer(course.creator)
       get :show, params: { id: course.to_param }, session: valid_session
       expect(response).to be_successful
     end
@@ -75,13 +76,14 @@ RSpec.describe CoursesController, type: :controller do
   describe "GET #edit" do
     it "returns a success response", :logged_lecturer do
       course = Course.create! valid_attributes
+      login_lecturer(course.creator)
       get :edit, params: { id: course.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
 
   describe "POST #create" do
-    context "with valid params" do
+    context "with valid params", :logged_lecturer do
       it "creates a new Course" do
         expect {
           post :create, params: { course: valid_attributes }, session: valid_session
@@ -94,7 +96,7 @@ RSpec.describe CoursesController, type: :controller do
       end
     end
 
-    context "with invalid params" do
+    context "with invalid params",  :logged_lecturer do
       it "returns a success response (i.e. to display the 'new' template)" do
         post :create, params: { course: invalid_attributes }, session: valid_session
         expect(response).to be_successful
@@ -102,17 +104,16 @@ RSpec.describe CoursesController, type: :controller do
     end
   end
 
-  describe "PUT #update" do
+  describe "PUT #update", :logged_lecturer  do
     context "with valid params" do
-      let(:new_attributes) {
-        skip("Add a hash of attributes valid for your model")
-      }
+      let(:new_attributes) { {name: "New Name", description: "New Desc"} }
 
       it "updates the requested course" do
         course = Course.create! valid_attributes
         put :update, params: { id: course.to_param, course: new_attributes }, session: valid_session
         course.reload
-        skip("Add assertions for updated state")
+        expect(course.name).to eq("New Name")
+        expect(course.description).to eq("New Desc")
       end
 
       it "redirects to the course" do
@@ -131,7 +132,7 @@ RSpec.describe CoursesController, type: :controller do
     end
   end
 
-  describe "DELETE #destroy" do
+  describe "DELETE #destroy",  :logged_lecturer do
     it "destroys the requested course" do
       course = Course.create! valid_attributes
       expect {
@@ -148,12 +149,11 @@ RSpec.describe CoursesController, type: :controller do
 
   describe "POST #join_course" do
     before(:each) do
-      # login user
+      login_student
       @course = FactoryBot.create(:course)
     end
 
     it "redirects to the lectures overview for students" do
-      login_student
       post :join_course, params: { id: @course.id }
       expect(response).to redirect_to(@course)
     end

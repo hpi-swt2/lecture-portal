@@ -3,7 +3,7 @@ require "rails_helper"
 RSpec.describe "lectures/new", type: :view do
   before(:each) do
     @course = FactoryBot.create(:course)
-    @lecture = FactoryBot.create(:lecture, name: "MyString", enrollment_key: "MyString", status: "created", course: @course)
+    @lecture = FactoryBot.create(:lecture, course: @course)
   end
 
   it "renders new lecture form" do

@@ -22,7 +22,7 @@ RSpec.describe "lectures/current", type: :view do
     ])
   end
 
-  it "renders a list of aöll running lectures" do
+  it "renders a list of all running lectures" do
     login_student
     visit current_lectures_path(course_id: @course.id)
     expect(page).to have_css("td", text: @lectures[0].name)

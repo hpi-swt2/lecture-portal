@@ -7,31 +7,22 @@ class LecturesController < ApplicationController
   before_action :require_lecturer, except: [:current, :join_lecture, :show]
   before_action :require_student, only: [:join_lecture]
 
-  # GET /lectures
-  # def index
-  #  @lectures = Lecture.where(lecturer: current_user)
-  # end
-
-  # GET /lectures/1
+  # GET courses/:course_id/lectures/1
   def show
     @current_user = current_user
   end
 
-  # GET /lectures/new
+  # GET courses/:course_id/lectures/new
   def new
-    if current_user.is_student
-      redirect_to course_path(@course), notice: "You are a student. You can not create courses."
-    else
       @lecture = @course.lectures.build
       @lecture.lecturer = current_user
-    end
   end
 
-  # GET /lectures/1/edit
+  # GET courses/:course_id/lectures/1/edit
   def edit
   end
 
-  # POST /lectures
+  # POST courses/:course_id/lectures
   def create
     @lecture = @course.lectures.build(lecture_params)
     @lecture.lecturer = current_user
@@ -42,7 +33,7 @@ class LecturesController < ApplicationController
     end
   end
 
-  # PATCH/PUT /lectures/1
+  # PATCH/PUT courses/:course_id/lectures/1
   def update
     if @lecture.update(lecture_params)
       redirect_to course_lecture_path(@course, @lecture), notice: "Lecture was successfully updated."
@@ -51,14 +42,14 @@ class LecturesController < ApplicationController
     end
   end
 
-  # DELETE /lectures/1
+  # DELETE courses/:course_id/lectures/1
   def destroy
     if @lecture.destroy
       redirect_to course_path, notice: "Lecture was successfully destroyed."
     end
   end
 
-  # GET /lectures/current
+  # GET courses/:course_id/lectures/current
   def current
     if current_user.is_student?
       @lectures = Lecture.where(course_id: @course.id).active
@@ -122,7 +113,7 @@ class LecturesController < ApplicationController
 
     def require_lecturer
       if current_user.is_student?
-        redirect_to current_lectures_url, notice: "You can't access this site as a student."
+        redirect_to course_path(@course), notice: "You can't access this site as a student."
       end
     end
 
