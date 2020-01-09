@@ -28,10 +28,10 @@ RSpec.describe LecturesController, type: :controller do
   describe "Should prompt the user to log in first and redirect before accessing" do
     @lecture = FactoryBot.create(:lecture)
     urls = {
-        index: {course_id: @lecture.course.id},
-        show: {course_id: @lecture.course.id, id: @lecture.to_param },
-        new: {course_id: @lecture.course.id},
-        edit: {course_id: @lecture.course.id, id: @lecture.to_param }
+        index: { course_id: @lecture.course.id },
+        show: { course_id: @lecture.course.id, id: @lecture.to_param },
+        new: { course_id: @lecture.course.id },
+        edit: { course_id: @lecture.course.id, id: @lecture.to_param }
     }
     urls.each do |path, params|
       it " the #{path}  page" do
@@ -41,24 +41,11 @@ RSpec.describe LecturesController, type: :controller do
     end
   end
 
-  # there is no lectures index anymore because lectures only exists in the context of a course
-=begin
-  describe "GET #index" do
-    it "returns a success response" do
-      login_lecturer
-      #Lecture.create! valid_attributes_with_lecturer
-      FactoryBot.create(:lecture)
-      get :index, params: {}, session: valid_session
-      expect(response).to be_successful
-    end
-  end
-=end
-
   describe "GET #show" do
     it "returns a success response for owner", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       login_lecturer(lecture.lecturer)
-      get :show, params: {course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
+      get :show, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
     end
 
@@ -67,21 +54,21 @@ RSpec.describe LecturesController, type: :controller do
       student = FactoryBot.create(:user, :student)
       lecture.join_lecture(student)
       login_student(student)
-      get :show, params: {course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
+      get :show, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
     end
 
     it "redirects to course overview for not joined students", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       login_student()
-      get :show, params: {course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
+      get :show, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
       expect(response).to redirect_to(course_path(lecture.course))
     end
 
     it "redirects to overview for other lecturers", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       login_lecturer()
-      get :show, params: {course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
+      get :show, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
       expect(response).to redirect_to(course_path(lecture.course))
     end
   end
@@ -90,12 +77,12 @@ RSpec.describe LecturesController, type: :controller do
     it "will redirect student to the course path" do
       course = FactoryBot.create(:course)
       login_student
-      get :new, params: {course_id: (course.id)}, session: valid_session
+      get :new, params: { course_id: (course.id) }, session: valid_session
       expect(response).to redirect_to(current_lectures_path(course_id: (course.id)))
     end
     it "returns a success response for lecturer", :logged_lecturer do
       course = FactoryBot.create(:course)
-      get :new, params: {course_id: (course.id)}, session: valid_session
+      get :new, params: { course_id: (course.id) }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -104,7 +91,7 @@ RSpec.describe LecturesController, type: :controller do
     it "returns a success response for lecturer" do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       login_lecturer(lecture.lecturer)
-      get :edit, params: {course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
+      get :edit, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -114,13 +101,13 @@ RSpec.describe LecturesController, type: :controller do
       it "creates a new Lecture", :logged_lecturer do
         course = FactoryBot.create(:course)
         expect {
-          post :create, params: {course_id: (course.id), lecture: valid_attributes }, session: valid_session
+          post :create, params: { course_id: (course.id), lecture: valid_attributes }, session: valid_session
         }.to change(Lecture, :count).by(1)
       end
 
       it "redirects to the lecture dashboard", :logged_lecturer do
         course = FactoryBot.create(:course)
-        post :create, params: {course_id: (course.id), lecture: valid_attributes }, session: valid_session
+        post :create, params: { course_id: (course.id), lecture: valid_attributes }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(course_id: course.id, id: Lecture.find_by(course_id: course.id).id))
       end
     end
@@ -128,7 +115,7 @@ RSpec.describe LecturesController, type: :controller do
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)", :logged_lecturer do
         course = FactoryBot.create(:course)
-        post :create, params: {course_id: (course.id), lecture: invalid_attributes }, session: valid_session
+        post :create, params: { course_id: (course.id), lecture: invalid_attributes }, session: valid_session
         expect(response).to be_successful
       end
     end
@@ -146,7 +133,7 @@ RSpec.describe LecturesController, type: :controller do
       end
 
       it "updates the requested lecture" do
-        put :update, params: {course_id: @lecture.course.id, id: @lecture.to_param, lecture: new_attributes }, session: valid_session
+        put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: new_attributes }, session: valid_session
         @lecture.reload
         expect(@lecture.name).to eq("SWT2")
         expect(@lecture.enrollment_key).to eq("epic")
@@ -155,7 +142,7 @@ RSpec.describe LecturesController, type: :controller do
       end
 
       it "redirects to the lecture" do
-        put :update, params: {course_id: @lecture.course.id, id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
+        put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
       end
     end
@@ -163,13 +150,13 @@ RSpec.describe LecturesController, type: :controller do
     context "with invalid params" do
       it "redirects to root for other lecturers", :logged_lecturer do
         lecture = Lecture.create! valid_attributes_with_lecturer_with_course
-        put :update, params: {course_id: lecture.course.id, id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
+        put :update, params: { course_id: lecture.course.id, id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
         expect(response).to redirect_to(root_path)
       end
       it "returns a success response for lecturer (i.e. to display the 'edit' template)", :logged_lecturer do
         lecture = Lecture.create! valid_attributes_with_lecturer_with_course
         login_lecturer(lecture.lecturer)
-        put :update, params: {course_id: lecture.course.id, id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
+        put :update, params: { course_id: lecture.course.id, id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
         expect(response).to be_successful
       end
     end
@@ -184,12 +171,12 @@ RSpec.describe LecturesController, type: :controller do
     end
     it "destroys the requested lecture" do
       expect {
-        delete :destroy, params: {course_id: @lecture.course.id, id: @lecture.to_param }, session: valid_session
+        delete :destroy, params: { course_id: @lecture.course.id, id: @lecture.to_param }, session: valid_session
       }.to change(Lecture, :count).by(-1)
     end
 
     it "redirects to the lectures list" do
-      delete :destroy, params: {course_id: @lecture.course.id, id: @lecture.to_param }, session: valid_session
+      delete :destroy, params: { course_id: @lecture.course.id, id: @lecture.to_param }, session: valid_session
       expect(response).to redirect_to(course_path)
     end
   end
@@ -202,13 +189,13 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to the lectures overview for students" do
       login_student
-      post :join_lecture, params: {course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
       expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
     end
 
     it "redirects to overview for other lecturers" do
       login_lecturer
-      post :join_lecture, params: {course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
       expect(response).to redirect_to(course_path(@lecture.course.id))
     end
   end

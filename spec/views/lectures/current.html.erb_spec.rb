@@ -24,14 +24,14 @@ RSpec.describe "lectures/current", type: :view do
 
   it "renders a list of aöll running lectures" do
     login_student
-    visit current_lectures_path(course_id:@course.id)
+    visit current_lectures_path(course_id: @course.id)
     expect(page).to have_css("td", text: @lectures[0].name)
     expect(page).to_not have_css("td", text: @lectures[1].name)
   end
 
   it "provides a join button" do
     login_student
-    visit current_lectures_path(course_id:@course.id)
+    visit current_lectures_path(course_id: @course.id)
     have_selector("input[type=submit][value='Join']")
   end
 

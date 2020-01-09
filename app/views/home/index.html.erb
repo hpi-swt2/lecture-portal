@@ -7,68 +7,60 @@
     <%# fa_icon helper: https://github.com/bokmann/font-awesome-rails %>
     <%= link_to (fa_icon 'sign-in', text: 'Log-In'), new_user_session_path, class: 'btn btn-primary btn-lg' %>
     <%= link_to (fa_icon 'user-plus', text: 'Sign-Up'), new_user_registration_path, class: 'btn btn-secondary btn-lg' %>
-    <% if user_signed_in? && !@current_user.is_student %>
-      <%= link_to (fa_icon 'graduation-cap', text: 'New Course'), new_course_path, class: 'btn btn-secondary btn-lg' %>
-    <br>
-    <p class="lead">My Courses</p>
-      <table class="table .table-sm table-striped">
-      <% @courses.each do |course| %>
+    <% if user_signed_in? %>
+      <% if !@current_user.is_student %>
+        <%= link_to (fa_icon 'graduation-cap', text: 'New Course'), new_course_path, class: 'btn btn-secondary btn-lg' %>
+        <br>
+        <p class="lead">My Courses</p>
+        <table class="table .table-sm table-striped">
+          <% @courses.each do |course| %>
+            <tr>
+              <td><%= course.name %></td>
+              <td class="text-right">
+                <% if course.status == "open" %>
+                  <%= link_to 'View', course, {class:"btn btn-primary"} %>
+                <%end %>
+              </td>
+            </tr>
+          <% end %>
+        </table>
+      <% else %>
+        <p class="lead">My Courses</p>
+        <table class="table .table-sm table-striped">
+          <thead>
+          <tr>
+            <th class="col-sm-8"  scope="col">Name</th>
+            <th scope="col" colspan="3"></th>
+          </tr>
+          </thead>
 
-        <tr>
-          <td><%= course.name %></td>
+          <% @participating_courses.each do |course| %>
+            <tr>
+              <td><%= course.name %></td>
+              <td><%= button_to "View", course_path(id: course.id), :method => "get", class:"btn btn-primary" %></td>
+              <td><%= link_to "Leave", leave_course_path(id: course.id), method: :post, class:"btn btn-primary" %></td>
+            </tr>
+          <% end %>
+        </table>
 
-          <td class="text-right">
-            <% if course.status == "open" %>
-              <%= link_to 'View', course, {class:"btn btn-primary"} %>
-            <%end %>
-          </td>
-        </tr>
+        <p class="lead">Available Courses</p>
+        <table class="table .table-sm table-striped">
+          <thead>
+          <tr>
+            <th class="col-sm-8" scope="col">Name</th>
+            <th scope="col" colspan="3"></th>
+          </tr>
+          </thead>
+          <% @open_courses.each do |course| %>
+            <tr>
+              <td><%= course.name %></td>
+              <td><%#= button_to "Join", {action: "join_course", params: {id: course.id}}, {class:"btn btn-primary"} %></td>
+              <td><%= link_to "Join", join_course_path(id: course.id), method: :post, class:"btn btn-primary" %></td>
+            </tr>
+          <% end %>
+        </table>
       <% end %>
-      </table>
     <% end %>
 
-    <% if user_signed_in? && @current_user.is_student %>
-      <p class="lead">My Courses</p>
-      <table class="table .table-sm table-striped">
-        <thead>
-        <tr>
-          <th class="col-sm-8"  scope="col">Name</th>
-        </tr>
-        </thead>
-
-        <% @participating_courses.each do |course| %>
-
-          <tr>
-            <td><%= course.name %></td>
-            <td><%= button_to "View", course_path(id: course.id), :method => "get", class:"btn btn-primary" %></td>
-            <td><%= link_to "Leave", leave_course_path(id: course.id), method: :post, class:"btn btn-primary" %></td>
-          </tr>
-
-
-        <% end %>
-      </table>
-
-      <p class="lead">Available Courses</p>
-      <table class="table .table-sm table-striped">
-        <thead>
-        <tr>
-          <th class="col-sm-8" scope="col">Name</th>
-        </tr>
-        </thead>
-        <% @open_courses.each do |course| %>
-
-          <tr>
-            <td><%= course.name %></td>
-            <td><%#= button_to "Join", {action: "join_course", params: {id: course.id}}, {class:"btn btn-primary"} %></td>
-            <td><%= link_to "Join", join_course_path(id: course.id), method: :post, class:"btn btn-primary" %></td>
-          </tr>
-
-
-        <% end %>
-      </table>
-    <% end %>
-
-
-
-  </p>
-</div>
+    </p>
+    </div>

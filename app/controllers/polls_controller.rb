@@ -15,7 +15,7 @@ class PollsController < ApplicationController
   # GET /polls/new
   def new
     if current_user.is_student
-      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id:@lecture.id), notice: "You are a student. You can not create polls."
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You are a student. You can not create polls."
     else
       @poll = @lecture.polls.build
     end
@@ -24,7 +24,7 @@ class PollsController < ApplicationController
   # GET /polls/1/edit
   def edit
     if current_user.is_student
-      redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id:@lecture.id, poll:@poll)
+      redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll)
     end
   end
 
@@ -38,7 +38,7 @@ class PollsController < ApplicationController
       @poll.poll_options.build(description: poll_option_description.to_param)
     end
     if @poll.save
-      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id:@lecture.id), notice: "Poll was successfully created."
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully created."
     else
       render :new
     end
@@ -56,7 +56,7 @@ class PollsController < ApplicationController
         @poll.poll_options.build(description: poll_option_description.to_param)
       end
       if @poll.save
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id:@lecture.id), notice: "Poll was successfully updated."
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully updated."
       else
         render :edit
       end
@@ -68,7 +68,7 @@ class PollsController < ApplicationController
   # DELETE /polls/1
   def destroy
     @poll.destroy
-    redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id:@lecture.id), notice: "Poll was successfully destroyed."
+    redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully destroyed."
   end
 
   private

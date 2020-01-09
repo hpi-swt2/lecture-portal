@@ -1,6 +1,7 @@
 class CoursesController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_course, only: [:show, :edit, :update, :destroy]
-  # before_action :validate_owner, only: [:show, :edit]
+  before_action :validate_owner, only: [:show, :edit]
 
   # GET /courses
   def index
@@ -10,11 +11,6 @@ class CoursesController < ApplicationController
   # GET /courses/1
   def show
     @current_user = current_user
-=begin
-    if (current_user.is_student)
-      redirect_to current_lectures_path(@course)
-    end
-=end
   end
 
   # GET /courses/new
@@ -67,7 +63,7 @@ class CoursesController < ApplicationController
     @course.leave_course(current_user)
     @course.save
     current_user.save
-    redirect_to root_path, notice: "You successfully leaved the course."
+    redirect_to root_path, notice: "You successfully left the course."
   end
 
 
@@ -84,7 +80,7 @@ class CoursesController < ApplicationController
 
     def validate_owner
       if @course.creator != current_user
-        redirect_to lectures_url, notice: "You can only access your own courses."
+        redirect_to courses_url, notice: "You can only access your own courses."
       end
     end
 end

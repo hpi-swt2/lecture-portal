@@ -40,8 +40,17 @@ RSpec.describe CoursesController, type: :controller do
   # CoursesController. Be sure to keep this updated too.
   let(:valid_session) { {} }
 
+  before(:each) do |test|
+    if test.metadata[:logged_student]
+      login_student
+    end
+    if test.metadata[:logged_lecturer]
+      login_lecturer
+    end
+  end
+
   describe "GET #index" do
-    it "returns a success response" do
+    it "returns a success response", :logged_student do
       Course.create! valid_attributes
       get :index, params: {}, session: valid_session
       expect(response).to be_successful
@@ -49,7 +58,7 @@ RSpec.describe CoursesController, type: :controller do
   end
 
   describe "GET #show" do
-    it "returns a success response" do
+    it "returns a success response", :logged_student do
       course = Course.create! valid_attributes
       get :show, params: { id: course.to_param }, session: valid_session
       expect(response).to be_successful
@@ -57,14 +66,14 @@ RSpec.describe CoursesController, type: :controller do
   end
 
   describe "GET #new" do
-    it "returns a success response" do
+    it "returns a success response", :logged_lecturer do
       get :new, params: {}, session: valid_session
       expect(response).to be_successful
     end
   end
 
   describe "GET #edit" do
-    it "returns a success response" do
+    it "returns a success response", :logged_lecturer do
       course = Course.create! valid_attributes
       get :edit, params: { id: course.to_param }, session: valid_session
       expect(response).to be_successful
@@ -151,6 +160,9 @@ RSpec.describe CoursesController, type: :controller do
   end
 
   def login_student(user = FactoryBot.create(:user, :student))
+    sign_in(user, scope: :user)
+  end
+  def login_lecturer(user = FactoryBot.create(:user, :lecturer))
     sign_in(user, scope: :user)
   end
 end

@@ -12,8 +12,8 @@ describe "The current lectures page", type: :feature do
     end
 
     it "should be viewable for a course" do
-      visit current_lectures_path(course_id:@course.id)
-      expect(page).to have_current_path(current_lectures_path(course_id:@course.id))
+      visit current_lectures_path(course_id: @course.id)
+      expect(page).to have_current_path(current_lectures_path(course_id: @course.id))
     end
 
     it "should only show active lectures" do
@@ -23,14 +23,14 @@ describe "The current lectures page", type: :feature do
       @lectures[1].update(status: "running", name: "Other name")
       @lectures[1].update(course: @course)
 
-      visit current_lectures_path(course_id:@course.id)
+      visit current_lectures_path(course_id: @course.id)
       expect(page).to_not have_css("td", text: @lectures[0].name)
       expect(page).to have_css("td", text: @lectures[1].name)
     end
 
     it "clicking the join button adds the student to the lecture" do
       @lecture = FactoryBot.create(:lecture, status: "running", course: @course)
-      visit current_lectures_path(course_id:@course.id)
+      visit current_lectures_path(course_id: @course.id)
       expect(@lecture.participating_students.length).to be 0
       click_on("Join")
       @lecture.reload
@@ -47,8 +47,8 @@ describe "The current lectures page", type: :feature do
     end
 
     it "should not be viewable" do
-      visit current_lectures_path(course_id:@course.id)
-      expect(page).to_not have_current_path(current_lectures_path(course_id:@course.id))
+      visit current_lectures_path(course_id: @course.id)
+      expect(page).to_not have_current_path(current_lectures_path(course_id: @course.id))
     end
   end
 end

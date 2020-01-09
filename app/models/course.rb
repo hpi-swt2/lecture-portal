@@ -6,7 +6,7 @@ class Course < ApplicationRecord
   enum status: { open: "open", closed: "closed" }
 
   def join_course(student)
-    if !self.participating_students.include?(student)
+    unless self.participating_students.include?(student)
       self.participating_students << student
     end
   end

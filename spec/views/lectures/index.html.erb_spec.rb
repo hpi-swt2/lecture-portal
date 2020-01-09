@@ -9,14 +9,14 @@ RSpec.describe "lectures/index", type: :view do
         enrollment_key: "Enrollment Key",
         status: "created",
         lecturer: FactoryBot.create(:user, :lecturer, email: "hp@hpi.de"),
-        course:@course
+        course: @course
       ),
       Lecture.create!(
         name: "Name",
         enrollment_key: "Enrollment Key",
         status: "created",
         lecturer: FactoryBot.create(:user, :lecturer, email: "cm@hpi.de"),
-        course:@course
+        course: @course
       )
     ])
   end

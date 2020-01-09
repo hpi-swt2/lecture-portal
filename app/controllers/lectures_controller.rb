@@ -8,9 +8,9 @@ class LecturesController < ApplicationController
   before_action :require_student, only: [:join_lecture]
 
   # GET /lectures
-  #def index
+  # def index
   #  @lectures = Lecture.where(lecturer: current_user)
-  #end
+  # end
 
   # GET /lectures/1
   def show
@@ -126,7 +126,7 @@ class LecturesController < ApplicationController
       end
     end
 
-  def get_course
-    @course = Course.find(params[:course_id])
-  end
+    def get_course
+      @course = Course.find(params[:course_id])
+    end
 end

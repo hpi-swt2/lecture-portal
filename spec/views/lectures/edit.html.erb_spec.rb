@@ -15,7 +15,7 @@ RSpec.describe "lectures/edit", type: :view do
   it "renders the edit lecture form" do
     render
 
-    assert_select "form[action=?][method=?]", course_lecture_path(course_id:@course.id, id:@lecture), "post" do
+    assert_select "form[action=?][method=?]", course_lecture_path(course_id: @course.id, id: @lecture), "post" do
       assert_select "input[name=?]", "lecture[name]"
 
       assert_select "input[name=?]", "lecture[enrollment_key]"
@@ -33,5 +33,4 @@ RSpec.describe "lectures/edit", type: :view do
 
     assert_select "[data-method=delete]"
   end
-
 end

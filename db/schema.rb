@@ -24,11 +24,6 @@ ActiveRecord::Schema.define(version: 2019_12_23_173438) do
     t.index ["lecture_id"], name: "index_courses_on_lecture_id"
   end
 
-  create_table "courses_lectures", id: false, force: :cascade do |t|
-    t.integer "course_id", null: false
-    t.integer "lecture_id", null: false
-  end
-
   create_table "courses_users", id: false, force: :cascade do |t|
     t.integer "course_id", null: false
     t.integer "user_id", null: false
@@ -91,7 +86,27 @@ ActiveRecord::Schema.define(version: 2019_12_23_173438) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "resolved", default: false, null: false
+    t.integer "lecture_id"
     t.index ["author_id"], name: "index_questions_on_author_id"
+    t.index ["lecture_id"], name: "index_questions_on_lecture_id"
+  end
+
+  create_table "questions_users", id: false, force: :cascade do |t|
+    t.integer "question_id", null: false
+    t.integer "user_id", null: false
+    t.index ["question_id", "user_id"], name: "index_questions_users_on_question_id_and_user_id"
+    t.index ["user_id", "question_id"], name: "index_questions_users_on_user_id_and_question_id"
+  end
+
+  create_table "uploaded_files", force: :cascade do |t|
+    t.string "content_type"
+    t.string "filename"
+    t.binary "data"
+    t.string "allowsUpload_type"
+    t.integer "allowsUpload_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
   end
 
   create_table "users", force: :cascade do |t|
