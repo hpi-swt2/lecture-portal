@@ -16,32 +16,25 @@ const PollResultPieChart: React.FunctionComponent<{}> = observer(() => {
     const { poll_options } = useInjectPollOptions(mapStore);
     const allVotes = poll_options.poll_options.map(option => option.votes).reduce((a, b) => a + b, 0);
     allVotes = (allVotes === 0) ? 1 : allVotes;
-    const poll_data = poll_options.poll_options.map(option => ({y: (option.votes / allVotes), label: option.description}));
+    const poll_data = poll_options.poll_options.map(option => ({y: (option.votes / allVotes).toFixed(2) * 100, label: option.description}));
     const options = {
-        // exportEnabled: true,
+        exportEnabled: true,
         animationEnabled: true,
-        //title: {
-        //    text: ""
-        //},
         data: [{
             type: "pie",
             startAngle: 0,
-            //toolTipContent: "<b>{label}</b>: {y}%",
-            //showInLegend: "true",
-            //legendText: "{label}",
+            toolTipContent: "<b>{label}</b>: {y}%",
             indexLabelFontSize: 16,
             indexLabel: "{label} - {y}%",
             dataPoints: poll_data
         }]
     }
-    
 
     return (
         <div>
 			<CanvasJSChart options = {options}
-				/* onRef={ref => this.chart = ref} */
 			/>
-		    {/*You can get reference to the chart instance as shown above using onRef. This allows you to access all chart properties and methods*/}
+		    {}
 	    </div>
     );
 });

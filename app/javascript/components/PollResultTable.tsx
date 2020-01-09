@@ -27,7 +27,7 @@ const PollResultTable: React.FunctionComponent<{}> = observer(() => {
                     <tr>
                         <td>{option.description}</td>
                         <td className="text-right">{option.votes}</td>
-                        <td className="text-right"> {(option.votes / allVotes).toFixed(2)}</td>
+                        <td className="text-right"> {(option.votes / allVotes).toFixed(2) * 100} %</td>
                     </tr>
                 ))}
                 </tbody>
