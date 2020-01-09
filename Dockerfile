@@ -17,6 +17,8 @@ ENV RAILS_ENV=production
 RUN gem install rake -v 13.0.0
 RUN gem install bundler -v 2.0.2
 ENV BUNDLER_VERSION 2.0.2
+# see https://github.com/sass/sassc-ruby/issues/146
+RUN gem install sassc -- --disable-march-tune-native
 RUN bundle install --without development test
 
 COPY . .

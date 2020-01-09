@@ -8,6 +8,7 @@ class LecturesController < ApplicationController
 
   # GET /lectures
   def index
+    @is_student = current_user.is_student
     @lectures = Lecture.where(lecturer: current_user)
     @running_lectures = @lectures.where(status: "running")
     @created_lectures = @lectures.where(status: "created")
@@ -28,6 +29,9 @@ class LecturesController < ApplicationController
 
   # GET /lectures/1/edit
   def edit
+    if @lecture.status != "created"
+      redirect_to lectures_url, notice: "This page is only available before a lecture was started. Use the settings tab instead."
+    end
   end
 
   # POST /lectures
@@ -123,7 +127,7 @@ class LecturesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def lecture_params
-      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled)
+      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled, :description)
     end
 
     def require_lecturer
