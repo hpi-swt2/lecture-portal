@@ -66,7 +66,7 @@
   <% end %>
 
   <%= link_to 'Edit', edit_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %> |
-  <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id)) %> |
+  <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %> |
   <%= link_to 'Back', course_lecture_polls_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %>
 
 <% end %>

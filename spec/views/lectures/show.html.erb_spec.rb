@@ -39,7 +39,7 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_css("#settings-tab")
     end
     it "renders end button" do
-      expect(rendered).to have_css("[value='End']")
+      expect(rendered).to have_link("End")
     end
     it "renders a leave lecture button" do
       expect(rendered).not_to have_css("[value='Leave Lecture']")
@@ -60,7 +60,7 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).not_to have_css("[value='End']")
     end
     it "renders a leave lecture button" do
-      expect(rendered).to have_css("[value='Leave Lecture']")
+      expect(rendered).to have_link("Leave Lecture")
     end
   end
 

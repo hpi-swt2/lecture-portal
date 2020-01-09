@@ -96,13 +96,13 @@ RSpec.describe LecturesController, type: :controller do
         lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "running")
         login_lecturer(lecture.lecturer)
         get :edit, params: {course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
-        expect(response).to redirect_to(course_lectures_path(course_id: lecture.course.id, id: lecture.id))
+        expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
       end
       it "ended lecture redirects to overview" do
         lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "ended")
         login_lecturer(lecture.lecturer)
         get :edit, params: {course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
-        expect(response).to redirect_to(course_lectures_path(course_id: lecture.course.id, id: lecture.id))
+        expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
       end
     end
     it "returns a success response for lecturer" do
@@ -130,6 +130,7 @@ RSpec.describe LecturesController, type: :controller do
       end
 
       it "creates a new Lecture with description", :logged_lecturer do
+        course = FactoryBot.create(:course)
         expect {
           post :create, params: { course_id: (course.id), lecture: valid_attributes_with_description }, session: valid_session
         }.to change(Lecture, :count).by(1)
@@ -238,7 +239,7 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to the lectures overview" do
       post :leave_lecture, params: {course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
-      expect(response).to redirect_to(current_lectures_path)
+      expect(response).to redirect_to(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
     end
   end
 

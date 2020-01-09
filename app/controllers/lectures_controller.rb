@@ -11,6 +11,7 @@ class LecturesController < ApplicationController
   def index
     @is_student = current_user.is_student
     @lectures = Lecture.where(lecturer: current_user)
+
     @running_lectures = @lectures.where(status: "running")
     @created_lectures = @lectures.where(status: "created")
     @ended_lectures = @lectures.where(status: "ended")

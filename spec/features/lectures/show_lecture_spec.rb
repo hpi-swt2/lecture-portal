@@ -20,7 +20,7 @@ describe "The show lecture page", type: :feature do
     it "should have an end button if the lecture is running" do
       @lecture.update(status: "running")
       visit(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
-      expect(page).to have_selector("input[type=submit][value='End']")
+      expect(page).to have_link("End")
     end
 
   it "should end the lecture if the end button is clicked" do
@@ -49,7 +49,7 @@ end
     it "students should be able to leave a lecture" do
       @lecture.update(status: "running")
       @lecture.join_lecture(@student)
-      visit(course_lecture_path(@course, @lecture))
+      visit(course_lecture_path(@lecture.course, @lecture))
       expect(@lecture.participating_students.length).to be 1
       expect(@lecture.participating_students[0]).to eq @student
       @lecture.reload
