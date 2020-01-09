@@ -116,7 +116,7 @@ class AnswerOption extends React.Component<
       answers
     };
     const response = await axios.post(
-      `/courses/`${course_id}`/lectures/${lecture_id}/polls/${poll_id}/save_answers`,
+      `/lectures/${lecture_id}/polls/${poll_id}/save_answers`,
       data
     );
     const newUrl = response.request.responseURL;
