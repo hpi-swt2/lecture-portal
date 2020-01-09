@@ -32,7 +32,7 @@
       <table class="table .table-sm table-striped">
         <thead>
         <tr>
-          <th scope="col">Name</th>
+          <th class="col-sm-8"  scope="col">Name</th>
         </tr>
         </thead>
 
@@ -41,8 +41,7 @@
           <tr>
             <td><%= course.name %></td>
             <td><%= button_to "View", course_path(id: course.id), :method => "get", class:"btn btn-primary" %></td>
-            <td><%= link_to "View", course_path(id: course.id) %></td>
-            <td><%= link_to "Leave", leave_course_path(id: course.id), method: :post %></td>
+            <td><%= link_to "Leave", leave_course_path(id: course.id), method: :post, class:"btn btn-primary" %></td>
           </tr>
 
 
@@ -53,7 +52,7 @@
       <table class="table .table-sm table-striped">
         <thead>
         <tr>
-          <th scope="col">Name</th>
+          <th class="col-sm-8" scope="col">Name</th>
         </tr>
         </thead>
         <% @open_courses.each do |course| %>
@@ -61,7 +60,7 @@
           <tr>
             <td><%= course.name %></td>
             <td><%#= button_to "Join", {action: "join_course", params: {id: course.id}}, {class:"btn btn-primary"} %></td>
-            <td><%= link_to "Join", join_course_path(id: course.id), method: :post %></td>
+            <td><%= link_to "Join", join_course_path(id: course.id), method: :post, class:"btn btn-primary" %></td>
           </tr>
 
 
