@@ -1,10 +1,10 @@
 <%= form_with(model: [@lecture.course, @lecture, poll], local: true) do |form| %>
   <% if poll.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(poll.errors.count, "error") %> prohibited this poll from being saved:</h2>
+      <h2><%= pluralize(@poll.errors.count, "error") %> prohibited this poll from being saved:</h2>
 
       <ul>
-      <% poll.errors.full_messages.each do |message| %>
+      <% @poll.errors.full_messages.each do |message| %>
         <li><%= message %></li>
       <% end %>
       </ul>
@@ -27,7 +27,7 @@
   </div>
 
   <div class="field">
-    <%= react_component("PollOption", poll.poll_options.length>1 ? {options: poll.poll_options.map{|option| option.description}} : {options: ["", ""]}) %>
+    <%= react_component("PollOption", @poll.poll_options.length>1 ? {options: @poll.poll_options.map{|option| option.description}} : {options: ["", ""]}) %>
   </div>
 
   <div class="actions">

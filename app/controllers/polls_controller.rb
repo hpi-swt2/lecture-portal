@@ -1,20 +1,25 @@
 class PollsController < ApplicationController
-  before_action :set_poll, only: [:show, :edit, :update, :destroy]
+  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start]
   before_action :get_lecture
   before_action :authenticate_user!
+  before_action :set_is_student
 
   # GET /polls
   def index
     @polls = @lecture.polls
+    if @is_student
+      render :index_students
+    end
   end
 
   # GET /polls/1
   def show
+    get_users_answers
   end
 
   # GET /polls/new
   def new
-    if current_user.is_student
+    if @is_student
       redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You are a student. You can not create polls."
     else
       @poll = @lecture.polls.build
@@ -23,8 +28,45 @@ class PollsController < ApplicationController
 
   # GET /polls/1/edit
   def edit
-    if current_user.is_student
-      redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll)
+    if @is_student
+      if !@poll.is_active
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "This poll is closed."
+      else
+        get_users_answers
+        render :answer
+      end
+    end
+  end
+
+  # GET /polls/1/stop
+  def stop_start
+    if @poll.is_active
+      if @poll.update(is_active: false)
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "You stopped the poll!"
+      else
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "Stopping the poll did not work :("
+      end
+    else
+      if @poll.update(is_active: true)
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "You started the poll!"
+      else
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "Starting the poll did not work :("
+      end
+    end
+  end
+
+  # POST /polls/id/save_answers
+  def save_answers
+    answer_params
+    current_poll_answers = params[:answers]
+    poll = Poll.find(params[:id])
+    if !poll.is_active
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "This poll is closed, you cannot answer it."
+    else
+      Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
+      save_given_answers(current_poll_answers, poll)
+      @poll.gather_vote_results
+      redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "You answered successfully ;-)"
     end
   end
 
@@ -49,7 +91,6 @@ class PollsController < ApplicationController
     current_poll_params = poll_params
     if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
-      PollOption.where(poll_id: @poll.id).destroy_all
       poll_options = current_poll_params[:poll_options]
       for poll_option in poll_options do
         poll_option_description = poll_option.values_at(1)
@@ -84,5 +125,26 @@ class PollsController < ApplicationController
 
     def get_lecture
       @lecture = Lecture.find(params[:lecture_id])
+    end
+
+    def answer_params
+      params.require(:poll).permit(:answers)
+    end
+
+    def get_users_answers
+      @answers = Answer.where(poll_id: @poll.id, student_id: current_user.id)
+    end
+
+    def set_is_student
+      @is_student = current_user.is_student
+    end
+
+    def save_given_answers(current_poll_answers, poll)
+      current_poll_answers.each { |answer|
+        if answer[:value] == true
+          current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
+          current_answer.save
+        end
+      }
     end
 end

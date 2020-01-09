@@ -30,4 +30,11 @@ RSpec.describe User, type: :model do
     @user.participating_lectures << lecture1
     @user.participating_lectures << lecture2
   end
+
+  it "can have upvoted questions" do
+    question1 = FactoryBot.create(:question, author: @user)
+    question2 = FactoryBot.create(:question, author: @user)
+    @user.upvoted_questions << question1
+    @user.upvoted_questions << question2
+  end
 end

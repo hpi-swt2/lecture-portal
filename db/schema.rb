@@ -12,6 +12,15 @@
 
 ActiveRecord::Schema.define(version: 2019_12_23_173438) do
 
+  create_table "answers", force: :cascade do |t|
+    t.integer "student_id"
+    t.integer "option_id"
+    t.integer "poll_id"
+    t.index ["option_id"], name: "index_answers_on_option_id"
+    t.index ["poll_id"], name: "index_answers_on_poll_id"
+    t.index ["student_id"], name: "index_answers_on_student_id"
+  end
+
   create_table "courses", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -76,7 +85,7 @@ ActiveRecord::Schema.define(version: 2019_12_23_173438) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "lecture_id"
-    t.boolean "is_active", default: false, null: false
+    t.boolean "is_active", default: true, null: false
     t.index ["lecture_id"], name: "index_polls_on_lecture_id"
   end
 

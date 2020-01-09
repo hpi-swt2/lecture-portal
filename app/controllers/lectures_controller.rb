@@ -1,11 +1,20 @@
 class LecturesController < ApplicationController
   before_action :authenticate_user!
   before_action :get_course
-  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture]
+  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :validate_joined_user_or_owner, only: [:show]
-  before_action :require_lecturer, except: [:current, :join_lecture, :show]
-  before_action :require_student, only: [:join_lecture]
+  before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show]
+  before_action :require_student, only: [:join_lecture, :leave_lecture]
+
+  # GET /lectures
+  def index
+    @is_student = current_user.is_student
+    @lectures = Lecture.where(lecturer: current_user)
+    @running_lectures = @lectures.where(status: "running")
+    @created_lectures = @lectures.where(status: "created")
+    @ended_lectures = @lectures.where(status: "ended")
+  end
 
   # GET courses/:course_id/lectures/1
   def show
@@ -20,6 +29,9 @@ class LecturesController < ApplicationController
 
   # GET courses/:course_id/lectures/1/edit
   def edit
+    if @lecture.status != "created"
+      redirect_to lectures_url, notice: "This page is only available before a lecture was started. Use the settings tab instead."
+    end
   end
 
   # POST courses/:course_id/lectures
@@ -59,9 +71,13 @@ class LecturesController < ApplicationController
   end
 
   def start_lecture
-    @lecture.set_active
-    @lecture.save
-    redirect_to course_lecture_path(@course, @lecture)
+    if @lecture.status != "ended"
+      @lecture.set_active
+      @lecture.save
+      redirect_to course_lecture_path(@course, @lecture)
+    else
+      redirect_to course_lecture_path(@course, @lecture), notice: "Can't restart an ended lecture."
+    end
   end
 
   def join_lecture
@@ -69,6 +85,11 @@ class LecturesController < ApplicationController
     @lecture.save
     current_user.save
     redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
+  end
+
+  def leave_lecture
+    @lecture.leave_lecture(current_user)
+    redirect_to course_lecture_path(@course, @lecture), notice: "You successfully left the lecture."
   end
 
   def end_lecture
@@ -106,9 +127,8 @@ class LecturesController < ApplicationController
       end
     end
 
-    # Only allow a trusted parameter "white list" through.
     def lecture_params
-      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled)
+      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled, :description)
     end
 
     def require_lecturer
