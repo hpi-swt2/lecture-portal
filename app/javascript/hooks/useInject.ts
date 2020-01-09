@@ -3,6 +3,7 @@ import {UpdatesRootStoreModel} from "../stores/UpdatesRootStore";
 import {useQuestionsStore} from "../utils/QuestionsUtils";
 import {useUpdatesStore} from "../utils/UpdatesUtils";
 import {ComprehensionRootStoreModel} from "../stores/ComprehensionRootStore";
+import {useComprehensionStore} from "../utils/ComprehensionUtils";
 
 export type QuestionsMapStore<T> = (store: QuestionsRootStoreModel) => T
 export type UpdatesMapStore<T> = (store: UpdatesRootStoreModel) => T
@@ -17,6 +18,6 @@ export const useInjectUpdates = <T>(mapStore: UpdatesMapStore<T>) => {
     return mapStore(store)
 };
 export const useInjectComprehension = <T>(mapStore: ComprehensionMapStore<T>) => {
-    const store = useUpdatesStore();
+    const store = useComprehensionStore();
     return mapStore(store)
 };

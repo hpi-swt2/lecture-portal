@@ -15,11 +15,11 @@ const getBaseRequestUrl = (lectureId: number): string => {
 };
 
 const loadComprehensionState = (rootStore: ComprehensionRootStoreModel) => {
-  fetch(getBaseRequestUrl(rootStore.lecture_id) + `comprehension_stamps`)
+  /*fetch(getBaseRequestUrl(rootStore.lecture_id) + `comprehension_stamps`)
     .then(res => res.json())
     .then(comprehensionState => {
       //rootStore
-    });
+    });*/
 };
 
 

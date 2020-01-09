@@ -13,7 +13,7 @@ const ComprehensionRootStore = types.model("ComprehensionRootStore", {
 
     results: types.optional(types.array(types.number), []),
     participants: types.optional(types.integer, 0),
-    last_updated: types.optional(types.Date, null)
+    last_updated: types.optional(types.Date, () => new Date())
 }).actions(self => ({
     setUserId(user_id: number) {
         self.user_id = user_id;
@@ -23,6 +23,10 @@ const ComprehensionRootStore = types.model("ComprehensionRootStore", {
     },
     setLectureId(lecture_id: number) {
         self.lecture_id = lecture_id
+    },
+
+    setParticipants(participants: number) {
+        self.participants = participants
     }
 }));
 

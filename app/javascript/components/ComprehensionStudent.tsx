@@ -12,7 +12,7 @@ const ComprehensionStudent: React.FunctionComponent<{}> = observer(() => {
 
     return (
         <div>
-            <p>Last Updated: {last_updated}</p>
+            <p>Last Updated: {last_updated.toString()}</p>
             <div className="comprehensionBox">
 
             </div>

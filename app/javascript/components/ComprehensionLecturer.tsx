@@ -21,7 +21,7 @@ const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
 
     return (
         <div>
-            <p>Last Updated: {last_updated}</p>
+            <p>Last Updated: {last_updated.toString()}</p>
             <p>{participants} Participants</p>
             <div className="comprehensionResults">
                 <canvas ref={canvasRef} width={"100%"} height={"100%"} />
