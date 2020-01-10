@@ -23,7 +23,6 @@ describe "Uploading files", type: :feature do
       @lecture.reload
       expect(@lecture.uploaded_files).to include(@file)
     end
-
   end
   context "to a course" do
     before :each do
@@ -44,7 +43,5 @@ describe "Uploading files", type: :feature do
       @course.reload
       expect(@course.uploaded_files).to include(@file)
     end
-
-
   end
 end
