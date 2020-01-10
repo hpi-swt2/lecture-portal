@@ -18,7 +18,8 @@ Rails.application.routes.draw do
 
     resources :feedbacks
 
-    get "/comp", to: "lectures#update_comprehension_stamp", on: :member
+    get "comprehension", to: "lectures#get_comprehension", on: :member
+    put "comprehension", to: "lectures#update_comprehension_stamp", on: :member
 
     resources :questions, only: [:index, :create] do
       post "upvote", on: :member

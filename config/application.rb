@@ -19,8 +19,8 @@ module LecturePortal
     # Schedule a check for aging of comprehension stamps
     config.after_initialize do
       scheduler = Rufus::Scheduler.new
-      scheduler.every '10s' do
-        LecturesController.eliminateComprehensionStamps
+      scheduler.every '30s' do
+        Lecture.eliminateComprehensionStamps
       end
     end
 

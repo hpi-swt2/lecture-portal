@@ -2,10 +2,10 @@ require 'rufus-scheduler'
 
 class LecturesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture, :update_comprehension_stamp]
+  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture, :update_comprehension_stamp, :get_comprehension]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
-  before_action :validate_joined_user_or_owner, only: [:show, :update_comprehension_stamp]
-  before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show, :update_comprehension_stamp]
+  before_action :validate_joined_user_or_owner, only: [:show, :update_comprehension_stamp, :get_comprehension]
+  before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show, :update_comprehension_stamp, :get_comprehension]
   before_action :require_student, only: [:join_lecture, :leave_lecture, :update_comprehension_stamp]
 
   # GET /lectures
@@ -101,11 +101,14 @@ class LecturesController < ApplicationController
     @lecture.lecture_comprehension_stamps << LectureComprehensionStamp.new(:user => current_user, :status => params[:status])
   end
 
-  def LecturesController.eliminateComprehensionStamps
-    puts "Do elimination checks!"
-    Lecture.where(status: "running").each { |lecture|
-      lecture.eliminateOwnComprehensionStamps
-    }
+  def get_comprehension
+    if current_user.is_student
+      stamp = @lecture.lecture_comprehension_stamps.where(user: current_user).max { |a,b| a.timestamp <=> b.timestamp } #TODO handle no stamps
+      data = { status: stamp.status, last_update: stamp.timestamp }
+    else
+      data = @lecture.getComprehensionStatus
+    end
+    render json: data
   end
 
   private
@@ -135,16 +138,6 @@ class LecturesController < ApplicationController
       if !current_user.is_student
         redirect_to lectures_url, notice: "Only students can join a lecture."
       end
-    end
-
-    def getComprehensionStatus
-      status = Array.new(LectureComprehensionStamp.number_of_states, 0)
-      i=0
-      loop do 
-        status[i] = @lecture.lecture_comprehension_stamps.where(status: i).count
-      end
-      last_update = @lecture.lecture_comprehension_stamps.max { |a,b| a.timestamp <=> b.timestamp }
-      return {status: status, last_update: last_update}
     end
 
     # Only allow a trusted parameter "white list" through.
