@@ -49,9 +49,8 @@ class UploadedFilesController < ApplicationController
 
 
   private
-
-  # Only allow a trusted parameter "white list" through.
-  def uploaded_file_params
-    params.require(:uploaded_file).permit(:attachment, :lecture, :link)
-  end
+    # Only allow a trusted parameter "white list" through.
+    def uploaded_file_params
+      params.require(:uploaded_file).permit(:attachment, :lecture, :link)
+    end
 end
