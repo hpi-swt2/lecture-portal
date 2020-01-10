@@ -1,12 +1,10 @@
 import React from "react";
 import { observer } from "mobx-react";
 import { QuestionModel } from "../stores/Question";
-import { resolveQuestionById, upvoteQuestionById } from "../utils/QuestionsUtils";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import useInject from "../hooks/useInject";
+import {useInjectQuestions} from "../hooks/useInject";
 
-const mapStore = ({ user_id, is_student }: QuestionsRootStoreModel) => ({
-    user_id,
+const mapStore = ({ is_student }: QuestionsRootStoreModel) => ({
     is_student
 });
 
@@ -15,23 +13,22 @@ type Props = {
 }
 
 const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
-    const { user_id, is_student } = useInject(mapStore);
+    const { is_student } = useInjectQuestions(mapStore);
 
-    const canQuestionBeUpvoted : boolean =
-        question.author_id != user_id && is_student;
-    const isQuestionAlreadyUpvoted : boolean =
-        question.already_upvoted && canQuestionBeUpvoted;
-    const canQuestionBeResolved : boolean =
-        user_id == question.author_id || !is_student;
+    const canQuestionBeUpvoted: boolean =
+        question.canBeUpvoted();
+    const isQuestionAlreadyUpvoted: boolean =
+        question.isAlreadyUpvoted();
+    const canQuestionBeResolved: boolean =
+        question.canBeResolved();
 
     const onResolveClick = _ => {
-        canQuestionBeResolved && resolveQuestionById(question.id)
+        canQuestionBeResolved && question.resolveClick()
     };
 
     const onUpvoteClick = _ => {
-        canQuestionBeUpvoted && upvoteQuestionById(question.id)
+        canQuestionBeUpvoted && question.upvoteClick()
     };
-
     return (
         <li key={question.id}>
             <div className={"questionUpvotes " + (!canQuestionBeUpvoted ? "disabled" : "") + (isQuestionAlreadyUpvoted ? " upvoted" : "")}>
@@ -42,10 +39,10 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
                 {question.content}
             </div>
 
-            { canQuestionBeResolved &&
+            {canQuestionBeResolved &&
                 <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg")} onClick={onResolveClick}>
                     mark as solved
-                </button> }
+                </button>}
         </li>
     );
 };

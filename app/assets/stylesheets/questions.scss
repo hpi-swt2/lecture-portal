@@ -17,6 +17,9 @@ form#questionForm {
 div.questionsList {
   clear: both;
   margin: 70px 0;
+  &.is_lecturer {
+    margin-top: 0;
+  }
   > .questionsFilter {
     margin-bottom: 15px;
     float: right;
@@ -37,7 +40,9 @@ div.questionsList {
         border-right: 10px solid transparent;
         border-top: 15px solid #888;
       }
-      &:active, &:hover, &:focus {
+      &:active,
+      &:hover,
+      &:focus {
         color: #000;
         &::after {
           border-top-color: #000;
@@ -54,7 +59,7 @@ div.questionsList {
       font-size: 36px;
     }
     > li {
-      display:flex;
+      display: flex;
       flex-direction: row;
       align-items: center;
       justify-content: space-between;
@@ -71,7 +76,9 @@ div.questionsList {
           border-left: 15px solid transparent;
           border-right: 15px solid transparent;
           border-bottom: 25px solid #999;
-          &:hover, &:focus, &:active {
+          &:hover,
+          &:focus,
+          &:active {
             border-bottom-color: #000;
           }
         }
@@ -89,7 +96,7 @@ div.questionsList {
         }
         &.disabled {
           > .arrow {
-            border-bottom-color: #EEE;
+            border-bottom-color: #eee;
             cursor: default !important;
           }
         }
@@ -104,10 +111,10 @@ div.questionsList {
         background-color: white;
         margin: 20px;
       }
-      > .btn-sm{
+      > .btn-sm {
         min-width: 110px;
       }
-      > .btn-lg{
+      > .btn-lg {
         min-width: 165px;
       }
     }
