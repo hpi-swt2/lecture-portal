@@ -1,18 +1,24 @@
 
-<p>
-  <strong>Title:</strong>
-  <%= @poll.title %>
-</p>
+<div id="pollInformation">
+  <p id="pollTitle">
+    <%= @poll.title %> <br>
+  </p>
 
-<p>
-  <strong>Is multiselect:</strong>
-  <%= @poll.is_multiselect %>
-</p>
+  <p class="pollStatusInformation">
+    <% if  @poll.is_multiselect? %>
+    Multiselect enabled
+    <% else %>
+    Multiselect disabled
+    <% end %>
+     |
+    <% if  @poll.is_active %>
+      Active
+    <% else %>
+      Inactive
+    <% end %>
+  </p>
+</div>
 
-<p>
-  <strong>Is active:</strong>
-  <%= @poll.is_active %>
-</p>
 
 <h3>Voting Results</h3>
   <div>

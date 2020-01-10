@@ -3,6 +3,8 @@ import {StoreProvider, createPollOptionsRootStore, initPollOptionsApp} from "../
 import PollResultTable from "./PollResultTable";
 import PollResultPieChart from "./PollResultPieChart";
 import PollResultBarChart from "./PollResultBarChart";
+import CanvasJSReact from "../utils/canvasjs/canvasjs.react";
+var CanvasJS = CanvasJSReact.CanvasJS;
 
 const rootStore = createPollOptionsRootStore();
 
@@ -17,6 +19,8 @@ const PollResultApp: React.FunctionComponent<IPollResultAppData> = ({ lecture_id
     rootStore.setPollId(poll_id);
     rootStore.setPollOptionIds(poll_option_ids);
     initPollOptionsApp(rootStore);
+
+    ResultAppClass.addColorSets();
 
     return (
         <StoreProvider value={rootStore}>
@@ -48,5 +52,27 @@ const PollResultApp: React.FunctionComponent<IPollResultAppData> = ({ lecture_id
         </StoreProvider>
     )
 };
+
+class ResultAppClass {
+    public static addColorSets() {
+        CanvasJS.addColorSet("grayShade",
+            [//colorSet Array
+                "#C4C4C4"
+            ]);
+
+        CanvasJS.addColorSet("applicationColorScheme",
+            [//colorSet Array
+                "#C4C4C4",
+                "#9b9b9b",
+                "#828282",
+                "#5b5b5b",
+                "#fcf6f1",
+                "#F2DCC8",
+                "#F2994A",
+                "#ef7e1a",
+                "#e07110"
+            ]);
+    }
+}
 
 export default PollResultApp;

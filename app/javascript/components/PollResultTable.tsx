@@ -2,6 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { PollOptionsRootStoreModel } from "../stores/PollOptionsRootStore";
 import {useInjectPollOptions} from "../hooks/useInject";
+import PollResultDataInitializer from "./PollResultDataInitializer";
 
 const mapStore = ({ poll_options }: PollOptionsRootStoreModel) => ({
     poll_options
@@ -9,8 +10,7 @@ const mapStore = ({ poll_options }: PollOptionsRootStoreModel) => ({
 
 const PollResultTable: React.FunctionComponent<{}> = observer(() => {
     const { poll_options } = useInjectPollOptions(mapStore);
-    let allVotes = poll_options.poll_options.map(option => option.votes).reduce((a, b) => a + b, 0);
-    allVotes = (allVotes === 0) ? 1 : allVotes;
+    const pollDataInitializer = new PollResultDataInitializer(poll_options);
 
         return (
             <table className="table .table-sm table-striped">
@@ -27,7 +27,7 @@ const PollResultTable: React.FunctionComponent<{}> = observer(() => {
                     <tr>
                         <td>{option.description}</td>
                         <td className="text-right">{option.votes}</td>
-                        <td className="text-right"> {(option.votes / allVotes).toFixed(2) * 100} %</td>
+                        <td className="text-right"> {pollDataInitializer.getVotePercentage(option.votes)} %</td>
                     </tr>
                 ))}
                 </tbody>
