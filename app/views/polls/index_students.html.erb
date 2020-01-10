@@ -17,8 +17,8 @@
       <td><%= poll.title %></td>
       <td><%= poll.is_multiselect %></td>
       <td><%= poll.is_active %></td>
-      <td><%= link_to 'Your answers', lecture_poll_path(@lecture, poll) %></td>
-      <td><%= link_to 'Answer', edit_lecture_poll_path(@lecture, poll) %></td>
+      <td><%= link_to 'Your answers', course_lecture_poll_path(@lecture.course.id, @lecture, poll) %></td>
+      <td><%= link_to 'Answer', edit_course_lecture_poll_path(@lecture.course.id, @lecture, poll) %></td>
     </tr>
     <% end %>
   </tbody>
@@ -26,4 +26,4 @@
 
 <br>
 
-<%= link_to 'Back to lecture', [@lecture] %>
+<%= link_to 'Back', course_lecture_path(course_id:@lecture.course.id, id:@lecture.id) %>
