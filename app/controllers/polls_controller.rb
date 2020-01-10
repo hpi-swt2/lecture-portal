@@ -1,5 +1,5 @@
 class PollsController < ApplicationController
-  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start]
+  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start, :answer]
   before_action :get_lecture
   before_action :authenticate_user!
   before_action :set_is_student
@@ -32,12 +32,21 @@ class PollsController < ApplicationController
   # GET /polls/1/edit
   def edit
     if @is_student
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Only lecturers can edit polls. :("
+    end
+  end
+
+  # GET /polls/1/answer
+  def answer
+    if @is_student
       if !@poll.is_active
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "This poll is closed."
       else
         get_users_answers
         render :answer
       end
+    else
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Only students can vote."
     end
   end
 

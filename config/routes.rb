@@ -15,6 +15,7 @@ Rails.application.routes.draw do
           patch :save_answers
           post :save_answers
           get :stop_start
+          get :answer
         end
       end
       resources :feedbacks

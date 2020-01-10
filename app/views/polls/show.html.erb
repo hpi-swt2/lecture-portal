@@ -37,10 +37,8 @@
     <thead>
     <tr>
       <th>Description</th>
-      <% if !@poll.is_active? %>
-        <th class="text-right">Votes</th>
-        <th class="text-right">Percentage</th>
-      <% end %>
+      <th class="text-right">Votes</th>
+      <th class="text-right">Percentage</th>
     </tr>
     </thead>
 
@@ -48,14 +46,12 @@
       <% for option in @poll.poll_options %>
         <tr>
         <td><%= option.description %></td>
-        <% if !@poll.is_active? %>
-          <td class="text-right">
-            <%= option.votes %>
-          </td>
-          <td class="text-right">
-            <%= (option.votes.to_f / PollOption.where(poll_id: @poll.id).sum(:votes)).round(2) %>
-          </td>
-        <% end %>
+        <td class="text-right">
+          <%= option.votes %>
+        </td>
+        <td class="text-right">
+          <%= (option.votes.to_f / PollOption.where(poll_id: @poll.id).sum(:votes)).round(2) %>
+        </td>
         </tr>
       <% end %>
     </tbody>
@@ -67,7 +63,7 @@
 
   <%= link_to 'Edit', edit_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %> |
   <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %> |
-  <%= link_to 'Back', course_lecture_polls_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %>
+  <%= link_to 'Back', course_lecture_polls_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %> |
 
 <% end %>
 
