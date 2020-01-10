@@ -14,7 +14,9 @@
   </head>
 
   <body>
-    <%= render "layouts/navbar" %>
+    <% if @display_nav_bar != false %>
+      <%= render "layouts/navbar" %>
+    <% end %>
     <%# Bootstrap container, https://getbootstrap.com/docs/4.0/layout/overview/ %>
     <main role="main" class="container mt-4">
       <% if notice %><div class="alert alert-success notice" role="alert"><%= notice %></div><% end %>
