@@ -15,6 +15,7 @@ const ComprehensionApp: React.FunctionComponent<IComprehensionAppProps> = ({ use
     rootStore.setUserId(user_id);
     rootStore.setIsStudent(is_student);
     rootStore.setLectureId(lecture_id);
+    rootStore.setActiveStamp(2);
     initComprehensionApp(rootStore);
     return (
         <StoreProvider value={rootStore}>

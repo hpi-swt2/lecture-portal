@@ -3,20 +3,24 @@ import { observer } from "mobx-react";
 import {ComprehensionRootStoreModel} from "../stores/ComprehensionRootStore";
 import {useInjectComprehension} from "../hooks/useInject";
 import {formatDate} from "../utils/ComprehensionUtils";
+import {
+    comprehensionColors,
+    comprehensionLabels,
+    comprehensionStates,
+    numberOfComprehensionStates
+} from "../utils/constants";
 
-const mapStore = ({ last_updated, participants, results }: ComprehensionRootStoreModel) => ({
+const mapStore = ({ last_updated, results }: ComprehensionRootStoreModel) => ({
     last_updated,
-    participants,
     results
 });
 
 const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
-    const { last_updated, participants, results } = useInjectComprehension(mapStore);
+    const { last_updated, results } = useInjectComprehension(mapStore);
 
     const canvasRef = createRef<HTMLCanvasElement>();
 
-    const colors = ['#98ff9c', '#ffed86', '#ff8988'];
-    const labels = ['Too easy', 'Just right', 'I\'m out'];
+    let participants = 0;
 
     useEffect(() => {
         const canvas = canvasRef.current;
@@ -24,26 +28,33 @@ const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
         canvas.height = canvas.parentElement.offsetHeight;
 
         const ctx = canvas.getContext("2d");
-        if(results.length == 3) {
+
+        if(results.length == numberOfComprehensionStates) {
+            participants = 0;
+            for(let i = 0; i < results.length; i++) {
+                participants += results[i];
+            }
             let xOffset = 0;
             for(let i = 0; i < 3; i++) {
                 const currentWidth = canvas.width * (results[i] / participants);
-
-                ctx.fillStyle = colors[i];
+                ctx.fillStyle = comprehensionColors[i];
                 ctx.fillRect(xOffset, 0, currentWidth, canvas.height);
                 xOffset += currentWidth;
             }
+        } else {
+            // clear canvas if we get invalid data
+            ctx.clearRect(0, 0, canvas.width, canvas.height)
         }
     }, []);
 
     const renderLegend = () => {
         let legendItems = [];
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < numberOfComprehensionStates; i++) {
             legendItems.push(
                 <div className="legendItem">
                     <div>
-                        <div style={{background: colors[i]}} />
-                        <span>{labels[i]}</span>
+                        <div className={comprehensionStates[i]} />
+                        <span>{comprehensionLabels[i]}</span>
                     </div>
                 </div>);
         }

@@ -34,7 +34,7 @@ const setupActionCable = (rootStore: ComprehensionRootStoreModel) => {
       (data) => {
         // TODO: use update data
         //const { question } = data;
-        //rootStore.questionsList.addQuestion(question);
+        //rootStore.setActiveStamp(dsdsg)
       }
   );
 };
