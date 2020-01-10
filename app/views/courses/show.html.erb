@@ -77,6 +77,6 @@
   <% end %>
   </tbody>
 </table>
-
+<%= link_to "Leave", leave_course_path(id: @course.id), method: :post, class:"btn btn-primary" %> |
 <%= link_to 'Edit', edit_course_path(@course) %> |
 <%= link_to 'Back', root_path %>
