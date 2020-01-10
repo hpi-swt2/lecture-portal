@@ -15,5 +15,15 @@ module LecturePortal
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
+
+    # Schedule a check for aging of comprehension stamps
+    config.after_initialize do
+      scheduler = Rufus::Scheduler.new
+      scheduler.every '10s' do
+        LecturesController.eliminateComprehensionStamps
+      end
+    end
+
   end
 end
+

@@ -8,8 +8,6 @@ class LecturesController < ApplicationController
   before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show, :update_comprehension_stamp]
   before_action :require_student, only: [:join_lecture, :leave_lecture, :update_comprehension_stamp]
 
-  @scheduler = nil
-
   # GET /lectures
   def index
     @is_student = current_user.is_student
@@ -77,7 +75,6 @@ class LecturesController < ApplicationController
     if @lecture.status != "ended"
       @lecture.set_active
       @lecture.save
-      scheduleComprehensionStampElimination
       redirect_to lecture_path(@lecture)
     else
       redirect_to lectures_path, notice: "Can't restart an ended lecture."
@@ -95,7 +92,6 @@ class LecturesController < ApplicationController
   end
 
   def end_lecture
-    @scheduler.shutdown
     @lecture.set_inactive
     @lecture.save
     redirect_to lecture_path(@lecture), notice: "You successfully ended the lecture."
@@ -103,6 +99,13 @@ class LecturesController < ApplicationController
 
   def update_comprehension_stamp
     @lecture.lecture_comprehension_stamps << LectureComprehensionStamp.new(:user => current_user, :status => params[:status])
+  end
+
+  def LecturesController.eliminateComprehensionStamps
+    puts "Do elimination checks!"
+    Lecture.where(status: "running").each { |lecture|
+      lecture.eliminateOwnComprehensionStamps
+    }
   end
 
   private
@@ -131,31 +134,6 @@ class LecturesController < ApplicationController
     def require_student
       if !current_user.is_student
         redirect_to lectures_url, notice: "Only students can join a lecture."
-      end
-    end
-
-    def scheduleComprehensionStampElimination
-      @scheduler = Rufus::Scheduler.new
-      @scheduler.every '10s' do
-        eliminateComprehensionStamps
-      end
-      if @scheduler.nil?
-        puts "HOHOHOHO"
-      end
-    end
-
-    def eliminateComprehensionStamps
-      puts "Haaaaaaaaaaaaaaaaaaaaaaaaaallllllllllllllllllllllooooooooooooooooo!"
-      cur_time = Time.now
-      changed = false
-      @lecture.lecture_comprehension_stamps.each { |stamp|
-        if (cur_time - stamp.timestamp) >= 10*60 # if stamp is at least 10min old 
-            stamp.eliminate
-            changed = true
-        end
-      }
-      if changed
-        ComprehensionStampChannel.broadcast_to(@lecture, getComprehensionStatus) # TODO only send to lecturer
       end
     end
 

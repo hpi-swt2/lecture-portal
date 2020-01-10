@@ -32,4 +32,19 @@ class Lecture < ApplicationRecord
       self.participating_students.delete(student)
     end
   end
+
+  def eliminateOwnComprehensionStamps
+    puts "check!"
+    cur_time = Time.now
+    changed = false
+    self.lecture_comprehension_stamps.each { |stamp|
+      if (cur_time - stamp.timestamp) >= 10*60 # if stamp is at least 10min old 
+          stamp.eliminate
+          changed = true
+      end
+    }
+    if changed
+      ComprehensionStampChannel.broadcast_to(self, getComprehensionStatus) # TODO only send to lecturer
+    end
+  end
 end
