@@ -2,8 +2,8 @@
 class LectureValidator < ActiveModel::Validator
   # changing attributes from a lecture is prohibited if the lecture ended
   def validate(lecture)
-    db_lecture = Lecture.find_by_lecturer_id(lecture.id)
-    if lecture.ended? && db_lecture
+    if lecture.ended? && lecture.id
+      db_lecture = Lecture.find(lecture.id)
       attributes_changed = lecture != db_lecture
       # Additional id comparison is needed since you get the first entry in the db if the lecture has no id
       if attributes_changed && lecture.id == db_lecture.id

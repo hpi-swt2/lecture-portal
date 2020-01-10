@@ -4,6 +4,7 @@ RSpec.describe Lecture, type: :model do
   before (:each) do
     @lecture = FactoryBot.build(:lecture)
   end
+
   it "is creatable using a Factory" do
     expect(@lecture).to be_valid
   end
@@ -51,21 +52,11 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture.participating_students.length).to be 0
   end
 
-  it "is cannot be changed  when it ended" do
-    isValid = @lecture.validate
-    puts isValid
-    lecture = FactoryBot.create(:lecture)
-    lectureIsValid = lecture.validate
-    puts lectureIsValid
-    lecture.set_inactive
-    lectureIsValid = lecture.validate
-    puts lectureIsValid
-    failed = lecture.save
-    puts failed
-    # db_lecture = Lecture.find_by_lecturer_id(lecture.id)
-    lecture.description = lecture.description + " new"
-    lectureIsValid = lecture.validate
-    puts lectureIsValid
-    expect(lecture).not_to be_valid
+  it "is cannot be changed when it ended" do
+    @lecture.set_inactive
+    expect(@lecture).to be_valid
+    @lecture.save
+    @lecture.description = @lecture.description + " new"
+    expect(@lecture).not_to be_valid
   end
 end

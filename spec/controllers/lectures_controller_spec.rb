@@ -11,7 +11,7 @@ RSpec.describe LecturesController, type: :controller do
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
   }
   let(:valid_attributes_with_lecturer_with_course) {
-    valid_attributes_with_lecturer.merge(course: FactoryBot.create(:course),)
+    valid_attributes_with_lecturer.merge(course: FactoryBot.create(:course))
   }
   let(:invalid_attributes) {
     { name: "", enrollment_key: "swt", status: "created" }
