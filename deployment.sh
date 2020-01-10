@@ -2,9 +2,10 @@ echo "Currently running a $TRAVIS_EVENT_TYPE"
 if [ "$TRAVIS_BRANCH" = "master" ]
 then 
 	export APP="hpi-lectureportal"; 
-elif [ "$TRAVIS_BRANCH" = "ab-fix-is-active-migration" ]
+elif [ "$TRAVIS_BRANCH" = "dev" ]
 then 
 	export APP="hpi-lectureportal-dev"; 
+	export APP="hpi-lectureportal-dev";
 else
 	echo "No deployment on branch $TRAVIS_BRANCH";
 	exit 0
