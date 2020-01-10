@@ -102,8 +102,9 @@ class PollsController < ApplicationController
   def update
     current_poll_params = poll_params
     if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
-      # Remove all previously existing options so there are no conflicts with the new/updated ones.
       poll_options = current_poll_params[:poll_options]
+      # Remove all previously existing options so there are no conflicts with the new/updated ones.
+      PollOption.where(poll_id: @poll.id).destroy_all
       for poll_option in poll_options do
         poll_option_description = poll_option.values_at(1)
         @poll.poll_options.build(description: poll_option_description.to_param)
