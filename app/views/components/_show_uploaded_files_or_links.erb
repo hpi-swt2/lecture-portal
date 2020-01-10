@@ -1,0 +1,36 @@
+<table class="table table-sm table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Content type</th>
+    <th scope="col">Filename</th>
+    <th scope="col">Data</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% uploaded_files.each do |uploaded_file| %>
+    <tr>
+      <% if uploaded_file.isLink %>
+        <td>Hyperlink</td>
+        <td/>
+        <td><a href="<%= uploaded_file.data %>"><%= uploaded_file.data %></a></td>
+      <% else %>
+        <td><%= uploaded_file.content_type %></td>
+        <td><%= uploaded_file.filename %></td>
+        <td>
+          <details>
+            <summary>iFrame</summary>
+            <iframe srcdoc="<%= uploaded_file.data %>" sandbox frameborder="0"></iframe>
+          </details>
+          <details>
+            <summary>RAW</summary>
+            <pre style="width: 50vw; min-width: 300px;"><%= uploaded_file.data %></pre>
+          </details>
+        </td>
+        <td><%= link_to "Download", uploaded_file_path(uploaded_file), target: "_self", class: "btn btn-link" %> </td>
+      <% end %>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
