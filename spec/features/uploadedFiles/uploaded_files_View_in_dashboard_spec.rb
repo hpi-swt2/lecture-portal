@@ -31,8 +31,8 @@ describe "The lecture dashboard page", type: :feature do
     end
 
     it "shows the file name" do
-      visit course_lecture_path(@course, @lecture)
-      expect(page).to have_text(@filename)
+        visit course_lecture_path(@course, @lecture)
+        expect(page).to have_text(@filename)
       end
 
     it "does not show the files of other lectures" do
@@ -44,6 +44,5 @@ describe "The lecture dashboard page", type: :feature do
       visit course_lecture_path(@course, @lecture)
       expect(page).to have_link("Download")
     end
-
   end
 end
