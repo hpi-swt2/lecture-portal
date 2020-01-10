@@ -15,6 +15,7 @@ export const getQuestionsRootStore = (target: IAnyStateTreeNode): QuestionsRootS
 
 const QuestionsRootStore = types.model("QuestionsRootStore", {
     user_id: types.optional(types.integer, -1),
+    course_id: types.optional(types.integer, -1),
     lecture_id: types.optional(types.integer, -1),
     is_student: types.optional(types.boolean, true),
     current_question: currentQuestion,
@@ -30,6 +31,9 @@ const QuestionsRootStore = types.model("QuestionsRootStore", {
     },
     setLectureId(lecture_id: number) {
         self.lecture_id = lecture_id
+    },
+    setCourseId(course_id: number) {
+        self.course_id = course_id
     }
 }));
 

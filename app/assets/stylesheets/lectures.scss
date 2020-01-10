@@ -5,6 +5,13 @@
 @import 'lecture_updates';
 @import 'questions';
 
+.text-right {
+  a,
+  form,
+  form > input {
+    display: inline-block;
+  }
+}
 form.button_to {
   display: inline-block;
 }

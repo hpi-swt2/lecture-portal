@@ -1,4 +1,4 @@
-<%= form_with(model: lecture, local: true, params: render_enrolment_key) do |form| %>
+<%= form_with(model: [@course, lecture], local: true, params: render_enrolment_key) do |form| %>
   <% if lecture.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</h2>
@@ -8,6 +8,12 @@
         <li><%= message %></li>
       <% end %>
       </ul>
+    </div>
+  <% end %>
+
+  <% if lecture.ended? %>
+    <div class="alert alert-success notice" role="alert">
+      This lecture has been archived and can no longer be modified
     </div>
   <% end %>
 
@@ -37,8 +43,9 @@
       <% else %>
         <%= form.text_field :enrollment_key, class: "col-sm-9" %>
       <% end %>
-  </div>
+    </div>
   <% end %>
+
   <div class="enable-questions row checkbox">
     <%= form.label "Enable Questions", class: "col-sm-3 col-form-label"%>
     <% if lecture.ended? %>
@@ -61,8 +68,11 @@
     <% end %>
   </div>
 
-
   <div class="actions">
-    <%= form.submit :class => "btn btn-primary" %>
+    <% if lecture.ended? %>
+      <%= form.submit :class => "btn btn-primary", :disabled => true %>
+    <% else %>
+      <%= form.submit :class => "btn btn-primary" %>
+    <% end %>
   </div>
 <% end %>

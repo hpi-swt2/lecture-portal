@@ -1,25 +1,30 @@
 Rails.application.routes.draw do
-  # add additional routes later when needed
   resources :uploaded_files, only: [:show, :index, :new, :create]
-  get "/lectures/current", to: "lectures#current", as: "current_lectures"
-  post "/lectures/start_lecture", to: "lectures#start_lecture", as: "start_lecture"
-  post "/lectures/join_lecture", to: "lectures#join_lecture", as: "join_lecture"
-  post "/lectures/leave_lecture", to: "lectures#leave_lecture", as: "leave_lecture"
-  post "/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
+  get "/courses/:course_id/lectures/current", to: "lectures#current", as: "current_lectures"
+  post "/courses/:course_id/lectures/start_lecture", to: "lectures#start_lecture", as: "start_lecture"
+  post "/courses/:course_id/lectures/join_lecture", to: "lectures#join_lecture", as: "join_lecture"
+  post "/courses/:course_id/lectures/leave_lecture", to: "lectures#leave_lecture", as: "leave_lecture"
+  post "/courses/join_course", to: "courses#join_course", as: "join_course"
+  post "/courses/leave_course", to: "courses#leave_course", as: "leave_course"
+  post "/courses/:course_id/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
 
-  resources :lectures do
-    resources :feedbacks
-    resources :polls do
-      member do
-        patch :save_answers
-        put :save_answers
+  resources :courses do
+    resources :lectures do
+      resources :polls do
+        member do
+          patch :save_answers
+          post :save_answers
+          get :stop_start
+        end
       end
-    end
+      resources :feedbacks
 
 
-    resources :questions, only: [:index, :create] do
-      post "upvote", on: :member
-      post "resolve", on: :member
+
+      resources :questions, only: [:index, :create] do
+        post "upvote", on: :member
+        post "resolve", on: :member
+      end
     end
   end
 
