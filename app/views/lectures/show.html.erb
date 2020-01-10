@@ -13,6 +13,9 @@
   </li>
   <% if !@current_user.is_student %>
     <li class="nav-item">
+      <a class="nav-link" id="enrollmentKey-tab" data-toggle="tab" href="#enrollmentKey" role="tab" aria-controls="enrollmentKey" aria-selected="false">Enrollment Key</a>
+    </li>
+    <li class="nav-item">
       <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Settings</a>
     </li>
   <% end %>
@@ -73,8 +76,11 @@
 
   </div>
   <% if !@current_user.is_student %>
+    <div class="tab-pane fade" id="enrollmentKey" role="tabpanel" aria-labelledby="enrollmentKey-tab-tab">
+      <h1 class="padded-text">Enrollment Key: <%= @lecture.enrollment_key %></h1>
+    </div>
     <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-      <%= render 'form', lecture: @lecture, render_enrolment_key: false %>
+      <%= render 'form', lecture: @lecture %>
     </div>
   <% end %>
 </div>

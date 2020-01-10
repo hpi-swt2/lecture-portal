@@ -38,6 +38,11 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_content("Settings")
       expect(rendered).to have_css("#settings-tab")
     end
+    it "renders enrollment key tab" do
+      assert_select "a", "Enrollment Key"
+      expect(rendered).to have_content("Enrollment Key")
+      expect(rendered).to have_css("#enrollmentKey-tab")
+    end
     it "renders end button" do
       expect(rendered).to have_link("End")
     end
@@ -51,6 +56,10 @@ RSpec.describe "lectures/show", type: :view do
       @current_user = FactoryBot.create(:user, :student)
       @lecture.join_lecture(@current_user)
       render
+    end
+    it "renders no enrollment key tab" do
+      expect(rendered).not_to have_content("Enrollment Key")
+      expect(rendered).not_to have_css("#enrollmentKey-tab")
     end
     it "renders no settings tab" do
       expect(rendered).not_to have_content("Settings")
@@ -76,13 +85,11 @@ RSpec.describe "lectures/show", type: :view do
     assert_select "a", "Settings"
     expect(rendered).to have_selector("input[id='lecture_description'][type='text']")
   end
-
-  # wireframe does not show it
-  it "can change description in settings tab" do
+  it "can change enrollment key in settings tab" do
     @current_user = FactoryBot.create(:user, :lecturer)
     render
     assert_select "a", "Settings"
-    expect(rendered).to_not have_selector("input[id='lecture_enrollment_key'][type='text']")
+    expect(rendered).to have_selector("input[id='lecture_enrollment_key'][type='text']")
   end
   it "can change polls in settings tab" do
       @current_user = FactoryBot.create(:user, :lecturer)

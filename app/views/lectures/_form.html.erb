@@ -1,4 +1,4 @@
-<%= form_with(model: [@course, lecture], local: true, params: render_enrolment_key) do |form| %>
+<%= form_with(model: [@course, lecture], local: true) do |form| %>
   <% if lecture.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</h2>
@@ -20,13 +20,11 @@
     <%= form.label :description%>
     <%= form.text_field :description%>
   </div>
-  <!-- Should not be able to be edited after the lecture has started.-->
-  <% if render_enrolment_key==true %>
-    <div class="field">
-      <%= form.label :enrollment_key %>
-      <%= form.text_field :enrollment_key %>
+
+  <div class="field">
+    <%= form.label :enrollment_key %>
+    <%= form.text_field :enrollment_key %>
   </div>
-  <% end %>
 
   <div class="field">
     <%= form.label "Enable Questions"%>
