@@ -9,7 +9,7 @@ class Lecture < ApplicationRecord
   enum status: { created: "created", running: "running", ended: "ended" }
 
   validates :name, presence: true, length: { in: 2..40 }
-  validates :enrollment_key, presence: true, length: { in: 3..20 }
+  validates :enrollment_key, length: { in: 3..20, if: :enrollment_key_present? }
   scope :active, -> { where status: "running" }
 
 
@@ -31,5 +31,11 @@ class Lecture < ApplicationRecord
     if self.participating_students.include?(student)
       self.participating_students.delete(student)
     end
+  end
+
+  private
+
+  def enrollment_key_present?
+    enrollment_key.present?
   end
 end
