@@ -86,7 +86,7 @@
       <td colspan="2"> | <%= link_to "Leave Lecture", leave_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class:"btn btn-link" %></td>
     <% else %>
       <% if @lecture.created? %>
-        <td colspan="2"> | <%= link_to "Edit", edit_course_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class:"btn btn-link" %></td>
+          <td colspan="2"> | <%= link_to "Edit", edit_course_lecture_path(course_id: @lecture.course.id, id: @lecture.id), class:"btn btn-link" %></td>
         <td colspan="2"> | <%= link_to "Start", start_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class:"btn btn-link" %></td>
       <% elsif @lecture.running? %>
         <td colspan="2"> | <%= link_to 'New Poll', new_course_lecture_poll_path(@course, @lecture), {class:"btn btn-link"} %> </td>
