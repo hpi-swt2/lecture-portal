@@ -77,6 +77,10 @@
   <% end %>
   </tbody>
 </table>
-<%= link_to "Leave", leave_course_path(id: @course.id), method: :post, class:"btn btn-primary" %> |
-<%= link_to 'Edit', edit_course_path(@course) %> |
+<% if @current_user.is_student %>
+  <%= link_to "Leave", leave_course_path(id: @course.id), method: :post, class:"btn btn-primary" %> |
+<% end %>
+<% if !@current_user.is_student %>
+  <%= link_to 'Edit', edit_course_path(@course) %> |
+<% end %>
 <%= link_to 'Back', root_path %>
