@@ -13,25 +13,31 @@ class UploadedFilesController < ApplicationController
 
   # POST /uploaded_files
   def create
-    file = uploaded_file_params["attachment"]
-    if file.nil? || !(file.is_a? ActionDispatch::Http::UploadedFile)
-      render :new
+    uploaded_file = uploaded_file_params["attachment"]
+    if uploaded_file.nil? || !(uploaded_file.is_a? ActionDispatch::Http::UploadedFile)
+      filename = nil
+      content_type = nil
+      data = nil
     else
-      filename = file.original_filename
-      content_type = file.content_type
-      data = file.read
-      lecture_id = uploaded_file_params["lecture"]
-      unless Lecture.exists?(lecture_id)
-        render :new
-        return
-      end
+      filename = uploaded_file.original_filename
+      content_type = uploaded_file.content_type
+      data = uploaded_file.read
+    end
+    lecture_id = uploaded_file_params["lecture"]
+    if Lecture.exists?(lecture_id)
       lecture = Lecture.find(lecture_id)
-      file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: lecture)
-      if file.save
-        redirect_to (uploaded_files_url), notice: "Uploaded file was successfully saved."
-      else
-        render :new
-      end
+    else
+      lecture = nil
+    end
+    is_link = !uploaded_file_params["link"].blank?
+    if is_link
+      data = uploaded_file_params["link"]
+    end
+    @uploaded_file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: lecture, isLink: is_link)
+    if @uploaded_file.save
+      redirect_to (uploaded_files_url), notice: "Uploaded file was successfully saved."
+    else
+      render :new
     end
   end
 
@@ -43,8 +49,9 @@ class UploadedFilesController < ApplicationController
 
 
   private
-    # Only allow a trusted parameter "white list" through.
-    def uploaded_file_params
-      params.require(:uploaded_file).permit(:attachment, :lecture)
-    end
+
+  # Only allow a trusted parameter "white list" through.
+  def uploaded_file_params
+    params.require(:uploaded_file).permit(:attachment, :lecture, :link)
+  end
 end

@@ -13,8 +13,13 @@
   </thead>
 
   <tbody>
-    <% @uploaded_files.each do |uploaded_file| %>
-      <tr>
+  <% @uploaded_files.each do |uploaded_file| %>
+    <tr>
+      <% if uploaded_file.isLink %>
+        <td>Hyperlink</td>
+        <td/>
+        <td><a href="<%= uploaded_file.data %>"><%= uploaded_file.data %></a></td>
+      <% else %>
         <td><%= uploaded_file.content_type %></td>
         <td><%= uploaded_file.filename %></td>
         <td>
@@ -28,6 +33,7 @@
           </details>
         </td>
         <td><%= link_to "Download", uploaded_file_path(uploaded_file), target: "_self", class:"btn btn-link" %> </td>
+      <% end %>
       </tr>
     <% end %>
   </tbody>
