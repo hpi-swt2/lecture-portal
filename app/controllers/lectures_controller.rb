@@ -7,6 +7,7 @@ class LecturesController < ApplicationController
   before_action :require_student, only: [:join_lecture]
   before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show]
   before_action :require_student, only: [:join_lecture, :leave_lecture]
+  before_action :validate_course_creator, only: [:create, :new]
 
   # GET /lectures
   def index
@@ -108,7 +109,7 @@ class LecturesController < ApplicationController
 
     def validate_lecture_owner
       if @lecture.lecturer != current_user
-        redirect_to root_path, notice: "You can only access your own lectures."
+        redirect_to course_path(@course), notice: "You can only access your own lectures."
       end
     end
 
@@ -136,6 +137,12 @@ class LecturesController < ApplicationController
     def require_lecturer
       if current_user.is_student?
         redirect_to course_path(@course), notice: "You can't access this site as a student."
+      end
+    end
+
+    def validate_course_creator
+      if @course.creator != current_user
+        redirect_to @course, notice: "You can only access your own courses."
       end
     end
 
