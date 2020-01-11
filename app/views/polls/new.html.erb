@@ -2,4 +2,4 @@
 
 <%= render 'form', poll: @poll %>
 
-<%= link_to 'Back', lecture_path(@lecture) %>
+<%= link_to 'Back', course_lecture_path(@lecture.course, @lecture) %>

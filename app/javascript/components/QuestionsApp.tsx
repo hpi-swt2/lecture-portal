@@ -1,24 +1,28 @@
 import React from "react";
 import QuestionsForm from "./QuestionsForm";
 import QuestionsList from "./QuestionsList";
-import initQuestionsApp, {StoreProvider} from "../utils/QuestionsUtils";
+import { StoreProvider, initQuestionsApp, createQuestionsRootStore } from "../utils/QuestionsUtils";
 
-const rootStore = initQuestionsApp();
-//onSnapshot(rootStore, console.log);
+const rootStore = createQuestionsRootStore();
 
 interface IQuestionsAppProps {
     user_id: number,
-    is_student: boolean
+    is_student: boolean,
+    lecture_id: number,
+    course_id: number
 }
 
-const QuestionsApp: React.FunctionComponent<IQuestionsAppProps> = ({user_id, is_student}) => {
+const QuestionsApp: React.FunctionComponent<IQuestionsAppProps> = ({ user_id, is_student, lecture_id, course_id }) => {
     rootStore.setUserId(user_id);
     rootStore.setIsStudent(is_student);
+    rootStore.setLectureId(lecture_id);
+    rootStore.setCourseId(course_id);
+    initQuestionsApp(rootStore);
     return (
         <StoreProvider value={rootStore}>
             <div className="QuestionsApp">
-                <QuestionsForm/>
-                <QuestionsList/>
+                <QuestionsForm />
+                <QuestionsList />
             </div>
         </StoreProvider>
     )
