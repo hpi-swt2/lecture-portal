@@ -26,7 +26,7 @@ const PollResultPieChart: React.FunctionComponent<{}> = observer(() => {
             toolTipContent: "<b>{label}</b>: {y}%",
             indexLabelFontSize: 16,
             indexLabel: "{label} - {y}%",
-            dataPoints: pollDataInitializer.getPollData();
+            dataPoints: pollDataInitializer.getPollData(),
         }]
     }
 

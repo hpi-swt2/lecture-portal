@@ -14,6 +14,7 @@ Rails.application.routes.draw do
         post :save_answers
         get :stop_start
         get :serialized_options
+        get :serialized_participants_count
       end
     end
 

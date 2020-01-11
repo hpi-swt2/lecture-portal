@@ -4,6 +4,7 @@ import PollResultTable from "./PollResultTable";
 import PollResultPieChart from "./PollResultPieChart";
 import PollResultBarChart from "./PollResultBarChart";
 import CanvasJSReact from "../utils/canvasjs/canvasjs.react";
+import ParticipantsCount from "./ParticipantsCount";
 var CanvasJS = CanvasJSReact.CanvasJS;
 
 const rootStore = createPollOptionsRootStore();
@@ -11,7 +12,7 @@ const rootStore = createPollOptionsRootStore();
 interface IPollResultAppData {
     lecture_id: number,
     poll_id: number,
-    poll_option_ids: Array<number>;
+    poll_option_ids: Array<number>
 }
 
 const PollResultApp: React.FunctionComponent<IPollResultAppData> = ({ lecture_id, poll_id, poll_option_ids }) => {
@@ -25,6 +26,7 @@ const PollResultApp: React.FunctionComponent<IPollResultAppData> = ({ lecture_id
     return (
         <StoreProvider value={rootStore}>
             <div className="PollResultApp">
+                <ParticipantsCount />
                 <ul className="nav nav-tabs" id="pollResultTabs" role="tablist">
                     <li className="nav-item">
                         <a className="nav-link active" id="resultTable-tab" data-toggle="tab" href="#resultTable" role="tab" aria-controls="resultTable" aria-selected="true">Table</a>

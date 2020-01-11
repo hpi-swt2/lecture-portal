@@ -12,6 +12,18 @@
   color: red;
 }
 
+#numberOfParticipants {
+  text-align: right;
+  font-size: 24px;
+}
+
+.userIcon {
+  background-color: $gray-light;
+  font-size:32px;
+  margin-right: 10px;
+  padding: 2px;
+}
+
 #pollInformation {
   border: 1px solid $black-main;
   text-color: $black-main;
