@@ -40,6 +40,8 @@
   </tr>
   </thead>
 
+
+  <!-- Describes the currently running lectures table -->
   <tbody>
   <% @course.lectures.each do |lecture| %>
     <% if lecture.status =="running" %>
@@ -74,14 +76,15 @@
         <% end %>
         <% if @current_user.is_student%>
           <% if lecture.status == "running"%>
-            <td class="text-right">
-              <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
-            </td>
-            <td class="text-right">
-              <%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
-            </td>
-          <% else %>
-            <td></td>
+            <% if lecture.participating_students.include?(@current_user)%>
+              <td class="text-right">
+                <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+              </td>
+            <% else %>
+              <td class="text-right">
+                <%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
+              </td>
+            <% end %>
           <% end %>
         <% end %>
       </tr>
@@ -96,6 +99,7 @@
   <strong>All lectures</strong>
 </h3>
 
+<!-- Describes the all lectures table - all lectures means all which are not in status running -->
 <table class="table .table-sm table-striped">
   <thead>
   <tr>
