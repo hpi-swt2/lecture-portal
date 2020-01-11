@@ -27,18 +27,19 @@
       <% else %>
 
         <p class="lead">My Lectures</p>
-        <table class="table .table-sm table-striped">
+
+        <table class="table .table-sm">
           <thead>
           <tr>
             <th style="width: 25%">Name</th>
-            <th style="width: 100%" scope="col">End Time</th>
-            <th scope="col" colspan="3"></th>
+            <th style="width: 75%" scope="col">End Time</th>
+            <th scope="col"></th>
           </tr>
           </thead>
 
           <% Lecture.where(course: @participating_courses).each do |lecture| %>
             <% if lecture.status == "running" %>
-              <tr>
+              <tr class="border-orange">
                 <td><%= lecture.course.name %> - <%= lecture.name %></td>
                 <td><%= lecture.end_time.strftime("%H:%M")  %></td>
                 <% if @participating_lectures.include?(lecture)  %>
