@@ -4,52 +4,26 @@
   </div>
 <% end %>
 
-<p>
-  <strong>Name:</strong>
-  <%= @course.name %>
-</p>
-
-<p>
-  <strong>Description:</strong>
-  <%= @course.description %>
-</p>
-
-<p>
-  <strong>Status:</strong>
-  <%= @course.status %>
-</p>
-
+<h2> <%= @course.name %> </h2>
+<h4> <%= @course.description %> </h4>
 <br>
+<h3> Currently running lectures </h3>
 
-<h3>
-  <strong>Currently running lectures</strong>
-</h3>
-
-<table class="table .table-sm table-striped">
+<!-- Describes the currently running lectures table -->
+<table class="table .table-sm  ">
   <thead>
   <tr>
-    <th style="width: 25%">Name</th>
-    <th style="width: 15%">Enrollment key</th>
+    <th style="width: 15%">Name</th>
     <th style="width: 10%" scope="col">End Time</th>
-    <th style="width: 10%" scope="col">Status</th>
-    <% if !@current_user.is_student%>
-      <th scope="col" colspan="4"></th>
-    <% else %>
-      <th scope="col" colspan="2"></th>
-    <% end %>
+    <th style="width: 75%" scope="col">Status</th>
+    <th scope="col" colspan="3"></th>
   </tr>
   </thead>
-
-
-  <!-- Describes the currently running lectures table -->
   <tbody>
   <% @course.lectures.each do |lecture| %>
     <% if lecture.status =="running" %>
-      <tr>
-        <td ><%= lecture.name %></td>
-        <td><%= lecture.enrollment_key %></td>
-        <td><%= lecture.date.strftime("%d-%m-%Y") %></td>
-        <td><%= lecture.start_time.strftime("%H:%M") %></td>
+      <tr class="border-orange">
+        <td><%= lecture.name %></td>
         <td><%= lecture.end_time.strftime("%H:%M")  %></td>
         <td><%= lecture.status%></td>
 
@@ -77,7 +51,7 @@
         <% if @current_user.is_student%>
           <% if lecture.status == "running"%>
             <% if lecture.participating_students.include?(@current_user)%>
-              <td class="text-right">
+              <td  class="text-right">
                 <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
               </td>
             <% else %>
@@ -96,7 +70,7 @@
 <br>
 
 <h3>
-  <strong>All lectures</strong>
+  All lectures
 </h3>
 
 <!-- Describes the all lectures table - all lectures means all which are not in status running -->
