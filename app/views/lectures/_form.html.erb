@@ -11,31 +11,50 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="field row">
+    <%= form.label :name, :class => "col" %>
+    <%= form.text_field :name, :class => "col-10" %>
   </div>
 
-  <div class="field">
-    <%= form.label :description%>
-    <%= form.text_field :description%>
+  <div class="field row">
+    <%= form.label :date , :class => "col"%>
+    <%= form.date_field :date, :class => "col-10"%>
+  </div>
+
+  <div class="field row">
+    <%= form.label :start_time , :class => "col"%>
+    <%= form.time_field :start_time, :class => "col-10"%>
+  </div>
+
+  <div class="field row">
+    <%= form.label :end_time , :class => "col"%>
+    <%= form.time_field :end_time, :class => "col-10"%>
+  </div>
+
+  <div class="field row">
+    <%= form.label :description , :class => "col"%>
+    <%= form.text_field :description, :class => "col-10"%>
   </div>
   <!-- Should not be able to be edited after the lecture has started.-->
   <% if render_enrolment_key==true %>
-    <div class="field">
-      <%= form.label :enrollment_key %>
-      <%= form.text_field :enrollment_key %>
+    <div class="field row">
+      <%= form.label :enrollment_key , :class => "col" %>
+      <%= form.text_field :enrollment_key, :class => "col-10" %>
   </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label "Enable Questions"%>
-    <%= form.check_box :questions_enabled %>
+  <br>
+
+  <div class="field row">
+    <%= form.label "Enable Questions" , :class => "col"%>
+    <%= form.check_box :questions_enabled, :class => "col" %>
+    <div class="col-8"></div>
   </div>
 
-  <div class="field">
-    <%= form.label "Enable Polls"%>
-    <%= form.check_box :polls_enabled%>
+  <div class="field row">
+    <%= form.label "Enable Polls" , :class => "col"%>
+    <%= form.check_box :polls_enabled, :class => "col" %>
+    <div class="col-8"></div>
   </div>
 
   <div class="actions">

@@ -10,6 +10,9 @@ class Lecture < ApplicationRecord
 
   validates :name, presence: true, length: { in: 2..40 }
   validates :enrollment_key, presence: true, length: { in: 3..20 }
+  validates :date, presence: true
+  validates :start_time, presence: true
+  validates :end_time, presence: true
   scope :active, -> { where status: "running" }
 
 

@@ -1,3 +1,6 @@
+<h5><%= @lecture.name %></h5>
+<p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
+
 <ul class="nav nav-tabs" id="lectureTabs" role="tablist">
   <li class="nav-item">
     <a class="nav-link active" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="true">Dashboard</a>
