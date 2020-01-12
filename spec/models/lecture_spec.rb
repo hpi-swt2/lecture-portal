@@ -19,6 +19,21 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture).not_to be_valid
   end
 
+  it "is not valid without a date" do
+    @lecture.date = ""
+    expect(@lecture).not_to be_valid
+  end
+
+  it "is not valid without a start time" do
+    @lecture.start_time = ""
+    expect(@lecture).not_to be_valid
+  end
+
+  it "is not valid without a end time" do
+    @lecture.end_time = ""
+    expect(@lecture).not_to be_valid
+  end
+
   it "has all features enabled by default" do
     expect(@lecture.polls_enabled).to be true
     expect(@lecture.questions_enabled).to be true
