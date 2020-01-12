@@ -52,7 +52,7 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture.participating_students.length).to be 0
   end
 
-  it "is cannot be changed when it ended" do
+  it "cannot be changed after it ended" do
     @lecture.set_inactive
     expect(@lecture).to be_valid
     @lecture.save
