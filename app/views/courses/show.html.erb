@@ -13,66 +13,6 @@
   <%= render 'table_only_running', course: @course %>
 <% end %>
 
-<!-- Describes the currently running lectures table -->
-<!--
-<table class="table .table-sm table-striped">
-  <thead>
-  <tr>
-    <th style="width: 15%">Name</th>
-    <th style="width: 10%" scope="col">End Time</th>
-    <th style="width: 75%" scope="col">Status</th>
-    <th scope="col"></th>
-  </tr>
-  </thead>
-  <tbody>
-  <%# @course.lectures.each do |lecture| %>
-    <%# if lecture.status =="running" %>
-      <tr>
-        <td><%#= lecture.name %></td>
-        <td><%#= lecture.end_time.strftime("%H:%M")  %></td>
-        <td><%#= lecture.status%></td>
-
-        <%# if !@current_user.is_student%>
-          <%# if lecture.status == "running" %>
-            <td></td>
-            <td class="text-right">
-              <%#= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
-            </td>
-            <td class="text-right">
-              <%#= link_to 'End', end_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
-            </td>
-          <%# else %>
-            <%# if lecture.status == "created" %>
-              <td class="text-right">
-                <%#= link_to 'Start', start_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary"%>
-              </td>
-            <%# end %>
-            <td></td>
-          <%# end %>
-          <td class="text-right">
-            <%#= link_to 'Edit', edit_course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
-          </td>
-        <%# end %>
-        <%# if @current_user.is_student%>
-          <%# if lecture.status == "running"%>
-            <%# if lecture.participating_students.include?(@current_user)%>
-              <td  class="text-right">
-                <%#= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
-              </td>
-            <%# else %>
-              <td class="text-right">
-                <%#= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
-              </td>
-            <%# end %>
-          <%# end %>
-        <%# end %>
-      </tr>
-    <%# end %>
-  <%# end %>
-  </tbody>
-</table>
--->
-
 <br>
 
 <% if !@course.lectures.empty? %>
