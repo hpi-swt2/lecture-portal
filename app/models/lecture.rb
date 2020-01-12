@@ -73,4 +73,13 @@ class Lecture < ApplicationRecord
     "{ id:" + id.to_s + " status: " + status.to_s + " name: " + name + " description: " + description +
         " enrollment_key : " + enrollment_key + " polls_enabled " + polls_enabled.to_s + " questions_enabled " + questions_enabled.to_s + "}"
   end
+
+
+  def readonly?
+    if self.id
+      db_lecture = Lecture.find(self.id)
+      return db_lecture.status == "ended"
+    end
+    false
+  end
 end
