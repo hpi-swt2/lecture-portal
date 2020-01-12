@@ -1,4 +1,6 @@
-import {Instance, types} from "mobx-state-tree";
+import { Instance, types } from "mobx-state-tree";
+import { createQuestion } from "../utils/QuestionsUtils";
+import { getQuestionsRootStore } from "./QuestionsRootStore";
 
 export type CurrentQuestionModel = Instance<typeof CurrentQuestion>
 
@@ -7,17 +9,14 @@ const CurrentQuestion = types
         content: types.optional(types.string, ""),
     })
     .actions(self => ({
-        set(content) {
+        set(content: string) {
             self.content = content.replace(/[\r\n\v]+/g, "");
         },
-        get() {
-            return self.content
-        },
-        getTrimmed() {
-            return self.content.trim()
-        },
-        clear() {
-            self.content = ""
+        createQuestion() {
+            if(self.content.trim() != "") {
+                createQuestion(self.content.trim(), getQuestionsRootStore(self).course_id, getQuestionsRootStore(self).lecture_id);
+                self.content = ""
+            }
         }
     }));
 

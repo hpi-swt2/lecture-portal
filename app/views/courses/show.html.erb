@@ -1,0 +1,82 @@
+<% if !@current_user.is_student %>
+  <div class="d-flex justify-content-center my-5">
+    <%= link_to 'Create Lecture', new_course_lecture_path(@course), :class => "btn btn-primary btn-lg"%>
+  </div>
+<% end %>
+
+<p>
+  <strong>Name:</strong>
+  <%= @course.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @course.description %>
+</p>
+
+<p>
+  <strong>Status:</strong>
+  <%= @course.status %>
+</p>
+
+<table class="table .table-sm table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Name</th>
+    <th scope="col">Enrollment key</th>
+    <th class="col-sm" scope="col">Status</th>
+    <% if !@current_user.is_student%>
+      <th scope="col" colspan="4"></th>
+    <% else %>
+      <th scope="col" colspan="2"></th>
+    <% end %>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% @course.lectures.each do |lecture| %>
+    <tr>
+      <td><%= lecture.name %></td>
+      <td><%= lecture.enrollment_key %></td>
+      <td><%= lecture.status%></td>
+
+      <% if !@current_user.is_student%>
+        <% if lecture.status == "running" %>
+          <td></td>
+          <td class="text-right">
+            <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+          </td>
+          <td class="text-right">
+            <%= link_to 'End', end_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
+          </td>
+        <% else %>
+          <% if lecture.status == "created" %>
+          <td class="text-right">
+            <%= link_to 'Start', start_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary"%>
+          </td>
+            <% end %>
+          <td></td>
+        <% end %>
+        <td class="text-right">
+          <%= link_to 'Edit', edit_course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+        </td>
+      <% end %>
+      <% if @current_user.is_student%>
+        <% if lecture.status == "running"%>
+          <td class="text-right">
+            <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+          </td>
+          <td class="text-right">
+            <%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
+          </td>
+        <% else %>
+          <td></td>
+        <% end %>
+      <% end %>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<%= link_to 'Edit', edit_course_path(@course) %> |
+<%= link_to 'Back', root_path %>

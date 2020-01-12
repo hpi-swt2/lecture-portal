@@ -1,0 +1,7 @@
+<%= form_for @file, html: { multipart: true } do |f| %>
+  <%= f.label :lecture %>
+  <%= f.number_field :lecture %>
+  <%= f.label :data %>
+  <%= f.file_field_tag :data %>
+  <%= f.submit "Save", class: "btn btn-primary" %>
+<% end %>

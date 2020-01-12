@@ -5,38 +5,38 @@ describe "The show lecture page", type: :feature do
   include Devise::Test::IntegrationHelpers
 
   describe "as a lecturer" do
-    before(:each) do
-      @lecturer = FactoryBot.create(:user, :lecturer)
-      @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
-      sign_in @lecturer
-    end
-
-    it "should have no end button if the lecture is not running" do
-      visit(lecture_path(@lecture))
-      expect(page).not_to have_selector("input[type=submit][value='End Lecture']")
-    end
-
-
-    it "should have an end button if the lecture is running" do
-      @lecture.update(status: "running")
-      visit(lecture_path(@lecture))
-      expect(page).to have_selector("input[type=submit][value='End Lecture']")
-    end
-
-    it "should end the lecture if the end button is clicked" do
-      @lecture.update(status: "running")
-      visit(lecture_path(@lecture))
-      click_on("End")
-      @lecture.reload
-      expect(@lecture.status).to eq("ended")
-    end
-
-    it "should not be accesible by another lecturer" do
-      @lecture2 = FactoryBot.create(:lecture)
-      visit(lecture_path(@lecture2))
-      expect(page).to_not have_current_path(lecture_path(@lecture2))
-    end
+  before(:each) do
+    @lecturer = FactoryBot.create(:user, :lecturer)
+    @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+    sign_in @lecturer
   end
+
+  it "should have no end button if the lecture is not running" do
+    visit(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
+    expect(page).not_to have_link("End Lecture")
+  end
+
+
+  it "should have an end button if the lecture is running" do
+    @lecture.update(status: "running")
+    visit(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
+    expect(page).to have_link("End Lecture")
+  end
+
+  it "should end the lecture if the end button is clicked" do
+    @lecture.update(status: "running")
+    visit(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
+    click_on("End")
+    @lecture.reload
+    expect(@lecture.status).to eq("ended")
+  end
+
+  it "should not be accesible by another lecturer" do
+    @lecture2 = FactoryBot.create(:lecture)
+    visit(course_lecture_path(course_id: @lecture2.course.id, id: @lecture2.id))
+    expect(page).to_not have_current_path(course_lecture_path(course_id: @lecture2.course.id, id: @lecture2))
+  end
+end
 
   describe "as a student" do
     before(:each) do
@@ -49,7 +49,7 @@ describe "The show lecture page", type: :feature do
     it "students should be able to leave a lecture" do
       @lecture.update(status: "running")
       @lecture.join_lecture(@student)
-      visit(lecture_path(@lecture))
+      visit(course_lecture_path(@lecture.course, @lecture))
       expect(@lecture.participating_students.length).to be 1
       expect(@lecture.participating_students[0]).to eq @student
       @lecture.reload
