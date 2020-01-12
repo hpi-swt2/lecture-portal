@@ -8,12 +8,11 @@
                 <%= link_to (fa_icon 'home', text: 'home'), root_path, class: 'nav-link' %>
             </li>
             <%# https://github.com/plataformatec/devise#controller-filters-and-helpers %>
+        </ul>
+        <ul class="navbar-nav ml-auto">
             <% if user_signed_in? %>
-                <li class="navbar-text">
-                    <%= fa_icon 'user', text: current_user.email %>
-                </li>
                 <li class="nav-item">
-                    <%= link_to (fa_icon 'edit', text: 'edit user'), edit_user_registration_path, class: 'nav-link'%>
+                  <%= link_to (fa_icon 'user', text: 'Show Profile'), users_show_path, class: 'nav-link'%>
                 </li>
                 <li class="nav-item">
                     <%= link_to (fa_icon 'sign-out', text: 'logout'), destroy_user_session_path, method: :delete, class: 'nav-link' %>

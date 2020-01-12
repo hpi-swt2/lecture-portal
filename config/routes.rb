@@ -36,6 +36,10 @@ Rails.application.routes.draw do
       unlocks: "users/unlocks",
   }
 
+  devise_scope :user do
+    get "/users/show" => "users/registrations#show"
+  end
+
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: "home#index"
 
