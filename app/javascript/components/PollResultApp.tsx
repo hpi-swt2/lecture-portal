@@ -3,7 +3,7 @@ import {StoreProvider, createPollOptionsRootStore, initPollOptionsApp} from "../
 import PollResultTable from "./PollResultTable";
 import PollResultPieChart from "./PollResultPieChart";
 import PollResultBarChart from "./PollResultBarChart";
-import CanvasJSReact from "../utils/canvasjs/canvasjs.react";
+import CanvasJSReact from "../lib/canvasjs/canvasjs.react";
 import ParticipantsCount from "./ParticipantsCount";
 var CanvasJS = CanvasJSReact.CanvasJS;
 

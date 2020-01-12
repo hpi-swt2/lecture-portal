@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import { PollOptionsRootStoreModel } from "../stores/PollOptionsRootStore";
 import {useInjectPollOptions} from "../hooks/useInject";
-import CanvasJSReact from "../utils/canvasjs/canvasjs.react";
+import CanvasJSReact from "../lib/canvasjs/canvasjs.react";
 import PollResultDataInitializer from "./PollResultDataInitializer";
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
