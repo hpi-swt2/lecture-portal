@@ -9,7 +9,7 @@ describe "Uploading files", type: :feature do
       data = file_fixture("LICENSE").read
       @lecturer = FactoryBot.create(:user, :lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
-      @file = UploadedFile.new(filename: "LICENSE", content_type: "text/plain", data: data, allowsUpload: @lecture)
+      @file = UploadedFile.new(filename: "LICENSE", content_type: "text/plain", data: data, allowsUpload: @lecture, author: @lecturer)
     end
 
     it "allows a lecture to be associated" do
@@ -29,7 +29,7 @@ describe "Uploading files", type: :feature do
       data = file_fixture("LICENSE").read
       @lecturer = FactoryBot.create(:user, :lecturer)
       @course = FactoryBot.create(:course, creator: @lecturer)
-      @file = UploadedFile.new(filename: "LICENSE", content_type: "text/plain", data: data, allowsUpload: @course)
+      @file = UploadedFile.new(filename: "LICENSE", content_type: "text/plain", data: data, allowsUpload: @course, author: @lecturer)
     end
 
     it "allows a course to be associated" do
