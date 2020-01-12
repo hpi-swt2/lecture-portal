@@ -1,30 +1,3 @@
 <h1>Polls of lecture <%= @lecture.name %></h1>
 
 <%= render 'student_table', polls: @polls %>
-
-<!--
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Is multiselect</th>
-      <th>Is active</th>
-      <th colspan="3"></th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <%# @polls.each do |poll| %>
-    <tr>
-      <td><%#= poll.title %></td>
-      <td><%#= poll.is_multiselect %></td>
-      <td><%#= poll.is_active %></td>
-      <td><%#= link_to 'Your answers', course_lecture_poll_path(@lecture.course.id, @lecture, poll) %></td>
-      <td><%#= link_to 'Answer', edit_course_lecture_poll_path(@lecture.course.id, @lecture, poll) %></td>
-    </tr>
-    <%# end %>
-  </tbody>
-</table>-->
-
-<br>
