@@ -7,10 +7,15 @@
 <h2> <%= @course.name %> </h2>
 <h4> <%= @course.description %> </h4>
 <br>
-<h3> Currently running lectures </h3>
+
+<% if !@course.lectures.empty? %>
+  <h2> Currently running lectures </h2>
+  <%= render 'table_only_running', course: @course %>
+<% end %>
 
 <!-- Describes the currently running lectures table -->
-<table class="table .table-sm  ">
+<!--
+<table class="table .table-sm table-striped">
   <thead>
   <tr>
     <th style="width: 15%">Name</th>
@@ -20,58 +25,59 @@
   </tr>
   </thead>
   <tbody>
-  <% @course.lectures.each do |lecture| %>
-    <% if lecture.status =="running" %>
-      <tr class="border-orange">
-        <td><%= lecture.name %></td>
-        <td><%= lecture.end_time.strftime("%H:%M")  %></td>
-        <td><%= lecture.status%></td>
+  <%# @course.lectures.each do |lecture| %>
+    <%# if lecture.status =="running" %>
+      <tr>
+        <td><%#= lecture.name %></td>
+        <td><%#= lecture.end_time.strftime("%H:%M")  %></td>
+        <td><%#= lecture.status%></td>
 
-        <% if !@current_user.is_student%>
-          <% if lecture.status == "running" %>
+        <%# if !@current_user.is_student%>
+          <%# if lecture.status == "running" %>
             <td></td>
             <td class="text-right">
-              <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+              <%#= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
             </td>
             <td class="text-right">
-              <%= link_to 'End', end_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
+              <%#= link_to 'End', end_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
             </td>
-          <% else %>
-            <% if lecture.status == "created" %>
+          <%# else %>
+            <%# if lecture.status == "created" %>
               <td class="text-right">
-                <%= link_to 'Start', start_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary"%>
+                <%#= link_to 'Start', start_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary"%>
               </td>
-            <% end %>
+            <%# end %>
             <td></td>
-          <% end %>
+          <%# end %>
           <td class="text-right">
-            <%= link_to 'Edit', edit_course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+            <%#= link_to 'Edit', edit_course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
           </td>
-        <% end %>
-        <% if @current_user.is_student%>
-          <% if lecture.status == "running"%>
-            <% if lecture.participating_students.include?(@current_user)%>
+        <%# end %>
+        <%# if @current_user.is_student%>
+          <%# if lecture.status == "running"%>
+            <%# if lecture.participating_students.include?(@current_user)%>
               <td  class="text-right">
-                <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+                <%#= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
               </td>
-            <% else %>
+            <%# else %>
               <td class="text-right">
-                <%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
+                <%#= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
               </td>
-            <% end %>
-          <% end %>
-        <% end %>
+            <%# end %>
+          <%# end %>
+        <%# end %>
       </tr>
-    <% end %>
-  <% end %>
+    <%# end %>
+  <%# end %>
   </tbody>
 </table>
+-->
 
 <br>
 
 <% if !@course.lectures.empty? %>
   <h2>All Lectures</h2>
-  <%= render 'table', course: @course %>
+  <%= render 'table_not_running', course: @course %>
 <% end %>
 
 
