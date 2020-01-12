@@ -4,7 +4,6 @@ class Lecture < ApplicationRecord
   has_many :polls, dependent: :destroy
   has_many :feedbacks
   belongs_to :course
-  # do the same thing with course later
   has_many :uploaded_files, as: :allowsUpload
   enum status: { created: "created", running: "running", ended: "ended" }
 
