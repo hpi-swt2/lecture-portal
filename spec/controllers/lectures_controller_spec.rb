@@ -11,7 +11,7 @@ RSpec.describe LecturesController, type: :controller do
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
   }
   let(:valid_attributes_with_lecturer_with_course) {
-    valid_attributes_with_lecturer.merge(course: FactoryBot.create(:course),)
+    valid_attributes_with_lecturer.merge(course: FactoryBot.create(:course))
   }
   let(:invalid_attributes) {
     { name: "", enrollment_key: "swt", status: "created" }
@@ -53,6 +53,7 @@ RSpec.describe LecturesController, type: :controller do
     end
 
     it "returns a success response for joined students", :logged_lecturer do
+      # lecture = FactoryBot.create(:lecture, valid_attributes_with_lecturer)
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       student = FactoryBot.create(:user, :student)
       lecture.join_lecture(student)
@@ -99,6 +100,8 @@ RSpec.describe LecturesController, type: :controller do
         expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
       end
       it "ended lecture redirects to overview" do
+        # lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "ended")
+        # lecture = FactoryBot.create(:lecture, valid_attributes_with_lecturer.merge(status: "ended"))
         lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "ended")
         login_lecturer(lecture.lecturer)
         get :edit, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
@@ -173,6 +176,8 @@ RSpec.describe LecturesController, type: :controller do
       end
 
       it "redirects to the lecture" do
+        # put :update, params: { id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
+        # expect(response).to redirect_to(lecture_path(@lecture))
         put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
       end
@@ -218,6 +223,8 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to the lectures overview for students" do
       login_student
+      # post :join_lecture, params: { id: @lecture.id }, session: valid_session
+      # expect(response).to redirect_to(lecture_path(@lecture))
       post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
       expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
     end
