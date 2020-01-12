@@ -2,7 +2,7 @@ import React from "react";
 import { observer } from "mobx-react";
 import Question from "./Question";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import useInject from "../hooks/useInject"
+import {useInjectQuestions} from "../hooks/useInject";
 
 const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
   is_student,
@@ -10,14 +10,25 @@ const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
 });
 
 const QuestionsList: React.FunctionComponent<{}> = observer(() => {
-  const { is_student, questionsList } = useInject(mapStore);
+  const { is_student, questionsList } = useInjectQuestions(mapStore);
+
+  const onSortingClick = () => {
+    questionsList.toggleSorting();
+  };
 
   return (
-    <ul className={"questionsList " + (is_student ? "" : "is_lecturer")}>
-      {questionsList.list.map(question => (
-        <Question question={question} key={question.id} />
-      ))}
-    </ul>
+    <div className={"questionsList" + (is_student ? "" : " is_lecturer")}>
+      <div className="questionsFilter">
+        <div className="sorting" onClick={onSortingClick}>
+          {questionsList.is_sorted_by_time ? "time" : "votes"}
+        </div>
+      </div>
+      <ul className={is_student ? "" : "is_lecturer"}>
+        {questionsList.list.map(question => (
+          <Question question={question} key={question.id} />
+        ))}
+      </ul>
+    </div>
   );
 });
 
