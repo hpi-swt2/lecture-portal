@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_11_115936) do
+ActiveRecord::Schema.define(version: 2020_01_12_153848) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -33,6 +33,11 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.index ["lecture_id"], name: "index_courses_on_lecture_id"
   end
 
+  create_table "courses_lectures", id: false, force: :cascade do |t|
+    t.integer "course_id", null: false
+    t.integer "lecture_id", null: false
+  end
+
   create_table "courses_users", id: false, force: :cascade do |t|
     t.integer "course_id", null: false
     t.integer "user_id", null: false
@@ -45,7 +50,9 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.integer "lecture_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
     t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
   create_table "lectures", force: :cascade do |t|
@@ -59,9 +66,6 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.string "status", default: "created"
     t.integer "lecturer_id"
     t.integer "course_id"
-    t.date "date"
-    t.time "start_time"
-    t.time "end_time"
     t.index ["course_id"], name: "index_lectures_on_course_id"
     t.index ["lecturer_id"], name: "index_lectures_on_lecturer_id"
   end
@@ -132,7 +136,9 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_student", default: false, null: false
+    t.integer "feedback_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["feedback_id"], name: "index_users_on_feedback_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
