@@ -1,0 +1,45 @@
+<table class="table table-sm table-striped">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <% if !@current_user.is_student%>
+        <th scope="col">Enrollment key</th>
+        <th scope="col">Status</th>
+      <% end %>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% course.lectures.each do |lecture| %>
+      <tr>
+        <td><%= lecture.name %></td>
+        <% if !@current_user.is_student%>
+          <td><%= lecture.enrollment_key %></td>
+          <td><%= lecture.status%></td>
+        <% end %>
+        <td class="text-right">
+          <% if @current_user.is_student%>
+            <% if lecture.status == "running" %>
+              <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+              <%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
+            <% elsif lecture.status == "ended" %>
+              <%= link_to 'Review', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
+            <% end %>
+          <% else %>
+            <% if lecture.status == "created" %>
+              <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
+              <%= link_to 'Start', start_lecture_path(:course_id => course.id, :id => lecture.id), method: :post, class:"btn btn-primary"%>
+            <% elsif lecture.status == "running" %>
+              <%= link_to 'End', end_lecture_path(:course_id => course.id, :id => lecture.id), method: :post, class:"btn btn-outline-secondary" %>
+              <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
+              <%= link_to 'View', course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+            <% else %>
+              <%= link_to 'Review', course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
