@@ -26,4 +26,11 @@ RSpec.describe "home/index", type: :view do
     visit root_path
     expect(page).to have_button("View")
   end
+
+  it "has link to the user profile" do
+    @current_user = FactoryBot.create(:user, :student)
+    sign_in @current_user
+    visit root_path
+    expect(page).to have_link("Show Profile", href: users_show_path)
+  end
 end
