@@ -4,6 +4,7 @@
       <th scope="col">Name</th>
       <% if !@current_user.is_student%>
         <th scope="col">Enrollment key</th>
+        <th scope="col">Status</th>
       <% end %>
       <th scope="col"></th>
     </tr>
@@ -15,6 +16,7 @@
         <td><%= lecture.name %></td>
         <% if !@current_user.is_student%>
           <td><%= lecture.enrollment_key %></td>
+          <td><%= lecture.status%></td>
         <% end %>
         <td class="text-right">
           <% if @current_user.is_student%>
