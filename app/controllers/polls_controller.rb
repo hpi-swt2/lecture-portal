@@ -4,7 +4,7 @@ class PollsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_is_student
   before_action do |controller|
-    @display_nav_bar = false
+    @hide_navbar = true
   end
 
   # GET /polls

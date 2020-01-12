@@ -14,7 +14,7 @@
   </head>
 
   <body>
-    <% if @display_nav_bar != false %>
+    <% if !@hide_navbar %>
       <%= render "layouts/navbar" %>
     <% end %>
     <%# Bootstrap container, https://getbootstrap.com/docs/4.0/layout/overview/ %>
