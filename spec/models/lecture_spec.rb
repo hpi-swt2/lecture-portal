@@ -60,4 +60,13 @@ RSpec.describe Lecture, type: :model do
     expect { @lecture.save }.to raise_error(ActiveRecord::ReadOnlyRecord)
     expect { @lecture.update(status: "running") }.to raise_error(ActiveRecord::ReadOnlyRecord)
   end
+
+  it "can be changed before it ended" do
+    @lecture.set_active
+    expect(@lecture).to be_valid
+    @lecture.save
+    @lecture.description = @lecture.description + " new"
+    expect(@lecture.save).to be_truthy
+    expect(@lecture.update(status: "running")).to be_truthy
+  end
 end
