@@ -10,7 +10,7 @@
 <h3> Currently running lectures </h3>
 
 <!-- Describes the currently running lectures table -->
-<table class="table .table-sm  ">
+<table class="table .table-sm table-striped">
   <thead>
   <tr>
     <th style="width: 15%">Name</th>
@@ -22,7 +22,7 @@
   <tbody>
   <% @course.lectures.each do |lecture| %>
     <% if lecture.status =="running" %>
-      <tr class="border-orange">
+      <tr>
         <td><%= lecture.name %></td>
         <td><%= lecture.end_time.strftime("%H:%M")  %></td>
         <td><%= lecture.status%></td>

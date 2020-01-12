@@ -47,14 +47,16 @@
 
   <div class="field row">
     <%= form.label "Enable Questions" , :class => "col"%>
-    <%= form.check_box :questions_enabled, :class => "col" %>
-    <div class="col-8"></div>
+    <div class="col-10" style="padding-left: 0%">
+      <%= form.check_box :questions_enabled, :style => "padding-right: 100%" %>
+    </div>
   </div>
 
   <div class="field row">
     <%= form.label "Enable Polls" , :class => "col"%>
-    <%= form.check_box :polls_enabled, :class => "col" %>
-    <div class="col-8"></div>
+    <div class="col-10" style="padding-left: 0%">
+      <%= form.check_box :polls_enabled, :style => "padding-right: 100%" %>
+    </div>
   </div>
 
   <div class="actions">

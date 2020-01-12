@@ -28,7 +28,7 @@
 
         <p class="lead">My Lectures</p>
 
-        <table class="table .table-sm">
+        <table class="table .table-sm table-striped">
           <thead>
           <tr>
             <th style="width: 25%">Name</th>
@@ -39,7 +39,7 @@
 
           <% Lecture.where(course: @participating_courses).each do |lecture| %>
             <% if lecture.status == "running" %>
-              <tr class="border-orange">
+              <tr>
                 <td><%= lecture.course.name %> - <%= lecture.name %></td>
                 <td><%= lecture.end_time.strftime("%H:%M")  %></td>
                 <% if @participating_lectures.include?(lecture)  %>
