@@ -62,14 +62,14 @@ describe "The course detail page", type: :feature do
 
     it "should have an \"edit\" button." do
       visit course_path(@course)
-      expect(page).to have_link("Edit", href: edit_course_lecture_path(:course_id => @course.id, :id => @lecture.id))
+      expect(page).to have_link("Edit", href: edit_course_lecture_path(course_id: @course.id, id: @lecture.id))
     end
 
     it "should redirect to current course page when accessed by a student" do
       @student = FactoryBot.create(:user, :student)
       @course.join_course(@student)
       sign_in @student
-      visit(course_lecture_path(:course_id => @course.id, :id => @lecture.id))
+      visit(course_lecture_path(course_id: @course.id, id: @lecture.id))
       expect(page).to have_current_path(course_path(@course))
     end
   end
