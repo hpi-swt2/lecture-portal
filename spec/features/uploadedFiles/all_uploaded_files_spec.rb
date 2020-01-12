@@ -9,9 +9,24 @@ describe "The uploaded files index page", type: :feature do
       data = file_fixture("LICENSE").read
       @lecturer = FactoryBot.create(:user, :lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
-      @file = UploadedFile.new(filename: "LICENSE", content_type: "text/plain", data: data, allowsUpload: @lecture)
+      @file = UploadedFile.new(filename: "LICENSE", content_type: "text/plain", data: data, allowsUpload: @lecture, author: @lecturer)
       @file.save
       sign_in @lecturer
+    end
+
+    it "has an author" do
+      expect(@file.author).to_not be_nil
+      expect(@file).to be_valid
+    end
+
+    it "should not be vaild without an author" do
+      @file.author = nil
+      expect(@file).to_not be_valid
+    end
+
+    it "should be assosiatable from the author" do
+      fileAuthor = @file.author
+      expect(fileAuthor.uploaded_files.include?(@file)).to be_truthy
     end
 
     it "should show the license content type" do
