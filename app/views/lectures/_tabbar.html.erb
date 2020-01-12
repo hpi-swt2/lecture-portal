@@ -21,9 +21,9 @@
   <aside class="actions-right">
     <% if @lecture.status == "running" %>
       <% if current_user.is_student %>
-        <%= button_to "Leave Lecture", {action: "leave_lecture", params: {id: @lecture.id}}, { class: "btn btn-outline-secondary"} %>
+        <%= link_to "Leave Lecture", leave_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class:"btn btn-outline-secondary" %>
       <% else %>
-        <%= button_to "End Lecture", {action: "end_lecture", params: {id: @lecture.id}}, { class: "btn btn-outline-secondary"} %>
+        <%= link_to "End Lecture", end_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class:"btn btn-outline-secondary" %>
       <% end %>
     <% end %>
   </aside>
