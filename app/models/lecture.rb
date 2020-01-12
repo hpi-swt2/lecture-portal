@@ -1,23 +1,3 @@
-# needs to be at the top of the file
-class LectureValidator < ActiveModel::Validator
-  # changing attributes from a lecture is prohibited if the lecture ended
-  def validate(lecture)
-    if lecture.ended? && lecture.id
-      db_lecture = Lecture.find(lecture.id)
-      attributes_changed = lecture != db_lecture
-      # Additional id comparison is needed since you get the first entry in the db if the lecture has no id
-      if attributes_changed && lecture.id == db_lecture.id
-        (lecture_set_from_running_to_ended = lecture.ended?) && db_lecture.running?
-        other_attributes_than_status_changed = !lecture.compareIgnoreStatus(db_lecture)
-        # allow changing the lecture from running to ended
-        if !lecture_set_from_running_to_ended || other_attributes_than_status_changed
-          lecture.errors[:base] << "You cannot edit a lecture when is has been archived."
-        end
-      end
-    end
-  end
-end
-
 class Lecture < ApplicationRecord
   belongs_to :lecturer, class_name: :User
   has_and_belongs_to_many :participating_students, class_name: :User
@@ -29,7 +9,6 @@ class Lecture < ApplicationRecord
 
   validates :name, presence: true, length: { in: 2..40 }
   validates :enrollment_key, presence: true, length: { in: 3..20 }
-  validates_with LectureValidator
   scope :active, -> { where status: "running" }
 
 
@@ -69,5 +48,14 @@ class Lecture < ApplicationRecord
   def to_s
     "{ id:" + id.to_s + " status: " + status.to_s + " name: " + name + " description: " + description +
         " enrollment_key : " + enrollment_key + " polls_enabled " + polls_enabled.to_s + " questions_enabled " + questions_enabled.to_s + "}"
+  end
+
+
+  def readonly?
+    if self.id
+      db_lecture = Lecture.find(self.id)
+      return db_lecture.status == "ended"
+    end
+    false
   end
 end
