@@ -85,7 +85,7 @@ RSpec.describe LecturesController, type: :controller do
       expect(response).to redirect_to(course_path(id: (course.id)))
     end
     it "returns a success response for lecturer", :logged_lecturer do
-      course = FactoryBot.create(:course)
+      course = FactoryBot.create(:course, creator: @lecturer)
       get :new, params: { course_id: (course.id) }, session: valid_session
       expect(response).to be_successful
     end
@@ -119,7 +119,7 @@ RSpec.describe LecturesController, type: :controller do
   describe "POST #create" do
     context "with valid params" do
       it "creates a new Lecture", :logged_lecturer do
-        course = FactoryBot.create(:course)
+        course = FactoryBot.create(:course, creator: @lecturer)
         expect {
           post :create, params: { course_id: (course.id), lecture: valid_attributes }, session: valid_session
         }.to change(Lecture, :count).by(1)
@@ -133,14 +133,14 @@ RSpec.describe LecturesController, type: :controller do
       end
 
       it "creates a new Lecture with description", :logged_lecturer do
-        course = FactoryBot.create(:course)
+        course = FactoryBot.create(:course, creator: @lecturer)
         expect {
           post :create, params: { course_id: (course.id), lecture: valid_attributes_with_description }, session: valid_session
         }.to change(Lecture, :count).by(1)
       end
 
       it "redirects to the lecture dashboard", :logged_lecturer do
-        course = FactoryBot.create(:course)
+        course = FactoryBot.create(:course, creator: @lecturer)
         post :create, params: { course_id: (course.id), lecture: valid_attributes }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(course_id: course.id, id: Lecture.find_by(course_id: course.id).id))
       end
@@ -148,7 +148,7 @@ RSpec.describe LecturesController, type: :controller do
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)", :logged_lecturer do
-        course = FactoryBot.create(:course)
+        course = FactoryBot.create(:course, creator: @lecturer)
         post :create, params: { course_id: (course.id), lecture: invalid_attributes }, session: valid_session
         expect(response).to be_successful
       end
@@ -184,10 +184,10 @@ RSpec.describe LecturesController, type: :controller do
     end
 
     context "with invalid params" do
-      it "redirects to root for other lecturers", :logged_lecturer do
+      it "redirects to course show for other lecturers", :logged_lecturer do
         lecture = Lecture.create! valid_attributes_with_lecturer_with_course
         put :update, params: { course_id: lecture.course.id, id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(course_path(id: lecture.course.id))
       end
       it "returns a success response for lecturer (i.e. to display the 'edit' template)", :logged_lecturer do
         lecture = Lecture.create! valid_attributes_with_lecturer_with_course
@@ -271,6 +271,7 @@ RSpec.describe LecturesController, type: :controller do
     sign_in(user, scope: :user)
   end
   def login_lecturer(user = FactoryBot.create(:user, :lecturer))
+    @lecturer = user
     sign_in(user, scope: :user)
   end
 end
