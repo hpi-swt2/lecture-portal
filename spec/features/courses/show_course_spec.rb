@@ -14,7 +14,7 @@ describe "The course detail page", type: :feature do
 
     it "should have a \"Start\" button for not started lectures" do
       visit(course_path(@course))
-      expect(page).to have_link("Start")
+      expect(page).to have_link("Start", href: start_lecture_path(course_id: @lecture.course.id) + "?id=" + @lecture.id.to_s)
     end
 
     it "should not have a \"View\" link for not started lectures" do
@@ -72,5 +72,36 @@ describe "The course detail page", type: :feature do
       visit(course_lecture_path(course_id: @course.id, id: @lecture.id))
       expect(page).to have_current_path(course_path(@course))
     end
+
+    it "should show a file that was uploaded to the course by a lecturer" do
+      @file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course" )
+      visit(course_path(@course))
+      expect(page).to have_link(@file.filename, href: uploaded_file_path(@file))
+    end
+
+    it "should show a file that was uploaded to the course by a student" do
+      @student = FactoryBot.create(:user, :student)
+      @file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course" )
+      visit(course_path(@course))
+      expect(page).to have_link(@file.filename, href: uploaded_file_path(@file))
+    end
+
+    it "should not show a file that is not linked to the course" do
+      @other_course = FactoryBot.create(:course, creator: @lecturer)
+      @file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @other_course.id, allowsUpload_type: "Course" )
+      visit(course_path(@course))
+      expect(page).not_to have_link(@file.filename, href: uploaded_file_path(@file))
+    end
+
+    it "should show student and lecturer files in according tabs" do
+      @student = FactoryBot.create(:user, :student)
+      @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course" )
+      @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course" )
+      visit(course_path(@course))
+      expect(page).to have_xpath(".//div[@id='files-course']//ul//li//div//a[@href='#{uploaded_file_path(@lecturer_file)}']")
+      expect(page).to_not have_xpath(".//div[@id='files-course']//ul//li//div//a[@href='#{uploaded_file_path(@student_file)}']")
+      expect(page).to have_xpath(".//div[@id='files-students']//ul//li//div//a[@href='#{uploaded_file_path(@student_file)}']")
+      expect(page).to_not have_xpath(".//div[@id='files-students']//ul//li//div//a[@href='#{uploaded_file_path(@lecturer_file)}']")
+   end
   end
 end
