@@ -1,5 +1,8 @@
 <%= render 'tabbar', current_user: @current_user %>
 
+<h5><%= @lecture.name %></h5>
+<p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
+
 <div class="tab-content" id="lectureTabsContent">
   <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
     <div id="updates">

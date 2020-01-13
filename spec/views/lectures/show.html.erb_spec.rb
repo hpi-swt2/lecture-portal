@@ -10,7 +10,10 @@ RSpec.describe "lectures/show", type: :view do
                                   enrollment_key: "Enrollment Key",
                                   status: "running",
                                   lecturer: FactoryBot.create(:user, :lecturer),
-                                  course: @course
+                                  course: @course,
+                                  date: "2020-02-02",
+                                  start_time: "2020-01-01 10:10:00",
+                                  end_time: "2020-01-01 10:20:00"
     ))
   end
 

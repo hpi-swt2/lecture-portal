@@ -2,10 +2,10 @@ require "rails_helper"
 
 RSpec.describe LecturesController, type: :controller do
   let(:valid_attributes) {
-    { name: "SWT", enrollment_key: "swt", status: "created", questions_enabled: true, polls_enabled: true }
+    { name: "SWT", enrollment_key: "swt", status: "created", date: "2020-02-02", start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
   }
   let(:valid_attributes_with_description) {
-    { name: "SWT", enrollment_key: "swt", status: "created", questions_enabled: true, polls_enabled: true, description: "description" }
+    { name: "SWT", enrollment_key: "swt", status: "created", date: "2020-02-02", start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true, description: "description" }
   }
   let(:valid_attributes_with_lecturer) {
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))

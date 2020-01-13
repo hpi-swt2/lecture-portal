@@ -10,11 +10,10 @@ RSpec.describe "courses/show", type: :view do
     sign_in @lecturer
   end
 
-  it "renders attributes of the course in <p>" do
+  it "renders title and description of the course " do
     render
-    expect(rendered).to match(/SWT2/)
-    expect(rendered).to match(/ruby/)
-    expect(rendered).to match(/open/)
+    expect(rendered).to have_text("SWT2")
+    expect(rendered).to have_text("ruby")
   end
 
   it "renders a list of lectures" do
