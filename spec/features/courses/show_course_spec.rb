@@ -103,5 +103,13 @@ describe "The course detail page", type: :feature do
      expect(page).to have_xpath(".//div[@id='files-students']//ul//li//div//a[@href='#{uploaded_file_path(@student_file)}']")
      expect(page).to_not have_xpath(".//div[@id='files-students']//ul//li//div//a[@href='#{uploaded_file_path(@lecturer_file)}']")
    end
+
+    it "should download a course file when clicking on it" do
+      @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+      visit(course_path(@course))
+      click_on @lecturer_file.filename
+      expect(page.body).to eql @lecturer_file.data
+      expect(page.response_headers["Content-Type"]).to eql @lecturer_file.content_type
+    end
   end
 end
