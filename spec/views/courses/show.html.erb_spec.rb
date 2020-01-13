@@ -25,6 +25,4 @@ RSpec.describe "courses/show", type: :view do
     assert_select "tr>td", text: @lecture.enrollment_key, count: 1
     assert_select "tr>td", text: @lecture.status, count: 1
   end
-
-  
 end
