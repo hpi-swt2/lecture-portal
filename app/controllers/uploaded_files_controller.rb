@@ -12,6 +12,14 @@ class UploadedFilesController < ApplicationController
     @uploaded_file.author = current_user
   end
 
+
+  # DELETE /uploaded_files/1
+  def destroy
+    @uploaded_file = UploadedFile.find(params[:id])
+    @uploaded_file.destroy
+    redirect_to course_path(@uploaded_file.allowsUpload), notice: "File was successfully deleted."
+  end
+
   # POST /uploaded_files
   def create
     file = uploaded_file_params["attachment"]
