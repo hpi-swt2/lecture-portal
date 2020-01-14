@@ -1,5 +1,6 @@
 class UploadedFilesController < ApplicationController
   before_action :authenticate_user!
+  before_action :validate_destroy_rights, only: [:destroy]
 
   # GET /uploaded_files
   def index
@@ -15,9 +16,12 @@ class UploadedFilesController < ApplicationController
 
   # DELETE /uploaded_files/1
   def destroy
-    @uploaded_file = UploadedFile.find(params[:id])
     @uploaded_file.destroy
-    redirect_to course_path(@uploaded_file.allowsUpload), notice: "File was successfully deleted."
+    if @uploaded_file.allowsUpload.class.name == "Course"
+      redirect_to course_path(@uploaded_file.allowsUpload), notice: "File was successfully deleted."
+    else
+      redirect_to course_lecture_path(@uploaded_file.allowsUpload), notice: "File was successfully deleted."
+    end
   end
 
   # POST /uploaded_files
@@ -55,5 +59,14 @@ class UploadedFilesController < ApplicationController
     # Only allow a trusted parameter "white list" through.
     def uploaded_file_params
       params.require(:uploaded_file).permit(:attachment, :lecture)
+    end
+
+    def validate_destroy_rights
+      @uploaded_file = UploadedFile.find(params[:id])
+      unless (current_user == @uploaded_file.author)
+        unless (@uploaded_file.allowsUpload.class.name == "Course") && (@uploaded_file.allowsUpload.creator_id == current_user.id)
+          redirect_to (uploaded_files_url), notice: "You can't delete this file."
+        end
+      end
     end
 end
