@@ -4,20 +4,16 @@
   </div>
 <% end %>
 
-<p>
-  <strong>Name:</strong>
-  <%= @course.name %>
-</p>
+<h2> <%= @course.name %> </h2>
+<h4> <%= @course.description %> </h4>
+<br>
 
-<p>
-  <strong>Description:</strong>
-  <%= @course.description %>
-</p>
+<% if !@course.lectures.empty? %>
+  <h2> Currently running lectures </h2>
+  <%= render 'table_only_running', course: @course %>
+<% end %>
 
-<p>
-  <strong>Status:</strong>
-  <%= @course.status %>
-</p>
+<br>
 
 <section>
   <h2>Files</h2>
@@ -44,12 +40,14 @@
 
 <% if !@course.lectures.empty? %>
   <h2>All Lectures</h2>
-  <%= render 'table', course: @course %>
+  <%= render 'table_not_running', course: @course %>
 <% end %>
 
 
 <% if @current_user.is_student %>
   <%= link_to "Leave", leave_course_path(id: @course.id), method: :post, class:"btn btn-primary" %> |
+<% end %>
+<% if !@current_user.is_student %>
   <%= link_to 'Edit', edit_course_path(@course) %> |
 <% end %>
 <%= link_to 'Back', root_path %>

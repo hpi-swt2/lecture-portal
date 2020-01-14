@@ -19,6 +19,21 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture).not_to be_valid
   end
 
+  it "is not valid without a date" do
+    @lecture.date = ""
+    expect(@lecture).not_to be_valid
+  end
+
+  it "is not valid without a start time" do
+    @lecture.start_time = ""
+    expect(@lecture).not_to be_valid
+  end
+
+  it "is not valid without a end time" do
+    @lecture.end_time = ""
+    expect(@lecture).not_to be_valid
+  end
+
   it "has all features enabled by default" do
     expect(@lecture.polls_enabled).to be true
     expect(@lecture.questions_enabled).to be true
@@ -52,11 +67,21 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture.participating_students.length).to be 0
   end
 
-  it "is cannot be changed when it ended" do
+  it "cannot be changed after it ended" do
     @lecture.set_inactive
     expect(@lecture).to be_valid
     @lecture.save
     @lecture.description = @lecture.description + " new"
-    expect(@lecture).not_to be_valid
+    expect { @lecture.save }.to raise_error(ActiveRecord::ReadOnlyRecord)
+    expect { @lecture.update(status: "running") }.to raise_error(ActiveRecord::ReadOnlyRecord)
+  end
+
+  it "can be changed before it ended" do
+    @lecture.set_active
+    expect(@lecture).to be_valid
+    @lecture.save
+    @lecture.description = @lecture.description + " new"
+    expect(@lecture.save).to be_truthy
+    expect(@lecture.update(status: "running")).to be_truthy
   end
 end

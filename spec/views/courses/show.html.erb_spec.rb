@@ -12,7 +12,7 @@ RSpec.describe "courses/show", type: :view do
     sign_in @lecturer
   end
 
-  it "renders attributes of the course in <p>" do
+  it "renders title and description of the course " do
     render
     expect(rendered).to match(@course.name)
     expect(rendered).to match(@course.description)
