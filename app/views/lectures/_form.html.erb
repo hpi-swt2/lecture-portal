@@ -4,9 +4,9 @@
       <h2><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</h2>
 
       <ul>
-      <% lecture.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% lecture.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
@@ -20,6 +20,23 @@
   <div class="form-group">
     <%= form.label :name %>
     <%= form.text_field :name, :readonly => lecture.ended?, class: "form-control" %>
+  </div>
+
+  <div class="row">
+    <div class="date form-group col-12 col-sm-4">
+      <%= form.label :date %>
+      <%= form.date_field :date, :readonly => lecture.ended?, class: "form-control" %>
+    </div>
+
+    <div class="start_time form-group col-6 col-sm-4">
+      <%= form.label :start_time %>
+      <%= form.time_field :start_time, :readonly => lecture.ended?, class: "form-control" %>
+    </div>
+
+    <div class="end_time form-group col-6 col-sm-4">
+      <%= form.label :end_time %>
+      <%= form.time_field :end_time, :readonly => lecture.ended?, class: "form-control" %>
+    </div>
   </div>
 
   <div class="form-group">

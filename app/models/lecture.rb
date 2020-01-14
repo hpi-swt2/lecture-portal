@@ -6,6 +6,9 @@ class Lecture < ApplicationRecord
   belongs_to :course
   has_many :uploaded_files, as: :allowsUpload
   enum status: { created: "created", running: "running", ended: "ended" }
+  validates :date, presence: true
+  validates :start_time, presence: true
+  validates :end_time, presence: true
 
   validates :name, presence: true, length: { in: 2..40 }
   validates :enrollment_key, presence: true, length: { in: 3..20 }
