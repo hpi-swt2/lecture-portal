@@ -1,5 +1,8 @@
 <%= render 'tabbar', current_user: @current_user %>
 
+<h5><%= @lecture.name %></h5>
+<p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
+
 <div class="tab-content" id="lectureTabsContent">
   <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
     <div id="updates">
@@ -14,20 +17,11 @@
   <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
     <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
   </div>
-  <div class="tab-pane fade" id="polls" role="tabpanel" aria-labelledby="polls-tab">
-    <h2>Polls</h2>
-    <% for poll in @lecture.polls %>
-      <ul>
-        <li>
-          <%= poll.title%>
-          <% if poll.is_active and @current_user.is_student %>
-            <%= link_to 'Vote', edit_course_lecture_poll_path(@lecture.course, @lecture, poll), class:"btn btn-primary" %>
-          <% end %>
 
-        </li>
-      </ul>
-    <% end %>
+  <div class="tab-pane fade poll-tab-container" id="polls" role="tabpanel" aria-labelledby="polls-tab" >
+    <iframe class="polls-iframe" src="<%= course_lecture_polls_path(@course, @lecture) %>"></iframe>
   </div>
+
   <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
 
     <% if @current_user.is_student %>
