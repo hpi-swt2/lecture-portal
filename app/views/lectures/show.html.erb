@@ -19,7 +19,7 @@
   </div>
 
   <div class="tab-pane fade poll-tab-container" id="polls" role="tabpanel" aria-labelledby="polls-tab" >
-    <iframe class="polls-iframe" src="<%= "http://localhost:3000/courses/#{@course.id}/lectures/#{@lecture.id}/polls" %>"></iframe>
+    <iframe class="polls-iframe" src="<%= course_lecture_polls_path(@course, @lecture) %>"></iframe>
   </div>
 
   <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
