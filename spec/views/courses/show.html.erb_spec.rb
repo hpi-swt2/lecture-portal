@@ -16,7 +16,6 @@ RSpec.describe "courses/show", type: :view do
     render
     expect(rendered).to match(@course.name)
     expect(rendered).to match(@course.description)
-    expect(rendered).to match(@course.status)
   end
 
   it "renders a list of lectures" do
