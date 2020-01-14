@@ -111,5 +111,40 @@ describe "The course detail page", type: :feature do
       expect(page.body).to eql @lecturer_file.data
       expect(page.response_headers["Content-Type"]).to eql @lecturer_file.content_type
     end
+
+    it "should have delete links for every file" do
+     @student = FactoryBot.create(:user, :student)
+     @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+     @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+     visit(course_path(@course))
+     @delete_link_student_file = find_link("Delete File", href: uploaded_file_path(@student_file))
+     @delete_link_lecturer_file =find_link("Delete File", href: uploaded_file_path(@lecturer_file))
+     expect { @delete_link_student_file.click }.to change(UploadedFile, :count).by(-1)
+     expect { @delete_link_lecturer_file.click }.to change(UploadedFile, :count).by(-1)
+   end
+  end
+
+  context "being signed in as a student" do
+    before(:each) do
+      @lecturer = FactoryBot.create(:user, :lecturer)
+      @course = FactoryBot.create(:course, creator: @lecturer)
+      @lecture = FactoryBot.create(:lecture, lecturer: @lecturer, course: @course)
+      @student = FactoryBot.create(:user, :student)
+      @course.join_course(@student)
+      sign_in @student
+    end
+
+    it "should only have delete links for his own files" do
+      @other_student = FactoryBot.create(:user, :student)
+      @other_student_file = FactoryBot.create(:uploaded_file, author: @other_student, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+      @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+      @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+      visit(course_path(@course))
+      expect(page).to have_selector("a[href='#{uploaded_file_path(@student_file)}'][data-method='delete']")
+      expect(page).to_not have_selector("a[href='#{uploaded_file_path(@lecturer_file)}'][data-method='delete']")
+      expect(page).to_not have_selector("a[href='#{uploaded_file_path(@other_student_file)}'][data-method='delete']")
+      @delete_link = find_link("Delete File", href: uploaded_file_path(@student_file))
+      expect { @delete_link.click }.to change(UploadedFile, :count).by(-1)
+    end
   end
 end
