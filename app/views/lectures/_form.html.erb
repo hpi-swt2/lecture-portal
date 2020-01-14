@@ -4,9 +4,9 @@
       <h2><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</h2>
 
       <ul>
-      <% lecture.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% lecture.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
@@ -23,6 +23,33 @@
       <%= form.text_field :name, :readonly => true, class: "col-sm-9" %>
     <% else %>
       <%= form.text_field :name, class: "col-sm-9" %>
+    <% end %>
+  </div>
+
+  <div class="date row">
+    <%= form.label :date, class: "col-sm-3 col-form-label" %>
+    <% if lecture.ended? %>
+      <%= form.date_field :date, :readonly => true, class: "col-sm-9" %>
+    <% else %>
+      <%= form.date_field :date, class: "col-sm-9" %>
+    <% end %>
+  </div>
+
+  <div class="start_time row">
+    <%= form.label :start_time, class: "col-sm-3 col-form-label" %>
+    <% if lecture.ended? %>
+      <%= form.time_field :start_time, :readonly => true, class: "col-sm-9" %>
+    <% else %>
+      <%= form.time_field :start_time, class: "col-sm-9" %>
+    <% end %>
+  </div>
+
+  <div class="end_time row">
+    <%= form.label :end_time, class: "col-sm-3 col-form-label" %>
+    <% if lecture.ended? %>
+      <%= form.time_field :end_time, :readonly => true, class: "col-sm-9" %>
+    <% else %>
+      <%= form.time_field :end_time, class: "col-sm-9" %>
     <% end %>
   </div>
 
