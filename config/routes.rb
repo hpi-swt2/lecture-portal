@@ -15,6 +15,7 @@ Rails.application.routes.draw do
           patch :save_answers
           post :save_answers
           get :stop_start
+          get :answer
         end
       end
       resources :feedbacks
@@ -35,6 +36,10 @@ Rails.application.routes.draw do
       sessions: "users/sessions",
       unlocks: "users/unlocks",
   }
+
+  devise_scope :user do
+    get "/users/show" => "users/registrations#show"
+  end
 
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
   root to: "home#index"
