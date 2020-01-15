@@ -1,0 +1,15 @@
+<ul class="list-group mb-2">
+  <% files.each do |file| %>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <div>
+        <%= fa_icon 'file', :class => "text-info" %>
+        <%= link_to file.filename, uploaded_file_path(file), target: "_self", class:"btn btn-link" %>
+      </div>
+      <div>
+        <% if @current_user == file.author || @current_user == @course.creator %>
+          <button class="btn btn-sm btn-outline-danger">TODO ADD DELETE ACTION</button>
+        <% end %>
+      </div>
+    </li>
+  <% end %>
+</ul>
