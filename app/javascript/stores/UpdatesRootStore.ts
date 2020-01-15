@@ -13,6 +13,7 @@ export const getUpdatesRootStore = (target: IAnyStateTreeNode): UpdatesRootStore
 
 const UpdatesRootStore = types.model("UpdatesRootStore", {
     user_id: types.optional(types.integer, -1),
+    course_id: types.optional(types.integer, -1),
     lecture_id: types.optional(types.integer, -1),
     is_student: types.optional(types.boolean, true),
     updatesList: UpdatesList,
@@ -27,6 +28,9 @@ const UpdatesRootStore = types.model("UpdatesRootStore", {
     },
     setLectureId(lecture_id: number) {
         self.lecture_id = lecture_id
+    },
+    setCourseId(course_id: number) {
+        self.course_id = course_id
     }
 }));
 

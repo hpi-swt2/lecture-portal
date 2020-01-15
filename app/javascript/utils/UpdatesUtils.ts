@@ -9,12 +9,12 @@ const StoreContext = createContext<UpdatesRootStoreModel>(
 export const useUpdatesStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
-const getBaseRequestUrl = (lectureId: number): string => {
-    return `/lectures/` + lectureId + `/questions/`;
+const getBaseRequestUrl = (lectureId: number, courseId: number): string => {
+    return `/courses/` + courseId + `/lectures/` + lectureId + `/questions/`;
 };
 
 const loadQuestionsList = (rootStore: UpdatesRootStoreModel) => {
-    fetch(getBaseRequestUrl(rootStore.lecture_id))
+    fetch(getBaseRequestUrl(rootStore.lecture_id, rootStore.course_id))
         .then(res => res.json())
         .then(questions => {
             rootStore.updatesList.setQuestionsList(questions);

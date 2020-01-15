@@ -9,6 +9,7 @@ class UploadedFilesController < ApplicationController
   # GET /uploaded_files/new
   def new
     @uploaded_file = UploadedFile.new
+    @uploaded_file.author = current_user
   end
 
   # POST /uploaded_files
@@ -26,7 +27,7 @@ class UploadedFilesController < ApplicationController
         return
       end
       lecture = Lecture.find(lecture_id)
-      file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: lecture)
+      file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: lecture, author: current_user)
       if file.save
         redirect_to (uploaded_files_url), notice: "Uploaded file was successfully saved."
       else
