@@ -18,7 +18,8 @@
 // navbar_height: 40px;
 // nav_tabs_height: 42px;
 // polls_footer_height: 40px;
+// for notices: 40px;
 
 .poll-tab-container {
-  height: calc(85vh - 40px - 42px - 40px);
+  height: calc(85vh - 40px - 42px - 40px - 80px);
 }
