@@ -62,9 +62,7 @@ class Lecture < ApplicationRecord
     false
   end
 
-  private
-
   def enrollment_key_present?
-    return enrollment_key.present?
+    enrollment_key.present?
   end
 end
