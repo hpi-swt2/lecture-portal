@@ -16,11 +16,11 @@ class UploadedFilesController < ApplicationController
 
   # DELETE /uploaded_files/1
   def destroy
-    @uploaded_file.destroy
-    if @uploaded_file.allowsUpload.class.name == "Course"
-      redirect_to course_path(@uploaded_file.allowsUpload), notice: "File was successfully deleted."
+    uploaded_file.destroy
+    if uploaded_file.allowsUpload.class.name == "Course"
+      redirect_to course_path(uploaded_file.allowsUpload), notice: "File was successfully deleted."
     else
-      redirect_to course_lecture_path(@uploaded_file.allowsUpload), notice: "File was successfully deleted."
+      redirect_to course_lecture_path(uploaded_file.allowsUpload), notice: "File was successfully deleted."
     end
   end
 
