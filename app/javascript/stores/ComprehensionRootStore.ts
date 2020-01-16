@@ -11,7 +11,7 @@ const ComprehensionRootStore = types.model("ComprehensionRootStore", {
     lecture_id: types.optional(types.integer, -1),
     is_student: types.optional(types.boolean, true),
 
-    last_updated: types.optional(types.Date, () => new Date()),
+    last_updated: types.optional(types.maybeNull(types.Date), null),
     // for student
     active_stamp: types.optional(types.number, -1),
     // for lecturer
@@ -34,11 +34,14 @@ const ComprehensionRootStore = types.model("ComprehensionRootStore", {
             self.results.replace(comprehension_state.status);
         }
 
-        try {
-            self.last_updated = new Date(comprehension_state.last_update);
-        } catch {
+        if(comprehension_state.last_update != null) {
+            try {
+                self.last_updated = new Date(comprehension_state.last_update);
+            } catch {
+                self.last_updated = null;
+            }
+        } else
             self.last_updated = null;
-        }
     }
 }));
 

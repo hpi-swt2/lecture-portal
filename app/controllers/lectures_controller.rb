@@ -104,12 +104,13 @@ class LecturesController < ApplicationController
   # PUT /lectures/:id/comprehension
   def update_comprehension_stamp
     stamp = LectureComprehensionStamp.where(lecture_id: @lecture.id, user_id: current_user.id)
-    if stamp
+    if stamp.size > 0
       stamp.update_all(:status => params[:status], :updated_at => DateTime.now)
+      stamp.first.broadcast_update
     else
       stamp = LectureComprehensionStamp.create(:user => current_user, :status => params[:status], :lecture => @lecture)
+      stamp.broadcast_update
     end
-    stamp.first.broadcast_update
   end
 
   def get_comprehension

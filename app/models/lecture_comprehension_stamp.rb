@@ -13,7 +13,8 @@ class LectureComprehensionStamp < ApplicationRecord
   end
 
   def broadcast_elimination
-    ComprehensionStampChannel.broadcast_to(@lecture, "expired") # TODO only send to corresponding user
+    ActionCable.server.broadcast "lecture_comprehension_stamp:#{self.lecture_id}:#{self.user_id}",
+                                 { :status => -1, :last_update => self.timestamp }
   end
 
   def timestamp

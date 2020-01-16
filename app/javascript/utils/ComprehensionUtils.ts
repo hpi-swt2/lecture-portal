@@ -33,6 +33,7 @@ const loadComprehensionState = (rootStore: ComprehensionRootStoreModel) => {
 const setupActionCable = (rootStore: ComprehensionRootStoreModel) => {
   setupComprehensionActionCable(rootStore.lecture_id,
       (comprehensionState) => {
+        console.log(comprehensionState);
         rootStore.setComprehensionState(comprehensionState)
       }
   );
