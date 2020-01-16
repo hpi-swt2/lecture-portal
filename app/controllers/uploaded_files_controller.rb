@@ -16,11 +16,11 @@ class UploadedFilesController < ApplicationController
 
   # DELETE /uploaded_files/1
   def destroy
-    uploaded_file.destroy
-    if uploaded_file.allowsUpload.class.name == "Course"
+    @uploaded_file.destroy
+    if @uploaded_file.allowsUpload.class.name == "Course"
       redirect_to course_path(uploaded_file.allowsUpload), notice: "File was successfully deleted."
     else
-      redirect_to course_lecture_path(uploaded_file.allowsUpload), notice: "File was successfully deleted."
+      redirect_to course_lecture_path(@uploaded_file.allowsUpload), notice: "File was successfully deleted."
     end
   end
 
@@ -62,10 +62,10 @@ class UploadedFilesController < ApplicationController
     end
 
     def validate_destroy_rights
-      uploaded_file = UploadedFile.find(params[:id])
-      owner = current_user == uploaded_file.author
-      course_file_and_course_owner = (uploaded_file.allowsUpload.class == Course) && (uploaded_file.allowsUpload.creator_id == current_user.id)
-      lecture_file_and_lecture_owner = (uploaded_file.allowsUpload.class == Lecture) && (uploaded_file.allowsUpload.lecturer_id == current_user.id)
+      @uploaded_file = UploadedFile.find(params[:id])
+      owner = current_user == @uploaded_file.author
+      course_file_and_course_owner = (@uploaded_file.allowsUpload.class == Course) && (@uploaded_file.allowsUpload.creator_id == current_user.id)
+      lecture_file_and_lecture_owner = (@uploaded_file.allowsUpload.class == Lecture) && (@uploaded_file.allowsUpload.lecturer_id == current_user.id)
       unless owner || course_file_and_course_owner || lecture_file_and_lecture_owner
         redirect_to (uploaded_files_url), notice: "You can't delete this file."
       end
