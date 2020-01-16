@@ -183,12 +183,11 @@ RSpec.describe LecturesController, type: :controller do
       end
 
       it "removes all joined students when adding key to keyless lecture", :logged_lecturer do
-        lecture = FactoryBot.create(:lecture, :keyless)
-        student = FactoryBot.create(:user, :student)
-        lecture.join_lecture(student)
-        put :update, params: { course_id: lecture.course.id, id: lecture.to_param, lecture: { enrollment_key: "firstKey" } }, session: valid_session
-        lecture.reload
-        expect(lecture.participating_students).to eq([])
+        @lecture.update(enrollment_key: nil)
+        @lecture.join_lecture(FactoryBot.create(:user, :student))
+        put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: new_attributes }, session: valid_session
+        @lecture.reload
+        expect(@lecture.participating_students.length).to eq(0)
       end
 
     end
