@@ -1,4 +1,5 @@
 require "rails_helper"
+require "action_cable/testing/rspec"
 
 RSpec.describe LecturesController, type: :controller do
   let(:valid_attributes) {
@@ -35,7 +36,7 @@ RSpec.describe LecturesController, type: :controller do
     }
     urls.each do |path, params|
       it " the #{path}  page" do
-        get path, params: params,  session: valid_session
+        get path, params: params, session: valid_session
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -257,70 +258,155 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "PUT #update" do
-  context "with valid params" do
-    let(:new_attributes) {
-      { name: "SWT2", enrollment_key: "epic", status: "running", description: "new description" }
-    }
+    context "with valid params" do
+      let(:new_attributes) {
+        { name: "SWT2", enrollment_key: "epic", status: "running", description: "new description" }
+      }
+      before(:each) do
+        @lecture = Lecture.create! valid_attributes_with_lecturer
+        login_lecturer(@lecture.lecturer)
+      end
+
+      it "updates the requested lecture" do
+        put :update, params: { id: @lecture.to_param, lecture: new_attributes }, session: valid_session
+        @lecture.reload
+        expect(@lecture.name).to eq("SWT2")
+        expect(@lecture.enrollment_key).to eq("epic")
+        expect(@lecture.running?).to eq(true)
+        expect(@lecture.description).to eq("new description")
+        expect(@lecture.status).to eq("running")
+      end
+
+      it "redirects to the lecture" do
+        put :update, params: { id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
+        expect(response).to redirect_to(@lecture)
+      end
+    end
+
+    context "with invalid params" do
+      it "redirects for other lecturers", :logged_lecturer do
+        lecture = Lecture.create! valid_attributes_with_lecturer
+        put :update, params: { id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
+        expect(response).to redirect_to(lectures_url)
+      end
+      it "returns a success response for lecturer (i.e. to display the 'edit' template)", :logged_lecturer do
+        lecture = Lecture.create! valid_attributes_with_lecturer
+        login_lecturer(lecture.lecturer)
+        put :update, params: { id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
+        expect(response).to be_successful
+      end
+    end
+  end
+
+  describe "PUT #update_comprehension_stamp" do
     before(:each) do
-      @lecture = Lecture.create! valid_attributes_with_lecturer
-      login_lecturer(@lecture.lecturer)
+      # login user
+      @lecture = FactoryBot.create(:lecture, status: "running")
+      @user = FactoryBot.create(:user, :student)
+      login_student(@user)
+      post :join_lecture, params: { id: @lecture.id }, session: valid_session
     end
+    context "with valid params" do
+      it "adds a comprehension stamp" do
+        expect {
+          put :update_comprehension_stamp, params: { id: @lecture.id, status: 0 }, session: valid_session
+        }.to change(LectureComprehensionStamp, :count).by(1)
+      end
+      it "changes a comprehension stamp" do
+        expect {
+          put :update_comprehension_stamp, params: { id: @lecture.id, status: 0 }, session: valid_session
+        }.to change(LectureComprehensionStamp, :count).by(1)
+        expect {
+          put :update_comprehension_stamp, params: { id: @lecture.id, status: 1 }, session: valid_session
+        }.to change(LectureComprehensionStamp, :count).by(0)
+      end
 
-    it "updates the requested lecture" do
-      put :update, params: { id: @lecture.to_param, lecture: new_attributes }, session: valid_session
-      @lecture.reload
-      expect(@lecture.name).to eq("SWT2")
-      expect(@lecture.enrollment_key).to eq("epic")
-      expect(@lecture.running?).to eq(true)
-      expect(@lecture.description).to eq("new description")
-      expect(@lecture.status).to eq("running")
-    end
-
-    it "redirects to the lecture" do
-      put :update, params: { id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
-      expect(response).to redirect_to(@lecture)
+      it "broadcasts an update to the user" do
+        expect {
+          put :update_comprehension_stamp, params: { id: @lecture.id, status: 0 }, session: valid_session
+        }.to have_broadcasted_to("lecture_comprehension_stamp:#{@lecture.id}:#{@user.id}").from_channel(ComprehensionStampChannel)
+      end
+      it "does not broadcast an update to another user" do
+        sign_out(@user)
+        @user1 = FactoryBot.create(:user, :student)
+        login_student(@user1)
+        post :join_lecture, params: { id: @lecture.id }, session: valid_session
+        expect {
+          put :update_comprehension_stamp, params: { id: @lecture.id, status: 0 }, session: valid_session
+        }.to_not have_broadcasted_to("lecture_comprehension_stamp:#{@lecture.id}:#{@user.id}").from_channel(ComprehensionStampChannel)
+      end
+      it "broadcasts an update to the lecturer" do
+        expect {
+          put :update_comprehension_stamp, params: { id: @lecture.id, status: 0 }, session: valid_session
+        }.to have_broadcasted_to("lecture_comprehension_stamp:#{@lecture.id}").from_channel(ComprehensionStampChannel)
+      end
     end
   end
 
-  context "with invalid params" do
-    it "redirects for other lecturers", :logged_lecturer do
-      lecture = Lecture.create! valid_attributes_with_lecturer
-      put :update, params: { id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
-      expect(response).to redirect_to(lectures_url)
+  describe "GET #get_comprehension" do
+    before(:each) do
+      # login user
+      @lecture = FactoryBot.create(:lecture, status: "running")
     end
-    it "returns a success response for lecturer (i.e. to display the 'edit' template)", :logged_lecturer do
-      lecture = Lecture.create! valid_attributes_with_lecturer
-      login_lecturer(lecture.lecturer)
-      put :update, params: { id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
-      expect(response).to be_successful
+    context "as student" do
+      before(:each) do
+        @user = FactoryBot.create(:user, :student)
+        login_student(@user)
+        post :join_lecture, params: { id: @lecture.id }, session: valid_session
+      end
+      it "returns correct comprehension level" do
+        stamp = LectureComprehensionStamp.create(user: @user, status: 0, lecture: @lecture)
+        get :get_comprehension, params: { id: @lecture.id }, session: valid_session
+        expect(response.body).to eq({ status: stamp.status, last_update: stamp.timestamp }.to_json)
+      end
+      it "returns empty comprehension level" do
+        get :get_comprehension, params: { id: @lecture.id }, session: valid_session
+        expect(response.body).to eq({ status: -1, last_update: nil }.to_json)
+      end
+
+      it "returns empty comprehension level if too old" do
+        stamp = LectureComprehensionStamp.create(user: @user, status: 0, lecture: @lecture, updated_at: Time.now - LectureComprehensionStamp.seconds_till_comp_timeout)
+        get :get_comprehension, params: { id: @lecture.id }, session: valid_session
+        expect(response.body).to eq({ status: -1, last_update: stamp.timestamp }.to_json)
+      end
+    end
+
+    context "as lecturer", :logged_lecturer do
+      before(:each) do
+        @lecture = Lecture.create! valid_attributes_with_lecturer
+        @user = FactoryBot.create(:user, :student)
+        login_lecturer(@lecture.lecturer)
+      end
+      it "returns correct comprehension level" do
+        stamp = LectureComprehensionStamp.create(user: @user, status: 0, lecture: @lecture)
+        get :get_comprehension, params: { id: @lecture.id }, session: valid_session
+        expect(response.body).to eq({ status: [1, 0, 0], last_update: stamp.timestamp }.to_json)
+      end
+      it "returns correct comprehension level distribution" do
+        LectureComprehensionStamp.create(user: @user, status: 0, lecture: @lecture)
+        LectureComprehensionStamp.create(user: FactoryBot.create(:user, :student), status: 1, lecture: @lecture)
+        LectureComprehensionStamp.create(user: FactoryBot.create(:user, :student), status: 2, lecture: @lecture)
+        stamp_last = LectureComprehensionStamp.create(user: FactoryBot.create(:user, :student), status: 0, lecture: @lecture)
+        get :get_comprehension, params: { id: @lecture.id }, session: valid_session
+        expect(response.body).to eq({ status: [2, 1, 1], last_update: stamp_last.timestamp }.to_json)
+      end
+      it "returns empty comprehension level" do
+        get :get_comprehension, params: { id: @lecture.id }, session: valid_session
+        expect(response.body).to eq({ status: [0, 0, 0], last_update: nil }.to_json)
+      end
+
+      it "returns empty comprehension level if too old" do
+        stamp = LectureComprehensionStamp.create(user: @user, status: 0, lecture: @lecture, updated_at: Time.now - LectureComprehensionStamp.seconds_till_comp_timeout)
+        get :get_comprehension, params: { id: @lecture.id }, session: valid_session
+        expect(response.body).to eq({ status: [0, 0, 0], last_update: stamp.timestamp }.to_json)
+      end
     end
   end
-end
-
-  # describe "PUT #update_comprehension_stamp" do
-  #   before(:each) do
-  #     # login user
-  #     @lecturer = FactoryBot.create(:user, :lecturer)
-  #     @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
-  #     @student = FactoryBot.create(:user, :student)
-  #     sign_in(@student, scope: :user)
-  #   end
-  #   context "with valid params" do
-  #     it "adds a comprehension stamp" do
-  #       # expect {
-  #       #   put :update_comprehension_stamp, params: { id: @lecture.to_param, status: 0 }, session: valid_session
-  #       # }.to change(LectureComprehensionStamp, :count).by(1)
-  #       puts @lecture.lecture_comprehension_stamps.size
-  #       put :comprehension, params: { id: @lecture.to_param, status: 0 }, session: valid_session
-  #       puts @lecture.lecture_comprehension_stamps.size
-  #       expect(@lecture.lecture_comprehension_stamps.size).to eq(1)
-  #     end
-  #   end
-  # end
 
   def login_student(user = FactoryBot.create(:user, :student))
     sign_in(user, scope: :user)
   end
+
   def login_lecturer(user = FactoryBot.create(:user, :lecturer))
     sign_in(user, scope: :user)
   end
