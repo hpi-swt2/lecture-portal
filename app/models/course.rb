@@ -4,6 +4,7 @@ class Course < ApplicationRecord
   has_many :lectures, dependent: :destroy
   validates :name, presence: true, length: { in: 2..40 }
   enum status: { open: "open", closed: "closed" }
+  has_many :uploaded_files, as: :allowsUpload
 
   def join_course(student)
     unless self.participating_students.include?(student)

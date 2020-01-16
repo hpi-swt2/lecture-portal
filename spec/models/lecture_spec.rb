@@ -4,6 +4,7 @@ RSpec.describe Lecture, type: :model do
   before (:each) do
     @lecture = FactoryBot.build(:lecture)
   end
+
   it "is creatable using a Factory" do
     expect(@lecture).to be_valid
   end
@@ -13,8 +14,36 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture).not_to be_valid
   end
 
-  it "is not valid without a enrollment key" do
+  it "is valid without an enrollment key" do
     @lecture.enrollment_key = ""
+    expect(@lecture).to be_valid
+  end
+
+  it "is valid with an enrollment key with 3 characters" do
+    @lecture.enrollment_key = "123"
+    expect(@lecture).to be_valid
+  end
+
+  it "is not valid with an enrollment key with 1 to 2 characters" do
+    @lecture.enrollment_key = "1"
+    expect(@lecture).not_to be_valid
+
+    @lecture.enrollment_key = "12"
+    expect(@lecture).not_to be_valid
+  end
+
+  it "is not valid without a date" do
+    @lecture.date = ""
+    expect(@lecture).not_to be_valid
+  end
+
+  it "is not valid without a start time" do
+    @lecture.start_time = ""
+    expect(@lecture).not_to be_valid
+  end
+
+  it "is not valid without a end time" do
+    @lecture.end_time = ""
     expect(@lecture).not_to be_valid
   end
 
@@ -49,5 +78,23 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture.participating_students.length).to be 1
     @lecture.leave_lecture(user)
     expect(@lecture.participating_students.length).to be 0
+  end
+
+  it "cannot be changed after it ended" do
+    @lecture.set_inactive
+    expect(@lecture).to be_valid
+    @lecture.save
+    @lecture.description = @lecture.description + " new"
+    expect { @lecture.save }.to raise_error(ActiveRecord::ReadOnlyRecord)
+    expect { @lecture.update(status: "running") }.to raise_error(ActiveRecord::ReadOnlyRecord)
+  end
+
+  it "can be changed before it ended" do
+    @lecture.set_active
+    expect(@lecture).to be_valid
+    @lecture.save
+    @lecture.description = @lecture.description + " new"
+    expect(@lecture.save).to be_truthy
+    expect(@lecture.update(status: "running")).to be_truthy
   end
 end

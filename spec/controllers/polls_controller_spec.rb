@@ -121,15 +121,22 @@ RSpec.describe PollsController, type: :controller do
       expect(response).not_to be_successful
     end
 
-    it "returns a success response for students for active polls", :logged_student do
+    it "returns a failure response for students for active polls", :logged_student do
       poll = Poll.create! valid_attributes_with_active
       poll.is_active = true
       get :edit, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
-      expect(response).to be_successful
+      expect(response).to_not be_successful
     end
   end
 
-
+  describe "GET #answer" do
+    it "returns a success response for students", :logged_student do
+      poll = Poll.create! valid_attributes_with_active
+      poll.is_active = true
+      get :answer, params: { course_id: lecture.course.id, lecture_id: lecture.to_param, id: poll.to_param }, session: valid_session
+      expect(response).to be_successful
+    end
+  end
 
   describe "POST #create" do
     context "with valid params" do

@@ -5,5 +5,8 @@ FactoryBot.define do
     description { "on rails" }
     lecturer { FactoryBot.create(:user, :lecturer) }
     course { FactoryBot.create(:course) }
+    date { "2020-02-02" }
+    start_time { "2020-01-01 10:10:00" }
+    end_time { "2020-01-01 10:20:00" }
   end
 end
