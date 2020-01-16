@@ -11,7 +11,7 @@ class Lecture < ApplicationRecord
   validates :end_time, presence: true
 
   validates :name, presence: true, length: { in: 2..40 }
-  validates :enrollment_key, presence: true, length: { in: 3..20 }
+  validates :enrollment_key, length: { in: 3..20, if: :enrollment_key_present? }
   scope :active, -> { where status: "running" }
 
 
@@ -60,5 +60,9 @@ class Lecture < ApplicationRecord
       return db_lecture.status == "ended"
     end
     false
+  end
+
+  def enrollment_key_present?
+    enrollment_key.present?
   end
 end
