@@ -23,7 +23,5 @@ module LecturePortal
         Lecture.eliminateComprehensionStamps
       end
     end
-
   end
 end
-

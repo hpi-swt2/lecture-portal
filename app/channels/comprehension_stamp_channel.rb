@@ -5,10 +5,15 @@ class ComprehensionStampChannel < ApplicationCable::Channel
         stream_from "lecture_comprehension_stamp:#{lecture.id}:#{current_connection_user.id}"
       else
         stream_from "lecture_comprehension_stamp:#{lecture.id}"
+      end
     end
   
     def unsubscribed
       # Any cleanup needed when channel is unsubscribed
     end
   end
-  
+
+  def unsubscribed
+    # Any cleanup needed when channel is unsubscribed
+  end
+end

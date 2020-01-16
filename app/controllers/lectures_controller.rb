@@ -71,6 +71,7 @@ class LecturesController < ApplicationController
     end
   end
 
+  # POST /lectures/start_lecture
   def start_lecture
     if @lecture.status != "ended"
       @lecture.set_active
@@ -81,22 +82,26 @@ class LecturesController < ApplicationController
     end
   end
 
+  # POST /lectures/join_lecture
   def join_lecture
     @lecture.join_lecture(current_user)
     redirect_to @lecture, notice: "You successfully joined the lecture."
   end
 
+  # POST /lectures/leave_lecture
   def leave_lecture
     @lecture.leave_lecture(current_user)
     redirect_to current_lectures_url, notice: "You successfully left the lecture."
   end
 
+  # POST /lectures/end_lecture
   def end_lecture
     @lecture.set_inactive
     @lecture.save
     redirect_to lecture_path(@lecture), notice: "You successfully ended the lecture."
   end
 
+  # PUT /lectures/:id/comprehension
   def update_comprehension_stamp
     stamp = LectureComprehensionStamp.find_by(user: current_user)
     if stamp
@@ -110,11 +115,11 @@ class LecturesController < ApplicationController
 
   def get_comprehension
     if current_user.is_student
-      stamp = @lecture.lecture_comprehension_stamps.where(user: current_user).max { |a,b| a.timestamp <=> b.timestamp } 
+      stamp = @lecture.lecture_comprehension_stamps.where(user: current_user).max { |a, b| a.timestamp <=> b.timestamp }
       if stamp
         if stamp.timestamp <= Time.now - LectureComprehensionStamp.seconds_till_comprehension_timeout
           data = { status: -1, last_update: stamp.timestamp }
-        else 
+        else
           data = { status: stamp.status, last_update: stamp.timestamp }
         end
       else

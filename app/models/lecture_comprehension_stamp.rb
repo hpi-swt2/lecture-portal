@@ -4,11 +4,12 @@ class LectureComprehensionStamp < ApplicationRecord
 
   belongs_to :user
   belongs_to :lecture
-  validates :status, presence: true, inclusion: { in: [0, 1, 2] }
+  validates :status, presence: true, inclusion: { in: (0..(@@number_of_states-1)) }
+
 
   def broadcastUpdate
     ActionCable.server.broadcast "lecture_comprehension_stamp:#{@lecture.id}:#{current_user.id}", "updated"
-    #ComprehensionStampChannel.broadcast_to(@lecture, "updated") # TODO only send to Lecturer
+    # ComprehensionStampChannel.broadcast_to(@lecture, "updated") # TODO only send to Lecturer
   end
 
   def broadcastElimination

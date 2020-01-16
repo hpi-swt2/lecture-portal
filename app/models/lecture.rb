@@ -44,14 +44,14 @@ class Lecture < ApplicationRecord
     cur_time = Time.now
     changed = false
     self.lecture_comprehension_stamps.each { |stamp|
-      if (cur_time - stamp.timestamp) >= LectureComprehensionStamp.seconds_till_comprehension_timeout 
-          stamp.broadcastElimination
-          changed = true
+      if (cur_time - stamp.timestamp) >= LectureComprehensionStamp.seconds_till_comprehension_timeout
+        stamp.broadcastElimination
+        changed = true
       end
     }
     if changed
       ActionCable.server.broadcast "lecture_comprehension_stamp:#{@lecture.id}", getComprehensionStatus
-      #ComprehensionStampChannel.broadcast_to(self.lecturer, getComprehensionStatus) # TODO only send to lecturer
+      # ComprehensionStampChannel.broadcast_to(self.lecturer, getComprehensionStatus) # TODO only send to lecturer
     end
   end
 
@@ -60,11 +60,11 @@ class Lecture < ApplicationRecord
     status.size.times do |i|
       status[i] = self.lecture_comprehension_stamps.where("status = ? and updated_at > ?", i, Time.now - LectureComprehensionStamp.seconds_till_comprehension_timeout).count
     end
-    last_update = self.lecture_comprehension_stamps.max { |a,b| a.timestamp <=> b.timestamp }
+    last_update = self.lecture_comprehension_stamps.max { |a, b| a.timestamp <=> b.timestamp }
     if !last_update
-      return {status: status, last_update: -1}
+      return { status: status, last_update: -1 }
     else
-      return {status: status, last_update: last_update.timestamp}
+      return { status: status, last_update: last_update.timestamp }
     end
   end
 end
