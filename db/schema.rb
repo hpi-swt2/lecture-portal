@@ -33,11 +33,6 @@ ActiveRecord::Schema.define(version: 2020_01_12_153848) do
     t.index ["lecture_id"], name: "index_courses_on_lecture_id"
   end
 
-  create_table "courses_lectures", id: false, force: :cascade do |t|
-    t.integer "course_id", null: false
-    t.integer "lecture_id", null: false
-  end
-
   create_table "courses_users", id: false, force: :cascade do |t|
     t.integer "course_id", null: false
     t.integer "user_id", null: false
@@ -66,6 +61,9 @@ ActiveRecord::Schema.define(version: 2020_01_12_153848) do
     t.string "status", default: "created"
     t.integer "lecturer_id"
     t.integer "course_id"
+    t.date "date"
+    t.time "start_time"
+    t.time "end_time"
     t.index ["course_id"], name: "index_lectures_on_course_id"
     t.index ["lecturer_id"], name: "index_lectures_on_lecturer_id"
   end

@@ -25,16 +25,14 @@
   <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
 
     <% if @current_user.is_student %>
-
-      <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ]) do |form| %>
+      <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ]) do |form|  %>
         <p>
           <%= form.label :content %><br>
           <%= form.text_field :content %>
         </p>
         <p>
-          <%= form.submit %>
+          <%= form.submit "SUBMIT"%>
         </p>
-
 
       <% end %>
 
