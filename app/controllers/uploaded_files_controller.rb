@@ -66,7 +66,7 @@ class UploadedFilesController < ApplicationController
       @owner = current_user == @uploaded_file.author
       @course_file_and_course_owner = (@uploaded_file.allowsUpload.class == Course) && (@uploaded_file.allowsUpload.creator_id == current_user.id)
       @lecture_file_and_lecture_owner = (@uploaded_file.allowsUpload.class == Lecture) && (@uploaded_file.allowsUpload.lecturer_id == current_user.id)
-      unless @owner || @course_file_and_course_owner || @lecture_file_and_lecture_owner
+      unless owner || course_file_and_course_owner || lecture_file_and_lecture_owner
         redirect_to (uploaded_files_url), notice: "You can't delete this file."
       end
     end
