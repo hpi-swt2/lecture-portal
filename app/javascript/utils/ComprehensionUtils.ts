@@ -25,7 +25,6 @@ export const formatDate = (date: Date): string => {
 const loadComprehensionState = (rootStore: ComprehensionRootStoreModel) => {
   axios.get(getBaseRequestUrl(rootStore.lecture_id))
     .then(res => {
-      console.log(res.data);
       rootStore.setComprehensionState(res.data);
     });
 };
@@ -33,10 +32,8 @@ const loadComprehensionState = (rootStore: ComprehensionRootStoreModel) => {
 
 const setupActionCable = (rootStore: ComprehensionRootStoreModel) => {
   setupComprehensionActionCable(rootStore.lecture_id,
-      (data) => {
-        // TODO: use update data
-        //const { question } = data;
-        //rootStore.setActiveStamp(dsdsg)
+      (comprehensionState) => {
+        rootStore.setComprehensionState(comprehensionState)
       }
   );
 };

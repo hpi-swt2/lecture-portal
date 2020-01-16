@@ -32,30 +32,30 @@ class Lecture < ApplicationRecord
     end
   end
 
-  def Lecture.eliminateComprehensionStamps
+  def Lecture.eliminate_comprehension_stamps
     puts "Do elimination checks!"
     Lecture.where(status: "running").each { |lecture|
-      lecture.eliminateOwnComprehensionStamps
+      lecture.eliminate_own_comp_stamps
     }
   end
 
-  def eliminateOwnComprehensionStamps
+  def eliminate_own_comp_stamps
     puts "check!"
     cur_time = Time.now
     changed = false
     self.lecture_comprehension_stamps.each { |stamp|
       if (cur_time - stamp.timestamp) >= LectureComprehensionStamp.seconds_till_comprehension_timeout 
-          stamp.broadcastElimination
+          stamp.broadcast_elimination
           changed = true
       end
     }
     if changed
-      ActionCable.server.broadcast "lecture_comprehension_stamp:#{@lecture.id}", getComprehensionStatus
+      ActionCable.server.broadcast "lecture_comprehension_stamp:#{self.id}", get_comprehension_status
       #ComprehensionStampChannel.broadcast_to(self.lecturer, getComprehensionStatus) # TODO only send to lecturer
     end
   end
 
-  def getComprehensionStatus
+  def get_comprehension_status
     status = Array.new(LectureComprehensionStamp.number_of_states, 0)
     status.size.times do |i|
       status[i] = self.lecture_comprehension_stamps.where("status = ? and updated_at > ?", i, Time.now - LectureComprehensionStamp.seconds_till_comprehension_timeout).count
