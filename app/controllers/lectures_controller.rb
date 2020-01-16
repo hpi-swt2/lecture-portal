@@ -1,4 +1,4 @@
-require 'rufus-scheduler'
+require "rufus-scheduler"
 
 class LecturesController < ApplicationController
   before_action :authenticate_user!
@@ -105,10 +105,10 @@ class LecturesController < ApplicationController
   def update_comprehension_stamp
     stamp = LectureComprehensionStamp.where(lecture_id: @lecture.id, user_id: current_user.id)
     if stamp.size > 0
-      stamp.update_all(:status => params[:status], :updated_at => DateTime.now)
+      stamp.update_all(status: params[:status], updated_at: DateTime.now)
       stamp.first.broadcast_update
     else
-      stamp = LectureComprehensionStamp.create(:user => current_user, :status => params[:status], :lecture => @lecture)
+      stamp = LectureComprehensionStamp.create(user: current_user, status: params[:status], lecture: @lecture)
       stamp.broadcast_update
     end
     @lecture.broadcast_comprehension_status

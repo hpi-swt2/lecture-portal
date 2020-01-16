@@ -9,12 +9,12 @@ class LectureComprehensionStamp < ApplicationRecord
 
   def broadcast_update
     ActionCable.server.broadcast "lecture_comprehension_stamp:#{self.lecture_id}:#{self.user_id}",
-                                 { :status => self.status, :last_update => self.timestamp }
+                                 { status: self.status, last_update: self.timestamp }
   end
 
   def broadcast_elimination
     ActionCable.server.broadcast "lecture_comprehension_stamp:#{self.lecture_id}:#{self.user_id}",
-                                 { :status => -1, :last_update => self.timestamp }
+                                 { status: -1, last_update: self.timestamp }
   end
 
   def timestamp
@@ -22,10 +22,10 @@ class LectureComprehensionStamp < ApplicationRecord
   end
 
   def LectureComprehensionStamp.number_of_states
-    return @@number_of_states
+    @@number_of_states
   end
 
   def LectureComprehensionStamp.seconds_till_comp_timeout
-    return @@seconds_till_comp_timeout
+    @@seconds_till_comp_timeout
   end
 end

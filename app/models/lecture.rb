@@ -45,8 +45,8 @@ class Lecture < ApplicationRecord
     changed = false
     self.lecture_comprehension_stamps.each { |stamp|
       if (cur_time - stamp.timestamp) >= LectureComprehensionStamp.seconds_till_comp_timeout
-          stamp.broadcast_elimination
-          changed = true
+        stamp.broadcast_elimination
+        changed = true
       end
     }
     if changed
@@ -65,7 +65,7 @@ class Lecture < ApplicationRecord
     end
     last_update = self.lecture_comprehension_stamps.max { |a, b| a.timestamp <=> b.timestamp }
     if !last_update
-      {status: status, last_update: nil }
+      { status: status, last_update: nil }
     else
       { status: status, last_update: last_update.timestamp }
     end
