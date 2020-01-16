@@ -105,8 +105,7 @@ class LecturesController < ApplicationController
   def update_comprehension_stamp
     @lecture.lecture_comprehension_stamps << LectureComprehensionStamp.new(:user => current_user, :status => params[:status])
   end
-
-  # GET /lectures/:id/comprehension
+  
   def get_comprehension
     if current_user.is_student
       stamp = @lecture.lecture_comprehension_stamps.where(user: current_user).max { |a,b| a.timestamp <=> b.timestamp } #TODO handle no stamps
