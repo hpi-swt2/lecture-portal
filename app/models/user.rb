@@ -1,6 +1,10 @@
 class User < ApplicationRecord
+  has_many :uploaded_files, foreign_key: "author_id"
   has_many :lectures, dependent: :destroy
+  has_many :courses, dependent: :destroy
   has_and_belongs_to_many :participating_lectures, class_name: :Lecture
+  has_and_belongs_to_many :participating_courses, class_name: :Course
+
 
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :is_student, inclusion: { in: [ true, false ] }
