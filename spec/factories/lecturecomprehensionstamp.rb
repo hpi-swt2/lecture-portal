@@ -5,4 +5,3 @@ FactoryBot.define do
       lecture { FactoryBot.create(:lecture, lecturer: FactoryBot.create(:user, :lecturer)) }
     end
   end
-  

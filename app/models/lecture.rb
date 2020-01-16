@@ -45,9 +45,9 @@ class Lecture < ApplicationRecord
     cur_time = Time.now
     changed = false
     self.lecture_comprehension_stamps.each { |stamp|
-      if (cur_time - stamp.timestamp) >= @@seconds_till_comprehension_timeout 
-          stamp.eliminate
-          changed = true
+      if (cur_time - stamp.timestamp) >= @@seconds_till_comprehension_timeout
+        stamp.eliminate
+        changed = true
       end
     }
     if changed
@@ -60,7 +60,7 @@ class Lecture < ApplicationRecord
     status.size.times do |i|
       status[i] = self.lecture_comprehension_stamps.where("status = ? and updated_at > ?", i, Time.now - @@seconds_till_comprehension_timeout).count
     end
-    last_update = self.lecture_comprehension_stamps.max { |a,b| a.timestamp <=> b.timestamp }  #TODO handle no stamps
-    return {status: status, last_update: last_update.timestamp}
+    last_update = self.lecture_comprehension_stamps.max { |a, b| a.timestamp <=> b.timestamp }  # TODO handle no stamps
+    return { status: status, last_update: last_update.timestamp }
   end
 end

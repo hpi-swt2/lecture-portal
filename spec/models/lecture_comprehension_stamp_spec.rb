@@ -22,6 +22,6 @@ RSpec.describe LectureComprehensionStamp, type: :model do
     expect(@stamp.timestamp).to be < Time.now
   end
 
-#   it "does ... on call of eliminate" do
-#   end
+  #   it "does ... on call of eliminate" do
+  #   end
 end
