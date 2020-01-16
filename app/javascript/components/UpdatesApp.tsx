@@ -15,6 +15,7 @@ const UpdatesApp: React.FunctionComponent<IUpdatesAppProps> = ({ user_id, is_stu
     rootStore.setIsStudent(is_student);
     rootStore.setLectureId(lecture_id);
     initUpdatesApp(rootStore);
+
     return (
         <StoreProvider value={rootStore}>
             <div className="UpdatesApp">

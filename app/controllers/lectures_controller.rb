@@ -111,6 +111,7 @@ class LecturesController < ApplicationController
       stamp = LectureComprehensionStamp.create(:user => current_user, :status => params[:status], :lecture => @lecture)
       stamp.broadcast_update
     end
+    @lecture.broadcast_comprehension_status
   end
 
   def get_comprehension

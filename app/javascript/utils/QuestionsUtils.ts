@@ -10,12 +10,10 @@ const StoreContext = createContext<QuestionsRootStoreModel>(
 export const useQuestionsStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
-const getBaseRequestUrl = (lectureId: number): string => {
-  return `/lectures/` + lectureId + `/questions/`;
-};
+const axiosInstance = axios.create();
 
 const loadQuestionsList = (rootStore: QuestionsRootStoreModel) => {
-  axios.get(getBaseRequestUrl(rootStore.lecture_id))
+  axiosInstance.get("")
     .then(res => {
       rootStore.questionsList.setQuestionsList(res.data);
     });
@@ -42,18 +40,20 @@ export const createQuestionsRootStore = (): QuestionsRootStoreModel => {
 };
 
 export const initQuestionsApp = (rootStore: QuestionsRootStoreModel) => {
-  loadQuestionsList(rootStore);
-  setupActionCable(rootStore);
+    axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector<HTMLMetaElement>('[name=csrf-token]').content;
+    axiosInstance.defaults.baseURL = `/lectures/` + rootStore.lecture_id + `/questions/`;
+    loadQuestionsList(rootStore);
+    setupActionCable(rootStore);
 };
 
-export const createQuestion = (content: string, lectureId: number) => {
-  axios.post(getBaseRequestUrl(lectureId), { content: content });
+export const createQuestion = (content: string) => {
+    axiosInstance.post("", { content: content });
 };
 
-export const resolveQuestionById = (id: number, lectureId: number) => {
-  axios.post(getBaseRequestUrl(lectureId) + id + "/resolve");
+export const resolveQuestionById = (id: number) => {
+    axiosInstance.post(id + "/resolve");
 };
 
-export const upvoteQuestionById = (id, lectureId) => {
-  axios.post(getBaseRequestUrl(lectureId) + id + "/upvote");
+export const upvoteQuestionById = (id : number) => {
+    axiosInstance.post(id + "/upvote");
 };

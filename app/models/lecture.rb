@@ -21,7 +21,7 @@ class Lecture < ApplicationRecord
   end
 
   def join_lecture(student)
-    if !self.participating_students.include?(student)
+    unless self.participating_students.include?(student)
       self.participating_students << student
     end
   end
@@ -50,8 +50,12 @@ class Lecture < ApplicationRecord
       end
     }
     if changed
-      ActionCable.server.broadcast "lecture_comprehension_stamp:#{self.id}", get_comprehension_status
+      broadcast_comprehension_status
     end
+  end
+
+  def broadcast_comprehension_status
+    ActionCable.server.broadcast "lecture_comprehension_stamp:#{self.id}", get_comprehension_status
   end
 
   def get_comprehension_status
@@ -61,7 +65,7 @@ class Lecture < ApplicationRecord
     end
     last_update = self.lecture_comprehension_stamps.max { |a, b| a.timestamp <=> b.timestamp }
     if !last_update
-      {status: status, last_update: -1 }
+      {status: status, last_update: nil }
     else
       { status: status, last_update: last_update.timestamp }
     end

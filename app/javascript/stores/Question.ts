@@ -35,10 +35,10 @@ const Question = types
       self.already_upvoted = true;
     },
     resolveClick() {
-      resolveQuestionById(self.id, getQuestionsRootStore(self).lecture_id);
+      resolveQuestionById(self.id);
     },
     upvoteClick() {
-      upvoteQuestionById(self.id, getQuestionsRootStore(self).lecture_id);
+      upvoteQuestionById(self.id);
     }
   }));
 

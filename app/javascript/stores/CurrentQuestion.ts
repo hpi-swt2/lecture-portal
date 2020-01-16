@@ -1,6 +1,5 @@
 import { Instance, types } from "mobx-state-tree";
 import { createQuestion } from "../utils/QuestionsUtils";
-import { getQuestionsRootStore } from "./QuestionsRootStore";
 
 export type CurrentQuestionModel = Instance<typeof CurrentQuestion>
 
@@ -14,7 +13,7 @@ const CurrentQuestion = types
         },
         createQuestion() {
             if(self.content.trim() != "") {
-                createQuestion(self.content.trim(), getQuestionsRootStore(self).lecture_id);
+                createQuestion(self.content.trim());
                 self.content = ""
             }
         }

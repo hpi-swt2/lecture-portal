@@ -4,7 +4,7 @@ class LectureComprehensionStamp < ApplicationRecord
 
   belongs_to :user
   belongs_to :lecture
-  validates :status, presence: true, inclusion: { in: (0..(@@number_of_states-1)) }
+  validates :status, presence: true, inclusion: { in: (0..(@@number_of_states - 1)) }
 
 
   def broadcast_update

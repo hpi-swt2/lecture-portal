@@ -20,7 +20,7 @@ const ComprehensionStudent: React.FunctionComponent<{}> = observer(() => {
 
     const onComprehensionStampClick = (clickedState) => {
         return () => {
-            updateComprehensionStamp(clickedState, lecture_id)
+            updateComprehensionStamp(clickedState)
         }
     };
 
