@@ -50,7 +50,8 @@ class Lecture < ApplicationRecord
       end
     }
     if changed
-      ComprehensionStampChannel.broadcast_to(self, getComprehensionStatus) # TODO only send to lecturer
+      ActionCable.server.broadcast "lecture_comprehension_stamp:#{@lecture.id}", getComprehensionStatus
+      #ComprehensionStampChannel.broadcast_to(self.lecturer, getComprehensionStatus) # TODO only send to lecturer
     end
   end
 
