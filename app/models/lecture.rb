@@ -58,9 +58,13 @@ class Lecture < ApplicationRecord
   def getComprehensionStatus
     status = Array.new(LectureComprehensionStamp.number_of_states, 0)
     status.size.times do |i|
-      status[i] = self.lecture_comprehension_stamps.where("status = ? and timestamp > ?", i, Time.now - @@seconds_till_comprehension_timeout).count
+      status[i] = self.lecture_comprehension_stamps.where("status = ? and updated_at > ?", i, Time.now - @@seconds_till_comprehension_timeout).count
     end
-    last_update = self.lecture_comprehension_stamps.max { |a,b| a.timestamp <=> b.timestamp }  #TODO handle no stamps
-    return {status: status, last_update: last_update.timestamp}
+    last_update = self.lecture_comprehension_stamps.max { |a,b| a.timestamp <=> b.timestamp }
+    if !last_update
+      return {status: status, last_update: -1}
+    else
+      return {status: status, last_update: last_update.timestamp}
+    end
   end
 end

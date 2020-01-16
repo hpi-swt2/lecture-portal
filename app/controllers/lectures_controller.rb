@@ -103,11 +103,16 @@ class LecturesController < ApplicationController
 
   def get_comprehension
     if current_user.is_student
-      stamp = @lecture.lecture_comprehension_stamps.where(user: current_user).max { |a,b| a.timestamp <=> b.timestamp } #TODO handle no stamps
-      data = { status: stamp.status, last_update: stamp.timestamp }
+      stamp = @lecture.lecture_comprehension_stamps.where(user: current_user).max { |a,b| a.timestamp <=> b.timestamp } 
+      if stamp
+        data = { status: stamp.status, last_update: stamp.timestamp }
+      else
+        data = { status: -1, last_update: -1 }
+      end
     else
       data = @lecture.getComprehensionStatus
     end
+
     render json: data
   end
 
