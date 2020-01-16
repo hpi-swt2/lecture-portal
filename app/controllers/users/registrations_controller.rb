@@ -63,4 +63,33 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_inactive_sign_up_path_for(resource)
     super(resource)
   end
+
+  def get_calendar
+    calendar = Icalendar::Calendar.new
+    current_user.participating_courses.each do |course|
+      course.lectures.each do |lecture|
+        event = Icalendar::Event.new
+        event.summary = course.name + " - " + lecture.name
+        event.dtstart = DateTime.new(
+            lecture.date.year,
+            lecture.date.month,
+            lecture.date.day,
+            lecture.start_time.hour,
+            lecture.start_time.min,
+            lecture.start_time.sec
+        )
+        event.dtend = DateTime.new(
+            lecture.date.year,
+            lecture.date.month,
+            lecture.date.day,
+            lecture.end_time.hour,
+            lecture.end_time.min,
+            lecture.end_time.sec
+        )
+        calendar.add_event(event)
+      end
+    end
+    calendar.publish
+    render plain: calendar.to_ical
+  end
 end
