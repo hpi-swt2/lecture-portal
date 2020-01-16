@@ -1,26 +1,11 @@
-<ul class="nav nav-tabs" id="lectureTabs" role="tablist">
-  <li class="nav-item">
-    <a class="nav-link active" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="true">Dashboard</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="questions-tab" data-toggle="tab" href="#questions" role="tab" aria-controls="questions" aria-selected="false">Questions</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="polls-tab" data-toggle="tab" href="#polls" role="tab" aria-controls="contact" aria-selected="false">Polls</a>
-  </li>
-  <li class="nav-item">
-    <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback" role="tab" aria-controls="feedback" aria-selected="false">Feedback</a>
-  </li>
-  <% if !@current_user.is_student %>
-    <li class="nav-item">
-      <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Settings</a>
-    </li>
-  <% end %>
-</ul>
+<%= render 'tabbar', current_user: @current_user %>
+
+<h5><%= @lecture.name %></h5>
+<p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
 
 <div class="tab-content" id="lectureTabsContent">
   <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-    <div class="row">
+   <div class="row">
       <div id="updates" class="col-lg-4 col-md-6">
         <% if @current_user.is_student %>
           <h5>Updates</h5>
@@ -37,27 +22,18 @@
     </div>
   </div>
   <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
-    <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id} ) %>
+    <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
   </div>
-  <div class="tab-pane fade" id="polls" role="tabpanel" aria-labelledby="polls-tab">
-    <h2>Polls</h2>
-    <% for poll in @lecture.polls %>
-      <ul>
-        <li>
-          <%= poll.title%>
-          <% if poll.is_active and @current_user.is_student %>
-            <%= link_to 'Vote', edit_lecture_poll_path(@lecture, poll) %>
-          <% end %>
 
-        </li>
-      </ul>
-    <% end %>
+  <div class="tab-pane fade poll-tab-container" id="polls" role="tabpanel" aria-labelledby="polls-tab" >
+    <iframe class="polls-iframe" src="<%= course_lecture_polls_path(@course, @lecture) %>"></iframe>
   </div>
+
   <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
 
     <% if @current_user.is_student %>
 
-      <%= form_with(model: [ @lecture, @lecture.feedbacks.build ]) do |form| %>
+      <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ]) do |form| %>
         <p>
           <%= form.label :content %><br>
           <%= form.text_field :content %>
@@ -88,14 +64,14 @@
 
 <table>
   <tr>
-    <td><%= link_to 'Back', lectures_path, {class:"btn btn-link"} %> | </td>
-    <% if @current_user.is_student %>
-      <td><%= button_to "Leave Lecture", {action: "leave_lecture", params: {id: @lecture.id}}, {class:"btn btn-link"} %> </td>
-    <% else %>
-      <% if @lecture.status == "running" %>
-        <td><%= link_to 'New Poll', new_lecture_poll_path(@lecture), {class:"btn btn-link"} %> | </td>
-        <td><%= button_to "End", {action: "end_lecture", params: {id: @lecture.id}}, {class:"btn btn-link"} %> </td>
+    <td colspan="2"><%= link_to 'Back', course_path(@course), class:"btn btn-link" %> </td>
+    <% if !@current_user.is_student %>
+      <% if @lecture.created? %>
+          <td colspan="2"> | <%= link_to "Edit", edit_course_lecture_path(course_id: @lecture.course.id, id: @lecture.id), class:"btn btn-link" %></td>
+        <td colspan="2"> | <%= link_to "Start", start_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class:"btn btn-link" %></td>
+      <% elsif @lecture.running? %>
+        <td colspan="2"> | <%= link_to 'New Poll', new_course_lecture_poll_path(@course, @lecture), {class:"btn btn-link"} %> </td>
       <%end %>
-    <% end %>
+  <%end %>
   </tr>
 </table>

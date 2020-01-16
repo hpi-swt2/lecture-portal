@@ -67,10 +67,10 @@ RSpec.describe PollsController, type: :controller do
     @lecture = FactoryBot.create(:lecture)
     @poll = FactoryBot.create(:poll)
     urls = {
-        index: { lecture_id: @lecture.to_param },
-        show: { lecture_id: @lecture.to_param, id: @poll.to_param },
-        new: { lecture_id: @lecture.to_param },
-        edit: { lecture_id: @lecture.to_param, id: @poll.to_param }
+        index: { course_id: @lecture.course.id, lecture_id: @lecture.to_param },
+        show: { course_id: @lecture.course.id, lecture_id: @lecture.to_param, id: @poll.to_param },
+        new: { course_id: @lecture.course.id, lecture_id: @lecture.to_param },
+        edit: { course_id: @lecture.course.id, lecture_id: @lecture.to_param, id: @poll.to_param }
     }
     urls.each do |path, params|
       it " the #{path}  page" do
@@ -83,7 +83,7 @@ RSpec.describe PollsController, type: :controller do
   describe "GET #index" do
     it "returns a success response", :logged_student do
       Poll.create! valid_attributes
-      get :index, params: { lecture_id: lecture.id }, session: valid_session
+      get :index, params: { course_id: lecture.course.id, lecture_id: lecture.id }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -91,40 +91,49 @@ RSpec.describe PollsController, type: :controller do
   describe "GET #show" do
     it "returns a success response", :logged_lecturer do
       poll = Poll.create! valid_attributes
-      get :show, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      get :show, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
 
   describe "GET #new" do
     it "returns a success response for lecturers", :logged_lecturer do
-      get :new, params: { lecture_id: lecture.id }, session: valid_session
+      get :new, params: { course_id: lecture.course.id, lecture_id: lecture.id }, session: valid_session
       expect(response).to be_successful
     end
     it "redirects to lecture poll index for students", :logged_student do
-      get :new, params: { lecture_id: lecture.id }, session: valid_session
-      expect(response).to redirect_to(lecture_polls_path(lecture))
+      get :new, params: { course_id: lecture.course.id, lecture_id: lecture.id }, session: valid_session
+      expect(response).to redirect_to(course_lecture_polls_path(course_id: lecture.course.id, lecture_id: lecture.id))
     end
   end
 
   describe "GET #edit" do
     it "returns a success response for lecturers", :logged_lecturer do
       poll = Poll.create! valid_attributes
-      get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      get :edit, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
 
     it "returns a failure response for students for not active polls", :logged_student do
       poll = Poll.create! valid_attributes
       poll.is_active = false
-      get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      get :edit, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).not_to be_successful
     end
 
-    it "returns a success response for students for active polls", :logged_student do
+    it "returns a failure response for students for active polls", :logged_student do
       poll = Poll.create! valid_attributes_with_active
       poll.is_active = true
-      get :edit, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      get :edit, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      expect(response).to_not be_successful
+    end
+  end
+
+  describe "GET #answer" do
+    it "returns a success response for students", :logged_student do
+      poll = Poll.create! valid_attributes_with_active
+      poll.is_active = true
+      get :answer, params: { course_id: lecture.course.id, lecture_id: lecture.to_param, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
   end
@@ -133,19 +142,19 @@ RSpec.describe PollsController, type: :controller do
     context "with valid params" do
       it "creates a new Poll", :logged_lecturer do
         expect {
-          post :create, params: { lecture_id: lecture.id, poll: valid_params }, session: valid_session
+          post :create, params: { course_id: lecture.course.id, lecture_id: lecture.id, poll: valid_params }, session: valid_session
         }.to change(Poll, :count).by(1)
       end
 
       it "redirects to the lecture's poll index", :logged_lecturer do
-        post :create, params: { lecture_id: lecture.id, poll: valid_params }, session: valid_session
-        expect(response).to redirect_to(lecture_polls_path(lecture))
+        post :create, params: { course_id: lecture.course.id, lecture_id: lecture.id, poll: valid_params }, session: valid_session
+        expect(response).to redirect_to(course_lecture_polls_path(course_id: lecture.course.id, lecture_id: lecture.id))
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'new' template)", :logged_lecturer do
-        post :create, params: { lecture_id: lecture.id, poll: invalid_params }, session: valid_session
+        post :create, params: { course_id: lecture.course.id, lecture_id: lecture.id, poll: invalid_params }, session: valid_session
         expect(response).to be_successful
       end
     end
@@ -154,13 +163,13 @@ RSpec.describe PollsController, type: :controller do
   describe "#stop_start" do
     it "starts an inactive poll", :logged_student do
       poll = FactoryBot.create(:poll, :inactive)
-      get :stop_start, params: { lecture_id: lecture.id, id: poll.id }, session: valid_session
+      get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
       poll.reload
       expect(poll.is_active).to eq(true)
     end
     it "stops an active poll", :logged_student do
       poll = FactoryBot.create(:poll, :active)
-      get :stop_start, params: { lecture_id: lecture.id, id: poll.id }, session: valid_session
+      get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
       poll.reload
       expect(poll.is_active).to eq(false)
     end
@@ -204,7 +213,7 @@ RSpec.describe PollsController, type: :controller do
 
       it "updates the requested poll", :logged_lecturer do
         poll = Poll.create! valid_attributes
-        put :update, params: { lecture_id: lecture.id, id: poll.to_param, poll: new_attributes }, session: valid_session
+        put :update, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param, poll: new_attributes }, session: valid_session
         poll.reload
         expect(poll.title).to eql(new_attributes[:title])
         expect(poll.is_multiselect).to eql(new_attributes[:is_multiselect])
@@ -212,15 +221,15 @@ RSpec.describe PollsController, type: :controller do
 
       it "redirects to the lecture's poll index", :logged_lecturer do
         poll = Poll.create! valid_attributes
-        put :update, params: { lecture_id: lecture.id, id: poll.to_param, poll: valid_params }, session: valid_session
-        expect(response).to redirect_to(lecture_polls_path(lecture))
+        put :update, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param, poll: valid_params }, session: valid_session
+        expect(response).to redirect_to(course_lecture_polls_path(course_id: lecture.course.id, lecture_id: lecture.id))
       end
     end
 
     context "with invalid params" do
       it "returns a success response (i.e. to display the 'edit' template)", :logged_lecturer do
         poll = Poll.create! valid_attributes
-        put :update, params: { lecture_id: lecture.id, id: poll.to_param, poll: invalid_params }, session: valid_session
+        put :update, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param, poll: invalid_params }, session: valid_session
         expect(response).to be_successful
       end
     end
@@ -230,14 +239,14 @@ RSpec.describe PollsController, type: :controller do
     it "destroys the requested poll", :logged_lecturer do
       poll = Poll.create! valid_attributes
       expect {
-        delete :destroy, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+        delete :destroy, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       }.to change(Poll, :count).by(-1)
     end
 
     it "redirects to the polls list", :logged_lecturer do
       poll = Poll.create! valid_attributes
-      delete :destroy, params: { lecture_id: lecture.id, id: poll.to_param }, session: valid_session
-      expect(response).to redirect_to(lecture_polls_path(lecture))
+      delete :destroy, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
+      expect(response).to redirect_to(course_lecture_polls_path(course_id: lecture.course.id, lecture_id: lecture.id))
     end
   end
 

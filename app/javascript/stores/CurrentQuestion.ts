@@ -1,5 +1,6 @@
 import { Instance, types } from "mobx-state-tree";
 import { createQuestion } from "../utils/QuestionsUtils";
+import { getQuestionsRootStore } from "./QuestionsRootStore";
 
 export type CurrentQuestionModel = Instance<typeof CurrentQuestion>
 
