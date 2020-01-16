@@ -1,4 +1,4 @@
-class CalendarsController < ApplicationController
+class CalendarsController < ActionController::Base
   before_action :set_calendar, only: [:show, :edit, :update, :destroy]
 
   # GET /calendars
@@ -8,7 +8,18 @@ class CalendarsController < ApplicationController
 
   # GET /calendars/1
   def show
+    cal = Icalendar::Calendar.new
+    cal.x_wr_calname = 'Awesome Rails Calendar'
+    cal.event do |e|
+      e.dtstart     = DateTime.now + 2.hours
+      e.dtend       = DateTime.now + 3.hours
+      e.summary     = 'Power Lunch'
+      e.description = 'Get together and do big things'
+    end
+    cal.publish
+    render plain: cal.to_ical
   end
+
 
   # GET /calendars/new
   def new
