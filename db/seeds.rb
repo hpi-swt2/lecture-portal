@@ -7,6 +7,6 @@
 
     course_1 = Course.create(name: "<Kurs-1>", description: "Testkurs #1", creator: lecturer_1)
 
-    Lecture.create(name: "<Created Lecture>", enrollment_key: "epic", status: "created", lecturer: lecturer_1, course: course_1)
-    Lecture.create(name: "<Running Lecture>", enrollment_key: "epic", status: "running", lecturer: lecturer_1, course: course_1)
-    Lecture.create(name: "<Ended Lecture>", enrollment_key: "epic", status: "ended", lecturer: lecturer_1, course: course_1)
+    Lecture.create(name: "<Created Lecture>", enrollment_key: "epic", status: "created", lecturer: lecturer_1, course: course_1, date: "2019-12-31", start_time: "2019-12-31 23:59:00", end_time: "2020-01-01 00:01:00")
+    Lecture.create(name: "<Running Lecture>", enrollment_key: "epic", status: "running", lecturer: lecturer_1, course: course_1, date: "2019-12-31", start_time: "2019-12-31 23:59:00", end_time: "2020-01-01 00:01:00")
+    Lecture.create(name: "<Ended Lecture>", enrollment_key: "epic", status: "ended", lecturer: lecturer_1, course: course_1, date: "2019-12-31", start_time: "2019-12-31 23:59:00", end_time: "2020-01-01 00:01:00")
