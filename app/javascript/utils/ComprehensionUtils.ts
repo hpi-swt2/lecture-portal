@@ -1,5 +1,5 @@
+import axios from 'axios';
 import { createContext, useContext } from "react";
-import { HEADERS } from "./constants";
 import {ComprehensionRootStoreModel} from "../stores/ComprehensionRootStore";
 import {createComprehensionStore} from "../stores/createComprehensionStore";
 import {setupComprehensionActionCable} from "./ComprehensionActionCable";
@@ -11,7 +11,7 @@ export const useComprehensionStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
 const getBaseRequestUrl = (lectureId: number): string => {
-  return `/lectures/` + lectureId + `/`;
+  return `/lectures/` + lectureId + `/comprehension`;
 };
 
 export const formatDate = (date: Date): string => {
@@ -23,12 +23,10 @@ export const formatDate = (date: Date): string => {
 };
 
 const loadComprehensionState = (rootStore: ComprehensionRootStoreModel) => {
-  fetch(getBaseRequestUrl(rootStore.lecture_id) + `comprehension`, {
-    method: "GET"
-  }).then(res => res.json())
-    .then(comprehensionState => {
-      console.log(comprehensionState);
-      rootStore.setComprehensionState(comprehensionState);
+  axios.get(getBaseRequestUrl(rootStore.lecture_id))
+    .then(res => {
+      console.log(res.data);
+      rootStore.setComprehensionState(res.data);
     });
 };
 
@@ -53,11 +51,5 @@ export const initComprehensionApp = (rootStore: ComprehensionRootStoreModel) => 
 };
 
 export const updateComprehensionStamp = (status: number, lectureId: number) => {
-  fetch(getBaseRequestUrl(lectureId) + `updateComprehensionStamp`, {
-    method: "POST",
-    headers: HEADERS,
-    body: JSON.stringify({
-      status: status
-    })
-  });
+    axios.put(getBaseRequestUrl(lectureId), { status: status })
 };

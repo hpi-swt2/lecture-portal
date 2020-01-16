@@ -1,6 +1,6 @@
+import axios from 'axios';
 import { createContext, useContext } from "react";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import { HEADERS } from "./constants";
 import {createQuestionsStore} from "../stores/createQuestionsStore";
 import {setupQuestionsActionCable} from "./QuestionsActionCable";
 
@@ -15,10 +15,9 @@ const getBaseRequestUrl = (lectureId: number): string => {
 };
 
 const loadQuestionsList = (rootStore: QuestionsRootStoreModel) => {
-  fetch(getBaseRequestUrl(rootStore.lecture_id))
-    .then(res => res.json())
-    .then(questions => {
-      rootStore.questionsList.setQuestionsList(questions);
+  axios.get(getBaseRequestUrl(rootStore.lecture_id))
+    .then(res => {
+      rootStore.questionsList.setQuestionsList(res.data);
     });
 };
 
@@ -48,25 +47,13 @@ export const initQuestionsApp = (rootStore: QuestionsRootStoreModel) => {
 };
 
 export const createQuestion = (content: string, lectureId: number) => {
-  fetch(getBaseRequestUrl(lectureId), {
-    method: "POST",
-    headers: HEADERS,
-    body: JSON.stringify({
-      content: content
-    })
-  });
+  axios.post(getBaseRequestUrl(lectureId), { content: content });
 };
 
 export const resolveQuestionById = (id: number, lectureId: number) => {
-  fetch(getBaseRequestUrl(lectureId) + id + "/resolve", {
-    method: "POST",
-    headers: HEADERS
-  });
+  axios.post(getBaseRequestUrl(lectureId) + id + "/resolve");
 };
 
 export const upvoteQuestionById = (id, lectureId) => {
-  fetch(getBaseRequestUrl(lectureId) + id + "/upvote", {
-    method: "POST",
-    headers: HEADERS
-  });
+  axios.post(getBaseRequestUrl(lectureId) + id + "/upvote");
 };
