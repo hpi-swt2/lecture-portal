@@ -4,75 +4,72 @@
       <h2><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</h2>
 
       <ul>
-      <% lecture.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
+        <% lecture.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
       </ul>
     </div>
   <% end %>
 
   <% if lecture.ended? %>
-    <div class="alert alert-success notice" role="alert">
-      This lecture has been archived and can no longer be modified
+    <div class="alert alert-info notice" role="alert">
+      This lecture has been archived and can no longer be modified.
     </div>
   <% end %>
 
-  <div class="name row">
-    <%= form.label :name, class: "col-sm-3 col-form-label" %>
-    <% if lecture.ended? %>
-      <%= form.text_field :name, :readonly => true, class: "col-sm-9" %>
-    <% else %>
-      <%= form.text_field :name, class: "col-sm-9" %>
-    <% end %>
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, :readonly => lecture.ended?, class: "form-control" %>
   </div>
 
-  <div class="description row">
-    <%= form.label :description, class: "col-sm-3 col-form-label" %>
-    <% if lecture.ended? %>
-      <%= form.text_field :description, :readonly => true, class: "col-sm-9" %>
-    <% else %>
-      <%= form.text_field :description, class: "col-sm-9" %>
-    <% end %>
+  <div class="row">
+    <div class="date form-group col-12 col-sm-4">
+      <%= form.label :date %>
+      <%= form.date_field :date, :readonly => lecture.ended?, class: "form-control" %>
+    </div>
+
+    <div class="start_time form-group col-6 col-sm-4">
+      <%= form.label :start_time %>
+      <%= form.time_field :start_time, :readonly => lecture.ended?, class: "form-control" %>
+    </div>
+
+    <div class="end_time form-group col-6 col-sm-4">
+      <%= form.label :end_time %>
+      <%= form.time_field :end_time, :readonly => lecture.ended?, class: "form-control" %>
+    </div>
   </div>
-  <!-- Should not be able to be edited after the lecture has started.-->
+
+  <div class="form-group">
+    <%= form.label :description %>
+    <%= form.text_area :description, :readonly => lecture.ended?, :class => "form-control", :rows => "5" %>
+  </div>
+
   <% if render_enrolment_key==true %>
-    <div class="enrollment-key row">
-      <%= form.label :enrollment_key, class: "col-sm-3 col-form-label" %>
-      <% if lecture.ended? %>
-        <%= form.text_field :enrollment_key, :readonly => true, class: "col-sm-9" %>
-      <% else %>
-        <%= form.text_field :enrollment_key, class: "col-sm-9" %>
+    <div class="form-group">
+      <%= form.label :enrollment_key %>
+      <%= form.text_field :enrollment_key, class: "form-control" %>
+    </div>
+  <% end %>
+
+  <div class="form-check">
+    <%= form.check_box :questions_enabled, :disabled => lecture.ended?, class: "form-check-input" %>
+    <%= form.label :questions_enabled, "Enable Questions", :class => "form-check-label"%>
+  </div>
+
+  <div class="form-check">
+    <%= form.check_box :polls_enabled, :disabled => lecture.ended?, :class => "form-check-input" %>
+    <%= form.label :polls_enabled, "Enable Polls", :class => "form-check-label" %>
+  </div>
+
+  <div class="actions d-flex flex-row justify-content-between mt-2">
+    <div class="float-left">
+      <%= yield(:action_left) %>
+    </div>
+    <div class="float-left">
+      <%= yield(:action_right) %>
+      <% if !lecture.ended? %>
+        <%= form.submit :class => "btn btn-primary" %>
       <% end %>
     </div>
-  <% end %>
-
-  <div class="enable-questions row checkbox">
-    <%= form.label "Enable Questions", class: "col-sm-3 col-form-label"%>
-    <% if lecture.ended? %>
-      <div class="checkbox disabled">
-        <%= form.check_box :questions_enabled, :disabled => true, class: "form-check-input" %>
-      </div>
-    <% else %>
-      <%= form.check_box :questions_enabled, class: "form-check-input" %>
-    <% end %>
-  </div>
-
-  <div class="enable-polls row checkbox">
-    <%= form.label "Enable Polls", class: "col-sm-3 col-form-label" %>
-    <% if lecture.ended? %>
-      <div class="checkbox disabled">
-        <%= form.check_box :polls_enabled, :disabled => true, class: "form-check-input" %>
-      </div>
-    <% else %>
-      <%= form.check_box :polls_enabled, class: "form-check-input" %>
-    <% end %>
-  </div>
-
-  <div class="actions">
-    <% if lecture.ended? %>
-      <%= form.submit :class => "btn btn-primary", :disabled => true %>
-    <% else %>
-      <%= form.submit :class => "btn btn-primary" %>
-    <% end %>
   </div>
 <% end %>
