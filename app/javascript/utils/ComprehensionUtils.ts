@@ -1,5 +1,5 @@
+import axios from 'axios';
 import { createContext, useContext } from "react";
-import { HEADERS } from "./constants";
 import {ComprehensionRootStoreModel} from "../stores/ComprehensionRootStore";
 import {createComprehensionStore} from "../stores/createComprehensionStore";
 import {setupComprehensionActionCable} from "./ComprehensionActionCable";
@@ -11,30 +11,29 @@ export const useComprehensionStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
 const getBaseRequestUrl = (lectureId: number): string => {
-  return `/lectures/` + lectureId + `/`;
+  return `/lectures/` + lectureId + `/comprehension`;
 };
 
 export const formatDate = (date: Date): string => {
-  return (date.getHours() < 10 ? "0" + date.getHours() : date.getHours())
-    + ":"
-    + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes())
+  if(date != null)
+    return (date.getHours() < 10 ? "0" + date.getHours() : date.getHours())
+      + ":"
+      + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+  return "-";
 };
 
 const loadComprehensionState = (rootStore: ComprehensionRootStoreModel) => {
-  /*fetch(getBaseRequestUrl(rootStore.lecture_id) + `comprehension_stamps`)
-    .then(res => res.json())
-    .then(comprehensionState => {
-      //rootStore
-    });*/
+  axios.get(getBaseRequestUrl(rootStore.lecture_id))
+    .then(res => {
+      rootStore.setComprehensionState(res.data);
+    });
 };
 
 
 const setupActionCable = (rootStore: ComprehensionRootStoreModel) => {
   setupComprehensionActionCable(rootStore.lecture_id,
-      (data) => {
-        // TODO: use update data
-        //const { question } = data;
-        //rootStore.setActiveStamp(dsdsg)
+      (comprehensionState) => {
+        rootStore.setComprehensionState(comprehensionState)
       }
   );
 };
@@ -49,11 +48,5 @@ export const initComprehensionApp = (rootStore: ComprehensionRootStoreModel) => 
 };
 
 export const updateComprehensionStamp = (status: number, lectureId: number) => {
-  fetch(getBaseRequestUrl(lectureId) + `updateComprehensionStamp`, {
-    method: "POST",
-    headers: HEADERS,
-    body: JSON.stringify({
-      status: status
-    })
-  });
+    axios.put(getBaseRequestUrl(lectureId), { status: status })
 };

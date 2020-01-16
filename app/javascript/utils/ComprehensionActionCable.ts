@@ -6,7 +6,7 @@ const CableApp = {
 
 export const setupComprehensionActionCable = (lecture_id, updateReceived) => {
     CableApp.cable.subscriptions.create(
-        { channel: "ComprehensionChannel", lecture_id: lecture_id },
+        { channel: "ComprehensionStampChannel", lecture_id: lecture_id },
         {
             received: data => {
                 updateReceived(data)
