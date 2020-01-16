@@ -20,8 +20,6 @@ const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
 
     const canvasRef = createRef<HTMLCanvasElement>();
 
-    let participants = 0;
-
     useEffect(() => {
         const canvas = canvasRef.current;
         canvas.width = canvas.parentElement.offsetWidth;
@@ -30,10 +28,7 @@ const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
         const ctx = canvas.getContext("2d");
 
         if(results.length == numberOfComprehensionStates) {
-            participants = 0;
-            for(let i = 0; i < results.length; i++) {
-                participants += results[i];
-            }
+            const participants = countParticipants();
             let xOffset = 0;
             for(let i = 0; i < 3; i++) {
                 const currentWidth = canvas.width * (results[i] / participants);
@@ -45,13 +40,28 @@ const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
             // clear canvas if we get invalid data
             ctx.clearRect(0, 0, canvas.width, canvas.height)
         }
-    }, []);
+    });
+
+    const countParticipants = () : number => {
+        let participants = 0;
+        for(let i = 0; i < results.length; i++) {
+            participants += results[i];
+        }
+        return participants
+    };
+
+    const renderParticipants = () : string => {
+       const participants = countParticipants();
+       if(participants == 1)
+           return participants + " Participant";
+       return participants + " Participants"
+    };
 
     const renderLegend = () => {
         let legendItems = [];
         for (let i = 0; i < numberOfComprehensionStates; i++) {
             legendItems.push(
-                <div className="legendItem">
+                <div className="legendItem" key={i}>
                     <div>
                         <div className={comprehensionStates[i]} />
                         <span>{comprehensionLabels[i]}</span>
@@ -64,7 +74,7 @@ const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
     return (
         <div>
             <span>Last Updated: {formatDate(last_updated)}</span>
-            <span className={"participants"}>{participants} Participants</span>
+            <span className={"participants"}>{renderParticipants()}</span>
             <div className="comprehensionResults">
                 <canvas ref={canvasRef} width={"100%"} height={"100%"} />
             </div>

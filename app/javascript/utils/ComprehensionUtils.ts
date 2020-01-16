@@ -15,17 +15,21 @@ const getBaseRequestUrl = (lectureId: number): string => {
 };
 
 export const formatDate = (date: Date): string => {
-  return (date.getHours() < 10 ? "0" + date.getHours() : date.getHours())
-    + ":"
-    + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes())
+  if(date != null)
+    return (date.getHours() < 10 ? "0" + date.getHours() : date.getHours())
+      + ":"
+      + (date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes());
+  return "-";
 };
 
 const loadComprehensionState = (rootStore: ComprehensionRootStoreModel) => {
-  /*fetch(getBaseRequestUrl(rootStore.lecture_id) + `comprehension_stamps`)
-    .then(res => res.json())
+  fetch(getBaseRequestUrl(rootStore.lecture_id) + `comprehension`, {
+    method: "GET"
+  }).then(res => res.json())
     .then(comprehensionState => {
-      //rootStore
-    });*/
+      console.log(comprehensionState);
+      rootStore.setComprehensionState(comprehensionState);
+    });
 };
 
 

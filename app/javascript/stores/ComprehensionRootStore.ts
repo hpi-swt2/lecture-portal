@@ -27,11 +27,18 @@ const ComprehensionRootStore = types.model("ComprehensionRootStore", {
         self.lecture_id = lecture_id
     },
 
-    setActiveStamp(active_stamp: number) {
-        self.active_stamp = active_stamp
-    },
-    setResults(results: number) {
-        //self.participants = participants
+    setComprehensionState(comprehension_state) {
+        if(self.is_student) {
+            self.active_stamp = comprehension_state.status;
+        } else {
+            self.results.replace(comprehension_state.status);
+        }
+
+        try {
+            self.last_updated = new Date(comprehension_state.last_update);
+        } catch {
+            self.last_updated = null;
+        }
     }
 }));
 
