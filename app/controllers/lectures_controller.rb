@@ -98,14 +98,25 @@ class LecturesController < ApplicationController
   end
 
   def update_comprehension_stamp
-    @lecture.lecture_comprehension_stamps << LectureComprehensionStamp.new(:user => current_user, :status => params[:status])
+    stamp = LectureComprehensionStamp.find_by(user: current_user)
+    if stamp
+      stamp.update(:status => params[:status])
+    else
+      stamp = LectureComprehensionStamp.new(:user => current_user, :status => params[:status])
+      @lecture.lecture_comprehension_stamps << stamp
+    end
+    stamp.broadcastUpdate
   end
 
   def get_comprehension
     if current_user.is_student
       stamp = @lecture.lecture_comprehension_stamps.where(user: current_user).max { |a,b| a.timestamp <=> b.timestamp } 
       if stamp
-        data = { status: stamp.status, last_update: stamp.timestamp }
+        if stamp.timestamp <= Time.now - LectureComprehensionStamp.seconds_till_comprehension_timeout
+          data = { status: -1, last_update: stamp.timestamp }
+        else 
+          data = { status: stamp.status, last_update: stamp.timestamp }
+        end
       else
         data = { status: -1, last_update: -1 }
       end

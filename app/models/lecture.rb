@@ -12,7 +12,6 @@ class Lecture < ApplicationRecord
   validates :enrollment_key, presence: true, length: { in: 3..20 }
   scope :active, -> { where status: "running" }
 
-  @@seconds_till_comprehension_timeout = 60*10 # 10min
   def set_active
     self.status = :running
   end
@@ -45,20 +44,21 @@ class Lecture < ApplicationRecord
     cur_time = Time.now
     changed = false
     self.lecture_comprehension_stamps.each { |stamp|
-      if (cur_time - stamp.timestamp) >= @@seconds_till_comprehension_timeout 
-          stamp.eliminate
+      if (cur_time - stamp.timestamp) >= LectureComprehensionStamp.seconds_till_comprehension_timeout 
+          stamp.broadcastElimination
           changed = true
       end
     }
     if changed
-      ComprehensionStampChannel.broadcast_to(self, getComprehensionStatus) # TODO only send to lecturer
+      ActionCable.server.broadcast "lecture_comprehension_stamp:#{@lecture.id}", getComprehensionStatus
+      #ComprehensionStampChannel.broadcast_to(self.lecturer, getComprehensionStatus) # TODO only send to lecturer
     end
   end
 
   def getComprehensionStatus
     status = Array.new(LectureComprehensionStamp.number_of_states, 0)
     status.size.times do |i|
-      status[i] = self.lecture_comprehension_stamps.where("status = ? and updated_at > ?", i, Time.now - @@seconds_till_comprehension_timeout).count
+      status[i] = self.lecture_comprehension_stamps.where("status = ? and updated_at > ?", i, Time.now - LectureComprehensionStamp.seconds_till_comprehension_timeout).count
     end
     last_update = self.lecture_comprehension_stamps.max { |a,b| a.timestamp <=> b.timestamp }
     if !last_update
