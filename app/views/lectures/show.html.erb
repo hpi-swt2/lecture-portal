@@ -38,12 +38,17 @@
 
     <% else %>
 
-      <% @lecture.feedbacks.each do |feedback| %>
-        <p>
-          <strong>Feedback:</strong>
-          <%= feedback.content %>
-        </p>
-      <% end %>
+      <div class="panel panel-default">
+        <div class="panel-body">
+          <ul class="list-group">
+            <% @lecture.feedbacks.each do |feedback| %>
+              <li class="list-group-item">
+                <%= feedback.content %>
+              </li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
 
     <% end %>
 
