@@ -3,10 +3,11 @@ class LectureComprehensionStamp < ApplicationRecord
 
   belongs_to :user
   belongs_to :lecture
-  validates :status, presence: true, inclusion: { in: [0, 1, 2] }
+  validates :status, presence: true, inclusion: { in: (0..(@@number_of_states-1)) }
+
 
   def eliminate
-    ComprehensionStampChannel.broadcast_to(@lecture, "expired") # TODO only send to corresponding user
+    ComprehensionStampChannel.broadcast_to(@lecture, "expired") # TODO only send to corresponding user and lecturer
   end
 
   def timestamp
