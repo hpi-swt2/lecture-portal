@@ -18,10 +18,10 @@ RSpec.describe LectureComprehensionStamp, type: :model do
     expect(@stamp).not_to be_valid
   end
 
-  it "it returns a creation timestamp" do
+  it "returns a creation timestamp" do
     expect(@stamp.timestamp).to be < Time.now
   end
 
-#   it "it does ... on call of eliminate" do
+#   it "does ... on call of eliminate" do
 #   end
 end
