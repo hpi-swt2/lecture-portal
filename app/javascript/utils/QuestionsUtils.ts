@@ -41,7 +41,7 @@ export const createQuestionsRootStore = (): QuestionsRootStoreModel => {
 
 export const initQuestionsApp = (rootStore: QuestionsRootStoreModel) => {
     axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector<HTMLMetaElement>('[name=csrf-token]').content;
-    axiosInstance.defaults.baseURL = `/courses/` + rootStore.courseId + `/lectures/` + rootStore.lecture_id + `/questions/`;
+    axiosInstance.defaults.baseURL = `/courses/` + rootStore.course_id + `/lectures/` + rootStore.lecture_id + `/questions/`;
     loadQuestionsList(rootStore);
     setupActionCable(rootStore);
 };

@@ -9,13 +9,15 @@ const rootStore = createComprehensionRootStore();
 interface IComprehensionAppProps {
     user_id: number,
     is_student: boolean,
-    lecture_id: number
+    lecture_id: number,
+    course_id: number
 }
 
-const ComprehensionApp: React.FunctionComponent<IComprehensionAppProps> = ({ user_id, is_student, lecture_id }) => {
+const ComprehensionApp: React.FunctionComponent<IComprehensionAppProps> = ({ user_id, is_student, lecture_id, course_id }) => {
     rootStore.setUserId(user_id);
     rootStore.setIsStudent(is_student);
     rootStore.setLectureId(lecture_id);
+    rootStore.setCourseId(course_id);
     initComprehensionApp(rootStore);
 
     return (

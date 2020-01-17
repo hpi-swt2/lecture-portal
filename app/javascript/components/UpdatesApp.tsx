@@ -11,7 +11,7 @@ interface IUpdatesAppProps {
     course_id: number
 }
 
-const UpdatesApp: React.FunctionComponent<IUpdatesAppProps> = ({ user_id, is_student, course_id, lecture_id }) => {
+const UpdatesApp: React.FunctionComponent<IUpdatesAppProps> = ({ user_id, is_student, lecture_id, course_id }) => {
     rootStore.setUserId(user_id);
     rootStore.setIsStudent(is_student);
     rootStore.setLectureId(lecture_id);
