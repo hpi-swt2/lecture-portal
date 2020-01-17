@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :uploaded_files, only: [:show, :index, :new, :create, :destroy]
   get "/courses/:course_id/lectures/current", to: "lectures#current", as: "current_lectures"
   post "/courses/:course_id/lectures/start_lecture", to: "lectures#start_lecture", as: "start_lecture"
   post "/courses/:course_id/lectures/join_lecture", to: "lectures#join_lecture", as: "join_lecture"
@@ -19,7 +18,7 @@ Rails.application.routes.draw do
           get :answer
         end
       end
-      resources :uploaded_files, only: [:show, :index, :new, :create, :destroy]
+      resources :uploaded_files#, only: [:show, :index, :new, :create, :destroy]
       resources :feedbacks
 
 
