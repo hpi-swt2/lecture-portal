@@ -16,6 +16,16 @@ class UploadedFilesController < ApplicationController
   def new
     @uploaded_file = UploadedFile.new
     @uploaded_file.author = current_user
+    # students are not allowed to upload lecture material
+    if @lecture && current_user.is_student
+      redirect_to(course_lecture_path(@course, @lecture), notice: "You are not allowed to upload lecture material.")
+    else
+      if @lecture
+        @model =  [@course, @lecture, @uploaded_file]
+      else
+        @model =  [@course, @uploaded_file]
+      end
+    end
   end
 
 
@@ -77,6 +87,7 @@ class UploadedFilesController < ApplicationController
 
     def validate_destroy_rights
       @uploaded_file = UploadedFile.find(params[:id])
+      # since students can't upload lecture material, they can't delete it either
       owner = current_user == @uploaded_file.author
       course_file_and_course_owner = (@uploaded_file.allowsUpload.class == Course) && (@uploaded_file.allowsUpload.creator_id == current_user.id)
       lecture_file_and_lecture_owner = (@uploaded_file.allowsUpload.class == Lecture) && (@uploaded_file.allowsUpload.lecturer_id == current_user.id)

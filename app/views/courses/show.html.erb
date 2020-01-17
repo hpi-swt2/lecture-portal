@@ -35,6 +35,7 @@
       <%= render 'components/show_uploaded_files_or_links', uploaded_files: @student_files %>
     </div>
   </div>
+  <%= link_to "Add new material", new_course_uploaded_file_path(@course), class:"btn btn-link"%>
 </section>
 
 

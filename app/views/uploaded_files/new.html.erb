@@ -2,4 +2,8 @@
 
 <%= render 'form', uploaded_file: @uploaded_file %>
 
+<% if  @lecture%>
 <%= link_to 'Back', course_lecture_path(@course, @lecture) %>
+<% else %>
+<%= link_to 'Back', course_path(@course) %>
+<% end %>

@@ -27,6 +27,9 @@
           </td>
           <td>
             <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
+            <% unless current_user.is_student %>
+              <%= link_to "Add lecture material", new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class:"btn btn-link"%>
+            <% end %>
           </td>
         </tr>
       </table>
