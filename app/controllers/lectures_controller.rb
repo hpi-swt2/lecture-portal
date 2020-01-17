@@ -108,8 +108,18 @@ class LecturesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    def get_course
+      @course = Course.find_by(id: params[:course_id])
+      if @course.nil?
+        redirect_to root_path, alert: "The course you requested does not exist."
+      end
+    end
+
     def set_lecture
-      @lecture = Lecture.find(params[:id])
+      @lecture = Lecture.find_by(id: params[:id])
+      if @lecture.nil?
+        redirect_to course_path(@course), alert: "The lecture you requested does not exist."
+      end
     end
 
     def validate_lecture_owner
@@ -149,9 +159,5 @@ class LecturesController < ApplicationController
       if @course.creator != current_user
         redirect_to @course, notice: "You can only access your own courses."
       end
-    end
-
-    def get_course
-      @course = Course.find(params[:course_id])
     end
 end
