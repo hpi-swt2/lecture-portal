@@ -16,7 +16,11 @@
       <% if lecture.status == "running" %>
         <tr>
           <td><%= lecture.name %></td>
-          <td><%= lecture.end_time.strftime("%H:%M") %></td>
+          <td>
+            <%if lecture.end_time %>
+              <%= lecture.end_time.strftime("%H:%M")  %>
+            <% end %>
+          </td>
           <% if !@current_user.is_student%>
             <td><%= lecture.enrollment_key %></td>
             <td><%= lecture.status%></td>

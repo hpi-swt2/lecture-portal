@@ -118,6 +118,8 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.integer "allowsUpload_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "isLink", default: false
+    t.integer "author_id"
     t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
     t.index ["author_id"], name: "index_uploaded_files_on_author_id"
   end

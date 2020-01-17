@@ -46,7 +46,7 @@ class UploadedFilesController < ApplicationController
     if is_link
       data = uploaded_file_params["link"]
     end
-    @uploaded_file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: lecture, isLink: is_link)
+    @uploaded_file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: lecture, isLink: is_link, author: current_user)
     if @uploaded_file.save
       redirect_to (uploaded_files_url), notice: "Uploaded file was successfully saved."
     else
@@ -64,7 +64,7 @@ class UploadedFilesController < ApplicationController
   private
     # Only allow a trusted parameter "white list" through.
     def uploaded_file_params
-      params.require(:uploaded_file).permit(:attachment, :lecture)
+      params.require(:uploaded_file).permit(:attachment, :lecture, :link)
     end
 
     def validate_destroy_rights

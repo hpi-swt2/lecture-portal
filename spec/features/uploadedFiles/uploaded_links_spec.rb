@@ -9,7 +9,7 @@ describe "The uploaded files index page", type: :feature do
       @data = "https://hpi.de"
       @lecturer = FactoryBot.create(:user, :lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
-      @file = UploadedFile.new(filename: "LICENSE", data: @data, allowsUpload: @lecture, isLink: true)
+      @file = UploadedFile.new(filename: "LICENSE", data: @data, allowsUpload: @lecture, isLink: true, author: @lecturer)
       sign_in @lecturer
     end
 

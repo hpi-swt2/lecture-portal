@@ -41,7 +41,11 @@
             <% if lecture.status == "running" %>
               <tr>
                 <td><%= lecture.course.name %> - <%= lecture.name %></td>
-                <td><%= lecture.end_time.strftime("%H:%M")  %></td>
+                <td>
+                  <%if lecture.end_time %>
+                    <%= lecture.end_time.strftime("%H:%M")  %>
+                  <% end %>
+                </td>
                 <% if @participating_lectures.include?(lecture)  %>
                   <td><%= button_to "View", course_lecture_path(course_id: lecture.course.id, id: lecture.id), :method => "get", class:"btn btn-primary" %></td>
                 <% else %>
