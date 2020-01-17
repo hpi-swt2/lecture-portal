@@ -4,8 +4,9 @@ import {useInjectUpdates} from "../hooks/useInject";
 import {UpdatesRootStoreModel} from "../stores/UpdatesRootStore";
 import {UpdateItem} from "../stores/UpdateItem";
 
-const mapStore = ({ is_student }: UpdatesRootStoreModel) => ({
-    is_student
+const mapStore = ({ is_student, interactions_enabled }: UpdatesRootStoreModel) => ({
+    is_student,
+    interactions_enabled
 });
 
 type Props = {
@@ -13,14 +14,14 @@ type Props = {
 }
 
 const UpdateView: React.FunctionComponent<Props> = ({item}) => {
-    const { is_student } = useInjectUpdates(mapStore);
+    const { is_student, interactions_enabled } = useInjectUpdates(mapStore);
 
     const onClick = _ => {
-        !is_student && item.onClick()
+        !is_student && interactions_enabled && item.onClick()
     };
 
     return (
-        <li key={item.id} onClick={onClick}>
+        <li key={item.id} onClick={onClick} className={interactions_enabled ? "interactable" : ""}>
             <div className="questionContent p-4">
                 {is_student && <span><b>{item.getTitle()}</b><br /></span>}
                 {item.getContent()}

@@ -11,7 +11,7 @@
       <% else %>
         <h5>Questions</h5>
       <% end %>
-      <%= react_component("UpdatesApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
+      <%= react_component("UpdatesApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?} ) %>
     </div>
   </div>
   <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
