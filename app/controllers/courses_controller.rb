@@ -57,8 +57,7 @@ class CoursesController < ApplicationController
     @course = Course.find(params[:id])
     @course.join_course(current_user)
     @course.save
-    current_user.save
-    update_calendar
+    current_user.update_calendar
     current_user.save
     redirect_to @course, notice: "You successfully joined the course."
   end
@@ -67,8 +66,7 @@ class CoursesController < ApplicationController
     @course = Course.find(params[:id])
     @course.leave_course(current_user)
     @course.save
-    current_user.save
-    update_calendar
+    current_user.update_calendar
     current_user.save
     redirect_to root_path, notice: "You successfully left the course."
   end
@@ -97,33 +95,4 @@ class CoursesController < ApplicationController
       end
     end
 
-    def update_calendar
-      calendar = Icalendar::Calendar.new
-      current_user.participating_courses.each do |course|
-        course.lectures.each do |lecture|
-          event = Icalendar::Event.new
-          event.summary = course.name + " - " + lecture.name
-          event.dtstart = DateTime.new(
-              lecture.date.year,
-              lecture.date.month,
-              lecture.date.day,
-              lecture.start_time.hour,
-              lecture.start_time.min,
-              lecture.start_time.sec
-          )
-          event.dtend = DateTime.new(
-              lecture.date.year,
-              lecture.date.month,
-              lecture.date.day,
-              lecture.end_time.hour,
-              lecture.end_time.min,
-              lecture.end_time.sec
-          )
-          calendar.add_event(event)
-        end
-      end
-      calendar.publish
-      current_user.calendar.ical = calendar.to_ical
-      current_user.calendar.save
-    end
 end
