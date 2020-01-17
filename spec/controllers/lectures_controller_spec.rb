@@ -273,7 +273,7 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to the lectures overview" do
       post :leave_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
-      expect(response).to redirect_to(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
+      expect(response).to redirect_to(course_path(id: @lecture.course.id))
     end
   end
 

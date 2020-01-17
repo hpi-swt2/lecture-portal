@@ -105,7 +105,7 @@ class LecturesController < ApplicationController
 
   def leave_lecture
     @lecture.leave_lecture(current_user)
-    redirect_to course_lecture_path(@course, @lecture), notice: "You successfully left the lecture."
+    redirect_to course_path(@course), notice: "You successfully left the lecture."
   end
 
   def end_lecture
