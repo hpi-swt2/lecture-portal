@@ -137,6 +137,7 @@ class PollsController < ApplicationController
       params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
     end
 
+    # This method looks for the course in the database and redirects with a failure if the course does not exist.
     def get_course
       @course = Course.find_by(id: params[:course_id])
       if @course.nil?
@@ -144,6 +145,7 @@ class PollsController < ApplicationController
       end
     end
 
+    # This method looks for the lecture in the database and redirects with a failure if the lecture does not exist.
     def get_lecture
       @lecture = Lecture.find_by(id: params[:lecture_id])
       if @lecture.nil?

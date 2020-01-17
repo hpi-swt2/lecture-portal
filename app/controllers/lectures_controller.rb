@@ -1,7 +1,7 @@
 class LecturesController < ApplicationController
   before_action :authenticate_user!
   before_action :get_course
-  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture]
+  before_action :get_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :validate_joined_user_or_owner, only: [:show]
   before_action :require_student, only: [:join_lecture]
@@ -116,6 +116,7 @@ class LecturesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
+    # This method looks for the course in the database and redirects with a failure if the course does not exist.
     def get_course
       @course = Course.find_by(id: params[:course_id])
       if @course.nil?
@@ -123,7 +124,8 @@ class LecturesController < ApplicationController
       end
     end
 
-    def set_lecture
+    # This method looks for the lecture in the database and redirects with a failure if the lecture does not exist.
+    def get_lecture
       @lecture = Lecture.find_by(id: params[:id])
       if @lecture.nil?
         redirect_to course_path(@course), alert: "The lecture you requested does not exist."

@@ -47,7 +47,7 @@ RSpec.describe QuestionsController, type: :controller do
         get :index, params: { course_id: (@lecture.course.id), lecture_id: not_existing_lecture_id }, session: valid_session
         expect(response).to redirect_to(course_path(@lecture.course))
       end
-    
+
       it "redirects to the root path view if the course does not exist", :logged_lecturer do
         not_existing_lecture_id = @lecture.id + 5
         not_existing_course_id = @lecture.course.id + 5
