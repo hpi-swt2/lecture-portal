@@ -96,7 +96,6 @@ class LecturesController < ApplicationController
     else
       redirect_to course_path(@course), alert: "You inserted the wrong key!"
     end
-
   end
 
   def leave_lecture

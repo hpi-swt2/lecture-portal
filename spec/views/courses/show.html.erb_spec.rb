@@ -44,12 +44,10 @@ RSpec.describe "courses/show", type: :view do
       assert_select "form input", count: 1
       assert_select "form", count: 1
     end
-
   end
 
   def login_student(user = FactoryBot.create(:user, :student))
     sign_in(user, scope: :user)
     @current_user = user
   end
-
 end
