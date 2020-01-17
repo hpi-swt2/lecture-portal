@@ -26,7 +26,12 @@
               <%if lecture.participating_students.include?(@current_user)%>
                 <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
               <% else %>
-                  <%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
+                <%= form_tag(join_lecture_path(:course_id => @course.id, :id => lecture.id)) do -%>
+                  <div>
+                    <%= text_field :enrollment_key , class: "col-10" %>
+                    <%= submit_tag 'Join', class: "btn btn-primary" %>
+                  </div>
+                <% end -%>
               <% end %>
             <% else %>
               <% if lecture.status == "running" %>

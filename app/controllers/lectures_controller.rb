@@ -84,10 +84,15 @@ class LecturesController < ApplicationController
   end
 
   def join_lecture
-    @lecture.join_lecture(current_user)
-    @lecture.save
-    current_user.save
-    redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
+    if params[:enrollment_key] == @lecture.enrollment_key
+      @lecture.join_lecture(current_user)
+      @lecture.save
+      current_user.save
+      redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
+    else
+      redirect_to course_path(@course), alert: "You inserted the wrong key!"
+    end
+
   end
 
   def leave_lecture
