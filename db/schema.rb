@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_16_215410) do
+ActiveRecord::Schema.define(version: 2020_01_16_233110) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -25,6 +25,8 @@ ActiveRecord::Schema.define(version: 2020_01_16_215410) do
     t.text "ical"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["user_id"], name: "index_calendars_on_user_id"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -138,6 +140,8 @@ ActiveRecord::Schema.define(version: 2020_01_16_215410) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_student", default: false, null: false
+    t.integer "calendar_id"
+    t.index ["calendar_id"], name: "index_users_on_calendar_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

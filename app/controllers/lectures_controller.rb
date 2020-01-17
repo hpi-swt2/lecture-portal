@@ -87,7 +87,6 @@ class LecturesController < ApplicationController
   def join_lecture
     @lecture.join_lecture(current_user)
     @lecture.save
-    current_user.save
     redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
   end
 
@@ -150,4 +149,5 @@ class LecturesController < ApplicationController
     def get_course
       @course = Course.find(params[:course_id])
     end
+
 end

@@ -52,4 +52,4 @@
 <% end %>
 <%= link_to 'Back', root_path %>
 
-<%= link_to 'Subscribe', calendar_url(protocol: :webcal, format: :ics) %>
+<%= link_to 'Subscribe', calendar_url(id: @current_user, protocol: :webcal, format: :ics) %>
