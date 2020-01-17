@@ -61,6 +61,23 @@ RSpec.describe "lectures/show", type: :view do
       render
       expect(rendered).not_to have_css("[value='Leave Lecture']")
     end
+    it "shows notice page on polls tab when polls are disabled" do
+      @lecture.update(polls_enabled: false)
+      render
+      expect(rendered).to have_text("Polls are not enabled.")
+    end
+    it "shows notice page on questions tab when questions are disabled" do
+      @lecture.update(questions_enabled: false)
+      render
+      assert_select "a", "Questions"
+      expect(rendered).to have_text("Questions are not enabled.")
+    end
+    it "does not show notice pages on disabled questions/polls when questions are enabled" do
+      render
+      assert_select "a", "Questions"
+      expect(rendered).to_not have_text("Questions are not enabled.")
+      expect(rendered).to_not have_text("Polls are not enabled.")
+    end
   end
 
   describe "as a student" do
