@@ -49,6 +49,11 @@ class LecturesController < ApplicationController
 
   # PATCH/PUT courses/:course_id/lectures/1
   def update
+    if !@lecture.enrollment_key_present? && lecture_params[:enrollment_key]
+      @lecture.participating_students.each do | student |
+        @lecture.leave_lecture(student)
+      end
+    end
     if @lecture.update(lecture_params)
       redirect_to course_lecture_path(@course, @lecture), notice: "Lecture was successfully updated."
     else
