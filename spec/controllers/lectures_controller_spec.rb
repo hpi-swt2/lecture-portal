@@ -189,7 +189,6 @@ RSpec.describe LecturesController, type: :controller do
         @lecture.reload
         expect(@lecture.participating_students.length).to eq(0)
       end
-
     end
 
     context "with invalid params" do
