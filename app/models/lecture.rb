@@ -68,14 +68,12 @@ class Lecture < ApplicationRecord
   end
 
   def Lecture.eliminate_comprehension_stamps
-    puts "Do elimination checks!"
     Lecture.where(status: "running").each { |lecture|
       lecture.eliminate_own_comp_stamps
     }
   end
 
   def eliminate_own_comp_stamps
-    puts "check!"
     cur_time = Time.now
     changed = false
     self.lecture_comprehension_stamps.each { |stamp|
