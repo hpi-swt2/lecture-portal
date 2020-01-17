@@ -14,13 +14,13 @@ describe "The lecture dashboard page", type: :feature do
       @other_lecture
       @other_lecture.save
       @course = @lecture.course
-      @link = UploadedFile.new(data: @link_addr, allowsUpload: @lecture, isLink: true, author:@lecturer)
+      @link = UploadedFile.new(data: @link_addr, allowsUpload: @lecture, isLink: true, author: @lecturer)
       @link.save
       @filename = "LICENSE"
       @filename2 = "OTHER LICENSE"
-      @file = UploadedFile.new(filename: @filename, content_type: "text/plain", data: @file_addr.read, allowsUpload: @lecture, isLink: false, author:@lecturer)
+      @file = UploadedFile.new(filename: @filename, content_type: "text/plain", data: @file_addr.read, allowsUpload: @lecture, isLink: false, author: @lecturer)
       @file.save
-      @file2 = UploadedFile.new(filename: @filename2, content_type: "text/plain", data: @file_addr.read, allowsUpload: @other_lecture, isLink: false, author:@lecturer)
+      @file2 = UploadedFile.new(filename: @filename2, content_type: "text/plain", data: @file_addr.read, allowsUpload: @other_lecture, isLink: false, author: @lecturer)
       @file2.save
       sign_in @lecturer
     end

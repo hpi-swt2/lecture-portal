@@ -48,12 +48,12 @@ describe "Upload files", type: :feature do
   end
 
   it "uploads a valid file with correct type" do
-    expect(UploadedFile.count).to be(0)
-    visit(new_uploaded_file_path)
-    find(:id, "uploaded_file_lecture").set(@lecture.id)
-    find(:id, "uploaded_file_attachment").set(@data)
-    click_on("Create Uploaded file")
-    expect(UploadedFile.count).to be(1)
+      expect(UploadedFile.count).to be(0)
+      visit(new_uploaded_file_path)
+      find(:id, "uploaded_file_lecture").set(@lecture.id)
+      find(:id, "uploaded_file_attachment").set(@data)
+      click_on("Create Uploaded file")
+      expect(UploadedFile.count).to be(1)
     end
 
   it "uploads a valid file with umlauts and with correct type" do
