@@ -17,4 +17,10 @@ class Course < ApplicationRecord
       self.participating_students.delete(User.find(student.id))
     end
   end
+
+  def update_students_calendars
+    self.participating_students.each do |student|
+      student.update_calendar
+    end
+  end
 end

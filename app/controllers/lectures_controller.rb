@@ -52,7 +52,7 @@ class LecturesController < ApplicationController
   # PATCH/PUT courses/:course_id/lectures/1
   def update
     if @lecture.update(lecture_params)
-      update_student_calendars
+      @course.update_students_calendars
       redirect_to course_lecture_path(@course, @lecture), notice: "Lecture was successfully updated."
     else
       render :edit
@@ -149,12 +149,6 @@ class LecturesController < ApplicationController
 
     def get_course
       @course = Course.find(params[:course_id])
-    end
-
-    def update_student_calendars
-      @course.participating_students.each do |student|
-        student.update_calendar
-      end
     end
 
 end
