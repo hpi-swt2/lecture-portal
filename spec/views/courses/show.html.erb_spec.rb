@@ -24,4 +24,34 @@ RSpec.describe "courses/show", type: :view do
     assert_select "tr>td", text: @lecture.enrollment_key, count: 1
     assert_select "tr>td", text: @lecture.status, count: 1
   end
+
+  context "for students" do
+    before(:each) do
+      login_student
+      @lecture.update(status: "running")
+    end
+
+    it "displays key input form for lectures with a key for not joined students" do
+      render
+      # it's 3 because of the hidden input fields in a form
+      assert_select "form input", count: 3
+      assert_select "form", count: 1
+    end
+
+    it "does not display key input form for lectures without a key for not joined students" do
+      @lecture.update(enrollment_key: nil)
+      render
+      # it's 3 because of the hidden input fields in a form
+      assert_select "form input", count: 0
+      assert_select "form", count: 0
+      assert_select "a", text: "Join"
+    end
+
+  end
+
+  def login_student(user = FactoryBot.create(:user, :student))
+    sign_in(user, scope: :user)
+    @current_user = user
+  end
+
 end
