@@ -142,7 +142,7 @@ describe "The course detail page", type: :feature do
       visit(course_path(@course))
       expect(page).to have_selector("a[href='#{course_uploaded_file_path(@course, @student_file)}'][data-method='delete']")
       expect(page).to_not have_selector("a[href='#{course_uploaded_file_path(@course, @lecturer_file)}'][data-method='delete']")
-      expect(page).to_not have_selector("a[href='#{uploaded_file_path(@other_student_file)}'][data-method='delete']")
+      expect(page).to_not have_selector("a[href='#{course_uploaded_file_path(@course, @other_student_file)}'][data-method='delete']")
       @delete_link = find_link("Delete File", href: course_uploaded_file_path(@course, @student_file))
       expect { @delete_link.click }.to change(UploadedFile, :count).by(-1)
     end
