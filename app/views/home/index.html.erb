@@ -32,8 +32,8 @@
           <thead>
           <tr>
             <th style="width: 25%">Name</th>
-            <th style="width: 75%" scope="col">End Time</th>
-            <th scope="col"></th>
+            <th style="width: 15%" scope="col">End Time</th>
+            <th style="width: 60%" scope="col"></th>
           </tr>
           </thead>
 
@@ -42,11 +42,18 @@
               <tr>
                 <td><%= lecture.course.name %> - <%= lecture.name %></td>
                 <td><%= lecture.end_time.strftime("%H:%M")  %></td>
+                <td class="text-right" >
                 <% if @participating_lectures.include?(lecture)  %>
-                  <td><%= button_to "View", course_lecture_path(course_id: lecture.course.id, id: lecture.id), :method => "get", class:"btn btn-primary" %></td>
+                  <%= button_to "View", course_lecture_path(course_id: lecture.course.id, id: lecture.id), :method => "get", class:"btn btn-primary" %>
+                <% elsif lecture.enrollment_key_present? && !@participating_lectures.include?(lecture)%>
+                  <%= form_tag join_lecture_path(:course_id => lecture.course.id, :id => lecture.id, method: :post, autocomplete: "off") do -%>
+                    <%= text_field :lecture, :enrollment_key%>
+                    <%= submit_tag 'Join', class: "btn btn-primary" %>
+                  <% end %>
                 <% else %>
-                  <td><%= link_to "Join", join_lecture_path(:course_id => lecture.course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %></td>
+                  <%= button_to 'Join', join_lecture_path(:course_id => lecture.course.id, :id => lecture.id),method: :post, class:"btn btn-primary" %>
                 <% end %>
+                </td>
               </tr>
             <% end %>
           <% end %>
