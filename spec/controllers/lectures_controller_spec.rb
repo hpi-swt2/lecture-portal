@@ -229,12 +229,16 @@ RSpec.describe LecturesController, type: :controller do
       @lecture = FactoryBot.create(:lecture, status: "running")
     end
 
-    it "redirects to the lectures overview for students" do
+    it "redirects to the lecture's overview for students with right key" do
       login_student
-      # post :join_lecture, params: { id: @lecture.id }, session: valid_session
-      # expect(response).to redirect_to(lecture_path(@lecture))
-      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: @lecture.enrollment_key } }, session: valid_session
       expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
+    end
+
+    it "redirects to the courses's overview for students without right key" do
+      login_student
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: "wrong" } }, session: valid_session
+      expect(response).to redirect_to(course_path(@lecture.course.id))
     end
 
     it "redirects to overview for other lecturers" do
