@@ -181,6 +181,14 @@ RSpec.describe LecturesController, type: :controller do
         put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
       end
+
+      it "removes all joined students when adding key to keyless lecture", :logged_lecturer do
+        @lecture.update(enrollment_key: nil)
+        @lecture.join_lecture(FactoryBot.create(:user, :student))
+        put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: new_attributes }, session: valid_session
+        @lecture.reload
+        expect(@lecture.participating_students.length).to eq(0)
+      end
     end
 
     context "with invalid params" do
