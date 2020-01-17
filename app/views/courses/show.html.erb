@@ -27,10 +27,13 @@
       </li>
       </ul>
       <aside class="actions-right">
-        <%= form_tag uploaded_files_path(@course), multipart: true do %>
-          <label for="uploaded_file", class="btn btn-outline-secondary">Add new material</label>
-          <%= file_field_tag "uploaded_file", onchange: 'this.form.submit();', style: "display: none;" %>
-        <% end %>
+      <%= form_with(model: @uploaded_file, local: true, html: { multipart: true } ) do |form| %>
+        <div class="field">
+          <%= form.label :attachment, "Add new material", class: "btn btn-outline-secondary" %>
+          <%= form.file_field :attachment, style: "display: none;", onchange: "this.form.submit();" %>
+        </div>
+      <% end %>
+        
       </aside>
   </div>
   <div class="tab-content" id="fileTabsContent">

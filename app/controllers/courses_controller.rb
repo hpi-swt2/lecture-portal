@@ -14,6 +14,10 @@ class CoursesController < ApplicationController
     @current_user = current_user
     @student_files = @course.uploaded_files.student_files
     @lecturer_files = @course.uploaded_files.lecturer_files
+    
+    @uploaded_file = UploadedFile.new
+    @uploaded_file.author = @current_user
+    @uploaded_file.allowsUpload = @course
   end
 
   # GET /courses/new
