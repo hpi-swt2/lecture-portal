@@ -4,6 +4,7 @@ import { PollOptionsRootStoreModel } from "../stores/PollOptionsRootStore";
 import {useInjectPollOptions} from "../hooks/useInject";
 import CanvasJSReact from "../lib/canvasjs/canvasjs.react";
 import PollResultDataInitializer from "./PollResultDataInitializer";
+
 var CanvasJSChart = CanvasJSReact.CanvasJSChart;
 
 const mapStore = ({ poll_options }: PollOptionsRootStoreModel) => ({
