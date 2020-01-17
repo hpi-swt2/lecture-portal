@@ -67,8 +67,11 @@
 
   </div>
   <% if !@current_user.is_student %>
+    <div class="tab-pane fade" id="enrollmentKey" role="tabpanel" aria-labelledby="enrollmentKey-tab-tab">
+      <h1 class="padded-text">Enrollment Key: <%= @lecture.enrollment_key %></h1>
+    </div>
     <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-      <%= render 'form', lecture: @lecture, render_enrolment_key: false %>
+      <%= render 'form', lecture: @lecture %>
     </div>
   <% end %>
 </div>
