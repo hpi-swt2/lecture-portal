@@ -27,7 +27,10 @@
       </li>
       </ul>
       <aside class="actions-right">
-        <%= link_to "Add new material", uploaded_files_path, method: :get, class: "btn btn-outline-secondary" %>
+        <%= form_tag uploaded_files_path(@course), multipart: true do %>
+          <label for="uploaded_file", class="btn btn-outline-secondary">Add new material</label>
+          <%= file_field_tag "uploaded_file", onchange: 'this.form.submit();', style: "display: none;" %>
+        <% end %>
       </aside>
   </div>
   <div class="tab-content" id="fileTabsContent">
