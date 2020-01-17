@@ -15,8 +15,6 @@ class PollOption extends React.Component <IPollOptionProps, IPollOptionState> {
         this.state = {numberOfOptions: props.options.length}
     }
 
-    // We chose blur as an event so that a mistyped input does not directly erase any of the currently existing options.
-    // So this component only updates the view when the input focus leaves the number field.
     onInput(evt) {
         if (evt.currentTarget && evt.currentTarget.value) {
             this.setState({numberOfOptions: evt.currentTarget.value});
