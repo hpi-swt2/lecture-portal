@@ -44,12 +44,10 @@
     <%= form.text_area :description, :readonly => lecture.ended?, :class => "form-control", :rows => "5" %>
   </div>
 
-  <% if render_enrolment_key==true %>
-    <div class="form-group">
-      <%= form.label :enrollment_key %>
-      <%= form.text_field :enrollment_key, class: "form-control" %>
-    </div>
-  <% end %>
+  <div class="form-group">
+    <%= form.label :enrollment_key %>
+    <%= form.text_field :enrollment_key, class: "form-control" %>
+  </div>
 
   <div class="form-check">
     <%= form.check_box :questions_enabled, :disabled => lecture.ended?, class: "form-check-input" %>

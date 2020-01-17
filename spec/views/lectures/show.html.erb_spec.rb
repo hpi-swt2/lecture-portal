@@ -33,23 +33,32 @@ RSpec.describe "lectures/show", type: :view do
   describe "as a lecturer" do
     before(:each) do
       @current_user = @lecture.lecturer
-      render
     end
 
     it "renders settings tab" do
+      render
       assert_select "a", "Settings"
       expect(rendered).to have_content("Settings")
       expect(rendered).to have_css("#settings-tab")
     end
-    it "renders enrollment key tab" do
+    it "renders enrollment key tab if enrollment key is present" do
+      render
       assert_select "a", "Enrollment Key"
       expect(rendered).to have_content("Enrollment Key")
       expect(rendered).to have_css("#enrollmentKey-tab")
     end
+    it "does not render enrollment key tab button if enrollment key is not present" do
+      @lecture.enrollment_key = nil
+      @lecture.save!
+      render
+      expect(rendered).not_to have_css("#enrollmentKey-tab")
+    end
     it "renders end button" do
+      render
       expect(rendered).to have_link("End Lecture")
     end
     it "renders a leave lecture button" do
+      render
       expect(rendered).not_to have_css("[value='Leave Lecture']")
     end
   end
