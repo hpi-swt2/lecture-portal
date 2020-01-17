@@ -22,6 +22,7 @@ class LecturesController < ApplicationController
   # GET courses/:course_id/lectures/1
   def show
     @current_user = current_user
+    @uploaded_files = @lecture.uploaded_files
   end
 
   # GET courses/:course_id/lectures/new
