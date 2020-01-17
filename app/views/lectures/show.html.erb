@@ -32,12 +32,21 @@
       </table>
     </div>
   </div>
+
   <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
-    <%= react_component("QuestionsApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id}) %>
+    <% if @lecture.questions_enabled %>
+      <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
+    <% else %>
+      <h1> Questions are not enabled. :(</h1>
+    <% end %>
   </div>
 
   <div class="tab-pane fade poll-tab-container" id="polls" role="tabpanel" aria-labelledby="polls-tab" >
-    <iframe class="polls-iframe" src="<%= course_lecture_polls_path(@course, @lecture) %>"></iframe>
+    <% if @lecture.polls_enabled%>
+      <iframe class="polls-iframe" src="<%= course_lecture_polls_path(@course, @lecture) %>"></iframe>
+    <% else %>
+      <h1> Polls are not enabled. :( </h1>
+    <% end %>
   </div>
 
   <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
