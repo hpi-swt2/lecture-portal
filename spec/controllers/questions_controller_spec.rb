@@ -43,7 +43,7 @@ RSpec.describe QuestionsController, type: :controller do
       end
 
       it "redirects to course overview when the lecture does not exist", :logged_lecturer do
-        not_existing_lecture_id = @lecture.to_param == 100 ? 101 : 100
+        not_existing_lecture_id = @lecture.id + 5
         get :index, params: { course_id: (@lecture.course.id), lecture_id: not_existing_lecture_id }, session: valid_session
         expect(response).to redirect_to(course_path(@lecture.course))
       end
