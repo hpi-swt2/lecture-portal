@@ -18,7 +18,7 @@ Rails.application.routes.draw do
           get :answer
         end
       end
-      resources :uploaded_files#, only: [:show, :index, :new, :create, :destroy]
+      resources :uploaded_files # , only: [:show, :index, :new, :create, :destroy]
       resources :feedbacks
 
 

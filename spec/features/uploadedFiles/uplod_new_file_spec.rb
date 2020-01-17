@@ -14,7 +14,6 @@ describe "Upload files", type: :feature do
     sign_in @lecturer
   end
   context "for lectures" do
-
     before :each do
       visit(new_course_lecture_uploaded_file_path(@lecture.course, @lecture))
     end
@@ -55,7 +54,7 @@ describe "Upload files", type: :feature do
       expect(page).to have_link("Back", href: course_lecture_path(@lecture.course, @lecture))
     end
 
-    #students are not allowed to upload files
+    # students are not allowed to upload files
     it "redirects a student away" do
       sign_in @student
       @lecture.join_lecture(@student)
@@ -65,16 +64,15 @@ describe "Upload files", type: :feature do
   end
 
   context "for courses" do
-
     before :each do
       visit(new_course_uploaded_file_path(@lecture.course))
     end
 
     it "uploads a valid file with umlauts and with correct type by a lecturer" do
-      expect(UploadedFile.count).to be(0)
-      find(:id, "uploaded_file_attachment").set(@data_umlauts)
-      click_on("Create Uploaded file")
-      expect(UploadedFile.count).to be(1)
+        expect(UploadedFile.count).to be(0)
+        find(:id, "uploaded_file_attachment").set(@data_umlauts)
+        click_on("Create Uploaded file")
+        expect(UploadedFile.count).to be(1)
       end
 
     it "uploads a valid file with umlauts and with correct type by a student" do
@@ -89,5 +87,4 @@ describe "Upload files", type: :feature do
       expect(page).to have_link("Back", href: course_path(@lecture.course))
     end
   end
-
 end

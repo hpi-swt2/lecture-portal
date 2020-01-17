@@ -10,8 +10,5 @@ describe "The show lecture page", type: :feature do
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
       sign_in @lecturer
     end
-
-
   end
-
 end

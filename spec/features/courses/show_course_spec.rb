@@ -114,18 +114,18 @@ describe "The course detail page", type: :feature do
     end
 
     it "should have delete links for every file" do
-     @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
-     @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
-     visit(course_path(@course))
-     @delete_link_student_file = find_link("Delete File", href: course_uploaded_file_path(@course, @student_file))
-     @delete_link_lecturer_file =find_link("Delete File", href: course_uploaded_file_path(@course, @lecturer_file))
-     expect { @delete_link_student_file.click }.to change(UploadedFile, :count).by(-1)
-     expect { @delete_link_lecturer_file.click }.to change(UploadedFile, :count).by(-1)
+      @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
+      @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
+      visit(course_path(@course))
+      @delete_link_student_file = find_link("Delete File", href: course_uploaded_file_path(@course, @student_file))
+      @delete_link_lecturer_file =find_link("Delete File", href: course_uploaded_file_path(@course, @lecturer_file))
+      expect { @delete_link_student_file.click }.to change(UploadedFile, :count).by(-1)
+      expect { @delete_link_lecturer_file.click }.to change(UploadedFile, :count).by(-1)
     end
 
     it "shoud have an \"Add new material\" link" do
-      visit(course_path(@course))
-      expect(page).to have_link("Add new material", href: new_course_uploaded_file_path(@course))
+        visit(course_path(@course))
+        expect(page).to have_link("Add new material", href: new_course_uploaded_file_path(@course))
       end
 
     it "shoud have an \"Add new material\" link for students" do

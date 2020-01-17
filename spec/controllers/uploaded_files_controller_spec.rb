@@ -78,7 +78,7 @@ RSpec.describe UploadedFilesController, type: :controller do
       end
 
     it "can not be deleted by a student" do
-      expect { post :destroy, params: { id: @lecturer_file[:id], lecture_id: @lecture.id, course_id: @course.id } }.to change(UploadedFile, :count).by(0)
+        expect { post :destroy, params: { id: @lecturer_file[:id], lecture_id: @lecture.id, course_id: @course.id } }.to change(UploadedFile, :count).by(0)
       end
 
     it "can be deleted by the lecture owner" do

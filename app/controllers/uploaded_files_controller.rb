@@ -6,9 +6,9 @@ class UploadedFilesController < ApplicationController
   # GET /courses/:course_id/lectures/:lecture_id/uploaded_files
   def index
     if @lecture
-      @uploaded_files = UploadedFile.where(:allowsUpload_id => @lecture.id)
+      @uploaded_files = UploadedFile.where(allowsUpload_id: @lecture.id)
     else
-      @uploaded_files = UploadedFile.where(:allowsUpload_id => @course.id)
+      @uploaded_files = UploadedFile.where(allowsUpload_id: @course.id)
     end
   end
 
@@ -55,7 +55,7 @@ class UploadedFilesController < ApplicationController
     if is_link
       data = uploaded_file_params["link"]
     end
-    #we might be under both
+    # we might be under both
     allows_upload = @course
     if @lecture
       allows_upload = @lecture
