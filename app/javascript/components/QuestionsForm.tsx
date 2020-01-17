@@ -5,16 +5,18 @@ import {useInjectQuestions} from "../hooks/useInject";
 
 const mapStore = ({
   is_student,
-  current_question
+  current_question,
+  interactions_enabled
 }: QuestionsRootStoreModel) => ({
   is_student,
-  current_question
+  current_question,
+  interactions_enabled
 });
 
 const QuestionsForm: React.FunctionComponent<{}> = observer(() => {
-  const { is_student, current_question } = useInjectQuestions(mapStore);
+  const { is_student, current_question, interactions_enabled } = useInjectQuestions(mapStore);
 
-  if (is_student) {
+  if (is_student && interactions_enabled) {
     const formRef = createRef<HTMLFormElement>();
     const textareaRef = createRef<HTMLTextAreaElement>();
     const formId = "questionForm";

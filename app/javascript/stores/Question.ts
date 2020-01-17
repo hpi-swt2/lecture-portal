@@ -16,7 +16,7 @@ const Question = types
   .views(self => ({
     canBeUpvoted(): boolean {
       const store = getQuestionsRootStore(self);
-      return self.author_id != store.user_id && store.is_student;
+      return self.author_id != store.user_id && store.is_student && store.interactions_enabled;
     },
     isAlreadyUpvoted(): boolean {
       const store = getQuestionsRootStore(self);
@@ -24,7 +24,7 @@ const Question = types
     },
     canBeResolved(): boolean {
       const store = getQuestionsRootStore(self);
-      return store.user_id == self.author_id || !store.is_student;
+      return (store.user_id == self.author_id || !store.is_student) && store.interactions_enabled;
     }
   }))
   .actions(self => ({

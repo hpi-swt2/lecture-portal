@@ -3,6 +3,7 @@ class QuestionsController < ApplicationController
   skip_before_action :verify_authenticity_token
   before_action :get_lecture
   before_action :validate_joined_user_or_owner
+  before_action :validate_lecture_running_or_ended, except: [:index]
 
   # GET /questions
   def index
@@ -54,6 +55,7 @@ class QuestionsController < ApplicationController
       head :forbidden
     end
   end
+
   # POST /questions/:id/resolve
   def resolve
     question = Question.find(params[:id])
@@ -80,5 +82,9 @@ class QuestionsController < ApplicationController
       isJoinedStudent = isStudent && @lecture.participating_students.include?(current_user)
       isLectureOwner = !isStudent && @lecture.lecturer == current_user
       return head :forbidden unless isJoinedStudent || isLectureOwner
+    end
+
+    def validate_lecture_running_or_ended
+      return head :forbidden if @lecture.readonly?
     end
 end
