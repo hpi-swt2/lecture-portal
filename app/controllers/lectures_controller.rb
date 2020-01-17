@@ -7,6 +7,7 @@ class LecturesController < ApplicationController
   before_action :require_student, only: [:join_lecture]
   before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show]
   before_action :require_student, only: [:join_lecture, :leave_lecture]
+  before_action :validate_course_creator, only: [:create, :new]
 
   # GET /lectures
   def index
@@ -50,6 +51,11 @@ class LecturesController < ApplicationController
 
   # PATCH/PUT courses/:course_id/lectures/1
   def update
+    if !@lecture.enrollment_key_present? && lecture_params[:enrollment_key]
+      @lecture.participating_students.each do | student |
+        @lecture.leave_lecture(student)
+      end
+    end
     if @lecture.update(lecture_params)
       redirect_to course_lecture_path(@course, @lecture), notice: "Lecture was successfully updated."
     else
@@ -109,7 +115,7 @@ class LecturesController < ApplicationController
 
     def validate_lecture_owner
       if @lecture.lecturer != current_user
-        redirect_to root_path, notice: "You can only access your own lectures."
+        redirect_to course_path(@course), notice: "You can only access your own lectures."
       end
     end
 
@@ -131,12 +137,18 @@ class LecturesController < ApplicationController
     end
 
     def lecture_params
-      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled, :description)
+      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled, :description, :date, :start_time, :end_time)
     end
 
     def require_lecturer
       if current_user.is_student?
         redirect_to course_path(@course), notice: "You can't access this site as a student."
+      end
+    end
+
+    def validate_course_creator
+      if @course.creator != current_user
+        redirect_to @course, notice: "You can only access your own courses."
       end
     end
 

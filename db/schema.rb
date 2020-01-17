@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_10_154810) do
+ActiveRecord::Schema.define(version: 2020_01_11_115936) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -59,6 +59,9 @@ ActiveRecord::Schema.define(version: 2020_01_10_154810) do
     t.string "status", default: "created"
     t.integer "lecturer_id"
     t.integer "course_id"
+    t.date "date"
+    t.time "start_time"
+    t.time "end_time"
     t.index ["course_id"], name: "index_lectures_on_course_id"
     t.index ["lecturer_id"], name: "index_lectures_on_lecturer_id"
   end
@@ -115,8 +118,8 @@ ActiveRecord::Schema.define(version: 2020_01_10_154810) do
     t.integer "allowsUpload_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "isLink", default: false
     t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
+    t.index ["author_id"], name: "index_uploaded_files_on_author_id"
   end
 
   create_table "users", force: :cascade do |t|

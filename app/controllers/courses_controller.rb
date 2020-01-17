@@ -12,6 +12,8 @@ class CoursesController < ApplicationController
   # GET /courses/1
   def show
     @current_user = current_user
+    @student_files = @course.uploaded_files.student_files
+    @lecturer_files = @course.uploaded_files.lecturer_files
   end
 
   # GET /courses/new
