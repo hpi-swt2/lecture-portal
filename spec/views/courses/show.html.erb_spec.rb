@@ -41,6 +41,7 @@ RSpec.describe "courses/show", type: :view do
     it "does not display key input form for lectures without a key for not joined students" do
       @lecture.update(enrollment_key: nil)
       render
+      # it's 1 because of the Join button is a form
       assert_select "form input", count: 1
       assert_select "form", count: 1
     end

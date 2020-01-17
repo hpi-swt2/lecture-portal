@@ -49,7 +49,9 @@ RSpec.describe "home/index", type: :view do
     it "displays key input form for lectures with a key for not joined students" do
       visit root_path
       expect(page).to have_text("Join")
+      # it's 2 because of the courses button
       expect(page).to have_css("form", count: 2)
+      # it's 3 because of the courses button and the hidden field in the key input form
       expect(page).to have_css("input", count: 3)
     end
 
@@ -57,7 +59,9 @@ RSpec.describe "home/index", type: :view do
       @lecture.update(enrollment_key: nil)
       visit root_path
       expect(page).to have_text("Join")
+      # it's 2 because of the courses button
       expect(page).to have_css("form", count: 2)
+      # it's 2 because of the courses button
       expect(page).to have_css("input", count: 2)
     end
   end
