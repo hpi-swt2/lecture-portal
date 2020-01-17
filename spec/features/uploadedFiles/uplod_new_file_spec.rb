@@ -82,7 +82,7 @@ describe "Upload files", type: :feature do
       click_on("Create Uploaded file")
       expect(UploadedFile.count).to be(1)
     end
-
+    
     it "links back to the course show page" do
       expect(page).to have_link("Back", href: course_path(@lecture.course))
     end
