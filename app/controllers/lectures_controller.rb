@@ -33,7 +33,7 @@ class LecturesController < ApplicationController
   # GET courses/:course_id/lectures/1/edit
   def edit
     if @lecture.status != "created"
-      redirect_to course_lecture_path(@course, @lecture), notice: "This page is only available before a lecture was started. Use the settings tab instead."
+      redirect_to course_lecture_path(@course, @lecture), alert: "This page is only available before a lecture was started. Use the settings tab instead."
     end
   end
 
@@ -69,7 +69,7 @@ class LecturesController < ApplicationController
     if current_user.is_student?
       @lectures = Lecture.where(course_id: @course.id).active
     else
-      redirect_to root_path, notice: "Only Students can access this site."
+      redirect_to root_path, alert: "Only Students can access this site."
     end
   end
 
@@ -79,7 +79,7 @@ class LecturesController < ApplicationController
       @lecture.save
       redirect_to course_lecture_path(@course, @lecture)
     else
-      redirect_to course_lecture_path(@course, @lecture), notice: "Can't restart an ended lecture."
+      redirect_to course_lecture_path(@course, @lecture), alert: "Can't restart an ended lecture."
     end
   end
 
@@ -114,7 +114,7 @@ class LecturesController < ApplicationController
 
     def validate_lecture_owner
       if @lecture.lecturer != current_user
-        redirect_to course_path(@course), notice: "You can only access your own lectures."
+        redirect_to course_path(@course), alert: "You can only access your own lectures."
       end
     end
 
@@ -123,15 +123,15 @@ class LecturesController < ApplicationController
       isJoinedStudent = @lecture.participating_students.include?(current_user)
       isLectureOwner = @lecture.lecturer == current_user
       if isStudent && !isJoinedStudent
-        redirect_to course_path(@course), notice: "You must join a lecture before you can view it."
+        redirect_to course_path(@course), alert: "You must join a lecture before you can view it."
       elsif !isStudent && !isLectureOwner
-        redirect_to course_path(@course), notice: "You can only access your own lectures."
+        redirect_to course_path(@course), alert: "You can only access your own lectures."
       end
     end
 
     def require_student
       if !current_user.is_student
-        redirect_to course_path(@course), notice: "Only students can join a lecture."
+        redirect_to course_path(@course), alert: "Only students can join a lecture."
       end
     end
 
@@ -141,13 +141,13 @@ class LecturesController < ApplicationController
 
     def require_lecturer
       if current_user.is_student?
-        redirect_to course_path(@course), notice: "You can't access this site as a student."
+        redirect_to course_path(@course), alert: "You can't access this site as a student."
       end
     end
 
     def validate_course_creator
       if @course.creator != current_user
-        redirect_to @course, notice: "You can only access your own courses."
+        redirect_to @course, alert: "You can only access your own courses."
       end
     end
 
