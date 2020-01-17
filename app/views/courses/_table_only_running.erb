@@ -26,9 +26,9 @@
               <%if lecture.participating_students.include?(@current_user)%>
                 <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
               <% elsif lecture.enrollment_key_present?%>
-                <%= form_tag(join_lecture_path(:course_id => @course.id, :id => lecture.id)) do -%>
+                <%= form_tag(join_lecture_path(:course_id => @course.id, :id => lecture.id), autocomplete: "off") do -%>
                   <div>
-                    <%= text_field :enrollment_key , class: "col-10" %>
+                    <%= text_field :enrollment_key , class: "col-10"%>
                     <%= submit_tag 'Join', class: "btn btn-primary" %>
                   </div>
                 <% end -%>
