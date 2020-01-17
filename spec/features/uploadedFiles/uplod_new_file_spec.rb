@@ -7,6 +7,7 @@ describe "Upload files", type: :feature do
   before :each do
     # could not get fixture_file_upload to find the file
     @data = file_fixture("LICENSE")
+    @data_umlauts = file_fixture("FileWithUmlautsÜÖÄüöä")
     @lecturer = FactoryBot.create(:user, :lecturer)
     @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
     sign_in @lecturer
@@ -51,6 +52,15 @@ describe "Upload files", type: :feature do
     visit(new_uploaded_file_path)
     find(:id, "uploaded_file_lecture").set(@lecture.id)
     find(:id, "uploaded_file_attachment").set(@data)
+    click_on("Create Uploaded file")
+    expect(UploadedFile.count).to be(1)
+    end
+
+  it "uploads a valid file with umlauts and with correct type" do
+    expect(UploadedFile.count).to be(0)
+    visit(new_uploaded_file_path)
+    find(:id, "uploaded_file_lecture").set(@lecture.id)
+    find(:id, "uploaded_file_attachment").set(@data_umlauts)
     click_on("Create Uploaded file")
     expect(UploadedFile.count).to be(1)
   end
