@@ -33,18 +33,32 @@ RSpec.describe "lectures/show", type: :view do
   describe "as a lecturer" do
     before(:each) do
       @current_user = @lecture.lecturer
-      render
     end
 
     it "renders settings tab" do
+      render
       assert_select "a", "Settings"
       expect(rendered).to have_content("Settings")
       expect(rendered).to have_css("#settings-tab")
     end
+    it "renders enrollment key tab if enrollment key is present" do
+      render
+      assert_select "a", "Enrollment Key"
+      expect(rendered).to have_content("Enrollment Key")
+      expect(rendered).to have_css("#enrollmentKey-tab")
+    end
+    it "does not render enrollment key tab button if enrollment key is not present" do
+      @lecture.enrollment_key = nil
+      @lecture.save!
+      render
+      expect(rendered).not_to have_css("#enrollmentKey-tab")
+    end
     it "renders end button" do
+      render
       expect(rendered).to have_link("End Lecture")
     end
     it "renders a leave lecture button" do
+      render
       expect(rendered).not_to have_css("[value='Leave Lecture']")
     end
   end
@@ -54,6 +68,10 @@ RSpec.describe "lectures/show", type: :view do
       @current_user = FactoryBot.create(:user, :student)
       @lecture.join_lecture(@current_user)
       render
+    end
+    it "renders no enrollment key tab" do
+      expect(rendered).not_to have_content("Enrollment Key")
+      expect(rendered).not_to have_css("#enrollmentKey-tab")
     end
     it "renders no settings tab" do
       expect(rendered).not_to have_content("Settings")
@@ -79,44 +97,11 @@ RSpec.describe "lectures/show", type: :view do
     assert_select "a", "Settings"
     expect(rendered).to have_selector("textarea[id='lecture_description']")
   end
-
   it "can change enrollment key in settings tab" do
     @current_user = FactoryBot.create(:user, :lecturer)
     render
     assert_select "a", "Settings"
-    expect(rendered).to_not have_selector("input[id='lecture_enrollment_key'][type='text']")
-  end
-  it "can change polls in settings tab" do
-      @current_user = FactoryBot.create(:user, :lecturer)
-      render
-      assert_select "a", "Settings"
-      expect(rendered).to have_selector("input[id='lecture_polls_enabled'][type='checkbox']")
-    end
-
-  it "can change questions in settings tab" do
-    @current_user = FactoryBot.create(:user, :lecturer)
-    render
-    assert_select "a", "Settings"
-    expect(rendered).to have_selector("input[id='lecture_questions_enabled'][type='checkbox']")
-  end
-
-  it "can change title in settings tab" do
-    @current_user = FactoryBot.create(:user, :lecturer)
-    render
-    assert_select "a", "Settings"
-    expect(rendered).to have_selector("input[id='lecture_name'][type='text']")
-  end
-  it "can change description in settings tab" do
-    @current_user = FactoryBot.create(:user, :lecturer)
-    render
-    assert_select "a", "Settings"
-    expect(rendered).to have_selector("textarea[id='lecture_description']")
-  end
-  it "can not change enrollment_key in settings tab" do
-    @current_user = FactoryBot.create(:user, :lecturer)
-    render
-    assert_select "a", "Settings"
-    expect(rendered).to_not have_selector("input[id='lecture_enrollment_key'][type='text']")
+    expect(rendered).to have_selector("input[id='lecture_enrollment_key'][type='text']")
   end
   it "can change polls in settings tab" do
       @current_user = FactoryBot.create(:user, :lecturer)
