@@ -19,7 +19,9 @@ module LecturePortal
     # Schedule a check for aging of comprehension stamps
     config.after_initialize do
       Rufus::Scheduler.singleton.every '30s' do
-        Lecture.eliminate_comprehension_stamps
+        ActiveRecord::Base.connection_pool.with_connection do
+          Lecture.eliminate_comprehension_stamps
+        end
       end
     end
   end
