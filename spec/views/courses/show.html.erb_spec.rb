@@ -41,10 +41,8 @@ RSpec.describe "courses/show", type: :view do
     it "does not display key input form for lectures without a key for not joined students" do
       @lecture.update(enrollment_key: nil)
       render
-      # it's 3 because of the hidden input fields in a form
-      assert_select "form input", count: 0
-      assert_select "form", count: 0
-      assert_select "a", text: "Join"
+      assert_select "form input", count: 1
+      assert_select "form", count: 1
     end
 
   end

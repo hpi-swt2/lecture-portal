@@ -225,7 +225,7 @@ RSpec.describe LecturesController, type: :controller do
       login_student
       # post :join_lecture, params: { id: @lecture.id }, session: valid_session
       # expect(response).to redirect_to(lecture_path(@lecture))
-      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, enrollment_key: @lecture.enrollment_key}, session: valid_session
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: @lecture.enrollment_key } }, session: valid_session
       expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
     end
 
@@ -233,7 +233,7 @@ RSpec.describe LecturesController, type: :controller do
       login_student
       # post :join_lecture, params: { id: @lecture.id }, session: valid_session
       # expect(response).to redirect_to(lecture_path(@lecture))
-      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, enrollment_key: "wrong" }, session: valid_session
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: "wrong"} }, session: valid_session
       expect(response).to redirect_to(course_path(@lecture.course.id))
     end
 

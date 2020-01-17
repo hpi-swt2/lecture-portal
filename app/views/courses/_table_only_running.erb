@@ -25,15 +25,13 @@
             <% if @current_user.is_student%>
               <%if lecture.participating_students.include?(@current_user)%>
                 <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
-              <% elsif lecture.enrollment_key_present?%>
-                <%= form_tag(join_lecture_path(:course_id => @course.id, :id => lecture.id), autocomplete: "off") do -%>
-                  <div>
-                    <%= text_field :enrollment_key , class: "col-10"%>
-                    <%= submit_tag 'Join', class: "btn btn-primary" %>
-                  </div>
-                <% end -%>
+              <% elsif lecture.enrollment_key_present? && !lecture.participating_students.include?(@current_user)%>
+                <%= form_tag join_lecture_path(:course_id => @course.id, :id => lecture.id, method: :post, autocomplete: "off") do -%>
+                  <%= text_field :lecture, :enrollment_key %>
+                  <%= submit_tag 'Join', class: "btn btn-primary" %>
+                <% end %>
               <%else %>
-                <%= link_to 'Join', join_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+                <%= button_to 'Join', join_lecture_path(:course_id => @course.id, :id => lecture.id),method: :post, class:"btn btn-primary" %>
               <% end %>
             <% else %>
               <% if lecture.status == "running" %>

@@ -84,7 +84,11 @@ class LecturesController < ApplicationController
   end
 
   def join_lecture
-    if params[:enrollment_key] == @lecture.enrollment_key
+    if params[:lecture].present?
+      key = params[:lecture][:enrollment_key]
+    end
+
+    if key == @lecture.enrollment_key || !@lecture.enrollment_key_present?
       @lecture.join_lecture(current_user)
       @lecture.save
       current_user.save
