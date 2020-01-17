@@ -1,8 +1,11 @@
 class PollsController < ApplicationController
-  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start]
+  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start, :answer]
   before_action :get_lecture
   before_action :authenticate_user!
   before_action :set_is_student
+  before_action do |controller|
+    @hide_navbar = true
+  end
 
   # GET /polls
   def index
@@ -29,12 +32,21 @@ class PollsController < ApplicationController
   # GET /polls/1/edit
   def edit
     if @is_student
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Only lecturers can edit polls. :("
+    end
+  end
+
+  # GET /polls/1/answer
+  def answer
+    if @is_student
       if !@poll.is_active
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "This poll is closed."
       else
         get_users_answers
         render :answer
       end
+    else
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Only students can vote."
     end
   end
 
@@ -42,15 +54,15 @@ class PollsController < ApplicationController
   def stop_start
     if @poll.is_active
       if @poll.update(is_active: false)
-        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "You stopped the poll!"
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You stopped the poll!"
       else
-        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "Stopping the poll did not work :("
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Stopping the poll did not work :("
       end
     else
       if @poll.update(is_active: true)
-        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "You started the poll!"
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You started the poll!"
       else
-        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "Starting the poll did not work :("
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Starting the poll did not work :("
       end
     end
   end
@@ -90,8 +102,9 @@ class PollsController < ApplicationController
   def update
     current_poll_params = poll_params
     if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
-      # Remove all previously existing options so there are no conflicts with the new/updated ones.
       poll_options = current_poll_params[:poll_options]
+      # Remove all previously existing options so there are no conflicts with the new/updated ones.
+      PollOption.where(poll_id: @poll.id).destroy_all
       for poll_option in poll_options do
         poll_option_description = poll_option.values_at(1)
         @poll.poll_options.build(description: poll_option_description.to_param)

@@ -20,10 +20,10 @@ RSpec.describe "polls/show", type: :view do
      ])
   end
 
-  it "renders attributes in <p>" do
+  it "renders attributes for lecturer" do
     render
-    expect(rendered).to match(/Title/)
-    expect(rendered).to match(/false/)
+    expect(rendered).to have_text("abc")
+    expect(rendered).to have_text("def")
   end
 
   it "shows votes for an inactive poll" do
@@ -35,12 +35,12 @@ RSpec.describe "polls/show", type: :view do
      end
   end
 
-  it "does not show votes for an active poll" do
+  it "does show votes for an active poll" do
     @poll.is_active = true
     @poll.save!
     visit course_lecture_poll_path(@lecture.course, @lecture, @poll)
     within "table" do
-      expect(page).to have_no_text("Votes")
+      expect(page).to have_text("Votes")
     end
   end
 
