@@ -1,4 +1,4 @@
-<%= form_with(model: uploaded_file, local: true, html: { multipart: true } ) do |form| %>
+<%= form_with(model: [@lecture.course, @lecture, uploaded_file], local: true, html: { multipart: true } ) do |form| %>
   <% if uploaded_file.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this uploaded_file from being saved:</h2>

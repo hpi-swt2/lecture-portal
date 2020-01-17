@@ -11,13 +11,21 @@
       <% else %>
       <div>
         <%= fa_icon 'file', :class => "text-info" %>
-        <%= link_to file.filename, uploaded_file_path(file), target: "_self", class:"btn btn-link" %>
+        <% if @lecture %>
+          <%= link_to file.filename, course_lecture_uploaded_file_path(@lecture.course, @lecture, file), target: "_self", class:"btn btn-link" %>
+        <% else %>
+          <%= link_to file.filename, course_uploaded_file_path(@course, file), target: "_self", class:"btn btn-link" %>
+      <% end %>
       </div>
         <% end %>
       <div>
         <!-- Might be a page where no @course or @lecture exists-->
-        <% if @current_user == file.author || (@course && @current_user == @course.creator) || (@lecture && @current_user == @lecture.course.creator) %>
-          <%=  link_to 'Delete File', file, method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: 'Are you sure?' } %>
+        <% if @current_user == file.author || @current_user == @course.creator || (@lecture && @current_user == @lecture.course.creator) %>
+          <% if @lecture %>
+            <%=  link_to 'Delete File', course_lecture_uploaded_file_path(@course, @lecture, file), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: 'Are you sure?' } %>
+          <% else %>
+            <%=  link_to 'Delete File', course_uploaded_file_path(@course, file), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: 'Are you sure?' } %>
+          <% end %>
         <% end %>
       </div>
     </li>

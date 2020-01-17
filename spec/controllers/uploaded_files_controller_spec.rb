@@ -9,17 +9,20 @@ RSpec.describe UploadedFilesController, type: :controller do
     @file["uploaded_file"] = Hash.new
     @file["uploaded_file"]["attachment"] = file
     @file["uploaded_file"]["lecture"] = @lecture.id
+    @file["lecture_id"] = @lecture.id
+    @file["course_id"] = @lecture.course.id
+    @course = @lecture.course
     sign_in @lecturer
   end
   it "returns success" do
     post :create, params: @file
-    expect(response).to redirect_to(uploaded_files_url)
+    expect(response).to redirect_to(course_lecture_path(@course, @lecture))
   end
 
   it "stores the file" do
     old_count = UploadedFile.count
     post :create, params: @file
-    expect(response).to redirect_to(uploaded_files_url)
+    expect(response).to redirect_to(course_lecture_path(@course, @lecture))
     expect(UploadedFile.count).to eq(old_count + 1)
   end
 
@@ -27,23 +30,7 @@ RSpec.describe UploadedFilesController, type: :controller do
     sign_out @lecturer
     old_count = UploadedFile.count
     post :create, params: @file
-    expect(response).to_not redirect_to(uploaded_files_url)
-    expect(UploadedFile.count).to eq(old_count)
-  end
-
-  it "stores the file only if lecture provided" do
-    old_count = UploadedFile.count
-    @file["uploaded_file"].except!("lecture")
-    post :create, params: @file
-    expect(response).to_not redirect_to(uploaded_files_url)
-    expect(UploadedFile.count).to eq(old_count)
-  end
-
-  it "stores the file only if valid lecture provided" do
-    old_count = UploadedFile.count
-    @file["uploaded_file"]["lecture"] = -1
-    post :create, params: @file
-    expect(response).to_not redirect_to(uploaded_files_url)
+    expect(response).to_not redirect_to(course_lecture_path(@course, @lecture))
     expect(UploadedFile.count).to eq(old_count)
   end
 
@@ -51,7 +38,7 @@ RSpec.describe UploadedFilesController, type: :controller do
     old_count = UploadedFile.count
     @file["uploaded_file"].except!("attachment")
     post :create, params: @file
-    expect(response).to_not redirect_to(uploaded_files_url)
+    expect(response).to_not redirect_to(course_lecture_path(@course, @lecture))
     expect(UploadedFile.count).to eq(old_count)
   end
 
@@ -65,18 +52,18 @@ RSpec.describe UploadedFilesController, type: :controller do
       end
 
     it "can be deleted by the owner" do
-      expect { post :destroy, params: { id: @student_file[:id] } }.to change(UploadedFile, :count).by(-1)
+      expect { post :destroy, params: { id: @student_file[:id], lecture_id: @lecture.id, course_id: @course.id } }.to change(UploadedFile, :count).by(-1)
     end
 
     it "can be deleted by the course owner" do
       sign_in @lecturer
-      expect { post :destroy, params: { id: @student_file[:id] } }.to change(UploadedFile, :count).by(-1)
+      expect { post :destroy, params: { id: @student_file[:id], lecture_id: @lecture.id, course_id: @course.id } }.to change(UploadedFile, :count).by(-1)
     end
 
     it "can't be deleted by someone else" do
       @other_lecturer = FactoryBot.create(:user, :lecturer)
       sign_in @other_lecturer
-      expect { post :destroy, params: { id: @student_file[:id] } }.to_not change(UploadedFile, :count)
+      expect { post :destroy, params: { id: @student_file[:id], lecture_id: @lecture.id, course_id: @course.id } }.to_not change(UploadedFile, :count)
     end
   end
 
@@ -91,18 +78,18 @@ RSpec.describe UploadedFilesController, type: :controller do
       end
 
     it "can be deleted by the owner" do
-      expect { post :destroy, params: { id: @student_file[:id] } }.to change(UploadedFile, :count).by(-1)
+      expect { post :destroy, params: { id: @student_file[:id], lecture_id: @lecture.id, course_id: @course.id } }.to change(UploadedFile, :count).by(-1)
     end
 
     it "can be deleted by the lecture owner" do
       sign_in @lecturer
-      expect { post :destroy, params: { id: @student_file[:id] } }.to change(UploadedFile, :count).by(-1)
+      expect { post :destroy, params: { id: @student_file[:id], lecture_id: @lecture.id, course_id: @course.id } }.to change(UploadedFile, :count).by(-1)
     end
 
     it "can't be deleted by someone else" do
       @other_lecturer = FactoryBot.create(:user, :lecturer)
       sign_in @other_lecturer
-      expect { post :destroy, params: { id: @student_file[:id] } }.to_not change(UploadedFile, :count)
+      expect { post :destroy, params: { id: @student_file[:id], lecture_id: @lecture.id, course_id: @course.id } }.to_not change(UploadedFile, :count)
     end
   end
 end

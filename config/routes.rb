@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   post "/courses/:course_id/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
 
   resources :courses do
+    resources :uploaded_files, only: [:show, :index, :new, :create, :destroy]
     resources :lectures do
       resources :polls do
         member do
@@ -18,6 +19,7 @@ Rails.application.routes.draw do
           get :answer
         end
       end
+      resources :uploaded_files, only: [:show, :index, :new, :create, :destroy]
       resources :feedbacks
 
 
