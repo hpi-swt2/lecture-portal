@@ -64,8 +64,6 @@ RSpec.describe "lectures/show", type: :view do
     it "shows notice page on polls tab when polls are disabled" do
       @lecture.update(polls_enabled: false)
       render
-      # it displays one, but not in the polls section
-      expect(rendered).to have_css("iframe", count: 1)
       expect(rendered).to have_text("Polls are not enabled.")
     end
     it "shows notice page on questions tab when questions are disabled" do
