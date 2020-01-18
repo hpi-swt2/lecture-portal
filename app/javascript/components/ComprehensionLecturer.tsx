@@ -38,7 +38,6 @@ const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
                     xOffset += currentWidth;
                 }
             } else {
-                console.log(results)
                 ctx.fillStyle = "#f0f0f0";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
