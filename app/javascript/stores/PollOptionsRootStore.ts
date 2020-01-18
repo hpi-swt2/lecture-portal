@@ -14,12 +14,16 @@ export const getPollOptionsRootStore = (target: IAnyStateTreeNode): PollOptionsR
 };
 
 const PollOptionsRootStore = types.model("PollOptionsRootStore", {
+    course_id: types.optional(types.integer, -1),
     lecture_id: types.optional(types.integer, -1),
     poll_id: types.optional(types.integer, -1),
     poll_option_ids: types.optional(types.array(types.integer), [-1]),
     poll_options: pollOptions,
     poll_participants_count: pollParticipantsCount,
 }).actions(self => ({
+    setCourseId(course_id: number) {
+        self.course_id = course_id
+    },
     setLectureId(lecture_id: number) {
         self.lecture_id = lecture_id
     },

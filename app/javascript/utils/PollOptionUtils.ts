@@ -10,14 +10,14 @@ const StoreContext = createContext<PollOptionsRootStoreModel>(
 export const usePollOptionsStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
-const getBaseRequestUrl = (lectureId: number, pollId: number): string => {
+const getBaseRequestUrl = (courseId: number, lectureId: number, pollId: number): string => {
     // + courseID, react Komponente PollOptionApp im Rootstore anpassen
     // javascript utils
-    return `/lectures/` + lectureId + `/polls/` + pollId + `/`;
+    return `/courses/` + courseId + `/lectures/` + lectureId + `/polls/` + pollId + `/`;
 };
 
 const loadPollOptions = (rootStore: PollOptionsRootStoreModel) => {
-    const url: string = getBaseRequestUrl(rootStore.lecture_id, rootStore.poll_id) + `serialized_options`
+    const url: string = getBaseRequestUrl(rootStore.course_id, rootStore.lecture_id, rootStore.poll_id) + `serialized_options`
     fetch(url)
         .then(res => res.json())
         .then(pollOptions => {
@@ -26,7 +26,7 @@ const loadPollOptions = (rootStore: PollOptionsRootStoreModel) => {
 };
 
 const loadParticipantsCount = (rootStore: PollOptionsRootStoreModel) => {
-    const url: string = getBaseRequestUrl(rootStore.lecture_id, rootStore.poll_id) + `serialized_participants_count`
+    const url: string = getBaseRequestUrl(rootStore.course_id, rootStore.lecture_id, rootStore.poll_id) + `serialized_participants_count`
     fetch(url)
         .then(res => res.json())
         .then(pollParticipants => {
