@@ -30,11 +30,17 @@ const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
         if(results.length == numberOfComprehensionStates) {
             const participants = countParticipants();
             let xOffset = 0;
-            for(let i = 0; i < 3; i++) {
-                const currentWidth = canvas.width * (results[i] / participants);
-                ctx.fillStyle = comprehensionColors[i];
-                ctx.fillRect(xOffset, 0, currentWidth, canvas.height);
-                xOffset += currentWidth;
+            if(participants > 0) {
+                for(let i = 0; i < 3; i++) {
+                    const currentWidth = canvas.width * (results[i] / participants);
+                    ctx.fillStyle = comprehensionColors[i];
+                    ctx.fillRect(xOffset, 0, currentWidth, canvas.height);
+                    xOffset += currentWidth;
+                }
+            } else {
+                console.log(results)
+                ctx.fillStyle = "#f0f0f0";
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
             }
         } else {
             // clear canvas if we get invalid data
