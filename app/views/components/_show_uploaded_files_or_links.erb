@@ -1,0 +1,25 @@
+<!-- No uploaded files.-->
+<% unless uploaded_files %>
+<%=  uploaded_files = []  %>
+<% end %>
+<ul class="list-group mb-2">
+  <% uploaded_files.each do |file| %>
+    <li class="list-group-item d-flex justify-content-between align-items-center">
+      <% if file.isLink %>
+        <%= fa_icon 'file', :class => "text-info" %>
+        <%= link_to file.data, file.data, class:"btn btn-link" %>
+      <% else %>
+      <div>
+        <%= fa_icon 'file', :class => "text-info" %>
+        <%= link_to file.filename, uploaded_file_path(file), target: "_self", class:"btn btn-link" %>
+      </div>
+        <% end %>
+      <div>
+        <!-- Might be a page where no @course or @lecture exists-->
+        <% if @current_user == file.author || (@course && @current_user == @course.creator) || (@lecture && @current_user == @lecture.course.creator) %>
+          <%=  link_to 'Delete File', file, method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: 'Are you sure?' } %>
+        <% end %>
+      </div>
+    </li>
+  <% end %>
+</ul>
