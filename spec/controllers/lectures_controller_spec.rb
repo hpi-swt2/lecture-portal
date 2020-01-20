@@ -181,6 +181,14 @@ RSpec.describe LecturesController, type: :controller do
         put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
       end
+
+      it "removes all joined students when adding key to keyless lecture", :logged_lecturer do
+        @lecture.update(enrollment_key: nil)
+        @lecture.join_lecture(FactoryBot.create(:user, :student))
+        put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: new_attributes }, session: valid_session
+        @lecture.reload
+        expect(@lecture.participating_students.length).to eq(0)
+      end
     end
 
     context "with invalid params" do
@@ -221,12 +229,16 @@ RSpec.describe LecturesController, type: :controller do
       @lecture = FactoryBot.create(:lecture, status: "running")
     end
 
-    it "redirects to the lectures overview for students" do
+    it "redirects to the lecture's overview for students with right key" do
       login_student
-      # post :join_lecture, params: { id: @lecture.id }, session: valid_session
-      # expect(response).to redirect_to(lecture_path(@lecture))
-      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: @lecture.enrollment_key } }, session: valid_session
       expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
+    end
+
+    it "redirects to the courses's overview for students without right key" do
+      login_student
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: "wrong" } }, session: valid_session
+      expect(response).to redirect_to(course_path(@lecture.course.id))
     end
 
     it "redirects to overview for other lecturers" do
