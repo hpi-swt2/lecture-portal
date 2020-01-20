@@ -15,7 +15,7 @@ class FeedbacksController < ApplicationController
       isStudent = current_user.is_student
       isJoinedStudent = isStudent && @lecture.participating_students.include?(current_user)
       isLectureOwner = !isStudent && @lecture.lecturer == current_user
-        #return head :forbidden unless isJoinedStudent || isLectureOwner
+      # return head :forbidden unless isJoinedStudent || isLectureOwner
       unless isJoinedStudent || isLectureOwner
         redirect_to course_lectures_path(@lecture.course)
       end
