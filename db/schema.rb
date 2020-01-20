@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_16_233110) do
+ActiveRecord::Schema.define(version: 2020_01_20_175459) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -26,6 +26,7 @@ ActiveRecord::Schema.define(version: 2020_01_16_233110) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
+    t.string "hash_id"
     t.index ["user_id"], name: "index_calendars_on_user_id"
   end
 

@@ -52,7 +52,7 @@ class CalendarsController < ActionController::Base
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_calendar
-      @calendar = Calendar.find(params[:id])
+      @calendar = Calendar.find_by(:hash_id => params[:hash_id])
     end
 
     # Only allow a trusted parameter "white list" through.

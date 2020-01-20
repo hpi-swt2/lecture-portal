@@ -1,7 +1,10 @@
 Rails.application.routes.draw do
   resources :calendars
   resources :uploaded_files, only: [:show, :index, :new, :create, :destroy]
+
   get "/courses/:course_id/lectures/current", to: "lectures#current", as: "current_lectures"
+  get "/ical/:hash_id", to: "calendars#show", as: "ical"
+
   post "/courses/:course_id/lectures/start_lecture", to: "lectures#start_lecture", as: "start_lecture"
   post "/courses/:course_id/lectures/join_lecture", to: "lectures#join_lecture", as: "join_lecture"
   post "/courses/:course_id/lectures/leave_lecture", to: "lectures#leave_lecture", as: "leave_lecture"
