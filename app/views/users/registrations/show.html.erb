@@ -1,7 +1,10 @@
 <h5>Email</h5>
 <p><%= @current_user.email %></p>
 <h5>Calendar Feed</h5>
-<p></p>
+<p>
+  <%= ical_url(hash_id: @current_user.hash_id, protocol: :webcal, format: :ics) %>
+  <%= link_to 'Subscribe', ical_url(hash_id: @current_user.hash_id, protocol: :webcal, format: :ics) %>
+</p>
 
 <%= link_to "Back", root_path, class:"btn btn-primary" %>
 <%= link_to "Edit Profile", edit_user_registration_path, class:"btn btn-primary" %>

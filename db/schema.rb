@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_11_115936) do
+ActiveRecord::Schema.define(version: 2020_01_20_184223) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -19,6 +19,15 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.index ["option_id"], name: "index_answers_on_option_id"
     t.index ["poll_id"], name: "index_answers_on_poll_id"
     t.index ["student_id"], name: "index_answers_on_student_id"
+  end
+
+  create_table "calendars", force: :cascade do |t|
+    t.text "ical"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.string "hash_id"
+    t.index ["user_id"], name: "index_calendars_on_user_id"
   end
 
   create_table "courses", force: :cascade do |t|
@@ -118,8 +127,8 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.integer "allowsUpload_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "isLink", default: false
     t.integer "author_id"
+    t.boolean "isLink", default: false
     t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
     t.index ["author_id"], name: "index_uploaded_files_on_author_id"
   end
@@ -133,6 +142,9 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_student", default: false, null: false
+    t.integer "calendar_id"
+    t.string "hash_id"
+    t.index ["calendar_id"], name: "index_users_on_calendar_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end

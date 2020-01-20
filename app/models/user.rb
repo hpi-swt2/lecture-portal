@@ -4,6 +4,7 @@ class User < ApplicationRecord
   has_many :courses, dependent: :destroy
   has_and_belongs_to_many :participating_lectures, class_name: :Lecture
   has_and_belongs_to_many :participating_courses, class_name: :Course
+  before_create :assign_hash_id
 
 
   validates :email, presence: true, format: { with: URI::MailTo::EMAIL_REGEXP }
@@ -14,4 +15,14 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable
   has_many :questions
   has_and_belongs_to_many :upvoted_questions, class_name: :Question
+
+  private
+
+  def assign_hash_id
+    self.hash_id = SecureRandom.urlsafe_base64(20) until unique_hash_id?
+  end
+
+  def unique_hash_id?
+    !self.class.exists?(hash_id: self.hash_id)
+  end
 end
