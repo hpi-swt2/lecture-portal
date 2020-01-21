@@ -1,3 +1,5 @@
+import { number } from "mobx-state-tree/dist/internal";
+
 export default class PollResultDataInitializer {
     private allVotesCount;
     private poll_data;
@@ -18,6 +20,6 @@ export default class PollResultDataInitializer {
     }
 
     public getVotePercentage(optionVotesCount) {
-        return (optionVotesCount / this.allVotesCount).toFixed(2) * 100;
+        return parseFloat((optionVotesCount / this.allVotesCount).toFixed(2)) * 100;
     }
 }
