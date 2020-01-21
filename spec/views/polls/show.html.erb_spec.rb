@@ -23,8 +23,8 @@ RSpec.describe "polls/show", type: :view do
   it "renders attributes" do
     render
     expect(rendered).to have_text(@poll.title)
-    expect(rendered).to have_text('Multiselect disabled')
-    expect(rendered).to have_text('Active')
+    expect(rendered).to have_text("Multiselect disabled")
+    expect(rendered).to have_text("Active")
   end
 
   def login_lecturer

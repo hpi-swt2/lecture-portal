@@ -138,77 +138,76 @@ class PollsController < ApplicationController
   end
 
   private
-
-  # Send belonging poll_options to subscribers so they can update their data
-  def broadcast_options
-    poll = Poll.find(params[:id])
-    if @poll.lecture == @lecture
-      # broadcast update via ActionCable
-      PollOptionsChannel.broadcast_to(poll, get_serialized_options)
-    end
-  end
-
-  def get_serialized_options
-    poll = Poll.find(params[:id])
-    poll_options = poll.poll_options
-    return poll_options.map{|option| ActiveModelSerializers::Adapter::Json.new(
-        PollOptionSerializer.new(option)
-    ).serializable_hash}
-  end
-
-  # Send belonging participants count of a poll to subscribers so they can update their data
-  def broadcast_participants_count
-    poll = Poll.find(params[:id])
-    if @poll.lecture == @lecture
-      # broadcast update via ActionCable
-      PollParticipantsCountChannel.broadcast_to(poll, get_serialized_participants_count)
-    end
-  end
-
-  def get_serialized_participants_count
-    poll = Poll.find(params[:id])
-    lecture = Lecture.find(params[:lecture_id])
-    return {'numberOfParticipants' => Answer.where(poll_id: poll.id).distinct.count(:student_id),
-            'numberOfLectureUsers' => lecture.participating_students.length()}
-  end
-
-  def broadcast_state
-    broadcast_options
-    broadcast_participants_count
-  end
-
-  # Use callbacks to share common setup or constraints between actions.
-  def set_poll
-    @poll = Poll.find(params[:id])
-  end
-
-  # Only allow a trusted parameter "white list" through.
-  def poll_params
-    params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
-  end
-
-  def get_lecture
-    @lecture = Lecture.find(params[:lecture_id])
-  end
-
-  def answer_params
-    params.require(:poll).permit(:answers)
-  end
-
-  def get_users_answers
-    @answers = Answer.where(poll_id: @poll.id, student_id: current_user.id)
-  end
-
-  def set_is_student
-    @is_student = current_user.is_student
-  end
-
-  def save_given_answers(current_poll_answers, poll)
-    current_poll_answers.each { |answer|
-      if answer[:value] == true
-        current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
-        current_answer.save
+    # Send belonging poll_options to subscribers so they can update their data
+    def broadcast_options
+      poll = Poll.find(params[:id])
+      if @poll.lecture == @lecture
+        # broadcast update via ActionCable
+        PollOptionsChannel.broadcast_to(poll, get_serialized_options)
       end
-    }
-  end
+    end
+
+    def get_serialized_options
+      poll = Poll.find(params[:id])
+      poll_options = poll.poll_options
+      poll_options.map { |option| ActiveModelSerializers::Adapter::Json.new(
+        PollOptionSerializer.new(option)
+      ).serializable_hash}
+    end
+
+    # Send belonging participants count of a poll to subscribers so they can update their data
+    def broadcast_participants_count
+      poll = Poll.find(params[:id])
+      if @poll.lecture == @lecture
+        # broadcast update via ActionCable
+        PollParticipantsCountChannel.broadcast_to(poll, get_serialized_participants_count)
+      end
+    end
+
+    def get_serialized_participants_count
+      poll = Poll.find(params[:id])
+      lecture = Lecture.find(params[:lecture_id])
+      { "numberOfParticipants" => Answer.where(poll_id: poll.id).distinct.count(:student_id),
+              "numberOfLectureUsers" => lecture.participating_students.length() }
+    end
+
+    def broadcast_state
+      broadcast_options
+      broadcast_participants_count
+    end
+
+    # Use callbacks to share common setup or constraints between actions.
+    def set_poll
+      @poll = Poll.find(params[:id])
+    end
+
+    # Only allow a trusted parameter "white list" through.
+    def poll_params
+      params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
+    end
+
+    def get_lecture
+      @lecture = Lecture.find(params[:lecture_id])
+    end
+
+    def answer_params
+      params.require(:poll).permit(:answers)
+    end
+
+    def get_users_answers
+      @answers = Answer.where(poll_id: @poll.id, student_id: current_user.id)
+    end
+
+    def set_is_student
+      @is_student = current_user.is_student
+    end
+
+    def save_given_answers(current_poll_answers, poll)
+      current_poll_answers.each { |answer|
+        if answer[:value] == true
+          current_answer = Answer.new(poll: poll, student_id: current_user.id, option_id: answer[:id])
+          current_answer.save
+        end
+      }
+    end
 end
