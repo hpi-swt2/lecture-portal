@@ -15,13 +15,12 @@ Rails.application.routes.draw do
           patch :save_answers
           post :save_answers
           get :stop_start
+          get :serialized_options
+          get :serialized_participants_count
           get :answer
         end
       end
       resources :feedbacks
-
-
-
       resources :questions, only: [:index, :create] do
         post "upvote", on: :member
         post "resolve", on: :member
