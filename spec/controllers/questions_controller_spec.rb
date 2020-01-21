@@ -54,15 +54,6 @@ RSpec.describe QuestionsController, type: :controller do
         expect(response.body).to eq(expected.to_json)
       end
 
-      it "should only show unresolved questions" do
-        FactoryBot.create(:question, author: @student)
-        unresolved_question = FactoryBot.create(:question, author: @student, lecture: @lecture)
-        post :resolve, params: { course_id: @lecture.course.id, lecture_id: @lecture.id, id: @question.id }, session: valid_session
-        expected = [ QuestionSerializer.new(unresolved_question, scope: @student, scope_name: :current_user).as_json ]
-        get :index, params: { course_id: @lecture.course.id, lecture_id: @lecture.id }, session: valid_session
-        expect(response.body).to eq(expected.to_json)
-      end
-
       it "should only show questions belonging to the requested lecture" do
         another_lecture = FactoryBot.create(:lecture)
         another_lecture.join_lecture(@student)
@@ -166,12 +157,6 @@ RSpec.describe QuestionsController, type: :controller do
         puts response.body
         updatedQuestion = Question.find(@question.id)
         expect(updatedQuestion.resolved).to eq(true)
-      end
-
-      it "should only show unresolved questions" do
-        post :resolve, params: { course_id: @lecture.course.id, lecture_id: @lecture.id, id: @question.id }, session: valid_session
-        get :index, params: { course_id: @lecture.course.id, lecture_id: @lecture.id }, session: valid_session
-        expect(response.body).to eq([].to_json)
       end
     end
 

@@ -7,9 +7,9 @@ class QuestionsController < ApplicationController
   # GET /questions
   def index
     if current_user.is_student
-      questions = Question.where(resolved: false, lecture: @lecture).order(created_at: :DESC)
+      questions = Question.where(lecture: @lecture).order(created_at: :DESC)
     else
-      questions = Question.where(resolved: false, lecture: @lecture)
+      questions = Question.where(lecture: @lecture)
         .left_joins(:upvoters)
         .group(:id)
         .order(Arel.sql("COUNT(users.id) DESC"), created_at: :DESC)

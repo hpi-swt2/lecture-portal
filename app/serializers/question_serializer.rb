@@ -1,5 +1,5 @@
 class QuestionSerializer < ActiveModel::Serializer
-  attributes :id, :content, :author_id, :created_at, :upvotes, :already_upvoted
+  attributes :id, :content, :author_id, :created_at, :upvotes, :already_upvoted, :resolved
 
   def already_upvoted
     if defined?(current_user)
