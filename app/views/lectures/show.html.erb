@@ -1,3 +1,14 @@
+<script>
+
+  function handleSubmit() {
+      document.getElementById("feedbackfeedback").style.display = "block";
+      setInterval(async () => {
+          document.getElementById("feedbackfeedback").style.display = "none"
+          }, 5000);
+  }
+
+</script>
+
 <%= render 'tabbar', current_user: @current_user %>
 
 <h5><%= @lecture.name %></h5>
@@ -25,18 +36,34 @@
   <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
 
     <% if @current_user.is_student %>
-      <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ]) do |form|  %>
+      <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ], :html => { :onsubmit => "handleSubmit()" }) do |form| %>
+        <div id="feedbackfeedback" style="display:none" class="alert alert-success" role="alert"> Feedback subitted</div>
         <p>
-          <%= form.label :content %><br>
-          <%= form.text_field :content %>
+          <%= form.label :content, "Write your feedback here"%>
+          <%= form.text_area :content, {class: "form-control"} %>
         </p>
-        <p>
-          <%= form.submit "SUBMIT"%>
-        </p>
+        <% if @lecture.feedbacks.where(user_id: current_user.id).count >= 1 %>
+          <p>
+            <%= form.submit "UPDATE", {class: "btn btn-primary"} %>
+          </p>
+        <% else %>
+          <p>
+            <%= form.submit "SUBMIT", {class: "btn btn-primary"} %>
+          </p>
+        <% end %>
+
+        <% @lecture.feedbacks.each do |feedback| %>
+          <% if feedback.user_id == @current_user.id %>
+            <p>
+              <strong>Feedback:</strong>
+              <%= feedback.content %>
+            </p>
+          <% end %>
+        <% end %>
 
       <% end %>
 
-    <% else %>
+  <% else %>
 
       <% @lecture.feedbacks.each do |feedback| %>
         <p>
