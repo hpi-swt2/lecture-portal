@@ -54,7 +54,6 @@ class Lecture < ApplicationRecord
         " enrollment_key : " + enrollment_key + " polls_enabled " + polls_enabled.to_s + " questions_enabled " + questions_enabled.to_s + "}"
   end
 
-
   def readonly?
     if self.id
       db_lecture = Lecture.find(self.id)

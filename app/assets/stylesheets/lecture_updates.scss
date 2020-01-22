@@ -14,7 +14,7 @@
       padding: 0 10px;
       
       &.is_lecturer {
-        > li {
+        > li.interactable {
           cursor: pointer;
           &:hover {
             background-color: #d4fcd2;
