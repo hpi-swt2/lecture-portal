@@ -91,6 +91,10 @@ div.questionsList {
       word-break: break-all;
       &.resolved {
         opacity: .4;
+        .arrow {
+          border-bottom-color: #eee !important;
+          cursor: default !important;
+        }
       }
       > .questionUpvotes {
         padding: 10px;
