@@ -1,6 +1,5 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token
   before_action :get_lecture
   before_action :validate_joined_user_or_owner
   before_action :validate_lecture_running_or_ended, except: [:index]

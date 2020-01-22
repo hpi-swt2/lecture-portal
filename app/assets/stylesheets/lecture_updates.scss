@@ -1,13 +1,7 @@
 #updates {
-  width: 33.33%;
-
   > div {
     overflow-y: scroll;
     height: 50vh;
-  }
-
-  > h5 {
-    border-bottom: 1px solid #555;
   }
 
   div.questionsList {
@@ -35,18 +29,9 @@
   }
 }
 
-@media(max-width: 800px) {
-  #updates {
-    width: 50%;
-  }
-}
 @media(max-width: 500px) {
-  #updates {
-    width: 100%;
-
-    > div {
+  #updates > div {
       overflow-y: unset;
       height: auto;
-    }
   }
 }

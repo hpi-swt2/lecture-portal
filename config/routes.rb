@@ -21,6 +21,10 @@ Rails.application.routes.draw do
         end
       end
       resources :feedbacks
+
+      get "comprehension", to: "lectures#get_comprehension", on: :member
+      put "comprehension", to: "lectures#update_comprehension_stamp", on: :member
+
       resources :questions, only: [:index, :create] do
         post "upvote", on: :member
         post "resolve", on: :member

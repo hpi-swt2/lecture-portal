@@ -97,6 +97,8 @@ GEM
       devise (>= 4.6)
     diff-lcs (1.3)
     erubi (1.9.0)
+    et-orbi (1.2.2)
+      tzinfo
     execjs (2.7.0)
     factory_bot (5.1.1)
       activesupport (>= 4.2.0)
@@ -107,6 +109,9 @@ GEM
     ffi (1.11.1-x86-mingw32)
     font-awesome-rails (4.7.0.5)
       railties (>= 3.2, < 6.1)
+    fugit (1.3.3)
+      et-orbi (~> 1.1, >= 1.1.8)
+      raabro (~> 1.1)
     globalid (0.4.2)
       activesupport (>= 4.2.0)
     i18n (1.7.0)
@@ -152,7 +157,8 @@ GEM
     popper_js (1.14.5)
     public_suffix (4.0.1)
     puma (3.12.2)
-    rack (2.0.8)
+    raabro (1.1.6)
+    rack (2.0.7)
     rack-proxy (0.6.5)
       rack
     rack-test (1.1.0)
@@ -229,6 +235,8 @@ GEM
       rubocop (>= 0.68.1)
     ruby-progressbar (1.10.1)
     ruby_dep (1.5.0)
+    rufus-scheduler (3.6.0)
+      fugit (~> 1.1, >= 1.1.6)
     sassc (2.2.1)
       ffi (~> 1.9)
     sassc (2.2.1-x86-mingw32)
@@ -312,6 +320,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-rspec
+  rufus-scheduler
   spring
   spring-watcher-listen (~> 2.0.0)
   sqlite3

@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import QuestionsForm from "./QuestionsForm";
 import QuestionsList from "./QuestionsList";
@@ -20,6 +21,7 @@ const QuestionsApp: React.FunctionComponent<IQuestionsAppProps> = ({ user_id, is
     rootStore.setCourseId(course_id);
     rootStore.setInteractionsEnabled(interactions_enabled);
     initQuestionsApp(rootStore);
+
     return (
         <StoreProvider value={rootStore}>
             <div className="QuestionsApp">
