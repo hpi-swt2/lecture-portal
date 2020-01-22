@@ -78,6 +78,12 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to_not have_text("Questions are not enabled.")
       expect(rendered).to_not have_text("Polls are not enabled.")
     end
+    it "shows list of participating students in enrollment key tab" do
+      @lecture.join_lecture(FactoryBot.create(:user, :student, email: "student@mail.com"))
+      render
+      assert_select "a", "Enrollment Key"
+      expect(rendered).to have_text("student@mail.com")
+    end
   end
 
   describe "as a student" do
