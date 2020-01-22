@@ -1,6 +1,7 @@
 class FeedbacksController < ApplicationController
-  before_action :validate_joined_user_or_owner
+  before_action :authenticate_user!
   before_action :set_lecture
+  before_action :validate_joined_user_or_owner
 
   def create
     @feedback = @lecture.feedbacks.create(comment_params)
