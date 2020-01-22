@@ -2,9 +2,6 @@
 
   function handleSubmit() {
       document.getElementById("feedbackfeedback").style.display = "block";
-      setInterval(async () => {
-          document.getElementById("feedbackfeedback").style.display = "none"
-          }, 5000);
   }
 
 </script>
@@ -44,7 +41,7 @@
         </p>
         <% if @lecture.feedbacks.where(user_id: current_user.id).count >= 1 %>
           <p>
-            <%= form.submit "UPDATE", {class: "btn btn-primary"} %>
+            <%= form.submit "UPDATE", {class: "btn btn-primary"}  %>
           </p>
         <% else %>
           <p>
