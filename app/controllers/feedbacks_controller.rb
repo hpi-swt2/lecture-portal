@@ -2,12 +2,11 @@ class FeedbacksController < ApplicationController
 
   def create
     @lecture = Lecture.find(params[:lecture_id])
-    if params[:commit] == "CREATE"
+    if params[:commit] == "Submit"
       @feedback = @lecture.feedbacks.create(content: comment_params[:content], user: current_user)
-    elsif params[:commit] == "UPDATE"
+    elsif params[:commit] == "Update"
       @feedback = @lecture.feedbacks.where(user_id: current_user.id)
       @feedback.update(comment_params)
-    #redirect_to course_lecture_path(@lecture.course, @lecture)
     end
     head :no_content
   end
