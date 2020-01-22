@@ -28,8 +28,8 @@ describe "The current lectures page", type: :feature do
       expect(page).to have_css("td", text: @lectures[1].name)
     end
 
-    it "clicking the join button adds the student to the lecture" do
-      @lecture = FactoryBot.create(:lecture, status: "running", course: @course)
+    it "clicking the join button adds the student to the keyless lecture" do
+      @lecture = FactoryBot.create(:lecture, enrollment_key: nil, status: "running", course: @course)
       visit current_lectures_path(course_id: @course.id)
       expect(@lecture.participating_students.length).to be 0
       click_on("Join")
