@@ -18,7 +18,7 @@ class FeedbacksController < ApplicationController
       isLectureOwner = !isStudent && @lecture.lecturer == current_user
       # return head :forbidden unless isJoinedStudent || isLectureOwner
       unless isJoinedStudent || isLectureOwner
-        redirect_to course_lectures_path(@lecture.course)
+        redirect_to course_path(@lecture.course), alert: "You are not a member of this lecture!"
       end
     end
 
