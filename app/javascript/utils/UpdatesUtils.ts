@@ -2,6 +2,7 @@ import {UpdatesRootStoreModel} from "../stores/UpdatesRootStore";
 import {createUpdatesStore} from "../stores/createUpdatesStore";
 import {setupQuestionsActionCable} from "./QuestionsActionCable";
 import {createContext, useContext} from "react";
+import axios from "axios";
 
 const StoreContext = createContext<UpdatesRootStoreModel>(
     {} as UpdatesRootStoreModel
@@ -9,15 +10,12 @@ const StoreContext = createContext<UpdatesRootStoreModel>(
 export const useUpdatesStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
-const getBaseRequestUrl = (lectureId: number, courseId: number): string => {
-    return `/courses/` + courseId + `/lectures/` + lectureId + `/questions/`;
-};
+const axiosInstance = axios.create();
 
 const loadQuestionsList = (rootStore: UpdatesRootStoreModel) => {
-    fetch(getBaseRequestUrl(rootStore.lecture_id, rootStore.course_id))
-        .then(res => res.json())
-        .then(questions => {
-            rootStore.updatesList.setQuestionsList(questions);
+    axiosInstance.get("")
+        .then(res => {
+            rootStore.updatesList.setQuestionsList(res.data);
         });
 };
 
@@ -41,6 +39,8 @@ export const createUpdatesRootStore = (): UpdatesRootStoreModel => {
 };
 
 export const initUpdatesApp = (rootStore: UpdatesRootStoreModel) => {
+    axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector<HTMLMetaElement>('[name=csrf-token]').content;
+    axiosInstance.defaults.baseURL = `/courses/` + rootStore.course_id + `/lectures/` + rootStore.lecture_id + `/questions/`;
     loadQuestionsList(rootStore);
     setupActionCable(rootStore);
 };

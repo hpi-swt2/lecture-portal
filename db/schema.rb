@@ -48,6 +48,16 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
   end
 
+  create_table "lecture_comprehension_stamps", id: false, force: :cascade do |t|
+    t.integer "lecture_id", null: false
+    t.integer "user_id", null: false
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lecture_id", "user_id"], name: "index_lecture_comprehension_stamps_on_lecture_id_and_user_id"
+    t.index ["user_id", "lecture_id"], name: "index_lecture_comprehension_stamps_on_user_id_and_lecture_id"
+  end
+
   create_table "lectures", force: :cascade do |t|
     t.string "name"
     t.string "description", default: ""
@@ -118,8 +128,8 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.integer "allowsUpload_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "isLink", default: false
     t.integer "author_id"
+    t.boolean "isLink", default: false
     t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
     t.index ["author_id"], name: "index_uploaded_files_on_author_id"
   end

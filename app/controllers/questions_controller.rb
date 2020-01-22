@@ -1,8 +1,10 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
-  skip_before_action :verify_authenticity_token
   before_action :get_lecture
   before_action :validate_joined_user_or_owner
+  before_action :validate_lecture_running_or_ended, except: [:index]
+  before_action :get_question, only: [:upvote, :resolve]
+  before_action :validate_question_unresolved, only: [:upvote, :resolve]
 
   # GET /questions
   def index
@@ -38,14 +40,12 @@ class QuestionsController < ApplicationController
 
   # POST /questions/:id/upvote
   def upvote
-    question = Question.find(params[:id])
-    if question && current_user.is_student && question.author != current_user && !question.upvoters.include?(current_user) && question.lecture == @lecture
-
-      question.upvoters << current_user
-      if question.save
+    if @question && current_user.is_student && @question.author != current_user && !@question.upvoters.include?(current_user) && @question.lecture == @lecture
+      @question.upvoters << current_user
+      if @question.save
         # broadcast upvote via ActionCable
         QuestionUpvotingChannel.broadcast_to(@lecture, {
-            question_id: question.id,
+            question_id: @question.id,
             upvoter_id: current_user.id
         })
         head :ok
@@ -54,15 +54,15 @@ class QuestionsController < ApplicationController
       head :forbidden
     end
   end
+
   # POST /questions/:id/resolve
   def resolve
-    question = Question.find(params[:id])
     # only allow author or lecturer to resolve the question
-    if question && (!current_user.is_student || question.author == current_user) && question.lecture == @lecture
-      question.resolved = true
-      if question.save
+    if @question && (!current_user.is_student || @question.author == current_user) && @question.lecture == @lecture
+      @question.resolved = true
+      if @question.save
         # broadcast resolving via ActionCable
-        QuestionResolvingChannel.broadcast_to(@lecture, question.id)
+        QuestionResolvingChannel.broadcast_to(@lecture, @question.id)
         head :ok
       end
     else
@@ -82,4 +82,18 @@ class QuestionsController < ApplicationController
       unless isJoinedStudent || isLectureOwner
         redirect_to course_lectures_path(@lecture.course)
       end    end
+      return head :forbidden unless isJoinedStudent || isLectureOwner
+    end
+
+    def validate_lecture_running_or_ended
+      head :forbidden if @lecture.readonly?
+    end
+
+    def get_question
+      @question = Question.find(params[:id])
+    end
+
+    def validate_question_unresolved
+      head :forbidden if @question.resolved
+    end
 end

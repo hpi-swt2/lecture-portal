@@ -5,13 +5,14 @@ import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
 import {useInjectQuestions} from "../hooks/useInject";
 import {QuestionModel} from "../stores/Question";
 
-const mapStore = ({ is_student, questionsList }: QuestionsRootStoreModel) => ({
+const mapStore = ({ is_student, questionsList, interactions_enabled }: QuestionsRootStoreModel) => ({
   is_student,
-  questionsList
+  questionsList,
+  interactions_enabled
 });
 
 const QuestionsList: React.FunctionComponent<{}> = observer(() => {
-  const { is_student, questionsList } = useInjectQuestions(mapStore);
+  const { is_student, questionsList, interactions_enabled } = useInjectQuestions(mapStore);
 
   const onSortingClick = () => {
     questionsList.toggleSorting();
@@ -30,7 +31,7 @@ const QuestionsList: React.FunctionComponent<{}> = observer(() => {
   };
 
   return (
-    <div className={"questionsList" + (is_student ? "" : " is_lecturer")}>
+    <div className={"questionsList" + (interactions_enabled && is_student ? " interactions_enabled" : "" )}>
       <div className="questionsFilter">
         <div className="filtering">
             <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg") + (questionsList.filter_resolved ? " active" : "")} onClick={onFilterResolvedClick}>
