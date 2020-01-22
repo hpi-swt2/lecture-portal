@@ -6,36 +6,28 @@
 <% end %>
 <div class="tab-content" id="lectureTabsContent" style="width: 70vw">
   <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="width: 70vw">
-    <div id="updates" style="width: 70vw">
-      <table>
-        <tr>
-          <td style="width: 30vw">
-            <% if @current_user.is_student %>
-              <h5>Updates</h5>
-            <% else %>
-              <h5>Questions</h5>
-            <% end %>
-          </td>
-          <td style="width: 30vw">
-            <h5>Materials</h5>
-
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id}) %>
-          </td>
-          <td>
-            <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
-          </td>
-        </tr>
-      </table>
+    <div class="row">
+      <div id="updates" class="col-lg-4 col-md-6">
+          <% if @current_user.is_student %>
+            <h5>Updates</h5>
+          <% else %>
+            <h5>Questions</h5>
+          <% end %>
+          <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?}) %>
+      </div>
+      <div id="materials" class="col-lg-4 col-md-6">
+        <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
+      </div>
+      <div id="comprehension" class="col-lg-4 col-md-6">
+        <h5>Comprehension Level</h5>
+        <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
+      </div>
     </div>
   </div>
 
   <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
     <% if @lecture.questions_enabled %>
-      <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
+      <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?} ) %>
     <% else %>
       <h1> Questions are not enabled. :(</h1>
     <% end %>

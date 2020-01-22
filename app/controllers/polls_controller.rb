@@ -78,6 +78,7 @@ class PollsController < ApplicationController
       Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
       save_given_answers(current_poll_answers, poll)
       @poll.gather_vote_results
+      broadcast_state
       redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "You answered successfully ;-)"
     end
   end
@@ -110,6 +111,7 @@ class PollsController < ApplicationController
         @poll.poll_options.build(description: poll_option_description.to_param)
       end
       if @poll.save
+        broadcast_state
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully updated."
       else
         render :edit
@@ -125,7 +127,55 @@ class PollsController < ApplicationController
     redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully destroyed."
   end
 
+  # GET /polls/:id/serializedOptions
+  def serialized_options
+    render json: get_serialized_options
+  end
+
+  # GET /polls/:id/serialize_participants_count
+  def serialized_participants_count
+    render json: get_serialized_participants_count
+  end
+
   private
+    # Send belonging poll_options to subscribers so they can update their data
+    def broadcast_options
+      poll = Poll.find(params[:id])
+      if @poll.lecture == @lecture
+        # broadcast update via ActionCable
+        PollOptionsChannel.broadcast_to(poll, get_serialized_options)
+      end
+    end
+
+    def get_serialized_options
+      poll = Poll.find(params[:id])
+      poll_options = poll.poll_options
+      poll_options.map { |option| ActiveModelSerializers::Adapter::Json.new(
+        PollOptionSerializer.new(option)
+      ).serializable_hash}
+    end
+
+    # Send belonging participants count of a poll to subscribers so they can update their data
+    def broadcast_participants_count
+      poll = Poll.find(params[:id])
+      if @poll.lecture == @lecture
+        # broadcast update via ActionCable
+        PollParticipantsCountChannel.broadcast_to(poll, get_serialized_participants_count)
+      end
+    end
+
+    def get_serialized_participants_count
+      poll = Poll.find(params[:id])
+      lecture = Lecture.find(params[:lecture_id])
+      { "numberOfParticipants" => Answer.where(poll_id: poll.id).distinct.count(:student_id),
+              "numberOfLectureUsers" => lecture.participating_students.length() }
+    end
+
+    def broadcast_state
+      broadcast_options
+      broadcast_participants_count
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_poll
       @poll = Poll.find(params[:id])
