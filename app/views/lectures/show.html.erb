@@ -13,8 +13,11 @@
           <% else %>
             <h5>Questions</h5>
           <% end %>
+          <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id}) %>
       </div>
-      <div id="materials" class="col-lg-4 col-md-6">&nbsp;</div>
+      <div id="materials" class="col-lg-4 col-md-6">
+        <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
+      </div>
       <div id="comprehension" class="col-lg-4 col-md-6">
         <h5>Comprehension Level</h5>
         <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
