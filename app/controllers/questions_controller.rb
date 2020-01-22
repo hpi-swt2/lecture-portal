@@ -81,8 +81,7 @@ class QuestionsController < ApplicationController
       isLectureOwner = !isStudent && @lecture.lecturer == current_user
       unless isJoinedStudent || isLectureOwner
         redirect_to course_lectures_path(@lecture.course)
-      end    end
-      return head :forbidden unless isJoinedStudent || isLectureOwner
+      end
     end
 
     def validate_lecture_running_or_ended
