@@ -22,6 +22,7 @@ class LecturesController < ApplicationController
   # GET courses/:course_id/lectures/1
   def show
     @current_user = current_user
+    @uploaded_files = @lecture.uploaded_files
   end
 
   # GET courses/:course_id/lectures/new
@@ -33,7 +34,7 @@ class LecturesController < ApplicationController
   # GET courses/:course_id/lectures/1/edit
   def edit
     if @lecture.status != "created"
-      redirect_to course_lecture_path(@course, @lecture), notice: "This page is only available before a lecture was started. Use the settings tab instead."
+      redirect_to course_lecture_path(@course, @lecture), alert: "This page is only available before a lecture was started. Use the settings tab instead."
     end
   end
 
@@ -74,7 +75,7 @@ class LecturesController < ApplicationController
     if current_user.is_student?
       @lectures = Lecture.where(course_id: @course.id).active
     else
-      redirect_to root_path, notice: "Only Students can access this site."
+      redirect_to root_path, alert: "Only Students can access this site."
     end
   end
 
@@ -84,15 +85,23 @@ class LecturesController < ApplicationController
       @lecture.save
       redirect_to course_lecture_path(@course, @lecture)
     else
-      redirect_to course_lecture_path(@course, @lecture), notice: "Can't restart an ended lecture."
+      redirect_to course_lecture_path(@course, @lecture), alert: "Can't restart an ended lecture."
     end
   end
 
   def join_lecture
-    @lecture.join_lecture(current_user)
-    @lecture.save
-    current_user.save
-    redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
+    if params[:lecture].present?
+      key = params[:lecture][:enrollment_key]
+    end
+
+    if key == @lecture.enrollment_key || !@lecture.enrollment_key_present?
+      @lecture.join_lecture(current_user)
+      @lecture.save
+      current_user.save
+      redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
+    else
+      redirect_to course_path(@course), alert: "You inserted the wrong key!"
+    end
   end
 
   def leave_lecture
@@ -114,7 +123,7 @@ class LecturesController < ApplicationController
 
     def validate_lecture_owner
       if @lecture.lecturer != current_user
-        redirect_to course_path(@course), notice: "You can only access your own lectures."
+        redirect_to course_path(@course), alert: "You can only access your own lectures."
       end
     end
 
@@ -123,15 +132,15 @@ class LecturesController < ApplicationController
       isJoinedStudent = @lecture.participating_students.include?(current_user)
       isLectureOwner = @lecture.lecturer == current_user
       if isStudent && !isJoinedStudent
-        redirect_to course_path(@course), notice: "You must join a lecture before you can view it."
+        redirect_to course_path(@course), alert: "You must join a lecture before you can view it."
       elsif !isStudent && !isLectureOwner
-        redirect_to course_path(@course), notice: "You can only access your own lectures."
+        redirect_to course_path(@course), alert: "You can only access your own lectures."
       end
     end
 
     def require_student
       if !current_user.is_student
-        redirect_to course_path(@course), notice: "Only students can join a lecture."
+        redirect_to course_path(@course), alert: "Only students can join a lecture."
       end
     end
 
@@ -141,13 +150,13 @@ class LecturesController < ApplicationController
 
     def require_lecturer
       if current_user.is_student?
-        redirect_to course_path(@course), notice: "You can't access this site as a student."
+        redirect_to course_path(@course), alert: "You can't access this site as a student."
       end
     end
 
     def validate_course_creator
       if @course.creator != current_user
-        redirect_to @course, notice: "You can only access your own courses."
+        redirect_to @course, alert: "You can only access your own courses."
       end
     end
 

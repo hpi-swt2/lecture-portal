@@ -60,7 +60,7 @@ RSpec.describe UploadedFilesController, type: :controller do
         @student = FactoryBot.create(:user, :student)
         @lecturer = FactoryBot.create(:user, :lecturer)
         @course = FactoryBot.create(:course, creator: @lecturer)
-        @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload: @course)
+        @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload: @course, data: "Some Text")
         sign_in @student
       end
 
@@ -86,7 +86,7 @@ RSpec.describe UploadedFilesController, type: :controller do
         @lecturer = FactoryBot.create(:user, :lecturer)
         @course = FactoryBot.create(:course, creator: @lecturer)
         @lecture = FactoryBot.create(:lecture, lecturer: @lecturer, course: @course)
-        @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload: @lecture)
+        @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload: @lecture, data: "Some Text")
         sign_in @student
       end
 

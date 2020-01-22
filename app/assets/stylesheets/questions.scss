@@ -22,14 +22,36 @@ div.questionsList {
   }
   > .questionsFilter {
     margin-bottom: 15px;
-    float: right;
-    cursor: pointer;
     -webkit-user-select: none;
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
+    &::after {
+      content: '';
+      display: block;
+      clear: both;
+    }
+    > .filtering {
+      float: left;
+      > button {
+        color: #333 !important;
+        background-color: white !important;
+        border-radius: 80px;
+        padding: 0 30px;
+        margin-right: 5px;
+        box-shadow: none !important;
+        &:hover {
+          background-color: #ddd !important;
+        }
+        &.active {
+          border: 1px solid #f2994a;
+        }
+      }
+    }
     > .sorting {
       display: inline-block;
+      float: right;
+      cursor: pointer;
       color: #888;
       &::after {
         content: "";
@@ -67,6 +89,9 @@ div.questionsList {
       border-radius: 3px;
       margin-bottom: 10px;
       word-break: break-all;
+      &.resolved {
+        opacity: .4;
+      }
       > .questionUpvotes {
         padding: 10px;
         > .arrow {
@@ -116,6 +141,10 @@ div.questionsList {
       }
       > .btn-lg {
         min-width: 165px;
+      }
+      > span {
+        margin: 20px;
+        text-align: center;
       }
     }
   }

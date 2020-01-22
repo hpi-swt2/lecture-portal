@@ -11,7 +11,8 @@ const Question = types
     author_id: types.integer,
     created_at: types.Date,
     upvotes: types.optional(types.integer, 0),
-    already_upvoted: types.boolean
+    already_upvoted: types.boolean,
+    resolved: types.boolean
   })
   .views(self => ({
     canBeUpvoted(): boolean {
