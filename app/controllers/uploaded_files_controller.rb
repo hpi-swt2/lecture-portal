@@ -75,7 +75,8 @@ class UploadedFilesController < ApplicationController
   # GET /courses/:course_id/lectures/:lecture_id/uploaded_files/:id
   def show
     file = UploadedFile.find(params[:id])
-    send_data file.data, filename: file.filename, type: file.content_type, disposition: "attachment"
+    send_data file.data, filename: file.filename, type: file.content_type 
+    #, disposition: "attachment"
   end
 
 
