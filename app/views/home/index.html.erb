@@ -55,7 +55,7 @@
                     <%= submit_tag 'Join', class: "btn btn-primary" %>
                   <% end %>
                 <% else %>
-                  <td><%= link_to "Join", join_lecture_path(:course_id => lecture.course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %></td>
+                  <%= button_to 'Join', join_lecture_path(:course_id => lecture.course.id, :id => lecture.id),method: :post, class:"btn btn-primary" %>
                 <% end %>
                 </td>
               </tr>
