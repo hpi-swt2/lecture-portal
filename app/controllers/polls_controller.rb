@@ -1,5 +1,6 @@
 class PollsController < ApplicationController
   before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start, :answer]
+  before_action :get_course
   before_action :get_lecture
   before_action :authenticate_user!
   before_action :set_is_student
@@ -186,8 +187,20 @@ class PollsController < ApplicationController
       params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
     end
 
+    # This method looks for the course in the database and redirects with a failure if the course does not exist.
+    def get_course
+      @course = Course.find_by(id: params[:course_id])
+      if @course.nil?
+        redirect_to root_path, alert: "The course you requested does not exist."
+      end
+    end
+
+    # This method looks for the lecture in the database and redirects with a failure if the lecture does not exist.
     def get_lecture
-      @lecture = Lecture.find(params[:lecture_id])
+      @lecture = Lecture.find_by(id: params[:lecture_id])
+      if @lecture.nil?
+        redirect_to course_path(id: @course.id), alert: "The lecture you requested does not exist."
+      end
     end
 
     def answer_params

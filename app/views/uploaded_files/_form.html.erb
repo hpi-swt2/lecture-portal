@@ -1,32 +1,83 @@
-<%= form_with(model: uploaded_file, local: true, html: { multipart: true } ) do |form| %>
-  <% if uploaded_file.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this uploaded_file from being saved:</h2>
+<%# TAB NAV TO SWITCH BETWEEN FILE / LINK UPLOAD %>
 
-      <ul>
-      <% uploaded_file.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
+<div class="d-flex justify-content-between nav-tabs">
+  <ul class="nav w-100" id="uploadTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="upload-file-tab" data-toggle="tab" href="#upload-file" role="tab" aria-controls="upload-file" aria-selected="true">File</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" id="upload-link-tab" data-toggle="tab" href="#upload-link" role="tab" aria-controls="upload-link" aria-selected="false">Link</a>
+    </li>
+  </ul>
+</div>
+
+
+
+<div class="tab-content" id="uploadTabsContent">
+
+  <%# FILE UPLOAD %>
+  <div class="tab-pane fade show active" id="upload-file" role="tabpanel" aria-labelledby="upload-file-tab">
+    <%= form_with(model: @model, local: true, html: { multipart: true } ) do |form| %>
+      <% if uploaded_file.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this file from being saved:</h2>
+
+          <ul>
+          <% uploaded_file.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
       <% end %>
-      </ul>
-    </div>
-  <% end %>
 
-  <div class="field">
-    <%= form.label :lecture %>
-    <%= form.number_field :lecture %>
+      <div class="form-group">
+        <%= form.label :attachment, "Click to choose File" %>
+        <br/>
+        <%= form.file_field :attachment, :class => "btn btn-outline-secondary", id:"input-upload-file", required: true %>
+      </div>
+
+
+      <div class="actions d-flex flex-row justify-content-between mt-2">
+        <div>
+          <%= yield(:action_left) %>
+        </div>
+        <div>
+          <%= yield(:action_right) %>
+          <%= form.submit "Upload File", :class => "btn btn-primary" %>
+        </div>
+      </div>
+    <% end %>
   </div>
 
-  <div class="field">
-    <%= form.label :attachment %>
-    <%= form.file_field :attachment %>
-  </div>
+  <%# LINK UPLOAD %>
+  <div class="tab-pane fade" id="upload-link" role="tabpanel" aria-labelledby="upload-link-tab">
+    <%= form_with(model: @model, local: true, html: { multipart: true } ) do |form| %>
+      <% if uploaded_file.errors.any? %>
+        <div id="error_explanation">
+          <h2><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this link from being saved:</h2>
 
-  <div class="field">
-    <%= form.label :link %>
-    <%= form.text_field :link %>
-  </div>
+          <ul>
+          <% uploaded_file.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+          </ul>
+        </div>
+      <% end %>
 
-  <div class="actions">
-    <%= form.submit %>
+      <div class="form-group">
+        <%= form.label :link %>
+        <%= form.text_field :link, :class => "form-control", id:"input-upload-link", required: true %>
+      </div>
+
+      <div class="actions d-flex flex-row justify-content-between mt-2">
+        <div>
+          <%= yield(:action_left) %>
+        </div>
+        <div>
+          <%= yield(:action_right) %>
+          <%= form.submit "Attach Link", :class => "btn btn-primary" %>
+        </div>
+      </div>
+    <% end %>
   </div>
-<% end %>
+</div>

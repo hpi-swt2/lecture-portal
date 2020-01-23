@@ -4,22 +4,26 @@
 <% end %>
 
 <%= render 'tabbar', current_user: @current_user %>
-<div class="tab-content" id="lectureTabsContent" style="width: 70vw">
-  <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="width: 70vw">
+<div class="tab-content" id="lectureTabsContent">
+  <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
     <div class="row">
-      <div id="updates" class="col-lg-4 col-md-6">
+      <div id="updates" class="col col-md-6 col-xl-4">
           <% if @current_user.is_student %>
-            <h5>Updates</h5>
+            <h2 class="h5">Updates</h2>
           <% else %>
-            <h5>Questions</h5>
+            <h2 class="h5">Questions</h2>
           <% end %>
           <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?}) %>
       </div>
-      <div id="materials" class="col-lg-4 col-md-6">
+      <div id="materials" class="col col-md-6 col-xl-4 ">
+        <h2 class="h5">Materials</h2>
         <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
+        <% unless current_user.is_student %>
+          <%= link_to "Add lecture material", new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class:"btn btn-link"%>
+        <% end %>
       </div>
-      <div id="comprehension" class="col-lg-4 col-md-6">
-        <h5>Comprehension Level</h5>
+      <div id="comprehension" class="col col-md-6 col-xl-4">
+        <h2 class="h5">Comprehension Level</h2>
         <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?} ) %>
       </div>
     </div>
@@ -42,9 +46,7 @@
   </div>
 
   <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
-
     <% if @current_user.is_student %>
-
       <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ]) do |form| %>
         <p>
           <%= form.label :content %><br>
@@ -54,29 +56,27 @@
           <%= form.submit %>
         </p>
       <% end %>
-
     <% else %>
-
       <% @lecture.feedbacks.each do |feedback| %>
         <p>
           <strong>Feedback:</strong>
           <%= feedback.content %>
         </p>
       <% end %>
-
     <% end %>
-
   </div>
   <% if !@current_user.is_student %>
-    <div class="tab-pane fade" id="enrollmentKey" role="tabpanel" aria-labelledby="enrollmentKey-tab-tab">
-      <h1 class="padded-text">Enrollment Key: <%= @lecture.enrollment_key %></h1>
-      <h3 class="padded-text"> Students </h3>
-        <ol>
-        <% for student in @lecture.participating_students%>
-          <li><%= student.email %></li>
-        <% end %>
-        </ol>
-    </div>
+    <% if @lecture.enrollment_key_present? %>
+      <div class="tab-pane fade" id="enrollmentKey" role="tabpanel" aria-labelledby="enrollmentKey-tab-tab">
+        <h1 class="padded-text">Enrollment Key: <%= @lecture.enrollment_key %></h1>
+        <h3 class="padded-text"> Students </h3>
+          <ol>
+          <% for student in @lecture.participating_students%>
+            <li><%= student.email %></li>
+          <% end %>
+          </ol>
+      </div>
+    <% end %>
     <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
       <%= render 'form', lecture: @lecture %>
     </div>
