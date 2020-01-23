@@ -5,26 +5,27 @@
 <ul class="list-group mb-2">
   <% uploaded_files.each do |file| %>
     <li class="list-group-item d-flex justify-content-between align-items-center">
-      <% if file.isLink %>
-        <%= fa_icon 'file', :class => "text-info" %>
-        <%= link_to file.data, file.data, class:"btn btn-link" %>
-      <% else %>
       <div>
-        <%= fa_icon 'file', :class => "text-info" %>
-        <% if @lecture %>
-          <%= link_to file.filename, course_lecture_uploaded_file_path(@lecture.course, @lecture, file), target: "_self", class:"btn btn-link" %>
+        <% if file.isLink %>
+          <%= fa_icon 'link', :class => "text-info" %>
+          <%= link_to file.data, file.data, class:"btn btn-link" %>
         <% else %>
-          <%= link_to file.filename, course_uploaded_file_path(@course, file), target: "_self", class:"btn btn-link" %>
+          <%= fa_icon 'file', :class => "text-info" %>
+          <% if @lecture %>
+            <%= link_to file.filename, course_lecture_uploaded_file_path(@lecture.course, @lecture, file), target: "_self", class:"btn btn-link" %>
+          <% else %>
+            <%= link_to file.filename, course_uploaded_file_path(@course, file), target: "_self", class:"btn btn-link" %>
+          <% end %>
         <% end %>
       </div>
-        <% end %>
       <div>
+        <small class="text-muted pr-2 d-none d-lg-inline">(last updated: <%= file.created_at.strftime("%d-%m-%Y") %>)</small>
         <!-- Might be a page where no @course or @lecture exists-->
         <% if @current_user == file.author || @current_user == @course.creator || (@lecture && @current_user == @lecture.course.creator) %>
           <% if @lecture %>
-            <%=  link_to 'Delete File', course_lecture_uploaded_file_path(@course, @lecture, file), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: 'Are you sure?' } %>
+            <%= link_to (file.isLink ? 'Delete Link' : 'Delete File'), course_lecture_uploaded_file_path(@course, @lecture, file), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: 'Are you sure?' } %>
           <% else %>
-            <%=  link_to 'Delete File', course_uploaded_file_path(@course, file), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: 'Are you sure?' } %>
+            <%= link_to (file.isLink ? 'Delete Link' : 'Delete File'), course_uploaded_file_path(@course, file), method: :delete, class: "btn btn-sm btn-outline-danger", data: { confirm: 'Are you sure?' } %>
           <% end %>
         <% end %>
       </div>
