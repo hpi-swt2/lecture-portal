@@ -1,11 +1,9 @@
 <script>
-
-  function handleSubmit() {
-      document.getElementById("feedback-notification").style.display = "block";
-      if (document.getElementById("feedback-submit").value !== "Update")
+    function handleSubmit() {
+        document.getElementById("feedback-notification").style.display = "block";
+        if (document.getElementById("feedback-submit").value !== "Update")
         {document.getElementById("feedback-submit").value = "Update"}
-  }
-
+    }
 </script>
 
 <%= render 'tabbar', current_user: @current_user %>
