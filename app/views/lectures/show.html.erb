@@ -1,3 +1,11 @@
+<script>
+    function handleSubmit() {
+        document.getElementById("feedback-notification").style.display = "block";
+        if (document.getElementById("feedback-submit").value !== "Update")
+        {document.getElementById("feedback-submit").value = "Update"}
+    }
+</script>
+
 <h5><%= @lecture.name %></h5>
 <% if @lecture.start_time &&  @lecture.end_time && @lecture.date%>
   <p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
@@ -55,16 +63,27 @@
 
   <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
     <% if @current_user.is_student %>
-      <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ]) do |form| %>
-        <p>
-          <%= form.label :content %><br>
-          <%= form.text_field :content %>
-        </p>
-        <p>
-          <%= form.submit %>
-        </p>
-      <% end %>
-    <% else %>
+      <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ], :html => { :onsubmit => "handleSubmit()" }) do |form| %>
+        <% if @lecture.feedbacks.where(user_id: @current_user.id).present? %>
+          <p>
+            <%= form.label :content, "You submitted your feedback. Update it here."%>
+            <%= form.text_area(:content, :value => @lecture.feedbacks.where(user_id: @current_user.id).first.content, :class => "form-control") %>
+          </p>
+          <p>
+            <%= form.submit "Update", {class: "btn btn-primary", id: "feedback-submit"}  %>
+          </p>
+        <% else %>
+          <p>
+            <%= form.label :content, "Write your feedback here"%>
+            <%= form.text_area :content, {class: "form-control"} %>
+          </p>
+          <p>
+            <%= form.submit "Submit", {class: "btn btn-primary", id: "feedback-submit"} %>
+          </p>
+        <% end %>
+        <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert"> Feedback submitted</div>
+  <% end %>
+  <% else %>
       <% @lecture.feedbacks.each do |feedback| %>
         <p>
           <strong>Feedback:</strong>
