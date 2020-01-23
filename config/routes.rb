@@ -15,13 +15,16 @@ Rails.application.routes.draw do
           patch :save_answers
           post :save_answers
           get :stop_start
+          get :serialized_options
+          get :serialized_participants_count
           get :answer
         end
       end
       resources :uploaded_files # , only: [:show, :index, :new, :create, :destroy]
       resources :feedbacks
 
-
+      get "comprehension", to: "lectures#get_comprehension", on: :member
+      put "comprehension", to: "lectures#update_comprehension_stamp", on: :member
 
       resources :questions, only: [:index, :create] do
         post "upvote", on: :member
