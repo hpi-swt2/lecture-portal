@@ -20,6 +20,15 @@
     border: 1px solid #333;
     background-color: #fdfdfd;
 
+    &.disabled {
+      .comprehensionButton, p {
+        opacity: .5 !important;
+      }
+      .comprehensionItem {
+        cursor: initial !important;
+      }
+    }
+
     p {
       margin: 0 !important;
     }

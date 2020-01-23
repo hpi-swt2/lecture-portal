@@ -9,18 +9,21 @@ import {
     numberOfComprehensionStates
 } from "../utils/constants";
 
-const mapStore = ({ active_stamp, last_updated, lecture_id }: ComprehensionRootStoreModel) => ({
+const mapStore = ({ active_stamp, last_updated, lecture_id, interactions_enabled }: ComprehensionRootStoreModel) => ({
     active_stamp,
     last_updated,
-    lecture_id
+    lecture_id,
+    interactions_enabled
 });
 
 const ComprehensionStudent: React.FunctionComponent<{}> = observer(() => {
-    const { active_stamp, last_updated, lecture_id } = useInjectComprehension(mapStore);
-
+    const { active_stamp, last_updated, lecture_id, interactions_enabled } = useInjectComprehension(mapStore);
+        
     const onComprehensionStampClick = (clickedState) => {
         return () => {
-            updateComprehensionStamp(clickedState)
+            if (interactions_enabled) {
+                updateComprehensionStamp(clickedState)
+            }
         }
     };
 
@@ -41,7 +44,7 @@ const ComprehensionStudent: React.FunctionComponent<{}> = observer(() => {
     return (
         <div>
             <p>Last Updated: {formatDate(last_updated)}</p>
-            <div className="comprehensionBox">
+            <div className={"comprehensionBox" + (interactions_enabled ? "" : " disabled")}>
                 {renderComprehensionItems()}
             </div>
         </div>
