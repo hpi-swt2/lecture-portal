@@ -98,6 +98,7 @@ class LecturesController < ApplicationController
       @lecture.save
       current_user.save
       redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
+      StudentsStatisticsChannel.broadcast_to(@lecture, 1)
     else
       redirect_to course_path(@course), alert: "You inserted the wrong key!"
     end
@@ -106,6 +107,7 @@ class LecturesController < ApplicationController
   def leave_lecture
     @lecture.leave_lecture(current_user)
     redirect_to course_path(@course), notice: "You successfully left the lecture."
+    StudentsStatisticsChannel.broadcast_to(@lecture, -1)
   end
 
   def end_lecture

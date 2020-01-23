@@ -4,7 +4,7 @@ const CableApp = {
     cable: ActionCable.createConsumer(`/cable`)
 };
 
-export const setupQuestionsActionCable = (lecture_id, questionReceived, questionResolved, questionUpvoted) => {
+export const setupQuestionsActionCable = (lecture_id, questionReceived, questionResolved, questionUpvoted = null) => {
     CableApp.cable.subscriptions.create(
         { channel: "QuestionsChannel", lecture_id: lecture_id },
         {
