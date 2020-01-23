@@ -17,43 +17,41 @@ describe "Upload files", type: :feature do
     before :each do
       visit(new_course_lecture_uploaded_file_path(@lecture.course, @lecture))
     end
+
+    # FILES
     it "uploads a valid file" do
       expect(UploadedFile.count).to be(0)
-      find(:id, "uploaded_file_attachment").set(@data)
-      click_on("Create Uploaded file")
-      expect(UploadedFile.count).to be(1)
-    end
-
-    it "uploads no file without data" do
-      expect(UploadedFile.count).to be(0)
-      click_on("Create Uploaded file")
-      expect(UploadedFile.count).to be(0)
-    end
-
-    it "uploads a link" do
-      expect(UploadedFile.count).to be(0)
-      find(:id, "uploaded_file_link").set("https://hpi.de")
-      click_on("Create Uploaded file")
+      find(:id, "input-upload-file").set(@data)
+      click_on("Upload File")
       expect(UploadedFile.count).to be(1)
     end
 
     it "uploads a valid file with correct type" do
       expect(UploadedFile.count).to be(0)
-      find(:id, "uploaded_file_attachment").set(@data)
-      click_on("Create Uploaded file")
+      find(:id, "input-upload-file").set(@data)
+      click_on("Upload File")
       expect(UploadedFile.count).to be(1)
     end
 
     it "uploads a valid file with umlauts and with correct type" do
       expect(UploadedFile.count).to be(0)
-      find(:id, "uploaded_file_attachment").set(@data_umlauts)
-      click_on("Create Uploaded file")
+      find(:id, "input-upload-file").set(@data_umlauts)
+      click_on("Upload File")
       expect(UploadedFile.count).to be(1)
     end
     it "links back to the lectures show page" do
       expect(page).to have_link("Back", href: course_lecture_path(@lecture.course, @lecture))
     end
 
+    # LINKS
+    it "uploads a link" do
+      expect(UploadedFile.count).to be(0)
+      find(:id, "input-upload-link").set("https://hpi.de")
+      click_on("Attach Link")
+      expect(UploadedFile.count).to be(1)
+    end
+
+    # BEHAVIOUR
     # students are not allowed to upload files
     it "redirects a student away" do
       sign_in @student
@@ -70,19 +68,19 @@ describe "Upload files", type: :feature do
 
     it "uploads a valid file with umlauts and with correct type by a lecturer" do
         expect(UploadedFile.count).to be(0)
-        find(:id, "uploaded_file_attachment").set(@data_umlauts)
-        click_on("Create Uploaded file")
+        find(:id, "input-upload-file").set(@data_umlauts)
+        click_on("Upload File")
         expect(UploadedFile.count).to be(1)
       end
 
     it "uploads a valid file with umlauts and with correct type by a student" do
       sign_in @student
       expect(UploadedFile.count).to be(0)
-      find(:id, "uploaded_file_attachment").set(@data_umlauts)
-      click_on("Create Uploaded file")
+      find(:id, "input-upload-file").set(@data_umlauts)
+      click_on("Upload File")
       expect(UploadedFile.count).to be(1)
     end
-    
+
     it "links back to the course show page" do
       expect(page).to have_link("Back", href: course_path(@lecture.course))
     end

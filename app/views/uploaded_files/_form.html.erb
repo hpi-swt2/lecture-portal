@@ -20,7 +20,7 @@
     <%= form_with(model: @model, local: true, html: { multipart: true } ) do |form| %>
       <% if uploaded_file.errors.any? %>
         <div id="error_explanation">
-          <h2><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this uploaded_file from being saved:</h2>
+          <h2><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this file from being saved:</h2>
 
           <ul>
           <% uploaded_file.errors.full_messages.each do |message| %>
@@ -33,7 +33,7 @@
       <div class="form-group">
         <%= form.label :attachment, "Click to choose File" %>
         <br/>
-        <%= form.file_field :attachment, :class => "btn btn-outline-secondary", :id="upload-file" %>
+        <%= form.file_field :attachment, :class => "btn btn-outline-secondary", id:"input-upload-file", required: true %>
       </div>
 
 
@@ -54,7 +54,7 @@
     <%= form_with(model: @model, local: true, html: { multipart: true } ) do |form| %>
       <% if uploaded_file.errors.any? %>
         <div id="error_explanation">
-          <h2><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this uploaded_file from being saved:</h2>
+          <h2><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this link from being saved:</h2>
 
           <ul>
           <% uploaded_file.errors.full_messages.each do |message| %>
@@ -66,7 +66,7 @@
 
       <div class="form-group">
         <%= form.label :link %>
-        <%= form.text_field :link, :class => "form-control", :id="upload-link" %>
+        <%= form.text_field :link, :class => "form-control", id:"input-upload-link", required: true %>
       </div>
 
       <div class="actions d-flex flex-row justify-content-between mt-2">
