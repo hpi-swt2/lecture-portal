@@ -53,7 +53,7 @@
 
     <% if @current_user.is_student %>
       <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ], :html => { :onsubmit => "handleSubmit()" }) do |form| %>
-        <% if @lecture.feedbacks.where(user_id: current_user.id).present? %>
+        <% if @lecture.feedbacks.where(user_id: @current_user.id).present? %>
           <p>
             <%= form.label :content, "You submitted your feedback. Update it here."%>
             <%= form.text_area(:content, :value => @lecture.feedbacks.where(user_id: @current_user.id).first.content, :class => "form-control") %>
