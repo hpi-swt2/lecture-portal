@@ -11,11 +11,6 @@ class FeedbacksController < ApplicationController
     head :no_content
   end
 
-  def update
-    @lecture = Lecture.find(params[:lecture_id])
-    @feedback.update(comment_params)
-  end
-
   private
     def comment_params
       params.require(:feedback).permit(:content, :user)
