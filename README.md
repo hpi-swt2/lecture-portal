@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.com/hpi-swt2/lecture-portal.svg?branch=master)](https://travis-ci.com/hpi-swt2/lecture-portal)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![mergify-status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/hpi-swt2/lecture-portal&style=flat)](https://dashboard.mergify.io/installation/6258647/repositories)
 
 Web application for organizing and managing lecture participation, written in [Ruby on Rails](https://rubyonrails.org/).
 Created in the [Software Engineering II course](https://hpi.de/plattner/teaching/winter-term-201920/softwaretechnik-ii.html) at HPI in Potsdam.  

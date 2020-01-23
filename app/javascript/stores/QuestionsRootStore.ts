@@ -17,6 +17,8 @@ const QuestionsRootStore = types.model("QuestionsRootStore", {
     user_id: types.optional(types.integer, -1),
     course_id: types.optional(types.integer, -1),
     lecture_id: types.optional(types.integer, -1),
+    interactions_enabled: types.optional(types.boolean, true),
+
     is_student: types.optional(types.boolean, true),
     current_question: currentQuestion,
     questionsList: questionsList,
@@ -34,6 +36,9 @@ const QuestionsRootStore = types.model("QuestionsRootStore", {
     },
     setCourseId(course_id: number) {
         self.course_id = course_id
+    },
+    setInteractionsEnabled(interactions_enabled: boolean) {
+        self.interactions_enabled = interactions_enabled
     }
 }));
 

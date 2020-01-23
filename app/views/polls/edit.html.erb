@@ -2,5 +2,5 @@
 
 <%= render 'form', poll: @poll %>
 
-<%= link_to 'Back', course_lecture_polls_path(course_id:@lecture.course.id, lecture_id:@lecture.id, poll:@poll)  %> |
-<%= link_to 'Delete', course_lecture_path(course_id:@lecture.course.id, id:@lecture.id), method: :delete, data: { confirm: 'Are you sure?' } %>
+<%= link_to 'Back', course_lecture_polls_path(@lecture.course, @lecture)  %> |
+<%= link_to 'Delete', course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll), method: :delete, data: { confirm: 'Are you sure?' } %>

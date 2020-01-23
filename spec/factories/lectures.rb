@@ -9,4 +9,8 @@ FactoryBot.define do
     start_time { "2020-01-01 10:10:00" }
     end_time { "2020-01-01 10:20:00" }
   end
+
+  trait :keyless do
+    enrollment_key { }
+  end
 end

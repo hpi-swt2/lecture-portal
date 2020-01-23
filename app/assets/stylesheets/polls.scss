@@ -1,12 +1,42 @@
 // Place all the styles related to the Polls controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+// Color Scheme
+@import "colorScheme";
+
 .green-checkmark {
   color: green;
 }
 
 .red-cross {
   color: red;
+}
+
+#numberOfParticipants {
+  text-align: right;
+  font-size: 24px;
+}
+
+.userIcon {
+  background-color: $gray-light;
+  font-size:32px;
+  margin-right: 10px;
+  padding: 2px;
+}
+
+#pollInformation {
+  border: 1px solid $black-main;
+  text-color: $black-main;
+  border-radius: 3px;
+  margin-bottom: 10px;
+  word-break: break-all;
+  text-align: center;
+  > #pollTitle {
+    font-size: 36px;
+  }
+  > .pollStatusInformation {
+    font-size: 16px;
+  }
 }
 
 .polls-iframe {
@@ -18,7 +48,8 @@
 // navbar_height: 40px;
 // nav_tabs_height: 42px;
 // polls_footer_height: 40px;
+// for notices: 40px;
 
 .poll-tab-container {
-  height: calc(85vh - 40px - 42px - 40px);
+  height: calc(85vh - 40px - 42px - 40px - 80px);
 }

@@ -7,13 +7,15 @@ RSpec.describe "courses/show", type: :view do
     @course = FactoryBot.create(:course, creator: @lecturer)
     @lecture = FactoryBot.create(:lecture, name: "Name", enrollment_key: "Enrollment", status: "created",  course: @course, lecturer: @lecturer)
     @current_user = FactoryBot.create(:user, :lecturer)
+    @student_files = []
+    @lecturer_files = []
     sign_in @lecturer
   end
 
   it "renders title and description of the course " do
     render
-    expect(rendered).to have_text("SWT2")
-    expect(rendered).to have_text("ruby")
+    expect(rendered).to match(@course.name)
+    expect(rendered).to match(@course.description)
   end
 
   it "renders a list of lectures" do
@@ -23,51 +25,30 @@ RSpec.describe "courses/show", type: :view do
     assert_select "tr>td", text: @lecture.status, count: 1
   end
 
-  it "should have a \"Start\" link for not started lecture" do
-    visit(course_path(id: @lecture.course.id))
+  context "for students" do
+    before(:each) do
+      login_student
+      @lecture.update(status: "running")
+    end
 
-    expect(page).to have_link("Start", href: start_lecture_path(course_id: @lecture.course.id) + "?id=" + @lecture.id.to_s)
+    it "displays key input form for lectures with a key for not joined students" do
+      render
+      # it's 3 because of the hidden input fields in a form
+      assert_select "form input", count: 3
+      assert_select "form", count: 1
+    end
+
+    it "does not display key input form for lectures without a key for not joined students" do
+      @lecture.update(enrollment_key: nil)
+      render
+      # it's 1 because of the Join button is a form
+      assert_select "form input", count: 1
+      assert_select "form", count: 1
+    end
   end
 
-  it "should not have a \"View\" link for not started lecture" do
-    visit(course_path(id: @lecture.course.id))
-    expect(page).to_not have_link("View", href: course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
-  end
-
-  it "should have a \"Create Lecture\" button" do
-    visit(course_path(id: @lecture.course.id))
-    expect(page).to have_link("Create Lecture")
-  end
-
-  it "should set the lecture active on clicking \"Start\"" do
-    visit(course_path(id: @lecture.course.id))
-    click_on("Start")
-    @lecture.reload
-    expect(@lecture.status).to eq("running")
-  end
-
-  it "should redirect to the show path after clicking \"Start\"" do
-    visit(course_path(id: @lecture.course.id))
-    click_on("Start")
-    expect(current_path).to eq(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
-  end
-
-  it "should not show the \"Start\" button after a lecture was started" do
-    visit(course_path(id: @lecture.course.id))
-    click_on("Start")
-    expect(page).not_to have_selector("input[type=submit][value='Start']")
-  end
-
-  it "should show a \"View\" link after the lecture is started" do
-    @lecture.update(status: "running")
-    visit(course_path(id: @lecture.course.id))
-    expect(page).to have_link("View", href: course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
-  end
-
-  it "should not show lectures of other lecturers" do
-    @lecture2 = FactoryBot.create(:lecture)
-    @lecture2.update(status: "running")
-    visit(course_path(id: @lecture.course.id))
-    expect(page).to_not have_link("View", href: course_lecture_path(course_id: @lecture2.course.id, id: @lecture2.id))
+  def login_student(user = FactoryBot.create(:user, :student))
+    sign_in(user, scope: :user)
+    @current_user = user
   end
 end

@@ -13,6 +13,11 @@
       <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback" role="tab" aria-controls="feedback" aria-selected="false">Feedback</a>
     </li>
     <% if !current_user.is_student %>
+      <% if @lecture.enrollment_key_present? %>
+        <li class="nav-item">
+          <a class="nav-link" id="enrollmentKey-tab" data-toggle="tab" href="#enrollmentKey" role="tab" aria-controls="enrollmentKey" aria-selected="false">Enrollment Key</a>
+        </li>
+      <% end %>
       <li class="nav-item">
         <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Settings</a>
       </li>
