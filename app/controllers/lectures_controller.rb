@@ -22,6 +22,7 @@ class LecturesController < ApplicationController
   def show
     @current_user = current_user
     @uploaded_files = @lecture.uploaded_files
+    render layout: "application-full"
   end
 
   # GET courses/:course_id/lectures/new
