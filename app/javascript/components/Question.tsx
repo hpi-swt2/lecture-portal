@@ -30,7 +30,7 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
         canQuestionBeUpvoted && question.upvoteClick()
     };
     return (
-        <li key={question.id}>
+        <li key={question.id} className={question.resolved ? "resolved" : ""}>
             <div className={"questionUpvotes " + (!canQuestionBeUpvoted ? "disabled" : "") + (isQuestionAlreadyUpvoted ? " upvoted" : "")}>
                 <div className="arrow" onClick={onUpvoteClick} />
                 <p className="count">{question.upvotes}</p>
@@ -39,10 +39,14 @@ const QuestionView: React.FunctionComponent<Props> = ({ question }) => {
                 {question.content}
             </div>
 
-            {canQuestionBeResolved &&
+            {!question.resolved && canQuestionBeResolved &&
                 <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg")} onClick={onResolveClick}>
                     mark as solved
                 </button>}
+            {question.resolved &&
+                <span className={is_student ? "btn-sm" : "btn-lg"}>
+                    resolved
+                </span>}
         </li>
     );
 };
