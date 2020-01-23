@@ -129,25 +129,6 @@ class LecturesController < ApplicationController
     @lecture.broadcast_comprehension_status
   end
 
-  def get_comprehension
-    if current_user.is_student
-      stamp = @lecture.lecture_comprehension_stamps.where(user: current_user).max { |a, b| a.timestamp <=> b.timestamp }
-      if stamp
-        if stamp.timestamp <= Time.now - LectureComprehensionStamp.seconds_till_comp_timeout
-          data = { status: -1, last_update: stamp.timestamp }
-        else
-          data = { status: stamp.status, last_update: stamp.timestamp }
-        end
-      else
-        data = { status: -1, last_update: nil }
-      end
-    else
-      data = @lecture.get_comprehension_status
-    end
-
-    render json: data
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     # This method looks for the course in the database and redirects with a failure if the course does not exist.
