@@ -16,7 +16,8 @@ const UpdatesList: React.FunctionComponent<{}> = observer(() => {
     <div className="questionsList mt-1">
       <ul className={(is_student ? "" : "is_lecturer")}>
         {updatesList.getList().map(update => (
-            <Update item={update} key={update.id} />
+            update.isVisible() &&
+                <Update item={update} key={update.id} />
         ))}
       </ul>
     </div>
