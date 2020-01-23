@@ -1,9 +1,12 @@
-<h1>Upload file</h1>
+<h1>Upload</h1>
+
+<% content_for :action_left do %>
+  <% if  @lecture%>
+    <%= link_to 'Back', course_lecture_path(@course, @lecture), :class => "btn btn-outline-secondary" %>
+  <% else %>
+    <%= link_to 'Back', course_path(@course), :class => "btn btn-outline-secondary" %>
+  <% end %>
+<% end %>
 
 <%= render 'form', uploaded_file: @uploaded_file %>
 
-<% if  @lecture%>
-<%= link_to 'Back', course_lecture_path(@course, @lecture) %>
-<% else %>
-<%= link_to 'Back', course_path(@course) %>
-<% end %>
