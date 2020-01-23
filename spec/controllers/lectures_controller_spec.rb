@@ -63,6 +63,22 @@ RSpec.describe LecturesController, type: :controller do
       expect(response).to be_successful
     end
 
+    it "redirects to course overview when the lecture does not exist", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      login_student()
+      not_existing_lecture_id = lecture.id + 5
+      get :show, params: { course_id: (lecture.course.id), id: not_existing_lecture_id }, session: valid_session
+      expect(response).to redirect_to(course_path(lecture.course))
+    end
+
+    it "redirects to the root path view if the course does not exist", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      not_existing_lecture_id = lecture.id + 5
+      not_existing_course_id = lecture.course.id + 5
+      get :show, params: { course_id: not_existing_course_id, id: not_existing_lecture_id }, session: valid_session
+      expect(response).to redirect_to(root_path)
+    end
+
     it "redirects to course overview for not joined students", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       login_student()
@@ -258,7 +274,7 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to the lectures overview" do
       post :leave_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
-      expect(response).to redirect_to(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
+      expect(response).to redirect_to(course_path(id: @lecture.course.id))
     end
   end
 
