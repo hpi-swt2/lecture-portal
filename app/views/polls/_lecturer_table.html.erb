@@ -1,0 +1,26 @@
+<table class="table table-sm table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Title</th>
+    <th scope="col">Active</th>
+    <th scope="col"></th>
+    <th scope="col"></th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% polls.each do |poll| %>
+    <tr>
+      <td><%= poll.title %></td>
+      <td><%= poll.is_active %></td>
+      <td class="text-right">
+        <%= link_to 'Edit', edit_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class:"btn btn-primary"} %>
+        <% text = poll.is_active ? 'Stop' : 'Start' %>
+        <%= link_to text, stop_start_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class:"btn btn-primary"} %>
+        <%= link_to 'Results', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class:"btn btn-primary"} %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

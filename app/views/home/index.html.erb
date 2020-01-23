@@ -25,6 +25,44 @@
           <% end %>
         </table>
       <% else %>
+
+        <p class="lead">My Lectures</p>
+
+        <table class="table .table-sm table-striped">
+          <thead>
+          <tr>
+            <th style="width: 25%">Name</th>
+            <th style="width: 15%" scope="col">End Time</th>
+            <th style="width: 60%" scope="col"></th>
+          </tr>
+          </thead>
+
+          <% Lecture.where(course: @participating_courses).each do |lecture| %>
+            <% if lecture.status == "running" %>
+              <tr>
+                <td><%= lecture.course.name %> - <%= lecture.name %></td>
+                <td>
+                  <%if lecture.end_time %>
+                    <%= lecture.end_time.strftime("%H:%M")  %>
+                  <% end %>
+                </td>
+                <td class="text-right" >
+                <% if @participating_lectures.include?(lecture)  %>
+                  <%= button_to "View", course_lecture_path(course_id: lecture.course.id, id: lecture.id), :method => "get", class:"btn btn-primary" %>
+                <% elsif lecture.enrollment_key_present? && !@participating_lectures.include?(lecture)%>
+                  <%= form_tag join_lecture_path(:course_id => lecture.course.id, :id => lecture.id, method: :post, autocomplete: "off") do -%>
+                    <%= text_field :lecture, :enrollment_key%>
+                    <%= submit_tag 'Join', class: "btn btn-primary" %>
+                  <% end %>
+                <% else %>
+                  <%= button_to 'Join', join_lecture_path(:course_id => lecture.course.id, :id => lecture.id),method: :post, class:"btn btn-primary" %>
+                <% end %>
+                </td>
+              </tr>
+            <% end %>
+          <% end %>
+        </table>
+
         <p class="lead">My Courses</p>
         <table class="table .table-sm table-striped">
           <thead>

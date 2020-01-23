@@ -14,8 +14,36 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture).not_to be_valid
   end
 
-  it "is not valid without a enrollment key" do
+  it "is valid without an enrollment key" do
     @lecture.enrollment_key = ""
+    expect(@lecture).to be_valid
+  end
+
+  it "is valid with an enrollment key with 3 characters" do
+    @lecture.enrollment_key = "123"
+    expect(@lecture).to be_valid
+  end
+
+  it "is not valid with an enrollment key with 1 to 2 characters" do
+    @lecture.enrollment_key = "1"
+    expect(@lecture).not_to be_valid
+
+    @lecture.enrollment_key = "12"
+    expect(@lecture).not_to be_valid
+  end
+
+  it "is not valid without a date" do
+    @lecture.date = ""
+    expect(@lecture).not_to be_valid
+  end
+
+  it "is not valid without a start time" do
+    @lecture.start_time = ""
+    expect(@lecture).not_to be_valid
+  end
+
+  it "is not valid without a end time" do
+    @lecture.end_time = ""
     expect(@lecture).not_to be_valid
   end
 
