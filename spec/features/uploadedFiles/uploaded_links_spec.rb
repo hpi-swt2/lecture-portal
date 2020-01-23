@@ -19,7 +19,7 @@ describe "The uploaded files index page", type: :feature do
 
     it "is rendered as link" do
       @file.save
-      visit uploaded_files_path
+      visit course_lecture_uploaded_files_path(@lecture.course, @lecture)
       expect(page).to have_link(@data)
     end
   end

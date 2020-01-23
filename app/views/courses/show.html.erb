@@ -18,14 +18,17 @@
 <section>
   <h2>Files</h2>
   <div class="d-flex justify-content-between nav-tabs">
-    <ul class="nav" id="fileTabs" role="tablist">
+    <ul class="nav w-100" id="fileTabs" role="tablist">
       <li class="nav-item">
         <a class="nav-link active" id="files-course-tab" data-toggle="tab" href="#files-course" role="tab" aria-controls="files-course" aria-selected="true">From Course</a>
       </li>
       <li class="nav-item">
         <a class="nav-link" id="files-students-tab" data-toggle="tab" href="#files-students" role="tab" aria-controls="files-students" aria-selected="false">From Students</a>
       </li>
-      </ul>
+      <li class="nav-item ml-auto">
+        <%= link_to (fa_icon 'plus', text: 'Add Material'), new_course_uploaded_file_path(@course), class:"btn btn-link text-muted"%>
+      </li>
+    </ul>
   </div>
   <div class="tab-content" id="fileTabsContent">
     <div class="tab-pane fade show active" id="files-course" role="tabpanel" aria-labelledby="files-course-tab">
