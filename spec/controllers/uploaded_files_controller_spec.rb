@@ -48,10 +48,61 @@ RSpec.describe UploadedFilesController, type: :controller do
   end
 
   it "stores the file only if valid file provided" do
-      old_count = UploadedFile.count
-      @file["uploaded_file"].except!("attachment")
-      post :create, params: @file
-      expect(response).to_not redirect_to(uploaded_files_url)
-      expect(UploadedFile.count).to eq(old_count)
+    old_count = UploadedFile.count
+    @file["uploaded_file"].except!("attachment")
+    post :create, params: @file
+    expect(response).to_not redirect_to(uploaded_files_url)
+    expect(UploadedFile.count).to eq(old_count)
+  end
+
+  context "having a file uploaded to a course as a student" do
+    before :each do
+        @student = FactoryBot.create(:user, :student)
+        @lecturer = FactoryBot.create(:user, :lecturer)
+        @course = FactoryBot.create(:course, creator: @lecturer)
+        @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload: @course, data: "Some Text")
+        sign_in @student
+      end
+
+    it "can be deleted by the owner" do
+      expect { post :destroy, params: { id: @student_file[:id] } }.to change(UploadedFile, :count).by(-1)
     end
+
+    it "can be deleted by the course owner" do
+      sign_in @lecturer
+      expect { post :destroy, params: { id: @student_file[:id] } }.to change(UploadedFile, :count).by(-1)
+    end
+
+    it "can't be deleted by someone else" do
+      @other_lecturer = FactoryBot.create(:user, :lecturer)
+      sign_in @other_lecturer
+      expect { post :destroy, params: { id: @student_file[:id] } }.to_not change(UploadedFile, :count)
+    end
+  end
+
+  context "having a file uploaded to a lecture as a student" do
+    before :each do
+        @student = FactoryBot.create(:user, :student)
+        @lecturer = FactoryBot.create(:user, :lecturer)
+        @course = FactoryBot.create(:course, creator: @lecturer)
+        @lecture = FactoryBot.create(:lecture, lecturer: @lecturer, course: @course)
+        @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload: @lecture, data: "Some Text")
+        sign_in @student
+      end
+
+    it "can be deleted by the owner" do
+      expect { post :destroy, params: { id: @student_file[:id] } }.to change(UploadedFile, :count).by(-1)
+    end
+
+    it "can be deleted by the lecture owner" do
+      sign_in @lecturer
+      expect { post :destroy, params: { id: @student_file[:id] } }.to change(UploadedFile, :count).by(-1)
+    end
+
+    it "can't be deleted by someone else" do
+      @other_lecturer = FactoryBot.create(:user, :lecturer)
+      sign_in @other_lecturer
+      expect { post :destroy, params: { id: @student_file[:id] } }.to_not change(UploadedFile, :count)
+    end
+  end
 end

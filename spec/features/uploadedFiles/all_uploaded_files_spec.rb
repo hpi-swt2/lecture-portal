@@ -33,24 +33,17 @@ describe "The uploaded files index page", type: :feature do
       visit uploaded_files_path
       # setup worked, else rest of test is pointless
       expect(UploadedFile.all.size).to eq(1)
-      expect(find(:table_row, { "Filename" => "LICENSE" }, {})).to have_text("text/plain")
+      expect(page).to have_link("LICENSE")
     end
 
-    it "should show the license text" do
+    it "should show a download file link as it's name" do
       visit uploaded_files_path
-      # setup worked, else rest of test is pointless
-      expect(UploadedFile.all.size).to eq(1)
-      expect(find(:table_row, { "Filename" => "LICENSE" }, {})).to have_text("WITHOUT WARRANTY OF ANY KIND")
-    end
-
-    it "should show a download link" do
-      visit uploaded_files_path
-      expect(page).to have_link "Download", href: uploaded_file_path(@file), count: 1
+      expect(page).to have_link "LICENSE", href: uploaded_file_path(@file), count: 1
     end
 
     it "should download the file when clicking the link" do
       visit uploaded_files_path
-      click_on "Download"
+      click_on "LICENSE"
       expect(page.body).to eql @file.data
       expect(page.response_headers["Content-Type"]).to eql @file.content_type
     end

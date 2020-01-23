@@ -131,3 +131,5 @@ gem "react-rails"
 gem "active_model_serializers"
 # Adds support to test action-cable behaviour, see https://github.com/palkan/action-cable-testing
 gem "action-cable-testing"
+# Easily schedule tasks in ruby <3
+gem "rufus-scheduler"
