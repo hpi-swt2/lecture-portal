@@ -1,8 +1,8 @@
 class PollsController < ApplicationController
-  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start, :answer]
+  before_action :authenticate_user!
   before_action :get_course
   before_action :get_lecture
-  before_action :authenticate_user!
+  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start, :answer]
   before_action :set_is_student
   before_action do |controller|
     @hide_navbar = true
