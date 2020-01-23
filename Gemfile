@@ -133,3 +133,5 @@ gem "active_model_serializers"
 gem "action-cable-testing"
 # Adds calendar with support for .ics files
 gem "icalendar"
+# Easily schedule tasks in ruby <3
+gem "rufus-scheduler"

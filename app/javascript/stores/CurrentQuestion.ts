@@ -14,7 +14,7 @@ const CurrentQuestion = types
         },
         createQuestion() {
             if(self.content.trim() != "") {
-                createQuestion(self.content.trim(), getQuestionsRootStore(self).course_id, getQuestionsRootStore(self).lecture_id);
+                createQuestion(self.content.trim());
                 self.content = ""
             }
         }

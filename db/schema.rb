@@ -57,6 +57,16 @@ ActiveRecord::Schema.define(version: 2020_01_20_184223) do
     t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
   end
 
+  create_table "lecture_comprehension_stamps", id: false, force: :cascade do |t|
+    t.integer "lecture_id", null: false
+    t.integer "user_id", null: false
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lecture_id", "user_id"], name: "index_lecture_comprehension_stamps_on_lecture_id_and_user_id"
+    t.index ["user_id", "lecture_id"], name: "index_lecture_comprehension_stamps_on_user_id_and_lecture_id"
+  end
+
   create_table "lectures", force: :cascade do |t|
     t.string "name"
     t.string "description", default: ""
