@@ -11,15 +11,17 @@ interface IComprehensionAppProps {
     is_student: boolean,
     lecture_id: number,
     course_id: number,
-    interactions_enabled: boolean
+    interactions_enabled: boolean,
+    comprehension_state: any
 }
 
-const ComprehensionApp: React.FunctionComponent<IComprehensionAppProps> = ({ user_id, is_student, lecture_id, course_id, interactions_enabled }) => {
+const ComprehensionApp: React.FunctionComponent<IComprehensionAppProps> = ({ user_id, is_student, lecture_id, course_id, interactions_enabled, comprehension_state }) => {
     rootStore.setUserId(user_id);
     rootStore.setIsStudent(is_student);
     rootStore.setLectureId(lecture_id);
     rootStore.setInteractionsEnabled(interactions_enabled);
     rootStore.setCourseId(course_id);
+    rootStore.setComprehensionState(comprehension_state);
     initComprehensionApp(rootStore);
 
     return (

@@ -12,13 +12,6 @@ export const StoreProvider = StoreContext.Provider;
 
 const axiosInstance = axios.create();
 
-const loadQuestionsList = (rootStore: UpdatesRootStoreModel) => {
-    axiosInstance.get("")
-        .then(res => {
-            rootStore.updatesList.setQuestionsList(res.data);
-        });
-};
-
 const setupActionCable = (rootStore: UpdatesRootStoreModel) => {
     setupQuestionsActionCable(rootStore.lecture_id,
         (data) => {
@@ -41,6 +34,5 @@ export const createUpdatesRootStore = (): UpdatesRootStoreModel => {
 export const initUpdatesApp = (rootStore: UpdatesRootStoreModel) => {
     axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector<HTMLMetaElement>('[name=csrf-token]').content;
     axiosInstance.defaults.baseURL = `/courses/` + rootStore.course_id + `/lectures/` + rootStore.lecture_id + `/questions/`;
-    loadQuestionsList(rootStore);
     setupActionCable(rootStore);
 };
