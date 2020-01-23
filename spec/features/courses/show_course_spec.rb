@@ -123,15 +123,15 @@ describe "The course detail page", type: :feature do
       expect { @delete_link_lecturer_file.click }.to change(UploadedFile, :count).by(-1)
     end
 
-    it "shoud have an \"Add new material\" link" do
+    it "shoud have an \"Add Material\" link" do
         visit(course_path(@course))
-        expect(page).to have_link("Add new material", href: new_course_uploaded_file_path(@course))
+        expect(page).to have_link("Add Material", href: new_course_uploaded_file_path(@course))
       end
 
-    it "shoud have an \"Add new material\" link for students" do
+    it "shoud have an \"Add Material\" link for students" do
       sign_in @student
       visit(course_path(@course))
-      expect(page).to have_link("Add new material", href: new_course_uploaded_file_path(@course))
+      expect(page).to have_link("Add Material", href: new_course_uploaded_file_path(@course))
     end
   end
 
