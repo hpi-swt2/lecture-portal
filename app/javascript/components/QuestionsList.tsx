@@ -26,6 +26,9 @@ const QuestionsList: React.FunctionComponent<{}> = observer(() => {
   };
 
   const checkQuestionFiltered = (question: QuestionModel): boolean => {
+    if (!(questionsList.filter_resolved || questionsList.filter_unresolved))
+      // if both filters are inactive, show all questions
+      return true;
     return (question.resolved && questionsList.filter_resolved) ||
       (!question.resolved && questionsList.filter_unresolved);
   };
