@@ -1,6 +1,5 @@
-import axios from 'axios'
 import React from "react";
-import {createComprehensionRootStore, initComprehensionApp, StoreProvider} from "../utils/ComprehensionUtils";
+import { createComprehensionRootStore, initComprehensionApp, StoreProvider } from "../utils/ComprehensionUtils";
 import ComprehensionStudent from "./ComprehensionStudent";
 import ComprehensionLecturer from "./ComprehensionLecturer";
 

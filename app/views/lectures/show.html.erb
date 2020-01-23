@@ -18,9 +18,17 @@
       <div id="materials" class="col-lg-4 col-md-6">
         <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
       </div>
-      <div id="comprehension" class="col-lg-4 col-md-6">
-        <h5>Comprehension Level</h5>
-        <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
+      <div class="col-lg-4 col-md-6">
+        <% if !@current_user.is_student %>
+          <div id="statistics">
+            <h5>Statistics</h5>
+            <%= react_component("StatisticsApp",  {lecture_id: @lecture.id, course_id: @lecture.course.id, student_count: @lecture.participating_students.count, question_count: Question.where(lecture: @lecture).count, resolved_count: Question.where(lecture: @lecture, resolved: true).count} ) %>
+          </div>
+        <% end %>
+        <div id="comprehension">
+          <h5>Comprehension Level</h5>
+          <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
+        </div>
       </div>
     </div>
   </div>
