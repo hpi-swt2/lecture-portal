@@ -2,7 +2,7 @@ class FeedbacksController < ApplicationController
   before_action :authenticate_user!
   before_action :get_course
   before_action :get_lecture
-  before_action :validate_joined_user_or_owner
+  #before_action :validate_joined_user_or_owner
 
   def create
     @lecture = Lecture.find(params[:lecture_id])
