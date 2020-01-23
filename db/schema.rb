@@ -21,15 +21,6 @@ ActiveRecord::Schema.define(version: 2020_01_20_184223) do
     t.index ["student_id"], name: "index_answers_on_student_id"
   end
 
-  create_table "calendars", force: :cascade do |t|
-    t.text "ical"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.integer "user_id"
-    t.string "hash_id"
-    t.index ["user_id"], name: "index_calendars_on_user_id"
-  end
-
   create_table "courses", force: :cascade do |t|
     t.string "name"
     t.text "description"
@@ -152,9 +143,7 @@ ActiveRecord::Schema.define(version: 2020_01_20_184223) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_student", default: false, null: false
-    t.integer "calendar_id"
     t.string "hash_id"
-    t.index ["calendar_id"], name: "index_users_on_calendar_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
