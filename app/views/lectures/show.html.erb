@@ -13,7 +13,7 @@
           <% else %>
             <h2 class="h5">Questions</h2>
           <% end %>
-          <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?}) %>
+          <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?, questions_list: Question.questions_for_lecture(@lecture, current_user)}) %>
       </div>
       <div id="materials" class="col col-md-6 col-xl-4 ">
         <h2 class="h5">Materials</h2>
@@ -31,7 +31,7 @@
         <% end %>
         <div id="comprehension">
           <h2 class="h5">Comprehension Level</h2>
-          <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
+          <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, comprehension_state: @lecture.comprehension_state(current_user)} ) %>
         </div>
       </div>
     </div>
@@ -39,7 +39,7 @@
 
   <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
     <% if @lecture.questions_enabled %>
-      <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?} ) %>
+      <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?, questions_list: Question.questions_for_lecture(@lecture, current_user)} ) %>
     <% else %>
       <h1> Questions are not enabled. :(</h1>
     <% end %>

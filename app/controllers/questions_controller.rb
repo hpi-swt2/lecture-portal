@@ -8,19 +8,6 @@ class QuestionsController < ApplicationController
   before_action :get_question, only: [:upvote, :resolve]
   before_action :validate_question_unresolved, only: [:upvote, :resolve]
 
-  # GET /questions
-  def index
-    if current_user.is_student
-      questions = Question.where(lecture: @lecture).order(created_at: :DESC)
-    else
-      questions = Question.where(lecture: @lecture)
-        .left_joins(:upvoters)
-        .group(:id)
-        .order(Arel.sql("COUNT(users.id) DESC"), created_at: :DESC)
-    end
-    render json: questions
-  end
-
   # POST /questions
   def create
     # only allow students to write questions
