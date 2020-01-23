@@ -1,5 +1,4 @@
 class FeedbacksController < ApplicationController
-
   def create
     @lecture = Lecture.find(params[:lecture_id])
     if params[:commit] == "Submit"

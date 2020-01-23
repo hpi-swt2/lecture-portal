@@ -55,8 +55,7 @@
 
     <% if @current_user.is_student %>
       <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ], :html => { :onsubmit => "handleSubmit()" }) do |form| %>
-        <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert"> Feedback submitted</div>
-        <% if @lecture.feedbacks.where(user_id: current_user.id).count >= 1 %>
+        <% if @lecture.feedbacks.where(user_id: current_user.id).present? %>
           <p>
             <%= form.label :content, "You submitted your feedback. Update it here."%>
             <%= form.text_area(:content, :value => @lecture.feedbacks.where(user_id: @current_user.id).first.content, :class => "form-control") %>
@@ -73,7 +72,8 @@
             <%= form.submit "Submit", {class: "btn btn-primary", id: "feedback-submit"} %>
           </p>
         <% end %>
-      <% end %>
+        <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert"> Feedback submitted</div>
+  <% end %>
   <% else %>
       <% @lecture.feedbacks.each do |feedback| %>
         <p>
