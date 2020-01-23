@@ -58,6 +58,7 @@ RSpec.describe "home/index", type: :view do
     it "does not display key input form for lectures without a key for not joined students" do
       @lecture.update(enrollment_key: nil)
       visit root_path
+      save_and_open_page
       expect(page).to have_text("Join")
       # it's 2 because of the courses button
       expect(page).to have_css("form", count: 2)
