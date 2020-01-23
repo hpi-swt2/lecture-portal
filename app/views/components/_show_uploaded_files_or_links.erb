@@ -19,7 +19,6 @@
         <% end %>
       </div>
       <div>
-        <small class="text-muted pr-2 d-none d-lg-inline">(last updated: <%= file.created_at.strftime("%d-%m-%Y") %>)</small>
         <!-- Might be a page where no @course or @lecture exists-->
         <% if @current_user == file.author || @current_user == @course.creator || (@lecture && @current_user == @lecture.course.creator) %>
           <% if @lecture %>
