@@ -94,6 +94,21 @@ RSpec.describe PollsController, type: :controller do
       get :show, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
+
+    it "redirects to the courses view if the lecture does not exist", :logged_lecturer do
+      poll = Poll.create! valid_attributes
+      not_existing_lecture_id = lecture.id + 5
+      get :show, params: { course_id: lecture.course.id, lecture_id: not_existing_lecture_id, id: poll.to_param }, session: valid_session
+      expect(response).to redirect_to(course_path(id: lecture.course.id))
+    end
+
+    it "redirects to the root path view if the course does not exist", :logged_lecturer do
+      poll = Poll.create! valid_attributes
+      not_existing_lecture_id = lecture.id + 5
+      not_existing_course_id = lecture.course.id + 5
+      get :show, params: { course_id: not_existing_course_id, lecture_id: not_existing_lecture_id, id: poll.to_param }, session: valid_session
+      expect(response).to redirect_to(root_path)
+    end
   end
 
   describe "GET #new" do

@@ -5,11 +5,11 @@
   span.participants {
     float: right;
   }
+  .legendItem .blue, .comprehensionButton.blue::after {
+    background-color: #80b2ff;
+  }
   .legendItem .green, .comprehensionButton.green::after {
     background-color: #98ff9c;
-  }
-  .legendItem .yellow, .comprehensionButton.yellow::after {
-    background-color: #ffed86;
   }
   .legendItem .red, .comprehensionButton.red::after {
     background-color: #ff8988;
@@ -19,6 +19,15 @@
     padding: 20px 0;
     border: 1px solid #333;
     background-color: #fdfdfd;
+
+    &.disabled {
+      .comprehensionButton, p {
+        opacity: .5 !important;
+      }
+      .comprehensionItem {
+        cursor: initial !important;
+      }
+    }
 
     p {
       margin: 0 !important;
@@ -77,11 +86,11 @@
           border: 3px solid;
           opacity: 1;
 
+          &.blue {
+            border-color: #3771ff;
+          }
           &.green {
             border-color: #10ca10;
-          }
-          &.yellow {
-            border-color: #e7cf00;
           }
           &.red {
             border-color: #f15655;
