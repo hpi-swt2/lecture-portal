@@ -11,6 +11,7 @@ const ComprehensionRootStore = types.model("ComprehensionRootStore", {
     course_id: types.optional(types.integer, -1),
     lecture_id: types.optional(types.integer, -1),
     is_student: types.optional(types.boolean, true),
+    interactions_enabled: types.optional(types.boolean, true),
 
     last_updated: types.optional(types.maybeNull(types.Date), null),
     // for student
@@ -46,6 +47,9 @@ const ComprehensionRootStore = types.model("ComprehensionRootStore", {
             }
         } else
             self.last_updated = null;
+    },
+    setInteractionsEnabled(interactions_enabled: boolean) {
+        self.interactions_enabled = interactions_enabled
     }
 }));
 
