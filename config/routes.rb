@@ -1,5 +1,4 @@
 Rails.application.routes.draw do
-  resources :uploaded_files, only: [:show, :index, :new, :create, :destroy]
   get "/courses/:course_id/lectures/current", to: "lectures#current", as: "current_lectures"
   get "/ical/:hash_id", to: "ical#show", as: "ical"
   post "/courses/:course_id/lectures/start_lecture", to: "lectures#start_lecture", as: "start_lecture"
@@ -10,6 +9,7 @@ Rails.application.routes.draw do
   post "/courses/:course_id/lectures/end_lecture", to: "lectures#end_lecture", as: "end_lecture"
 
   resources :courses do
+    resources :uploaded_files, only: [:show, :index, :new, :create, :destroy]
     resources :lectures do
       resources :polls do
         member do
@@ -21,6 +21,7 @@ Rails.application.routes.draw do
           get :answer
         end
       end
+      resources :uploaded_files # , only: [:show, :index, :new, :create, :destroy]
       resources :feedbacks
 
       get "comprehension", to: "lectures#get_comprehension", on: :member
