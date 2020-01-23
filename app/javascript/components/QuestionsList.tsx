@@ -2,8 +2,8 @@ import React from "react";
 import { observer } from "mobx-react";
 import Question from "./Question";
 import { QuestionsRootStoreModel } from "../stores/QuestionsRootStore";
-import {useInjectQuestions} from "../hooks/useInject";
-import {QuestionModel} from "../stores/Question";
+import { useInjectQuestions } from "../hooks/useInject";
+import { QuestionModel } from "../stores/Question";
 
 const mapStore = ({ is_student, questionsList, interactions_enabled }: QuestionsRootStoreModel) => ({
   is_student,
@@ -19,26 +19,29 @@ const QuestionsList: React.FunctionComponent<{}> = observer(() => {
   };
 
   const onFilterResolvedClick = () => {
-      questionsList.toggleFilterResolved();
+    questionsList.toggleFilterResolved();
   };
   const onFilterUnresolvedClick = () => {
-      questionsList.toggleFilterUnresolved();
+    questionsList.toggleFilterUnresolved();
   };
 
-  const checkQuestionFiltered = (question: QuestionModel) : boolean => {
-      return (question.resolved && questionsList.filter_resolved) ||
-        (!question.resolved && questionsList.filter_unresolved);
+  const checkQuestionFiltered = (question: QuestionModel): boolean => {
+    if (!(questionsList.filter_resolved || questionsList.filter_unresolved))
+      // if both filters are inactive, show all questions
+      return true;
+    return (question.resolved && questionsList.filter_resolved) ||
+      (!question.resolved && questionsList.filter_unresolved);
   };
 
   return (
-    <div className={"questionsList" + (interactions_enabled && is_student ? " interactions_enabled" : "" )}>
+    <div className={"questionsList" + (interactions_enabled && is_student ? " interactions_enabled" : "")}>
       <div className="questionsFilter">
         <div className="filtering">
-            <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg") + (questionsList.filter_resolved ? " active" : "")} onClick={onFilterResolvedClick}>
-                resolved
+          <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg") + (questionsList.filter_unresolved ? " active" : "")} onClick={onFilterUnresolvedClick}>
+            unresolved
             </button>
-            <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg") + (questionsList.filter_unresolved ? " active" : "")} onClick={onFilterUnresolvedClick}>
-                unresolved
+          <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg") + (questionsList.filter_resolved ? " active" : "")} onClick={onFilterResolvedClick}>
+            resolved
             </button>
         </div>
         <div className="sorting" onClick={onSortingClick}>
