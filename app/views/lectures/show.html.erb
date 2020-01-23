@@ -6,8 +6,6 @@
     }
 </script>
 
-<%= render 'tabbar', current_user: @current_user %>
-
 <h5><%= @lecture.name %></h5>
 <% if @lecture.start_time &&  @lecture.end_time && @lecture.date%>
   <p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
