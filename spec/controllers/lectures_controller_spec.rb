@@ -263,6 +263,13 @@ RSpec.describe LecturesController, type: :controller do
       post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
       expect(response).to redirect_to(course_path(@lecture.course.id))
     end
+
+    it "broadcasts to the StudentsStatisticsChannel" do
+      login_student
+      expect {
+        post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: @lecture.enrollment_key } }, session: valid_session
+      }.to have_broadcasted_to(@lecture).from_channel(StudentsStatisticsChannel)
+    end
   end
 
   describe "POST #leave_lecture" do
@@ -275,6 +282,12 @@ RSpec.describe LecturesController, type: :controller do
     it "redirects to the lectures overview" do
       post :leave_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
       expect(response).to redirect_to(course_path(id: @lecture.course.id))
+    end
+
+    it "broadcasts to the StudentsStatisticsChannel" do
+      expect {
+        post :leave_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      }.to have_broadcasted_to(@lecture).from_channel(StudentsStatisticsChannel)
     end
   end
 
