@@ -20,6 +20,7 @@ const StatisticsRootStore = types.model("StatisticsRootStore", {
     setCourseId(course_id: number) {
         self.course_id = course_id
     },
+
     setStudentCount(student_count: number) {
         self.student_count = student_count;
     },
@@ -28,6 +29,10 @@ const StatisticsRootStore = types.model("StatisticsRootStore", {
     },
     setResolvedCount(resolved_count: number) {
         self.resolved_count = resolved_count;
+    },
+
+    decreaseStudentCount() {
+        self.student_count--;
     },
     increaseStudentCount() {
         self.student_count++;

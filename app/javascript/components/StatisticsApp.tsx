@@ -1,5 +1,6 @@
 import React from "react";
 import { createStatisticsRootStore, initStatisticsApp, StoreProvider } from "../utils/StatisticsUtils";
+import StatisticsView from "./StatisticsView";
 
 const rootStore = createStatisticsRootStore();
 
@@ -22,8 +23,7 @@ const StatisticsApp: React.FunctionComponent<IStatisticsAppProps> = ({ lecture_i
     return (
         <StoreProvider value={rootStore}>
             <div className="StatisticsApp">
-                <p>Students: {rootStore.student_count}</p>
-                <p>Resolved Questions: {rootStore.resolved_count}/{rootStore.question_count}</p>
+                <StatisticsView/>
             </div>
         </StoreProvider>
     )

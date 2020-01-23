@@ -4,8 +4,8 @@
 <% end %>
 
 <%= render 'tabbar', current_user: @current_user %>
-<div class="tab-content" id="lectureTabsContent" style="width: 70vw">
-  <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="width: 70vw">
+<div class="tab-content" id="lectureTabsContent">
+  <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
     <div class="row">
       <div id="updates" class="col-lg-4 col-md-6">
           <% if @current_user.is_student %>
@@ -19,10 +19,10 @@
         <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
       </div>
       <div class="col-lg-4 col-md-6">
-        <% if !@current_user.is_student %>
+        <% unless @current_user.is_student %>
           <div id="statistics">
             <h5>Statistics</h5>
-            <%= react_component("StatisticsApp",  {lecture_id: @lecture.id, course_id: @lecture.course.id, student_count: @lecture.participating_students.count, question_count: Question.where(lecture: @lecture).count, resolved_count: Question.where(lecture: @lecture, resolved: true).count} ) %>
+            <%=  react_component("StatisticsApp",  {lecture_id: @lecture.id, course_id: @lecture.course.id, student_count: @lecture.participating_students.count, question_count: Question.where(lecture: @lecture).count, resolved_count: Question.where(lecture: @lecture, resolved: true).count} )  %>
           </div>
         <% end %>
         <div id="comprehension">
