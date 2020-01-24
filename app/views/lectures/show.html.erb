@@ -40,7 +40,7 @@
         <% end %>
         <div id="comprehension">
           <h2 class="h5">Comprehension Level</h2>
-          <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, comprehension_state: @lecture.comprehension_state(current_user)} ) %>
+          <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?, comprehension_state: @lecture.comprehension_state(current_user)}) %>
         </div>
       </div>
     </div>
