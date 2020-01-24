@@ -53,7 +53,7 @@ class AnswerOption extends React.Component<
           <h1>{this.props.title}</h1>
           {this.state.showNoOptionSelectedError ? (
             <div className="alert alert-danger">
-              <h6 className="alert-heading">Please select an answer</h6>
+              <p className="h6 alert-heading">Please select an answer</p>
             </div>
           ) : null}
           {allOptions}

@@ -1,7 +1,7 @@
 <%= form_with(model: [@course, lecture], local: true) do |form| %>
   <% if lecture.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</h2>
+      <p class="h2" role="alert"><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</p>
 
       <ul>
         <% lecture.errors.full_messages.each do |message| %>
@@ -52,6 +52,11 @@
   <div class="form-check">
     <%= form.check_box :polls_enabled, :disabled => lecture.ended?, :class => "form-check-input" %>
     <%= form.label :polls_enabled, "Enable Polls", :class => "form-check-label" %>
+  </div>
+
+  <div class="form-check">
+    <%= form.check_box :feedback_enabled, :disabled => lecture.ended?, :class => "form-check-input" %>
+    <%= form.label :feedback_enabled, "Enable Feedback", :class => "form-check-label" %>
   </div>
 
   <div class="actions d-flex flex-row justify-content-between mt-2">
