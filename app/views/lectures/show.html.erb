@@ -98,7 +98,7 @@
     <% end %>
   </div>
 
-  <% if !@current_user.is_student %>
+  <% unless @current_user.is_student %>
     <% if @lecture.enrollment_key_present? %>
       <div class="container tab-pane fade" id="enrollmentKey" role="tabpanel" aria-labelledby="enrollmentKey-tab-tab">
         <p class="h1 padded-text">Enrollment Key: <%= @lecture.enrollment_key %></p>

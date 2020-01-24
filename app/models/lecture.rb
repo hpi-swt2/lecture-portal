@@ -36,7 +36,7 @@ class Lecture < ApplicationRecord
 
 
   def join_lecture(student)
-    if !self.participating_students.include?(student)
+    unless self.participating_students.include?(student)
       self.participating_students << student
     end
   end
