@@ -12,10 +12,9 @@
       <th scope="col"></th>
     </tr>
   </thead>
-
   <tbody>
     <% course.lectures.each do |lecture| %>
-      <% if lecture.status != "running" %>
+      <% if lecture.status != "running" && lecture.status != "active" %>
         <tr>
           <td><%= lecture.name %></td>
           <td>
@@ -39,13 +38,12 @@
           <% end %>
           <td class="text-right">
             <% if @current_user.is_student%>
-              <% if lecture.status == "ended" %>
+              <% if lecture.status == "archived"  %>
                 <%= link_to 'Review', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
               <% end %>
             <% else %>
               <% if lecture.status == "created" %>
                 <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
-                <%= link_to 'Start', start_lecture_path(:course_id => course.id, :id => lecture.id), method: :post, class:"btn btn-primary"%>
               <% else %>
                 <%= link_to 'Review', course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
               <% end %>

@@ -11,9 +11,9 @@ RSpec.describe "lectures/current", type: :view do
         status: "running",
         lecturer: @lecturer,
         course: @course,
-        date: "2020-02-02",
-        start_time: "2020-01-01 10:10:00",
-        end_time: "2020-01-01 10:20:00"
+        date: Date.today,
+        start_time: DateTime.now,
+        end_time: DateTime.now + 20.minutes
       ),
       Lecture.create!(
         name: "not running lecture",
@@ -21,7 +21,7 @@ RSpec.describe "lectures/current", type: :view do
         status: "created",
         lecturer: @lecturer,
         course: @course,
-        date: "2020-02-02",
+        date: Date.tomorrow,
         start_time: "2020-01-01 10:10:00",
         end_time: "2020-01-01 10:20:00"
       )

@@ -11,8 +11,6 @@ export const usePollOptionsStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
 const getBaseRequestUrl = (courseId: number, lectureId: number, pollId: number): string => {
-    // + courseID, react Komponente PollOptionApp im Rootstore anpassen
-    // javascript utils
     return `/courses/` + courseId + `/lectures/` + lectureId + `/polls/` + pollId + `/`;
 };
 
@@ -36,7 +34,7 @@ const loadParticipantsCount = (rootStore: PollOptionsRootStoreModel) => {
 
 
 const setupActionCable = (rootStore: PollOptionsRootStoreModel) => {
-    setupPollOptionsActionCable(rootStore.lecture_id,
+    setupPollOptionsActionCable(rootStore.poll_id,
         (data) => {
             rootStore.poll_options.setPollOptions(data);
         }
@@ -44,7 +42,7 @@ const setupActionCable = (rootStore: PollOptionsRootStoreModel) => {
 };
 
 const setupParticipantsActionCable = (rootStore: PollOptionsRootStoreModel) => {
-    setupPollParticipantsCountActionCable(rootStore.lecture_id,
+    setupPollParticipantsCountActionCable(rootStore.poll_id,
         (data) => {
             rootStore.poll_participants_count.setPollParticipants(data);
         }

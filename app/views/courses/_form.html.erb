@@ -1,7 +1,7 @@
 <%= form_with(model: course, local: true) do |form| %>
   <% if course.errors.any? %>
     <div id="error_explanation">
-      <h2><%= pluralize(course.errors.count, "error") %> prohibited this course from being saved:</h2>
+      <p class="h2" role="alert"><%= pluralize(course.errors.count, "error") %> prohibited this course from being saved:</p>
 
       <ul>
       <% course.errors.full_messages.each do |message| %>
@@ -25,7 +25,7 @@
   <div class="actions">
     <%= form.submit :class => "btn btn-primary" %>
     <% if defined?(with_delete_button) && with_delete_button %>
-      <%= link_to 'Delete Course', course_path(id:@course.id), method: :delete, data: { confirm: "Do you really want to delete this course?\n\nDeleted courses cannnot be restored!" }, :class => "btn btn-primary" %>
+      <%= link_to 'Delete Course', course_path(id:@course.id), method: :delete, data: { confirm: "Do you really want to delete this course?\n\nDeleted courses cannot be restored!" }, :class => "btn btn-primary" %>
     <% end %>
   </div>
 <% end %>

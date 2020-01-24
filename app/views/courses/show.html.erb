@@ -4,8 +4,8 @@
   </div>
 <% end %>
 
-<h2> <%= @course.name %> </h2>
-<h4> <%= @course.description %> </h4>
+<h1><%= @course.name %></h1>
+<p class="h4"><%= @course.description %></p>
 <br>
 
 <% if !@course.lectures.empty? %>
@@ -47,10 +47,14 @@
 <% end %>
 
 
-<% if @current_user.is_student %>
-  <%= link_to "Leave", leave_course_path(id: @course.id), method: :post, class:"btn btn-primary" %> |
-<% end %>
-<% if !@current_user.is_student %>
-  <%= link_to 'Edit', edit_course_path(@course) %> |
-<% end %>
-<%= link_to 'Back', root_path %>
+<div class="d-flex justify-content-center">
+  <% if @current_user.is_student %>
+    <%= link_to "Leave", leave_course_path(id: @course.id), method: :post, class:"btn btn-primary" %> |
+  <% end %>
+
+  <% if !@current_user.is_student %>
+    <%= link_to 'Edit', edit_course_path(@course) %> |
+  <% end %>
+
+  <%= link_to (fa_icon 'arrow-left', text: 'Back'), root_path %>
+</div>
