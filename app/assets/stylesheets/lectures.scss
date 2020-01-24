@@ -33,3 +33,8 @@ form.button_to {
   padding: 20px;
   padding-right: 0;
 }
+select {
+  @extend .form-control;
+  width: 5.5vw;
+  display: inline;
+}

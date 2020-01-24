@@ -24,18 +24,18 @@
 
   <div class="row">
     <div class="date form-group col-12 col-sm-4">
-      <%= form.label :date %>
-      <%= form.date_field :date, :readonly => lecture.ended?, class: "form-control" %>
+      <%= form.label :date %> <br/>
+      <%= form.date_select :date, :readonly => lecture.ended?, class: "form-control" %>
     </div>
 
-    <div class="start_time form-group col-6 col-sm-4">
-      <%= form.label :start_time %>
-      <%= form.time_field :start_time, :readonly => lecture.ended?, class: "form-control" %>
+    <div class="start_time form-group col-6 col-sm-4 selcls">
+      <%= form.label :start_time %> <br/>
+      <%= form.time_select :start_time, {class: 'form-control'}, :readonly => lecture.ended? %>
     </div>
 
-    <div class="end_time form-group col-6 col-sm-4">
-      <%= form.label :end_time %>
-      <%= form.time_field :end_time, :readonly => lecture.ended?, class: "form-control" %>
+    <div class="end_time form-group col-6 col-sm-4 selcls">
+      <%= form.label :end_time %> <br/>
+      <%= form.time_select :end_time, :readonly => lecture.ended?, class: "form-control" %>
     </div>
   </div>
 
