@@ -89,7 +89,7 @@ class Lecture < ApplicationRecord
   end
 
   def allow_comprehension?
-    return self.status == :running 
+    return self.status == "running"
   end
 
 

@@ -2,6 +2,7 @@
   <thead>
     <tr>
       <th scope="col">Name</th>
+      <th scope="col">Starts</th>
       <th scope="col">Ends</th>
       <% if !@current_user.is_student%>
         <th scope="col">Enrollment key</th>
@@ -16,6 +17,11 @@
       <% if lecture.status == "running" || lecture.status == "active" %>
         <tr>
           <td><%= lecture.name %></td>
+          <td>
+            <%if lecture.start_time %>
+              <%= lecture.start_time.strftime("%H:%M")  %>
+            <% end %>
+          </td>
           <td>
             <%if lecture.end_time %>
               <%= lecture.end_time.strftime("%H:%M")  %>

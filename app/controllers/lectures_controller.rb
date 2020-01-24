@@ -135,7 +135,7 @@ class LecturesController < ApplicationController
     end
 
     def validate_lecture_running
-      head :forbidden unless @lecture.allow_comprehension
+      head :forbidden unless @lecture.allow_comprehension?
     end
 
     def validate_lecture_owner
