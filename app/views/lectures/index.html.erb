@@ -14,7 +14,18 @@
   <%= render 'table', lectures: @created_lectures %>
 <% end %>
 
-<% if !@ended_lectures.empty? %>
-  <h2>Ended Lectures</h2>
-  <%= render 'table', lectures: @ended_lectures %>
+<% if !@active_lectures.empty? %>
+  <h2>Active Lectures</h2>
+  <%= render 'table', lectures: @active_lectures %>
 <% end %>
+
+<% if !@archived_lectures.empty? %>
+  <h2>Archived Lectures</h2>
+  <%= render 'table', lectures: @archived_lectures %>
+<% end %>
+
+<%
+=begin%>
+ Rethink this, where is it needed? 
+<%
+=end%>

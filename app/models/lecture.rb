@@ -6,22 +6,31 @@ class Lecture < ApplicationRecord
   has_many :lecture_comprehension_stamps, class_name: :LectureComprehensionStamp
   belongs_to :course
   has_many :uploaded_files, as: :allowsUpload
-  enum status: { created: "created", running: "running", ended: "ended" }
+  enum status: { created: "created", running: "running", active: "active", archived: "archived" }
   validates :date, presence: true
   validates :start_time, presence: true
   validates :end_time, presence: true
 
   validates :name, presence: true, length: { in: 2..40 }
   validates :enrollment_key, length: { in: 3..20, if: :enrollment_key_present? }
-  scope :active, -> { where status: "running" }
+  # scope :active, -> { where status: "running" }  #TODO rethink
+
+  def set_created
+    self.status = :created
+  end
 
   def set_active
+    self.status = :active
+  end
+
+  def set_running
     self.status = :running
   end
 
-  def set_inactive
-    self.status = :ended
+  def set_archived
+    self.status = :archived
   end
+
 
   def join_lecture(student)
     if !self.participating_students.include?(student)
@@ -57,7 +66,7 @@ class Lecture < ApplicationRecord
   def readonly?
     if self.id
       db_lecture = Lecture.find(self.id)
-      return db_lecture.status == "ended"
+      return db_lecture.status == "archived" #TODO: Disallow comprehension not only in readonly but also when status = active
     end
     false
   end

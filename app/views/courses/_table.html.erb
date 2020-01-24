@@ -20,18 +20,26 @@
         <% end %>
         <td class="text-right">
           <% if @current_user.is_student%>
-            <% if lecture.status == "running" %>
+            <% if lecture.status == "running" || lecture.status == "active" %>
               <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
               <%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
-            <% elsif lecture.status == "ended" %>
+            <% elsif lecture.status == "archived" %>
               <%= link_to 'Review', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
             <% end %>
           <% else %>
             <% if lecture.status == "created" %>
               <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
-              <%= link_to 'Start', start_lecture_path(:course_id => course.id, :id => lecture.id), method: :post, class:"btn btn-primary"%>
-            <% elsif lecture.status == "running" %>
-              <%= link_to 'End', end_lecture_path(:course_id => course.id, :id => lecture.id), method: :post, class:"btn btn-outline-secondary" %>
+              <%
+=begin%>
+ <%= link_to 'Start', start_lecture_path(:course_id => course.id, :id => lecture.id), method: :post, class:"btn btn-primary"%> 
+<%
+=end%>
+            <% elsif lecture.status == "running" || lecture.status == "active" %>
+              <%
+=begin%>
+ <%= link_to 'End', end_lecture_path(:course_id => course.id, :id => lecture.id), method: :post, class:"btn btn-outline-secondary" %> 
+<%
+=end%>
               <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
               <%= link_to 'View', course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-primary"} %>
             <% else %>

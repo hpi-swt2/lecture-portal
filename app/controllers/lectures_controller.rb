@@ -14,8 +14,9 @@ class LecturesController < ApplicationController
     @lectures = Lecture.where(lecturer: current_user)
 
     @running_lectures = @lectures.where(status: "running")
+    @active_lectures = @lectures.where(status: "active")
     @created_lectures = @lectures.where(status: "created")
-    @ended_lectures = @lectures.where(status: "ended")
+    @archived_lectures = @lectures.where(status: "archived")
   end
 
   # GET courses/:course_id/lectures/1
@@ -73,20 +74,20 @@ class LecturesController < ApplicationController
   # GET courses/:course_id/lectures/current
   def current
     if current_user.is_student?
-      @lectures = Lecture.where(course_id: @course.id).active
+      @lectures = Lecture.where(course_id: @course.id).active #TODO ????
     else
       redirect_to root_path, alert: "Only Students can access this site."
     end
   end
 
-  def start_lecture
-    if @lecture.status != "ended"
-      @lecture.set_active
+  def start_lecture  # TODO move?
+    # if @lecture.status != "ended"
+      @lecture.set_running
       @lecture.save
       redirect_to course_lecture_path(@course, @lecture)
-    else
-      redirect_to course_lecture_path(@course, @lecture), alert: "Can't restart an ended lecture."
-    end
+    # else
+    #   redirect_to course_lecture_path(@course, @lecture), alert: "Can't restart an ended lecture."
+    # end
   end
 
   def join_lecture
@@ -111,8 +112,8 @@ class LecturesController < ApplicationController
     StudentsStatisticsChannel.broadcast_to(@lecture, -1)
   end
 
-  def end_lecture
-    @lecture.set_inactive
+  def end_lecture #TODO move?
+    @lecture.set_active
     @lecture.save
     redirect_to course_lecture_path(@course, @lecture), notice: "You successfully ended the lecture."
   end
