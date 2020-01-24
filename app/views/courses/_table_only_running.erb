@@ -44,7 +44,7 @@
                 <%= button_to 'Join', join_lecture_path(:course_id => @course.id, :id => lecture.id),method: :post, class:"btn btn-primary" %>
               <% end %>
             <% else %>
-              <% if lecture.status == "running" %>
+              <% if lecture.status == "running" || lecture.status == "active" %>
                 <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
                 <%= link_to 'View', course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-primary"} %>
               <% end %>
