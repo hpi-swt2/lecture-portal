@@ -50,7 +50,7 @@
     <% if @lecture.questions_enabled %>
       <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?, questions_list: Question.questions_for_lecture(@lecture, current_user)} ) %>
     <% else %>
-      <h1> Questions are not enabled. :(</h1>
+      <p class="h1"> Questions are not enabled. :(</p>
     <% end %>
   </div>
 
@@ -58,7 +58,7 @@
     <% if @lecture.polls_enabled%>
       <iframe class="polls-iframe" src="<%= course_lecture_polls_path(@course, @lecture) %>"></iframe>
     <% else %>
-      <h1> Polls are not enabled. :( </h1>
+      <p class="h1"> Polls are not enabled. :( </p>
     <% end %>
   </div>
 
@@ -101,12 +101,12 @@
   <% if !@current_user.is_student %>
     <% if @lecture.enrollment_key_present? %>
       <div class="container tab-pane fade" id="enrollmentKey" role="tabpanel" aria-labelledby="enrollmentKey-tab-tab">
-        <h1 class="padded-text">Enrollment Key: <%= @lecture.enrollment_key %></h1>
-        <h3 class="padded-text"> Students </h3>
+        <p class="h1 padded-text">Enrollment Key: <%= @lecture.enrollment_key %></p>
+        <p class="h3 padded-text"> Students </p>
           <ol>
-          <% for student in @lecture.participating_students%>
-            <li><%= student.email %></li>
-          <% end %>
+            <% for student in @lecture.participating_students%>
+              <li><%= student.email %></li>
+            <% end %>
           </ol>
       </div>
     <% end %>
