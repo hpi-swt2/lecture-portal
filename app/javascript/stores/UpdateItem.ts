@@ -55,4 +55,16 @@ export class UpdateItem {
             default: return false;
         }
     }
+    isInteractable(isStudent: boolean, userId: number): boolean {
+        switch (this.type) {
+            case (UpdateTypes.Question): {
+                if(isStudent)
+                    return !(this.item.value as QuestionModel).already_upvoted
+                        && (this.item.value as QuestionModel).author_id != userId;
+                else
+                    return true;
+            }
+            default: return false;
+        }
+    }
 }
