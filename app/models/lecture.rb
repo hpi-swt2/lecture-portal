@@ -163,9 +163,5 @@ class Lecture < ApplicationRecord
       else
         self.set_active
       end
-
-      if old_status != self.status
-        # TODO Broadcast change
-      end
     end
 end
