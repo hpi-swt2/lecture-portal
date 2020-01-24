@@ -50,12 +50,6 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).not_to have_css("#enrollmentKey-tab")
     end
 
-
-    it "renders end button" do
-      render
-      expect(rendered).to have_link("End Lecture")
-    end
-
     it "renders a leave lecture button" do
       render
       expect(rendered).not_to have_css("[value='Leave Lecture']")

@@ -74,20 +74,10 @@ class LecturesController < ApplicationController
   # GET courses/:course_id/lectures/current
   def current
     if current_user.is_student?
-      @lectures = Lecture.where(course_id: @course.id).active #TODO ????
+      @lectures = Lecture.where(course_id: @course.id).active
     else
       redirect_to root_path, alert: "Only Students can access this site."
     end
-  end
-
-  def start_lecture  # TODO move?
-    # if @lecture.status != "ended"
-      @lecture.set_running
-      @lecture.save
-      redirect_to course_lecture_path(@course, @lecture)
-    # else
-    #   redirect_to course_lecture_path(@course, @lecture), alert: "Can't restart an ended lecture."
-    # end
   end
 
   def join_lecture
@@ -110,12 +100,6 @@ class LecturesController < ApplicationController
     @lecture.leave_lecture(current_user)
     redirect_to course_path(@course), notice: "You successfully left the lecture."
     StudentsStatisticsChannel.broadcast_to(@lecture, -1)
-  end
-
-  def end_lecture #TODO move?
-    @lecture.set_active
-    @lecture.save
-    redirect_to course_lecture_path(@course, @lecture), notice: "You successfully ended the lecture."
   end
 
   # PUT /lectures/:id/comprehension

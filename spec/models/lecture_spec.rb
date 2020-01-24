@@ -93,8 +93,8 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture.participating_students.length).to be 0
   end
 
-  it "cannot be changed after it ended" do
-    @lecture.set_inactive
+  it "cannot be changed after it was archived" do
+    @lecture.set_archived
     expect(@lecture).to be_valid
     @lecture.save
     @lecture.description = @lecture.description + " new"
