@@ -60,10 +60,10 @@
   </div>
 
   <div class="actions d-flex flex-row justify-content-between mt-2">
-    <div class="float-left">
+    <div>
       <%= yield(:action_left) %>
     </div>
-    <div class="float-left">
+    <div>
       <%= yield(:action_right) %>
       <% if !lecture.ended? %>
         <%= form.submit :class => "btn btn-primary" %>
