@@ -20,9 +20,11 @@ class User < ApplicationRecord
 
   private
     def assign_hash_id
-      begin
-        self.hash_id = SecureRandom.urlsafe_base64(20)
-      end until unique_hash_id?
+      if self.hash_id === nil || self.hash_id === ""
+        begin
+          self.hash_id = SecureRandom.urlsafe_base64(20)
+        end until unique_hash_id?
+      end
     end
 
     def unique_hash_id?
