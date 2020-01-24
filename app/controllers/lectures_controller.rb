@@ -140,7 +140,7 @@ class LecturesController < ApplicationController
         redirect_to root_path, alert: "The course you requested does not exist."
       end
     end
-
+    
     # This method looks for the lecture in the database and redirects with a failure if the lecture does not exist.
     def get_lecture
       if params[:id].nil?
@@ -148,7 +148,7 @@ class LecturesController < ApplicationController
       else
         @lecture = Lecture.find_by(id: params[:id])
       end
-
+      
       if @lecture.nil?
         redirect_to course_path(@course), alert: "The lecture you requested does not exist."
       end
@@ -197,7 +197,10 @@ class LecturesController < ApplicationController
     end
 
     def generate_enrollment_qr_code
-      enrollment_url = request.base_url + "/courses/" + @course.id.to_s + "/lectures/" + @lecture.id.to_s + "/enrollment?key=" + @lecture.enrollment_key
+      enrollment_url = request.base_url + "/courses/" + @course.id.to_s + "/lectures/" + @lecture.id.to_s + "/enrollment"
+      if @lecture.enrollment_key
+        enrollment_url += "?key=" + @lecture.enrollment_key
+      end
       @qr_code = RQRCode::QRCode.new(enrollment_url)
     end
 
