@@ -49,7 +49,7 @@
 
 <div class="d-flex justify-content-center">
   <% if @current_user.is_student %>
-    <%= link_to "Leave", leave_course_path(id: @course.id), method: :post, class:"btn btn-primary" %> |
+    <%= link_to "Unenroll", leave_course_path(id: @course.id), method: :post, class:"btn btn-primary" %> |
   <% end %>
 
   <% if !@current_user.is_student %>

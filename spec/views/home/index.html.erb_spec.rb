@@ -64,6 +64,12 @@ RSpec.describe "home/index", type: :view do
       # it's 2 because of the courses button
       expect(page).to have_css("input", count: 2)
     end
+
+    it "shows an 'Unenroll' button" do
+      # because a joined course is displayed
+      visit root_path
+      expect(page).to have_link("Unenroll")
+    end
   end
 
   def login_student(user = FactoryBot.create(:user, :student))
