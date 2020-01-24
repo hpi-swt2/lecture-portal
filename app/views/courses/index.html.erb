@@ -18,7 +18,7 @@
         <td><%= course.status %></td>
         <td><%= link_to 'Show', course %></td>
         <td><%= link_to 'Edit', edit_course_path(course) %></td>
-        <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: "Do you really want to delete this course?\n\nDeleted courses cannnot be restored!" } %></td>
+        <td><%= link_to 'Destroy', course, method: :delete, data: { confirm: "Do you really want to delete this course?\n\nDeleted courses cannot be restored!" } %></td>
         <td><%= button_to "Join", {action: "join_course", params: {id: course.id}}, {class:"btn btn-primary"} %></td>
 
       </tr>
