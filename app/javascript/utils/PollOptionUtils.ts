@@ -11,8 +11,6 @@ export const usePollOptionsStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
 const getBaseRequestUrl = (courseId: number, lectureId: number, pollId: number): string => {
-    // + courseID, react Komponente PollOptionApp im Rootstore anpassen
-    // javascript utils
     return `/courses/` + courseId + `/lectures/` + lectureId + `/polls/` + pollId + `/`;
 };
 
