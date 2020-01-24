@@ -10,12 +10,14 @@ var CanvasJS = CanvasJSReact.CanvasJS;
 const rootStore = createPollOptionsRootStore();
 
 interface IPollResultAppData {
+    course_id: number,
     lecture_id: number,
     poll_id: number,
     poll_option_ids: Array<number>
 }
 
-const PollResultApp: React.FunctionComponent<IPollResultAppData> = ({ lecture_id, poll_id, poll_option_ids }) => {
+const PollResultApp: React.FunctionComponent<IPollResultAppData> = ({ course_id, lecture_id, poll_id, poll_option_ids }) => {
+    rootStore.setCourseId(course_id);
     rootStore.setLectureId(lecture_id);
     rootStore.setPollId(poll_id);
     rootStore.setPollOptionIds(poll_option_ids);

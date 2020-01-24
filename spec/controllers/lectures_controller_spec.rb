@@ -63,6 +63,22 @@ RSpec.describe LecturesController, type: :controller do
       expect(response).to be_successful
     end
 
+    it "redirects to course overview when the lecture does not exist", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      login_student()
+      not_existing_lecture_id = lecture.id + 5
+      get :show, params: { course_id: (lecture.course.id), id: not_existing_lecture_id }, session: valid_session
+      expect(response).to redirect_to(course_path(lecture.course))
+    end
+
+    it "redirects to the root path view if the course does not exist", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      not_existing_lecture_id = lecture.id + 5
+      not_existing_course_id = lecture.course.id + 5
+      get :show, params: { course_id: not_existing_course_id, id: not_existing_lecture_id }, session: valid_session
+      expect(response).to redirect_to(root_path)
+    end
+
     it "redirects to course overview for not joined students", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       login_student()
@@ -247,6 +263,13 @@ RSpec.describe LecturesController, type: :controller do
       post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
       expect(response).to redirect_to(course_path(@lecture.course.id))
     end
+
+    it "broadcasts to the StudentsStatisticsChannel" do
+      login_student
+      expect {
+        post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: @lecture.enrollment_key } }, session: valid_session
+      }.to have_broadcasted_to(@lecture).from_channel(StudentsStatisticsChannel)
+    end
   end
 
   describe "POST #leave_lecture" do
@@ -258,7 +281,13 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to the lectures overview" do
       post :leave_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
-      expect(response).to redirect_to(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
+      expect(response).to redirect_to(course_path(id: @lecture.course.id))
+    end
+
+    it "broadcasts to the StudentsStatisticsChannel" do
+      expect {
+        post :leave_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      }.to have_broadcasted_to(@lecture).from_channel(StudentsStatisticsChannel)
     end
   end
 
@@ -376,65 +405,6 @@ RSpec.describe LecturesController, type: :controller do
     end
   end
 
-  describe "GET #get_comprehension" do
-    before(:each) do
-      # login user
-      @lecture = FactoryBot.create(:lecture, status: "running")
-    end
-    context "as student" do
-      before(:each) do
-        @user = FactoryBot.create(:user, :student)
-        login_student(@user)
-        @lecture.join_lecture(@user)
-      end
-      it "returns correct comprehension level" do
-        stamp = LectureComprehensionStamp.create(user: @user, status: 0, lecture: @lecture)
-        get :get_comprehension, params: { course_id: (@lecture.course.id), id: @lecture.id }, session: valid_session
-        expect(response.body).to eq({ status: stamp.status, last_update: stamp.timestamp }.to_json)
-      end
-      it "returns empty comprehension level" do
-        get :get_comprehension, params: { course_id: (@lecture.course.id), id: @lecture.id }, session: valid_session
-        expect(response.body).to eq({ status: -1, last_update: nil }.to_json)
-      end
-
-      it "returns empty comprehension level if too old" do
-        stamp = LectureComprehensionStamp.create(user: @user, status: 0, lecture: @lecture, updated_at: Time.now - LectureComprehensionStamp.seconds_till_comp_timeout)
-        get :get_comprehension, params: { course_id: (@lecture.course.id), id: @lecture.id }, session: valid_session
-        expect(response.body).to eq({ status: -1, last_update: stamp.timestamp }.to_json)
-      end
-    end
-
-    context "as lecturer", :logged_lecturer do
-      before(:each) do
-        @lecture = Lecture.create! valid_attributes_with_lecturer_with_course
-        @user = FactoryBot.create(:user, :student)
-        login_lecturer(@lecture.lecturer)
-      end
-      it "returns correct comprehension level" do
-        stamp = LectureComprehensionStamp.create(user: @user, status: 0, lecture: @lecture)
-        get :get_comprehension, params: { course_id: (@lecture.course.id), id: @lecture.id }, session: valid_session
-        expect(response.body).to eq({ status: [1, 0, 0], last_update: stamp.timestamp }.to_json)
-      end
-      it "returns correct comprehension level distribution" do
-        LectureComprehensionStamp.create(user: @user, status: 0, lecture: @lecture)
-        LectureComprehensionStamp.create(user: FactoryBot.create(:user, :student), status: 1, lecture: @lecture)
-        LectureComprehensionStamp.create(user: FactoryBot.create(:user, :student), status: 2, lecture: @lecture)
-        stamp_last = LectureComprehensionStamp.create(user: FactoryBot.create(:user, :student), status: 0, lecture: @lecture)
-        get :get_comprehension, params: { course_id: (@lecture.course.id), id: @lecture.id }, session: valid_session
-        expect(response.body).to eq({ status: [2, 1, 1], last_update: stamp_last.timestamp }.to_json)
-      end
-      it "returns empty comprehension level" do
-        get :get_comprehension, params: { course_id: (@lecture.course.id), id: @lecture.id }, session: valid_session
-        expect(response.body).to eq({ status: [0, 0, 0], last_update: nil }.to_json)
-      end
-
-      it "returns empty comprehension level if too old" do
-        stamp = LectureComprehensionStamp.create(user: @user, status: 0, lecture: @lecture, updated_at: Time.now - LectureComprehensionStamp.seconds_till_comp_timeout)
-        get :get_comprehension, params: { course_id: (@lecture.course.id), id: @lecture.id }, session: valid_session
-        expect(response.body).to eq({ status: [0, 0, 0], last_update: stamp.timestamp }.to_json)
-      end
-    end
-  end
 
   def login_student(user = FactoryBot.create(:user, :student))
     sign_in(user, scope: :user)

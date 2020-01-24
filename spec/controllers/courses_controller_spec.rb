@@ -76,6 +76,13 @@ RSpec.describe CoursesController, type: :controller do
     end
   end
 
+  it "redirects to the root path view if the course does not exist", :logged_lecturer do
+    course = Course.create! valid_attributes
+    not_existing_course_id = course.id + 5
+    get :show, params: { id: not_existing_course_id }, session: valid_session
+    expect(response).to redirect_to(root_path)
+  end
+
   describe "GET #new" do
     it "returns a success response", :logged_lecturer do
       get :new, params: {}, session: valid_session
