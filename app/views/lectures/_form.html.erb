@@ -59,6 +59,11 @@
     <%= form.label :polls_enabled, "Enable Polls", :class => "form-check-label" %>
   </div>
 
+  <div class="form-check">
+    <%= form.check_box :feedback_enabled, :disabled => lecture.ended?, :class => "form-check-input" %>
+    <%= form.label :feedback_enabled, "Enable Feedback", :class => "form-check-label" %>
+  </div>
+
   <div class="actions d-flex flex-row justify-content-between mt-2">
     <div>
       <%= yield(:action_left) %>
