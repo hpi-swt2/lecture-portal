@@ -55,7 +55,7 @@
   </div>
 
   <div class="form-check">
-    <%= form.check_box :feedback_enabled, :disabled => lecture.ended?, :class => "form-check-input" %>
+    <%= form.check_box :feedback_enabled, :disabled => lecture.archived?, :class => "form-check-input" %>
     <%= form.label :feedback_enabled, "Enable Feedback", :class => "form-check-label" %>
   </div>
 

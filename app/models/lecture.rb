@@ -1,5 +1,5 @@
 class Lecture < ApplicationRecord
-  before_save :update_lecture_status, :if => lambda { |l| l.date_changed? || l.start_time_changed? || end_time_changed? }
+  before_save :update_lecture_status, if: lambda { |l| l.date_changed? || l.start_time_changed? || end_time_changed? }
 
   belongs_to :lecturer, class_name: :User
   has_and_belongs_to_many :participating_students, class_name: :User
@@ -75,7 +75,7 @@ class Lecture < ApplicationRecord
   end
 
   def allow_interactions?
-    return self.status.in?(["running", "active"]) 
+    self.status.in?(["running", "active"])
   end
 
   def enrollment_key_present?
@@ -89,7 +89,7 @@ class Lecture < ApplicationRecord
   end
 
   def allow_comprehension?
-    return self.status == "running"
+    self.status == "running"
   end
 
 
@@ -151,7 +151,7 @@ class Lecture < ApplicationRecord
       end
     end
 
-    def update_lecture_status 
+    def update_lecture_status
       old_status = self.status
 
       if self.date < Date.today
@@ -165,7 +165,7 @@ class Lecture < ApplicationRecord
       end
 
       if old_status != self.status
-        #TODO Broadcast change
+        # TODO Broadcast change
       end
     end
-  end
+end

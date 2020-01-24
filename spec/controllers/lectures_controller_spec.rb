@@ -341,7 +341,7 @@ RSpec.describe LecturesController, type: :controller do
   describe "PUT #update_comprehension_stamp" do
     before(:each) do
       # login user
-      @lecture = FactoryBot.create(:lecture, status: "running")
+      @lecture = FactoryBot.create(:lecture, status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
       @user = FactoryBot.create(:user, :student)
       login_student(@user)
       @lecture.join_lecture(@user)
