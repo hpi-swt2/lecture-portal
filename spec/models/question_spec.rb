@@ -42,11 +42,18 @@ RSpec.describe Question, type: :model do
       end
 
       it "should return list of a question" do
-        expect(Question.questions_for_lecture(@lecture, @student).to_json).to eq([@question].to_json)
+        expected = ActiveModelSerializers::SerializableResource.new(
+            [@question],
+            each_serializer: QuestionSerializer,
+            current_user: @student)
+        expect(Question.questions_for_lecture(@lecture, @student).to_json).to eq(expected.to_json)
       end
       it "should return a time-sorted list of all questions" do
         question2 = FactoryBot.create(:question, author: @student, lecture: @lecture)
-        expected = [ question2, @question ]
+        expected = ActiveModelSerializers::SerializableResource.new(
+            [question2, @question],
+            each_serializer: QuestionSerializer,
+            current_user: @student)
         expect(Question.questions_for_lecture(@lecture, @student).to_json).to eq(expected.to_json)
       end
 
@@ -54,7 +61,10 @@ RSpec.describe Question, type: :model do
         another_lecture = FactoryBot.create(:lecture)
         another_lecture.join_lecture(@student)
         FactoryBot.create(:question, author: @student, lecture: another_lecture)
-        expected = [ @question ]
+        expected = ActiveModelSerializers::SerializableResource.new(
+            [@question],
+            each_serializer: QuestionSerializer,
+            current_user: @student)
         expect(Question.questions_for_lecture(@lecture, @student).to_json).to eq(expected.to_json)
       end
     end

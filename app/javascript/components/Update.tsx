@@ -17,11 +17,17 @@ const UpdateView: React.FunctionComponent<Props> = ({ item }) => {
     const { is_student, interactions_enabled } = useInjectUpdates(mapStore);
 
     const onClick = _ => {
-        interactions_enabled && item.onClick(is_student)
+        if(interactions_enabled) {
+            is_student && item.onStudentClick();
+            !is_student && item.onLecturerClick();
+        }
     };
 
     return (
-        <li key={item.id} onClick={onClick} className={interactions_enabled ? "interactable" : ""}>
+        <li key={item.id} onClick={onClick} className={
+            (interactions_enabled ? "interactable" : "") +
+            (is_student && item.isMarked() ? " marked" : "")
+        }>
             <div className="questionContent p-4">
                 {is_student && <span><b>{item.getTitle()}</b><br /></span>}
                 {item.getContent()}

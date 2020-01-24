@@ -36,11 +36,8 @@ const Question = types
     disallowUpvote() {
       self.already_upvoted = true;
     },
-    updateClick(is_student: boolean) {
-      if (is_student)
-        upvoteQuestionById(self.id);
-      else
-        resolveQuestionById(self.id);
+    resolveClick() {
+      resolveQuestionById(self.id);
     },
     upvoteClick() {
       upvoteQuestionById(self.id);

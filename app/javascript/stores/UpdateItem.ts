@@ -31,12 +31,28 @@ export class UpdateItem {
             }
         }
     }
-    onClick(is_student: boolean) {
+    onStudentClick() {
         switch (this.type) {
             case (UpdateTypes.Question): {
-                (this.item.value as QuestionModel).updateClick(is_student);
+                (this.item.value as QuestionModel).upvoteClick();
                 break;
             }
+        }
+    }
+    onLecturerClick() {
+        switch (this.type) {
+            case (UpdateTypes.Question): {
+                (this.item.value as QuestionModel).resolveClick();
+                break;
+            }
+        }
+    }
+    isMarked(): boolean {
+        switch (this.type) {
+            case (UpdateTypes.Question): {
+                return (this.item.value as QuestionModel).already_upvoted;
+            }
+            default: return false;
         }
     }
 }
