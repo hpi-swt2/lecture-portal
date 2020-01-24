@@ -6,14 +6,13 @@ RSpec.describe "lectures/show", type: :view do
     @course = FactoryBot.create(:course)
     @lecture = assign(:lecture, Lecture.create!(
                                   name: "Name",
-                                  description: "Test",
                                   enrollment_key: "Enrollment Key",
                                   status: "running",
                                   lecturer: FactoryBot.create(:user, :lecturer),
                                   course: @course,
-                                  date: "2020-02-02",
-                                  start_time: "2020-01-01 10:10:00",
-                                  end_time: "2020-01-01 10:20:00"
+                                  date: Date.today,
+                                  start_time: DateTime.now,
+                                  end_time: DateTime.now + 20.minutes
     ))
   end
 
@@ -50,12 +49,6 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).not_to have_css("#enrollmentKey-tab")
     end
 
-
-    it "renders end button" do
-      render
-      expect(rendered).to have_link("End Lecture")
-    end
-
     it "renders a leave lecture button" do
       render
       expect(rendered).not_to have_css("[value='Leave Lecture']")
@@ -74,11 +67,18 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_text("Questions are not enabled.")
     end
 
-    it "does not show notice pages on disabled questions/polls when questions are enabled" do
+    it "shows notice page on feedback tab when feedback is disabled" do
+      @lecture.update(feedback_enabled: false)
       render
-      assert_select "a", "Questions"
+      assert_select "a", "Feedback"
+      expect(rendered).to have_text("Feedback is not enabled.")
+    end
+
+    it "does not show notice pages on disabled questions/polls/feedback when questions are enabled" do
+      render
       expect(rendered).to_not have_text("Questions are not enabled.")
       expect(rendered).to_not have_text("Polls are not enabled.")
+      expect(rendered).to_not have_text("Feedback is not enabled.")
     end
 
     it "shows list of participating students in enrollment key tab" do
@@ -92,12 +92,6 @@ RSpec.describe "lectures/show", type: :view do
       render
       assert_select "a", "Settings"
       expect(rendered).to have_selector("input[id='lecture_name'][type='text']")
-    end
-
-    it "can change description in settings tab" do
-      render
-      assert_select "a", "Settings"
-      expect(rendered).to have_selector("textarea[id='lecture_description']")
     end
 
     it "can change enrollment key in settings tab" do

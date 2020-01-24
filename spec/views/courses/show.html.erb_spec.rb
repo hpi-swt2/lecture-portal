@@ -5,7 +5,7 @@ RSpec.describe "courses/show", type: :view do
   before(:each) do
     @lecturer = FactoryBot.create(:user, :lecturer)
     @course = FactoryBot.create(:course, creator: @lecturer)
-    @lecture = FactoryBot.create(:lecture, name: "Name", enrollment_key: "Enrollment", status: "created",  course: @course, lecturer: @lecturer)
+    @lecture = FactoryBot.create(:lecture, name: "Name", enrollment_key: "Enrollment", status: "created",  course: @course, lecturer: @lecturer, date: Date.tomorrow)
     @current_user = FactoryBot.create(:user, :lecturer)
     @student_files = []
     @lecturer_files = []
@@ -28,7 +28,7 @@ RSpec.describe "courses/show", type: :view do
   context "for students" do
     before(:each) do
       login_student
-      @lecture.update(status: "running")
+      @lecture.update(status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
     end
 
     it "displays key input form for lectures with a key for not joined students" do

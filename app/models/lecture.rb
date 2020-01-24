@@ -1,4 +1,6 @@
 class Lecture < ApplicationRecord
+  before_save :update_lecture_status, if: lambda { |l| l.date_changed? || l.start_time_changed? || end_time_changed? }
+
   belongs_to :lecturer, class_name: :User
   has_and_belongs_to_many :participating_students, class_name: :User
   has_many :polls, dependent: :destroy
@@ -6,22 +8,32 @@ class Lecture < ApplicationRecord
   has_many :lecture_comprehension_stamps, class_name: :LectureComprehensionStamp
   belongs_to :course
   has_many :uploaded_files, as: :allowsUpload
-  enum status: { created: "created", running: "running", ended: "ended" }
+  enum status: { created: "created", running: "running", active: "active", archived: "archived" }
   validates :date, presence: true
   validates :start_time, presence: true
   validates :end_time, presence: true
 
   validates :name, presence: true, length: { in: 2..40 }
   validates :enrollment_key, length: { in: 3..20, if: :enrollment_key_present? }
-  scope :active, -> { where status: "running" }
+  scope :running, -> { where status: "running" }
+  scope :active, -> { running.or(where status: "active") }
+
+  def set_created
+    self.status = :created
+  end
 
   def set_active
+    self.status = :active
+  end
+
+  def set_running
     self.status = :running
   end
 
-  def set_inactive
-    self.status = :ended
+  def set_archived
+    self.status = :archived
   end
+
 
   def join_lecture(student)
     unless self.participating_students.include?(student)
@@ -38,7 +50,7 @@ class Lecture < ApplicationRecord
 
   def compare_ignore_status(other_lecture)
     name == other_lecture.name && polls_enabled == other_lecture.polls_enabled && questions_enabled == other_lecture.questions_enabled \
-    && description == other_lecture.description && enrollment_key == other_lecture.enrollment_key && id == other_lecture.id
+    && enrollment_key == other_lecture.enrollment_key && id == other_lecture.id
   end
 
   def ==(other_lecture)
@@ -50,21 +62,36 @@ class Lecture < ApplicationRecord
   end
 
   def to_s
-    "{ id:" + id.to_s + " status: " + status.to_s + " name: " + name + " description: " + description +
+    "{ id:" + id.to_s + " status: " + status.to_s + " name: " + name +
         " enrollment_key : " + enrollment_key + " polls_enabled " + polls_enabled.to_s + " questions_enabled " + questions_enabled.to_s + "}"
   end
 
   def readonly?
     if self.id
       db_lecture = Lecture.find(self.id)
-      return db_lecture.status == "ended"
+      return db_lecture.status == "archived"
     end
     false
+  end
+
+  def allow_interactions?
+    self.status.in?(["running", "active"])
   end
 
   def enrollment_key_present?
     enrollment_key.present?
   end
+
+  def Lecture.handle_activations
+    Lecture.where(status: [:created, :active, :running]).each { |lecture|
+      lecture.update_lecture_status
+    }
+  end
+
+  def allow_comprehension?
+    self.status == "running"
+  end
+
 
   def Lecture.eliminate_comprehension_stamps
     Lecture.where(status: "running").each { |lecture|
@@ -121,6 +148,18 @@ class Lecture < ApplicationRecord
         { status: status, last_update: nil }
       else
         { status: status, last_update: last_update.timestamp }
+      end
+    end
+
+    def update_lecture_status
+      if self.date < Date.today
+        self.set_archived
+      elsif self.date > Date.today
+        self.set_created
+      elsif self.start_time.seconds_since_midnight - 300 < DateTime.now.utc.seconds_since_midnight && self.end_time.seconds_since_midnight + 300 > DateTime.now.utc.seconds_since_midnight
+        self.set_running
+      else
+        self.set_active
       end
     end
 end

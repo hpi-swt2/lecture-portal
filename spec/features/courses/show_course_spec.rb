@@ -13,11 +13,6 @@ describe "The course detail page", type: :feature do
       sign_in @lecturer
     end
 
-    it "should have a \"Start\" button for not started lectures" do
-      visit(course_path(@course))
-      expect(page).to have_link("Start", href: start_lecture_path(course_id: @lecture.course.id) + "?id=" + @lecture.id.to_s)
-    end
-
     it "should not have a \"View\" link for not started lectures" do
       visit(course_path(@course))
       expect(page).to_not have_link("View", href: course_lecture_path(@course, @lecture))
