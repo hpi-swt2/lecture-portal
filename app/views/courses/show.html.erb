@@ -26,7 +26,7 @@
         <a class="nav-link" id="files-students-tab" data-toggle="tab" href="#files-students" role="tab" aria-controls="files-students" aria-selected="false">From Students</a>
       </li>
       <li class="nav-item ml-auto">
-        <%= link_to (fa_icon 'plus', text: 'Add Material'), new_course_uploaded_file_path(@course), class:"btn btn-link text-muted"%>
+        <%= link_to (fa_icon 'plus', text: 'Add Material'), new_course_uploaded_file_path(@course), class: "btn btn-link text-muted"%>
       </li>
     </ul>
   </div>
@@ -46,15 +46,12 @@
   <%= render 'table_not_running', course: @course %>
 <% end %>
 
+<div class="d-flex flex-row justify-content-between mb-2">
+  <%= link_to (fa_icon 'arrow-left', text: 'Back to Overview'), root_path, class: "btn btn-outline-primary" %>
 
-<div class="d-flex justify-content-center">
   <% if @current_user.is_student %>
-    <%= link_to "Leave", leave_course_path(id: @course.id), method: :post, class:"btn btn-primary" %> |
+    <%= link_to "Leave", leave_course_path(id: @course.id), method: :post, class: "btn btn-primary" %>
+  <% else %>
+    <%= link_to 'Edit', edit_course_path(@course), class: "btn btn-outline-secondary" %>
   <% end %>
-
-  <% if !@current_user.is_student %>
-    <%= link_to 'Edit', edit_course_path(@course) %> |
-  <% end %>
-
-  <%= link_to (fa_icon 'arrow-left', text: 'Back'), root_path %>
 </div>

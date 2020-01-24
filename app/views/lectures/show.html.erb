@@ -28,7 +28,7 @@
         <h2 class="h5">Materials</h2>
         <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
         <% unless current_user.is_student %>
-          <%= link_to "Add lecture material", new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class:"btn btn-link"%>
+          <%= link_to "Add lecture material", new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class: "btn btn-link"%>
         <% end %>
       </div>
       <div class="col-12 col-sm-6 col-xl-4">
@@ -112,6 +112,6 @@
   <% end %>
 </div>
 
-<div class="d-flex justify-content-center">
-  <%= link_to (fa_icon 'arrow-left', text: 'Back to Course'), course_path(@course), class:"btn btn-outline-secondary mb-2" %>
+<div class="d-flex flex-row justify-content-between">
+  <%= link_to (fa_icon 'arrow-left', text: 'Back to Course'), course_path(@course), class: "btn btn-outline-primary mb-2" %>
 </div>

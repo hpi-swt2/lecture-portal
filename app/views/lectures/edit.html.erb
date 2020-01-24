@@ -4,7 +4,7 @@
   <%= link_to 'Delete', course_lecture_path(course_id:@lecture.course.id, id: @lecture.id), method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-secondary" %>
 <% end %>
 <% content_for :action_right do %>
-  <%= link_to 'Back', course_lecture_path(course_id:@lecture.course.id, id: @lecture.id), :class => "btn btn-outline-secondary" %>
+  <%= link_to (fa_icon 'arrow-left', text: 'Back'), course_lecture_path(course_id:@lecture.course.id, id: @lecture.id), class: "btn btn-outline-primary" %>
 <% end %>
 <%= render 'form', lecture: @lecture, render_enrolment_key: true do %>
 <% end %>

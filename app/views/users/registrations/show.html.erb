@@ -12,9 +12,10 @@
   <tbody>
     <tr>
       <td><%= ical_url(hash_id: @current_user.hash_id, protocol: :webcal, format: :ics) %></td>
-      <td class="text-right"><%= link_to 'Subscribe', ical_url(hash_id: @current_user.hash_id, protocol: :webcal, format: :ics), class:"btn btn-primary" %></td>
+      <td class="text-right"><%= link_to 'Subscribe', ical_url(hash_id: @current_user.hash_id, protocol: :webcal, format: :ics), class: "btn btn-primary" %></td>
+    </tr>
   </tbody>
 </table>
 
-<%= link_to "Back", :back, class:"btn btn-primary" %>
-<%= link_to "Edit Profile", edit_user_registration_path, class:"btn btn-primary" %>
+<%= link_to "Back", :back, class: "btn btn-primary" %>
+<%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-primary" %>

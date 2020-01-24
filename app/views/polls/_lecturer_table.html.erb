@@ -15,10 +15,10 @@
       <td><%= poll.title %></td>
       <td><%= poll.is_active %></td>
       <td class="text-right">
-        <%= link_to 'Edit', edit_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class:"btn btn-primary"} %>
+        <%= link_to 'Edit', edit_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
         <% text = poll.is_active ? 'Stop' : 'Start' %>
-        <%= link_to text, stop_start_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class:"btn btn-primary"} %>
-        <%= link_to 'Results', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class:"btn btn-primary"} %>
+        <%= link_to text, stop_start_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+        <%= link_to 'Results', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
       </td>
     </tr>
   <% end %>

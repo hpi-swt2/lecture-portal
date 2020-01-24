@@ -14,7 +14,7 @@
         <td><%= lecture.name %></td>
         <td class="text-right">
           <% if lecture.status == "running" %>
-            <%= button_to "Join", {action: "join_lecture", params: {id: lecture.id}}, {class:"btn btn-primary"} %>
+            <%= button_to "Join", {action: "join_lecture", params: {id: lecture.id}}, {class: "btn btn-primary"} %>
           <% else %>
             not running
           <% end %>

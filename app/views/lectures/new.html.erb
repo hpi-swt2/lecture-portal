@@ -2,7 +2,7 @@
 
 
 <% content_for :action_right do %>
-  <%= link_to 'Back', course_path(id: @course.id), :class => "btn btn-outline-secondary" %>
+  <%= link_to (fa_icon 'arrow-left', text: 'Back to Course'), course_path(id: @course.id), class: "btn btn-outline-primary" %>
 <% end %>
 
 <%= render 'form', lecture: @lecture , render_enrolment_key: true do %>

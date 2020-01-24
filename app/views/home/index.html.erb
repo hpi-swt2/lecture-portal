@@ -18,7 +18,7 @@
               <td><%= course.name %></td>
               <td class="text-right">
                 <% if course.status == "open" %>
-                  <%= link_to 'View', course, {class:"btn btn-primary"} %>
+                  <%= link_to 'View', course, {class: "btn btn-primary"} %>
                 <% end %>
               </td>
             </tr>
@@ -48,14 +48,14 @@
                 </td>
                 <td class="text-right" >
                 <% if @participating_lectures.include?(lecture)  %>
-                  <%= button_to "View", course_lecture_path(course_id: lecture.course.id, id: lecture.id), :method => "get", class:"btn btn-primary" %>
+                  <%= button_to "View", course_lecture_path(course_id: lecture.course.id, id: lecture.id), :method => "get", class: "btn btn-primary" %>
                 <% elsif lecture.enrollment_key_present? && !@participating_lectures.include?(lecture)%>
                   <%= form_tag join_lecture_path(:course_id => lecture.course.id, :id => lecture.id, method: :post, autocomplete: "off") do -%>
                     <%= text_field :lecture, :enrollment_key%>
                     <%= submit_tag 'Join', class: "btn btn-primary" %>
                   <% end %>
                 <% else %>
-                  <%= button_to 'Join', join_lecture_path(:course_id => lecture.course.id, :id => lecture.id),method: :post, class:"btn btn-primary" %>
+                  <%= button_to 'Join', join_lecture_path(:course_id => lecture.course.id, :id => lecture.id),method: :post, class: "btn btn-primary" %>
                 <% end %>
                 </td>
               </tr>
@@ -75,8 +75,8 @@
           <% @participating_courses.each do |course| %>
             <tr>
               <td><%= course.name %></td>
-              <td><%= button_to "View", course_path(id: course.id), :method => "get", class:"btn btn-primary" %></td>
-              <td><%= link_to "Leave", leave_course_path(id: course.id), method: :post, class:"btn btn-primary" %></td>
+              <td><%= button_to "View", course_path(id: course.id), :method => "get", class: "btn btn-primary" %></td>
+              <td><%= link_to "Leave", leave_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
             </tr>
           <% end %>
         </table>
@@ -92,7 +92,7 @@
           <% @open_courses.each do |course| %>
             <tr>
               <td><%= course.name %></td>
-              <td><%= link_to "Join", join_course_path(id: course.id), method: :post, class:"btn btn-primary" %></td>
+              <td><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
             </tr>
           <% end %>
         </table>
