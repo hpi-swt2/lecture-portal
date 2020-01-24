@@ -43,7 +43,7 @@ RSpec.describe "home/index", type: :view do
       @lecture = FactoryBot.create(:lecture, name: "Name", enrollment_key: "Enrollment", status: "created",  course: @course, lecturer: @lecturer)
       login_student
       @course.join_course(@current_user)
-      @lecture.update(status: "running")
+      @lecture.update(status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
     end
 
     it "displays key input form for lectures with a key for not joined students" do

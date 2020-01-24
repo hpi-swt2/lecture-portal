@@ -94,12 +94,11 @@ RSpec.describe Lecture, type: :model do
   end
 
   it "cannot be changed after it was archived" do
-    @lecture.set_archived
+    @lecture.update(status: "archived", date: Date.yesterday)
     expect(@lecture).to be_valid
-    @lecture.save
     @lecture.description = @lecture.description + " new"
     expect { @lecture.save }.to raise_error(ActiveRecord::ReadOnlyRecord)
-    expect { @lecture.update(status: "running") }.to raise_error(ActiveRecord::ReadOnlyRecord)
+    expect { @lecture.update(status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes) }.to raise_error(ActiveRecord::ReadOnlyRecord)
   end
 
   it "can be changed before it ended" do

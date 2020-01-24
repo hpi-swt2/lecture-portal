@@ -1,5 +1,5 @@
 class Lecture < ApplicationRecord
-  after_save :update_lecture_status#, :if => lambda { |l| l.start_time_changed? || end_time_changed? }
+  before_save :update_lecture_status, :if => lambda { |l| l.date_changed? || l.start_time_changed? || end_time_changed? }
 
   belongs_to :lecturer, class_name: :User
   has_and_belongs_to_many :participating_students, class_name: :User
@@ -69,9 +69,13 @@ class Lecture < ApplicationRecord
   def readonly?
     if self.id
       db_lecture = Lecture.find(self.id)
-      return db_lecture.status == "archived" # TODO: Disallow comprehension not only in readonly but also when status = active
+      return db_lecture.status == "archived"
     end
     false
+  end
+
+  def allow_interactions?
+    return self.status.in?(["running", "active"]) 
   end
 
   def enrollment_key_present?
@@ -83,6 +87,11 @@ class Lecture < ApplicationRecord
       lecture.update_lecture_status
     }
   end
+
+  def allow_comprehension?
+    return self.status == :running 
+  end
+
 
   def Lecture.eliminate_comprehension_stamps
     Lecture.where(status: "running").each { |lecture|
@@ -149,14 +158,13 @@ class Lecture < ApplicationRecord
         self.set_archived
       elsif self.date > Date.today
         self.set_created
-      elsif (self.start_time - 5.minutes).seconds_since_midnight < DateTime.now.seconds_since_midnight && (self.end_time + 5.minutes).seconds_since_midnight > DateTime.now.seconds_since_midnight
+      elsif self.start_time.seconds_since_midnight - 300 < DateTime.now.utc.seconds_since_midnight && self.end_time.seconds_since_midnight + 300 > DateTime.now.utc.seconds_since_midnight
         self.set_running
       else
         self.set_active
       end
 
       if old_status != self.status
-        #TODO handle running or active lecture somehow? 
         #TODO Broadcast change
       end
     end

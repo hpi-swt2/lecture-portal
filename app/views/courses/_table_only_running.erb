@@ -13,7 +13,7 @@
 
   <tbody>
     <% course.lectures.each do |lecture| %>
-      <% if lecture.status == "running" %>
+      <% if lecture.status == "running" || lecture.status == "active" %>
         <tr>
           <td><%= lecture.name %></td>
           <td>
@@ -29,7 +29,7 @@
             <% if @current_user.is_student%>
               <%if lecture.participating_students.include?(@current_user)%>
                 <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
-              <% elsif lecture.enrollment_key_present? && !lecture.participating_students.include?(@current_user)%>
+              <% elsif lecture.enrollment_key_present? %>
                 <%= form_tag join_lecture_path(:course_id => @course.id, :id => lecture.id, method: :post, autocomplete: "off") do -%>
                   <%= text_field :lecture, :enrollment_key %>
                   <%= submit_tag 'Join', class: "btn btn-primary" %>

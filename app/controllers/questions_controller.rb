@@ -84,7 +84,7 @@ class QuestionsController < ApplicationController
     end
 
     def validate_lecture_running_or_active
-      head :forbidden if @lecture.readonly?  # TODO rethink
+      head :forbidden unless @lecture.allow_interactions?
     end
 
     def get_question

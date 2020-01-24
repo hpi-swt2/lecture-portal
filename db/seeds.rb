@@ -7,7 +7,7 @@
 
     course_1 = Course.create(name: "<Kurs-1>", description: "Testkurs #1", creator: lecturer_1)
 
-    Lecture.create(name: "<Created Lecture>", enrollment_key: "epic", status: "created", lecturer: lecturer_1, course: course_1, date: "2019-12-31", start_time: "2019-12-31 23:59:00", end_time: "2020-01-01 00:01:00")
-    Lecture.create(name: "<Running Lecture>", enrollment_key: "epic", status: "running", lecturer: lecturer_1, course: course_1, date: "2019-12-31", start_time: "2019-12-31 23:59:00", end_time: "2020-01-01 00:01:00")
-    Lecture.create(name: "<Archived Lecture>", enrollment_key: "epic", status: "archived", lecturer: lecturer_1, course: course_1, date: "2019-12-31", start_time: "2019-12-31 23:59:00", end_time: "2020-01-01 00:01:00")
-# TODO add Lecture for active?
+    Lecture.create(name: "<Created Lecture>", enrollment_key: "epic", status: "created", lecturer: lecturer_1, course: course_1, date: Date.tomorrow, start_time: "2020-01-01 10:00:00", end_time: "2020-01-01 15:00:00")
+    Lecture.create(name: "<Active Lecture>", enrollment_key: "epic", status: "active", lecturer: lecturer_1, course: course_1, date: Date.today, start_time: "2020-01-01 00:00:00", end_time: "2020-01-01 00:00:01")
+    Lecture.create(name: "<Running Lecture>", enrollment_key: "epic", status: "running", lecturer: lecturer_1, course: course_1, date: Date.today, start_time: DateTime.now, end_time: "2020-01-01 23:59:59")
+    Lecture.create(name: "<Archived Lecture>", enrollment_key: "epic", status: "archived", lecturer: lecturer_1, course: course_1, date: Date.yesterday, start_time: "2020-01-01 10:00:00", end_time: "2020-01-01 15:00:00")

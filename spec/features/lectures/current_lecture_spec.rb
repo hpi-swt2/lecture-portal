@@ -20,7 +20,7 @@ describe "The current lectures page", type: :feature do
       @lectures = FactoryBot.create_list(:lecture, 2)
       @lectures[0].update(status: "created")
       @lectures[0].update(course: @course)
-      @lectures[1].update(status: "running", name: "Other name")
+      @lectures[1].update(status: "running", name: "Other name", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
       @lectures[1].update(course: @course)
 
       visit current_lectures_path(course_id: @course.id)
@@ -29,7 +29,7 @@ describe "The current lectures page", type: :feature do
     end
 
     it "clicking the join button adds the student to the keyless lecture" do
-      @lecture = FactoryBot.create(:lecture, enrollment_key: nil, status: "running", course: @course)
+      @lecture = FactoryBot.create(:lecture, enrollment_key: nil, status: "running", course: @course, date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
       visit current_lectures_path(course_id: @course.id)
       expect(@lecture.participating_students.length).to be 0
       click_on("Join")

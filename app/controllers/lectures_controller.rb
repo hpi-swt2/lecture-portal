@@ -7,6 +7,7 @@ class LecturesController < ApplicationController
   before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show, :update_comprehension_stamp, :get_comprehension]
   before_action :require_student, only: [:join_lecture, :leave_lecture, :update_comprehension_stamp]
   before_action :validate_course_creator, only: [:create, :new]
+  before_action :validate_lecture_running, only: [:update_comprehension_stamp]
 
   # GET /lectures
   def index
@@ -131,6 +132,10 @@ class LecturesController < ApplicationController
       if @lecture.nil?
         redirect_to course_path(@course), alert: "The lecture you requested does not exist."
       end
+    end
+
+    def validate_lecture_running
+      head :forbidden unless @lecture.allow_comprehension
     end
 
     def validate_lecture_owner
