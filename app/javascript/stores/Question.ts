@@ -1,6 +1,7 @@
 import { Instance, types } from "mobx-state-tree";
 import { resolveQuestionById, upvoteQuestionById } from "../utils/QuestionsUtils";
 import { getQuestionsRootStore } from "./QuestionsRootStore";
+import { getUpdatesRootStore } from "./UpdatesRootStore";
 
 export type QuestionModel = Instance<typeof Question>
 
@@ -35,8 +36,11 @@ const Question = types
     disallowUpvote() {
       self.already_upvoted = true;
     },
-    resolveClick() {
-      resolveQuestionById(self.id);
+    updateClick(is_student: boolean) {
+      if (is_student)
+        upvoteQuestionById(self.id);
+      else
+        resolveQuestionById(self.id);
     },
     upvoteClick() {
       upvoteQuestionById(self.id);
