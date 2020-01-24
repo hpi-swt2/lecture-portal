@@ -25,17 +25,17 @@
   <div class="row">
     <div class="date form-group col-12 col-sm-4">
       <%= form.label :date %> <br/>
-      <%= form.date_select :date, :readonly => lecture.archived?, class: "form-control" %>
+      <%= form.date_select :date, :readonly => lecture.archived? %>
     </div>
 
     <div class="start_time form-group col-6 col-sm-4">
       <%= form.label :start_time %> <br/>
-      <%= form.time_select :start_time, {class: 'form-control'}, :readonly => lecture.archived? %>
+      <%= form.time_select :start_time, {minute_step: 5}, :readonly => lecture.archived? %>
     </div>
 
     <div class="end_time form-group col-6 col-sm-4 selcls">
       <%= form.label :end_time %> <br/>
-      <%= form.time_select :end_time, :readonly => lecture.archived?, class: "form-control" %>
+      <%= form.time_select :end_time, {minute_step: 5}, :readonly => lecture.archived? %>
     </div>
   </div>
 
