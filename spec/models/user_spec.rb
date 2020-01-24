@@ -33,8 +33,8 @@ RSpec.describe User, type: :model do
   it "(student) without hash_id is impossible" do
     @student = FactoryBot.create(:user, :student)
     @student.hash_id = nil
-    @student.valid? #triggers validation which recreates the hash_id
-    expect(@student.hash_id != nil);
+    @student.valid? # triggers validation which recreates the hash_id
+    expect(@student.hash_id != nil)
   end
 
   it "can participate lectures" do
