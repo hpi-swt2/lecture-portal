@@ -1,4 +1,6 @@
 class Lecture < ApplicationRecord
+  after_save :update_lecture_status#, :if => lambda { |l| l.start_time_changed? || end_time_changed? }
+
   belongs_to :lecturer, class_name: :User
   has_and_belongs_to_many :participating_students, class_name: :User
   has_many :polls, dependent: :destroy
@@ -45,13 +47,13 @@ class Lecture < ApplicationRecord
   end
 
 
-  def compareIgnoreStatus(other_lecture)
+  def compare_ignore_status(other_lecture)
     name == other_lecture.name && polls_enabled == other_lecture.polls_enabled && questions_enabled == other_lecture.questions_enabled \
     && description == other_lecture.description && enrollment_key == other_lecture.enrollment_key && id == other_lecture.id
   end
 
   def ==(other_lecture)
-    status == other_lecture.status && compareIgnoreStatus(other_lecture)
+    status == other_lecture.status && compare_ignore_status(other_lecture)
   end
 
   def !=(other_lecture)
@@ -73,6 +75,12 @@ class Lecture < ApplicationRecord
 
   def enrollment_key_present?
     enrollment_key.present?
+  end
+
+  def Lecture.handle_activations
+    Lecture.where(status: [:created, :active, :running]).each { |lecture|
+      lecture.update_lecture_status
+    }
   end
 
   def Lecture.eliminate_comprehension_stamps
@@ -132,4 +140,23 @@ class Lecture < ApplicationRecord
         { status: status, last_update: last_update.timestamp }
       end
     end
-end
+
+    def update_lecture_status 
+      old_status = self.status
+
+      if self.date < Date.today
+        self.set_archived
+      elsif self.date > Date.today
+        self.set_created
+      elsif (self.start_time - 5.minutes).seconds_since_midnight < DateTime.now.seconds_since_midnight && (self.end_time + 5.minutes).seconds_since_midnight > DateTime.now.seconds_since_midnight
+        self.set_running
+      else
+        self.set_active
+      end
+
+      if old_status != self.status
+        #TODO handle running or active lecture somehow? 
+        #TODO Broadcast change
+      end
+    end
+  end
