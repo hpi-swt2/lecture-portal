@@ -74,11 +74,18 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_text("Questions are not enabled.")
     end
 
-    it "does not show notice pages on disabled questions/polls when questions are enabled" do
+    it "shows notice page on feedback tab when feedback is disabled" do
+      @lecture.update(feedback_enabled: false)
       render
-      assert_select "a", "Questions"
+      assert_select "a", "Feedback"
+      expect(rendered).to have_text("Feedback is not enabled.")
+    end
+
+    it "does not show notice pages on disabled questions/polls/feedback when questions are enabled" do
+      render
       expect(rendered).to_not have_text("Questions are not enabled.")
       expect(rendered).to_not have_text("Polls are not enabled.")
+      expect(rendered).to_not have_text("Feedback is not enabled.")
     end
 
     it "shows list of participating students in enrollment key tab" do

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   get "/courses/:course_id/lectures/current", to: "lectures#current", as: "current_lectures"
+  get "/ical/:hash_id", to: "ical#show", as: "ical"
   post "/courses/:course_id/lectures/start_lecture", to: "lectures#start_lecture", as: "start_lecture"
   post "/courses/:course_id/lectures/join_lecture", to: "lectures#join_lecture", as: "join_lecture"
   get "/courses/:course_id/lectures/:lecture_id/enrollment", to: "lectures#join_lecture_with_url", as: "join_lecture_with_url"
