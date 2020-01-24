@@ -9,9 +9,11 @@
       <%= render "layouts/navbar" %>
     <% end %>
     <%# Bootstrap container, https://getbootstrap.com/docs/4.0/layout/overview/ %>
-    <main role="main" class="container mt-4">
-      <% if notice %><div class="alert alert-success notice" role="alert"><%= notice %></div><% end %>
-      <% if alert %><div class="alert alert-danger" role="alert"><%= alert %></div><% end %>
+    <main role="main" class="container-fluid mt-4 px-4">
+      <div class="container">
+        <% if notice %><div class="alert alert-success notice" role="alert"><%= notice %></div><% end %>
+        <% if alert %><div class="alert alert-danger" role="alert"><%= alert %></div><% end %>
+      </div>
       <%= yield %>
     </main>
   </body>
