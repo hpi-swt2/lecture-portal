@@ -38,7 +38,7 @@ class Lecture < ApplicationRecord
 
   def compareIgnoreStatus(other_lecture)
     name == other_lecture.name && polls_enabled == other_lecture.polls_enabled && questions_enabled == other_lecture.questions_enabled \
-    && description == other_lecture.description && enrollment_key == other_lecture.enrollment_key && id == other_lecture.id
+    && enrollment_key == other_lecture.enrollment_key && id == other_lecture.id
   end
 
   def ==(other_lecture)
@@ -50,7 +50,7 @@ class Lecture < ApplicationRecord
   end
 
   def to_s
-    "{ id:" + id.to_s + " status: " + status.to_s + " name: " + name + " description: " + description +
+    "{ id:" + id.to_s + " status: " + status.to_s + " name: " + name +
         " enrollment_key : " + enrollment_key + " polls_enabled " + polls_enabled.to_s + " questions_enabled " + questions_enabled.to_s + "}"
   end
 
