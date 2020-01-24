@@ -33,10 +33,10 @@
               <%= lecture.end_time.strftime("%H:%M")  %>
             <% end %>
           </td>
-          <% if !@current_user.is_student%>
-            <td><%= lecture.enrollment_key %></td>
-            <td><%= lecture.status%></td>
-          <% end %>
+          <% unless @current_user.is_student %>
+          <td><%=  lecture.enrollment_key  %></td>
+          <td><%= lecture.status %></td>
+          <%  end %>
           <td class="text-right">
             <% if @current_user.is_student%>
               <% if lecture.status == "ended" %>
