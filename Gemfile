@@ -133,3 +133,5 @@ gem "active_model_serializers"
 gem "action-cable-testing"
 # Easily schedule tasks in ruby <3
 gem "rufus-scheduler"
+
+gem "rqrcode", "~> 1.1"

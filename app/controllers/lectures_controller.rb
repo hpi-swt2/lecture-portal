@@ -1,12 +1,15 @@
+require "rqrcode"
+
 class LecturesController < ApplicationController
   before_action :authenticate_user!
   before_action :get_course
-  before_action :get_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture, :update_comprehension_stamp, :get_comprehension]
+  before_action :get_lecture, except: [:create, :new]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :validate_joined_user_or_owner, only: [:show, :update_comprehension_stamp, :get_comprehension]
-  before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show, :update_comprehension_stamp, :get_comprehension]
+  before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show, :update_comprehension_stamp, :get_comprehension, :join_lecture_with_url]
   before_action :require_student, only: [:join_lecture, :leave_lecture, :update_comprehension_stamp]
   before_action :validate_course_creator, only: [:create, :new]
+  before_action :generate_enrollment_qr_code, except: [:create, :new]
 
   # GET /lectures
   def index
@@ -94,15 +97,13 @@ class LecturesController < ApplicationController
       key = params[:lecture][:enrollment_key]
     end
 
-    if key == @lecture.enrollment_key || !@lecture.enrollment_key_present?
-      @lecture.join_lecture(current_user)
-      @lecture.save
-      current_user.save
-      redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
-      StudentsStatisticsChannel.broadcast_to(@lecture, 1)
-    else
-      redirect_to course_path(@course), alert: "You inserted the wrong key!"
-    end
+    join_lecture_with_key(key)
+  end
+
+  def join_lecture_with_url
+    key = params[:key]
+
+    join_lecture_with_key(key)
   end
 
   def leave_lecture
@@ -142,7 +143,12 @@ class LecturesController < ApplicationController
 
     # This method looks for the lecture in the database and redirects with a failure if the lecture does not exist.
     def get_lecture
-      @lecture = Lecture.find_by(id: params[:id])
+      if params[:id].nil?
+        @lecture = Lecture.find_by(id: params[:lecture_id])
+      else
+        @lecture = Lecture.find_by(id: params[:id])
+      end
+
       if @lecture.nil?
         redirect_to course_path(@course), alert: "The lecture you requested does not exist."
       end
@@ -156,9 +162,12 @@ class LecturesController < ApplicationController
 
     def validate_joined_user_or_owner
       isStudent = current_user.is_student
-      isJoinedStudent = @lecture.participating_students.include?(current_user)
+      isJoinedStudentCourse = @course.participating_students.include?(current_user)
+      isJoinedStudentLecture = @lecture.participating_students.include?(current_user)
       isLectureOwner = @lecture.lecturer == current_user
-      if isStudent && !isJoinedStudent
+      if isStudent && !isJoinedStudentCourse
+        redirect_to root_path, alert: "You must join the course before you can view one of its lectures."
+      elsif isStudent && !isJoinedStudentLecture
         redirect_to course_path(@course), alert: "You must join a lecture before you can view it."
       elsif !isStudent && !isLectureOwner
         redirect_to course_path(@course), alert: "You can only access your own lectures."
@@ -184,6 +193,25 @@ class LecturesController < ApplicationController
     def validate_course_creator
       if @course.creator != current_user
         redirect_to @course, alert: "You can only access your own courses."
+      end
+    end
+
+    def generate_enrollment_qr_code
+      enrollment_url = request.base_url + "/courses/" + @course.id.to_s + "/lectures/" + @lecture.id.to_s + "/enrollment?key=" + @lecture.enrollment_key
+      @qr_code = RQRCode::QRCode.new(enrollment_url)
+    end
+
+    def join_lecture_with_key(key)
+      if key == @lecture.enrollment_key || !@lecture.enrollment_key_present?
+        @course.join_course(current_user)
+        @course.save
+        @lecture.join_lecture(current_user)
+        @lecture.save
+        current_user.save
+        redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
+        StudentsStatisticsChannel.broadcast_to(@lecture, 1)
+      else
+        redirect_to course_path(@course), alert: "You inserted the wrong key!"
       end
     end
 end
