@@ -79,9 +79,9 @@
               <%= form.label :content, "Write your feedback here"%>
               <%= form.text_area :content, {class: "form-control"} %>
             </p>
-            <p>
+            <div class="d-flex flex-row-reverse">
               <%= form.submit "Submit", {class: "btn btn-primary", id: "feedback-submit"} %>
-            </p>
+            </div>
           <% end %>
           <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert"> Feedback submitted</div>
         <% end %>
