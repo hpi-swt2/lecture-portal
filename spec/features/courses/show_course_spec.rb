@@ -29,24 +29,6 @@ describe "The course detail page", type: :feature do
       visit(course_path(@course))
       expect(page).to have_link("Review", href: course_lecture_path(@course, @lecture))
     end
-    it "should set the lecture active on clicking \"Start\"" do
-      visit(course_path(@course))
-      click_on("Start")
-      @lecture.reload
-      expect(@lecture.status).to eq("running")
-    end
-
-    it "should redirect to the show path after clicking \"Start\"" do
-      visit(course_path(@course))
-      click_on("Start")
-      expect(current_path).to eq(course_lecture_path(@course, @lecture))
-    end
-
-    it "should not show the \"Start\" button after a lecture was started" do
-      visit(course_path(@course))
-      click_on("Start")
-      expect(page).not_to have_link("Start")
-    end
 
     it "should show a \"View\" link after the lecture is started" do
       @lecture.update(status: "running")
