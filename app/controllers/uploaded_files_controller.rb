@@ -47,13 +47,14 @@ class UploadedFilesController < ApplicationController
       content_type = nil
       data = nil
     else
-      filename = uploaded_file.original_filename
+      filename = uploaded_file_params["filename"].blank? ? uploaded_file.original_filename : uploaded_file_params["filename"]
       content_type = uploaded_file.content_type
       data = uploaded_file.read
     end
     is_link = !uploaded_file_params["link"].blank?
     if is_link
       data = uploaded_file_params["link"]
+      filename = uploaded_file_params["link_name"]
     end
     # we might be under both
     allows_upload = @course
@@ -82,7 +83,7 @@ class UploadedFilesController < ApplicationController
   private
     # Only allow a trusted parameter "white list" through.
     def uploaded_file_params
-      params.require(:uploaded_file).permit(:attachment, :lecture, :link)
+      params.require(:uploaded_file).permit(:attachment, :lecture, :link, :link_name, :filename)
     end
 
     def validate_destroy_rights
