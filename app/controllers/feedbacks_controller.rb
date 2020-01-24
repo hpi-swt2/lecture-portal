@@ -12,17 +12,6 @@ class FeedbacksController < ApplicationController
       @feedback = @lecture.feedbacks.where(user_id: current_user.id)
       @feedback.update(comment_params)
     end
-
-    respond_to do |format|
-      if @feedback.save
-        # format.html {redirect_to @feedback, notice: 'User was successfully created.'}
-        format.js
-        # format.json {render json: @feedback, status: :created, location: @feedback }
-      else
-        format.html { render action: "new", notice: "Error" }
-      end
-    end
-
     head :no_content
   end
 
