@@ -4,9 +4,6 @@ RSpec.describe Lecture, type: :model do
   let(:valid_attributes) {
     { name: "SWT", enrollment_key: "swt", status: "created", date: "2020-02-02", start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
   }
-  let(:valid_attributes_with_description) {
-    { name: "SWT", enrollment_key: "swt", status: "created", date: "2020-02-02", start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true, description: "description" }
-  }
   let(:valid_attributes_with_lecturer) {
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
   }
@@ -97,7 +94,6 @@ RSpec.describe Lecture, type: :model do
     @lecture.set_inactive
     expect(@lecture).to be_valid
     @lecture.save
-    @lecture.description = @lecture.description + " new"
     expect { @lecture.save }.to raise_error(ActiveRecord::ReadOnlyRecord)
     expect { @lecture.update(status: "running") }.to raise_error(ActiveRecord::ReadOnlyRecord)
   end
@@ -106,7 +102,6 @@ RSpec.describe Lecture, type: :model do
     @lecture.set_active
     expect(@lecture).to be_valid
     @lecture.save
-    @lecture.description = @lecture.description + " new"
     expect(@lecture.save).to be_truthy
     expect(@lecture.update(status: "running")).to be_truthy
   end

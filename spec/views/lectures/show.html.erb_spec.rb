@@ -6,7 +6,6 @@ RSpec.describe "lectures/show", type: :view do
     @course = FactoryBot.create(:course)
     @lecture = assign(:lecture, Lecture.create!(
                                   name: "Name",
-                                  description: "Test",
                                   enrollment_key: "Enrollment Key",
                                   status: "running",
                                   lecturer: FactoryBot.create(:user, :lecturer),
@@ -92,12 +91,6 @@ RSpec.describe "lectures/show", type: :view do
       render
       assert_select "a", "Settings"
       expect(rendered).to have_selector("input[id='lecture_name'][type='text']")
-    end
-
-    it "can change description in settings tab" do
-      render
-      assert_select "a", "Settings"
-      expect(rendered).to have_selector("textarea[id='lecture_description']")
     end
 
     it "can change enrollment key in settings tab" do

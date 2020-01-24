@@ -23,8 +23,6 @@ RSpec.describe "lectures/new", type: :view do
       assert_select "input[name=?]", "lecture[questions_enabled]"
 
       assert_select "input[name=?]", "lecture[polls_enabled]"
-
-      assert_select "textarea[name=?]", "lecture[description]"
     end
   end
 end
