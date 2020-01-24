@@ -87,19 +87,40 @@ class Lecture < ApplicationRecord
   end
 
   def broadcast_comprehension_status
-    ActionCable.server.broadcast "lecture_comprehension_stamp:#{self.id}", get_comprehension_status
+    ActionCable.server.broadcast "lecture_comprehension_stamp:#{self.id}", comprehension_state_lecture
   end
 
-  def get_comprehension_status
-    status = Array.new(LectureComprehensionStamp.number_of_states, 0)
-    status.size.times do |i|
-      status[i] = self.lecture_comprehension_stamps.where("status = ? and updated_at > ?", i, Time.now - LectureComprehensionStamp.seconds_till_comp_timeout).count
-    end
-    last_update = self.lecture_comprehension_stamps.max { |a, b| a.timestamp <=> b.timestamp }
-    if !last_update
-      { status: status, last_update: nil }
+  def comprehension_state(current_user)
+    if current_user.is_student
+      comprehension_state_student(current_user)
     else
-      { status: status, last_update: last_update.timestamp }
+      comprehension_state_lecture
     end
   end
+
+  private
+    def comprehension_state_student(current_user)
+      stamp = self.lecture_comprehension_stamps.where(user: current_user).max { |a, b| a.timestamp <=> b.timestamp }
+      if stamp
+        if stamp.timestamp <= Time.now - LectureComprehensionStamp.seconds_till_comp_timeout
+          { status: -1, last_update: stamp.timestamp }
+        else
+          { status: stamp.status, last_update: stamp.timestamp }
+        end
+      else
+        { status: -1, last_update: nil }
+      end
+    end
+    def comprehension_state_lecture
+      status = Array.new(LectureComprehensionStamp.number_of_states, 0)
+      status.size.times do |i|
+        status[i] = self.lecture_comprehension_stamps.where("status = ? and updated_at > ?", i, Time.now - LectureComprehensionStamp.seconds_till_comp_timeout).count
+      end
+      last_update = self.lecture_comprehension_stamps.max { |a, b| a.timestamp <=> b.timestamp }
+      if !last_update
+        { status: status, last_update: nil }
+      else
+        { status: status, last_update: last_update.timestamp }
+      end
+    end
 end
