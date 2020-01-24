@@ -13,11 +13,6 @@ describe "The course detail page", type: :feature do
       sign_in @lecturer
     end
 
-    it "should have a \"Start\" button for not started lectures" do
-      visit(course_path(@course))
-      expect(page).to have_link("Start", href: start_lecture_path(course_id: @lecture.course.id) + "?id=" + @lecture.id.to_s)
-    end
-
     it "should not have a \"View\" link for not started lectures" do
       visit(course_path(@course))
       expect(page).to_not have_link("View", href: course_lecture_path(@course, @lecture))
@@ -26,25 +21,6 @@ describe "The course detail page", type: :feature do
     it "should have a \"Create Lecture\" button" do
       visit(course_path(@course))
       expect(page).to have_link("Create Lecture")
-    end
-
-    it "should set the lecture active on clicking \"Start\"" do
-      visit(course_path(@course))
-      click_on("Start")
-      @lecture.reload
-      expect(@lecture.status).to eq("running")
-    end
-
-    it "should redirect to the show path after clicking \"Start\"" do
-      visit(course_path(@course))
-      click_on("Start")
-      expect(current_path).to eq(course_lecture_path(@course, @lecture))
-    end
-
-    it "should not show the \"Start\" button after a lecture was started" do
-      visit(course_path(@course))
-      click_on("Start")
-      expect(page).not_to have_link("Start")
     end
 
     it "should show a \"View\" link after the lecture is started" do
