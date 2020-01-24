@@ -24,7 +24,7 @@ class Lecture < ApplicationRecord
   end
 
   def join_lecture(student)
-    if !self.participating_students.include?(student)
+    unless self.participating_students.include?(student)
       self.participating_students << student
     end
   end
@@ -36,13 +36,13 @@ class Lecture < ApplicationRecord
   end
 
 
-  def compareIgnoreStatus(other_lecture)
+  def compare_ignore_status(other_lecture)
     name == other_lecture.name && polls_enabled == other_lecture.polls_enabled && questions_enabled == other_lecture.questions_enabled \
     && description == other_lecture.description && enrollment_key == other_lecture.enrollment_key && id == other_lecture.id
   end
 
   def ==(other_lecture)
-    status == other_lecture.status && compareIgnoreStatus(other_lecture)
+    status == other_lecture.status && compare_ignore_status(other_lecture)
   end
 
   def !=(other_lecture)
