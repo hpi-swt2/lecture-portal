@@ -6,14 +6,12 @@
     }
 </script>
 
-<div class="container">
-  <h1 class="h5"><%= @lecture.name %></h1>
-  <% if @lecture.start_time && @lecture.end_time && @lecture.date%>
-    <p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
-  <% end %>
+<h1 class="h5"><%= @lecture.name %></h1>
+<% if @lecture.start_time && @lecture.end_time && @lecture.date%>
+  <p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
+<% end %>
 
-  <%= render 'tabbar', current_user: @current_user %>
-</div>
+<%= render 'tabbar', current_user: @current_user %>
 
 <div class="tab-content" id="lectureTabsContent">
   <div class="tab-pane fade show active mx-auto" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="max-width: 2000px;">
