@@ -13,7 +13,8 @@ class Lecture < ApplicationRecord
 
   validates :name, presence: true, length: { in: 2..40 }
   validates :enrollment_key, length: { in: 3..20, if: :enrollment_key_present? }
-  # scope :active, -> { where status: "running" }  #TODO rethink
+  scope :running, -> { where status: "running" }
+  scope :active, -> { running.or(where status: "active") }
 
   def set_created
     self.status = :created
@@ -66,7 +67,7 @@ class Lecture < ApplicationRecord
   def readonly?
     if self.id
       db_lecture = Lecture.find(self.id)
-      return db_lecture.status == "archived" #TODO: Disallow comprehension not only in readonly but also when status = active
+      return db_lecture.status == "archived" # TODO: Disallow comprehension not only in readonly but also when status = active
     end
     false
   end

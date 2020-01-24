@@ -16,7 +16,7 @@ describe "The current lectures page", type: :feature do
       expect(page).to have_current_path(current_lectures_path(course_id: @course.id))
     end
 
-    it "should only show active lectures" do
+    it "should show active or running lectures" do
       @lectures = FactoryBot.create_list(:lecture, 2)
       @lectures[0].update(status: "created")
       @lectures[0].update(course: @course)
