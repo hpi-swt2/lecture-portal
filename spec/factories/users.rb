@@ -3,6 +3,7 @@ FactoryBot.define do
     email { random_name + "@hpi.de" }
     password { "password" }
     password_confirmation { "password" }
+    hash_id { SecureRandom.urlsafe_base64(20) }
 
     trait :student do
       is_student { true }

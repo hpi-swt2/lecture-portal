@@ -48,7 +48,6 @@ RSpec.describe "home/index", type: :view do
 
     it "displays key input form for lectures with a key for not joined students" do
       visit root_path
-      save_and_open_page
       expect(page).to have_text("Join")
       # it's 2 because of the courses button
       expect(page).to have_css("form", count: 2)
