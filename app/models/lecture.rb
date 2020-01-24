@@ -152,8 +152,6 @@ class Lecture < ApplicationRecord
     end
 
     def update_lecture_status
-      old_status = self.status
-
       if self.date < Date.today
         self.set_archived
       elsif self.date > Date.today
