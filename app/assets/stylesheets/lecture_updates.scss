@@ -12,18 +12,25 @@
       text-align: center;
       margin-bottom: 0;
       padding: 0 10px;
-      
-      &.is_lecturer {
-        > li.interactable {
+
+      > li {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        &.interactable {
           cursor: pointer;
           &:hover {
-            background-color: #d4fcd2;
+            background-color: #ddd !important;
           }
         }
-      }
-
-      > li:last-child {
-        margin-bottom: 0;
+        &.marked {
+          border: 1px solid #f2994a;
+        }
+        &:last-child {
+          margin-bottom: 0;
+        }
       }
     }
   }
