@@ -76,7 +76,7 @@
             <tr>
               <td><%= course.name %></td>
               <td><%= button_to "View", course_path(id: course.id), :method => "get", class:"btn btn-primary" %></td>
-              <td><%= link_to "Leave", leave_course_path(id: course.id), method: :post, class:"btn btn-primary" %></td>
+              <td><%= link_to "Unenroll", leave_course_path(id: course.id), method: :post, class:"btn btn-primary" %></td>
             </tr>
           <% end %>
         </table>
