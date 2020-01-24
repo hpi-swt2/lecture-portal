@@ -28,4 +28,35 @@ RSpec.describe Question, type: :model do
     question.upvoters << user1
     question.upvoters << user2
   end
+
+  describe "questions_for_lecture" do
+    before(:each) do
+      @lecturer = FactoryBot.create(:user, :lecturer, email: "lecturer@mail.de")
+      @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+    end
+    context "with user logged in as student" do
+      before(:each) do
+        @student = FactoryBot.create(:user, :student)
+        @lecture.join_lecture(@student)
+        @question = FactoryBot.create(:question, author: @student, lecture: @lecture)
+      end
+
+      it "should return list of a question" do
+        expect(Question.questions_for_lecture(@lecture, @student).to_json).to eq([@question].to_json)
+      end
+      it "should return a time-sorted list of all questions" do
+        question2 = FactoryBot.create(:question, author: @student, lecture: @lecture)
+        expected = [ question2, @question ]
+        expect(Question.questions_for_lecture(@lecture, @student).to_json).to eq(expected.to_json)
+      end
+
+      it "should only show questions belonging to the requested lecture" do
+        another_lecture = FactoryBot.create(:lecture)
+        another_lecture.join_lecture(@student)
+        FactoryBot.create(:question, author: @student, lecture: another_lecture)
+        expected = [ @question ]
+        expect(Question.questions_for_lecture(@lecture, @student).to_json).to eq(expected.to_json)
+      end
+    end
+  end
 end

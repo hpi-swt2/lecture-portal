@@ -23,6 +23,7 @@ class LecturesController < ApplicationController
     @current_user = current_user
     @feedback = Feedback.new
     @uploaded_files = @lecture.uploaded_files
+    render layout: "application-full"
   end
 
   # GET courses/:course_id/lectures/new
@@ -99,6 +100,7 @@ class LecturesController < ApplicationController
       @lecture.save
       current_user.save
       redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
+      StudentsStatisticsChannel.broadcast_to(@lecture, 1)
     else
       redirect_to course_path(@course), alert: "You inserted the wrong key!"
     end
@@ -107,6 +109,7 @@ class LecturesController < ApplicationController
   def leave_lecture
     @lecture.leave_lecture(current_user)
     redirect_to course_path(@course), notice: "You successfully left the lecture."
+    StudentsStatisticsChannel.broadcast_to(@lecture, -1)
   end
 
   def end_lecture
@@ -126,25 +129,6 @@ class LecturesController < ApplicationController
       stamp.broadcast_update
     end
     @lecture.broadcast_comprehension_status
-  end
-
-  def get_comprehension
-    if current_user.is_student
-      stamp = @lecture.lecture_comprehension_stamps.where(user: current_user).max { |a, b| a.timestamp <=> b.timestamp }
-      if stamp
-        if stamp.timestamp <= Time.now - LectureComprehensionStamp.seconds_till_comp_timeout
-          data = { status: -1, last_update: stamp.timestamp }
-        else
-          data = { status: stamp.status, last_update: stamp.timestamp }
-        end
-      else
-        data = { status: -1, last_update: nil }
-      end
-    else
-      data = @lecture.get_comprehension_status
-    end
-
-    render json: data
   end
 
   private

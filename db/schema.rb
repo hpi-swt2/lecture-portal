@@ -45,7 +45,9 @@ ActiveRecord::Schema.define(version: 2020_01_20_184223) do
     t.integer "lecture_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
     t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
 
   create_table "lecture_comprehension_stamps", id: false, force: :cascade do |t|
@@ -144,7 +146,9 @@ ActiveRecord::Schema.define(version: 2020_01_20_184223) do
     t.datetime "updated_at", null: false
     t.boolean "is_student", default: false, null: false
     t.string "hash_id"
+    t.integer "feedback_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["feedback_id"], name: "index_users_on_feedback_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

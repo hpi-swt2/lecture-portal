@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  has_one :feedback, dependent: :destroy
   has_many :uploaded_files, foreign_key: "author_id"
   has_many :lectures, dependent: :destroy
   has_many :courses, dependent: :destroy

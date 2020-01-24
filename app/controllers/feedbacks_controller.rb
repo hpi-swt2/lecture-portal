@@ -2,11 +2,16 @@ class FeedbacksController < ApplicationController
   before_action :authenticate_user!
   before_action :get_course
   before_action :get_lecture
-  before_action :validate_joined_user_or_owner
+  # before_action :validate_joined_user_or_owner
 
   def create
     @lecture = Lecture.find(params[:lecture_id])
-    @feedback = @lecture.feedbacks.create(comment_params)
+    if params[:commit] == "Submit"
+      @feedback = @lecture.feedbacks.create(content: comment_params[:content], user: current_user)
+    elsif params[:commit] == "Update"
+      @feedback = @lecture.feedbacks.where(user_id: current_user.id)
+      @feedback.update(comment_params)
+    end
 
     respond_to do |format|
       if @feedback.save
@@ -17,11 +22,13 @@ class FeedbacksController < ApplicationController
         format.html { render action: "new", notice: "Error" }
       end
     end
+
+    head :no_content
   end
 
   private
     def comment_params
-      params.require(:feedback).permit(:content)
+      params.require(:feedback).permit(:content, :user)
     end
 
     # This method looks for the course in the database and redirects with a failure if the course does not exist.
