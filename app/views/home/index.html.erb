@@ -38,7 +38,7 @@
           </thead>
 
           <% Lecture.where(course: @participating_courses).each do |lecture| %>
-            <% if lecture.status == "running" %>
+            <% if lecture.status == "running" || lecture.status == "active" %>
               <tr>
                 <td><%= lecture.course.name %> - <%= lecture.name %></td>
                 <td>
