@@ -25,7 +25,7 @@ RSpec.describe "lectures/edit", type: :view do
       assert_select "select[name=?]", "lecture[date(1i)]"
       assert_select "select[name=?]", "lecture[date(2i)]"
       assert_select "select[name=?]", "lecture[date(3i)]"
-      #there are 3 hidden inputs for start and end time, so the selects start with 4i
+      # there are 3 hidden inputs for start and end time, so the selects start with 4i
       assert_select "select[name=?]", "lecture[start_time(4i)]"
       assert_select "select[name=?]", "lecture[start_time(5i)]"
       assert_select "select[name=?]", "lecture[end_time(4i)]"
