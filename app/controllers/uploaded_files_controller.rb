@@ -54,7 +54,7 @@ class UploadedFilesController < ApplicationController
     is_link = !uploaded_file_params["link"].blank?
     if is_link
       data = uploaded_file_params["link"]
-      filename = uploaded_file_params["link_name"]
+      filename = uploaded_file_params["link_name"].blank? ? data : uploaded_file_params["link_name"]
     end
     # we might be under both
     allows_upload = @course
