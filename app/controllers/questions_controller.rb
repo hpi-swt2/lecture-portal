@@ -80,7 +80,9 @@ class QuestionsController < ApplicationController
       isStudent = current_user.is_student
       isJoinedStudent = isStudent && @lecture.participating_students.include?(current_user)
       isLectureOwner = !isStudent && @lecture.lecturer == current_user
-      return head :forbidden unless isJoinedStudent || isLectureOwner
+      unless isJoinedStudent || isLectureOwner
+        head :forbidden
+      end
     end
 
     def validate_lecture_running_or_active

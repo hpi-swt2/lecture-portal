@@ -4,8 +4,8 @@
   </div>
 <% end %>
 
-<h2> <%= @course.name %> </h2>
-<h4> <%= @course.description %> </h4>
+<h1><%= @course.name %></h1>
+<p class="h4"><%= @course.description %></p>
 <br>
 
 <% if !@course.lectures.empty? %>

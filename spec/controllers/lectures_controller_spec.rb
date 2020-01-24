@@ -5,9 +5,6 @@ RSpec.describe LecturesController, type: :controller do
   let(:valid_attributes) {
     { name: "SWT", enrollment_key: "swt", status: "created", date: "2020-02-02", start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
   }
-  let(:valid_attributes_with_description) {
-    { name: "SWT", enrollment_key: "swt", status: "created", date: "2020-02-02", start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true, description: "description" }
-  }
   let(:valid_attributes_with_lecturer) {
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
   }
@@ -149,13 +146,6 @@ RSpec.describe LecturesController, type: :controller do
         }.to change(Lecture, :count).by(0)
       end
 
-      it "creates a new Lecture with description", :logged_lecturer do
-        course = FactoryBot.create(:course, creator: @lecturer)
-        expect {
-          post :create, params: { course_id: (course.id), lecture: valid_attributes_with_description }, session: valid_session
-        }.to change(Lecture, :count).by(1)
-      end
-
       it "redirects to the lecture dashboard", :logged_lecturer do
         course = FactoryBot.create(:course, creator: @lecturer)
         post :create, params: { course_id: (course.id), lecture: valid_attributes }, session: valid_session
@@ -175,7 +165,7 @@ RSpec.describe LecturesController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        { name: "SWT2", enrollment_key: "epic", status: "running", description: "new description" }
+        { name: "SWT2", enrollment_key: "epic", status: "running" }
       }
       before(:each) do
         @lecture = Lecture.create! valid_attributes_with_lecturer_with_course
@@ -188,7 +178,6 @@ RSpec.describe LecturesController, type: :controller do
         expect(@lecture.name).to eq("SWT2")
         expect(@lecture.enrollment_key).to eq("epic")
         expect(@lecture.running?).to eq(true)
-        expect(@lecture.description).to eq("new description")
         expect(@lecture.status).to eq("running")
       end
 
@@ -302,7 +291,7 @@ RSpec.describe LecturesController, type: :controller do
   describe "PUT #update" do
     context "with valid params" do
       let(:new_attributes) {
-        { name: "SWT2", enrollment_key: "epic", status: "running", description: "new description" }
+        { name: "SWT2", enrollment_key: "epic", status: "running" }
       }
       before(:each) do
         @lecture = Lecture.create! valid_attributes_with_lecturer_with_course
@@ -315,7 +304,6 @@ RSpec.describe LecturesController, type: :controller do
         expect(@lecture.name).to eq("SWT2")
         expect(@lecture.enrollment_key).to eq("epic")
         expect(@lecture.running?).to eq(true)
-        expect(@lecture.description).to eq("new description")
         expect(@lecture.status).to eq("running")
       end
 
