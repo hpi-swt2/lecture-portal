@@ -9,6 +9,7 @@ describe "The course detail page", type: :feature do
       @lecturer = FactoryBot.create(:user, :lecturer)
       @course = FactoryBot.create(:course, creator: @lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer, course: @course)
+      @student = FactoryBot.create(:user, :student)
       sign_in @lecturer
     end
 
@@ -74,38 +75,38 @@ describe "The course detail page", type: :feature do
     end
 
     it "should show a file that was uploaded to the course by a lecturer" do
-      @file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+      @file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
       visit(course_path(@course))
-      expect(page).to have_link(@file.filename, href: uploaded_file_path(@file))
+      expect(page).to have_link(@file.filename, href: course_uploaded_file_path(@course, @file))
     end
 
     it "should show a file that was uploaded to the course by a student" do
       @student = FactoryBot.create(:user, :student)
-      @file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+      @file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
       visit(course_path(@course))
-      expect(page).to have_link(@file.filename, href: uploaded_file_path(@file))
+      expect(page).to have_link(@file.filename, href: course_uploaded_file_path(@course, @file))
     end
 
     it "should not show a file that is not linked to the course" do
       @other_course = FactoryBot.create(:course, creator: @lecturer)
-      @file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @other_course.id, allowsUpload_type: "Course")
+      @file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @other_course.id, allowsUpload_type: "Course", data: "Something")
       visit(course_path(@course))
-      expect(page).not_to have_link(@file.filename, href: uploaded_file_path(@file))
+      expect(page).not_to have_link(@file.filename, href: course_uploaded_file_path(@course, @file))
     end
 
     it "should show student and lecturer files in according tabs" do
      @student = FactoryBot.create(:user, :student)
-     @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course")
-     @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+     @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
+     @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
      visit(course_path(@course))
-     expect(page).to have_xpath(".//div[@id='files-course']//ul//li//div//a[@href='#{uploaded_file_path(@lecturer_file)}']")
-     expect(page).to_not have_xpath(".//div[@id='files-course']//ul//li//div//a[@href='#{uploaded_file_path(@student_file)}']")
-     expect(page).to have_xpath(".//div[@id='files-students']//ul//li//div//a[@href='#{uploaded_file_path(@student_file)}']")
-     expect(page).to_not have_xpath(".//div[@id='files-students']//ul//li//div//a[@href='#{uploaded_file_path(@lecturer_file)}']")
+     expect(page).to have_xpath(".//div[@id='files-course']//ul//li//div//a[@href='#{course_uploaded_file_path(@course, @lecturer_file)}']")
+     expect(page).to_not have_xpath(".//div[@id='files-course']//ul//li//div//a[@href='#{course_uploaded_file_path(@course, @student_file)}']")
+     expect(page).to have_xpath(".//div[@id='files-students']//ul//li//div//a[@href='#{course_uploaded_file_path(@course, @student_file)}']")
+     expect(page).to_not have_xpath(".//div[@id='files-students']//ul//li//div//a[@href='#{course_uploaded_file_path(@course, @lecturer_file)}']")
    end
 
     it "should download a course file when clicking on it" do
-      @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+      @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
       visit(course_path(@course))
       click_on @lecturer_file.filename
       expect(page.body).to eql @lecturer_file.data
@@ -113,15 +114,25 @@ describe "The course detail page", type: :feature do
     end
 
     it "should have delete links for every file" do
-     @student = FactoryBot.create(:user, :student)
-     @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course")
-     @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course")
-     visit(course_path(@course))
-     @delete_link_student_file = find_link("Delete File", href: uploaded_file_path(@student_file))
-     @delete_link_lecturer_file =find_link("Delete File", href: uploaded_file_path(@lecturer_file))
-     expect { @delete_link_student_file.click }.to change(UploadedFile, :count).by(-1)
-     expect { @delete_link_lecturer_file.click }.to change(UploadedFile, :count).by(-1)
-   end
+      @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
+      @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
+      visit(course_path(@course))
+      @delete_link_student_file = find_link("Delete File", href: course_uploaded_file_path(@course, @student_file))
+      @delete_link_lecturer_file =find_link("Delete File", href: course_uploaded_file_path(@course, @lecturer_file))
+      expect { @delete_link_student_file.click }.to change(UploadedFile, :count).by(-1)
+      expect { @delete_link_lecturer_file.click }.to change(UploadedFile, :count).by(-1)
+    end
+
+    it "shoud have an \"Add Material\" link" do
+        visit(course_path(@course))
+        expect(page).to have_link("Add Material", href: new_course_uploaded_file_path(@course))
+      end
+
+    it "shoud have an \"Add Material\" link for students" do
+      sign_in @student
+      visit(course_path(@course))
+      expect(page).to have_link("Add Material", href: new_course_uploaded_file_path(@course))
+    end
   end
 
   context "being signed in as a student" do
@@ -136,14 +147,14 @@ describe "The course detail page", type: :feature do
 
     it "should only have delete links for his own files" do
       @other_student = FactoryBot.create(:user, :student)
-      @other_student_file = FactoryBot.create(:uploaded_file, author: @other_student, allowsUpload_id: @course.id, allowsUpload_type: "Course")
-      @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course")
-      @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course")
+      @other_student_file = FactoryBot.create(:uploaded_file, author: @other_student, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
+      @lecturer_file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
+      @student_file = FactoryBot.create(:uploaded_file, author: @student, allowsUpload_id: @course.id, allowsUpload_type: "Course", data: "Something")
       visit(course_path(@course))
-      expect(page).to have_selector("a[href='#{uploaded_file_path(@student_file)}'][data-method='delete']")
-      expect(page).to_not have_selector("a[href='#{uploaded_file_path(@lecturer_file)}'][data-method='delete']")
-      expect(page).to_not have_selector("a[href='#{uploaded_file_path(@other_student_file)}'][data-method='delete']")
-      @delete_link = find_link("Delete File", href: uploaded_file_path(@student_file))
+      expect(page).to have_selector("a[href='#{course_uploaded_file_path(@course, @student_file)}'][data-method='delete']")
+      expect(page).to_not have_selector("a[href='#{course_uploaded_file_path(@course, @lecturer_file)}'][data-method='delete']")
+      expect(page).to_not have_selector("a[href='#{course_uploaded_file_path(@course, @other_student_file)}'][data-method='delete']")
+      @delete_link = find_link("Delete File", href: course_uploaded_file_path(@course, @student_file))
       expect { @delete_link.click }.to change(UploadedFile, :count).by(-1)
     end
   end

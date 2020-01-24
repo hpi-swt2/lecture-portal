@@ -1,21 +1,12 @@
 class QuestionsController < ApplicationController
   before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
+  before_action :get_course
   before_action :get_lecture
   before_action :validate_joined_user_or_owner
-
-  # GET /questions
-  def index
-    if current_user.is_student
-      questions = Question.where(resolved: false, lecture: @lecture).order(created_at: :DESC)
-    else
-      questions = Question.where(resolved: false, lecture: @lecture)
-        .left_joins(:upvoters)
-        .group(:id)
-        .order(Arel.sql("COUNT(users.id) DESC"), created_at: :DESC)
-    end
-    render json: questions
-  end
+  before_action :validate_lecture_running_or_ended, except: [:index]
+  before_action :get_question, only: [:upvote, :resolve]
+  before_action :validate_question_unresolved, only: [:upvote, :resolve]
 
   # POST /questions
   def create
@@ -38,14 +29,12 @@ class QuestionsController < ApplicationController
 
   # POST /questions/:id/upvote
   def upvote
-    question = Question.find(params[:id])
-    if question && current_user.is_student && question.author != current_user && !question.upvoters.include?(current_user) && question.lecture == @lecture
-
-      question.upvoters << current_user
-      if question.save
+    if @question && current_user.is_student && @question.author != current_user && !@question.upvoters.include?(current_user) && @question.lecture == @lecture
+      @question.upvoters << current_user
+      if @question.save
         # broadcast upvote via ActionCable
         QuestionUpvotingChannel.broadcast_to(@lecture, {
-            question_id: question.id,
+            question_id: @question.id,
             upvoter_id: current_user.id
         })
         head :ok
@@ -54,15 +43,15 @@ class QuestionsController < ApplicationController
       head :forbidden
     end
   end
+
   # POST /questions/:id/resolve
   def resolve
-    question = Question.find(params[:id])
     # only allow author or lecturer to resolve the question
-    if question && (!current_user.is_student || question.author == current_user) && question.lecture == @lecture
-      question.resolved = true
-      if question.save
+    if @question && (!current_user.is_student || @question.author == current_user) && @question.lecture == @lecture
+      @question.resolved = true
+      if @question.save
         # broadcast resolving via ActionCable
-        QuestionResolvingChannel.broadcast_to(@lecture, question.id)
+        QuestionResolvingChannel.broadcast_to(@lecture, @question.id)
         head :ok
       end
     else
@@ -71,8 +60,20 @@ class QuestionsController < ApplicationController
   end
 
   private
+    # This method looks for the course in the database and redirects with a failure if the course does not exist.
+    def get_course
+      @course = Course.find_by(id: params[:course_id])
+      if @course.nil?
+        redirect_to root_path, alert: "The course you requested does not exist."
+      end
+    end
+
+    # This method looks for the lecture in the database and redirects with a failure if the lecture does not exist.
     def get_lecture
-      @lecture = Lecture.find(params[:lecture_id])
+      @lecture = Lecture.find_by(id: params[:lecture_id])
+      if @lecture.nil?
+        redirect_to course_path(id: @course.id), alert: "The lecture you requested does not exist."
+      end
     end
 
     def validate_joined_user_or_owner
@@ -80,5 +81,17 @@ class QuestionsController < ApplicationController
       isJoinedStudent = isStudent && @lecture.participating_students.include?(current_user)
       isLectureOwner = !isStudent && @lecture.lecturer == current_user
       return head :forbidden unless isJoinedStudent || isLectureOwner
+    end
+
+    def validate_lecture_running_or_ended
+      head :forbidden if @lecture.readonly?
+    end
+
+    def get_question
+      @question = Question.find(params[:id])
+    end
+
+    def validate_question_unresolved
+      head :forbidden if @question.resolved
     end
 end

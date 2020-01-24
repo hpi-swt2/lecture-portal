@@ -1,7 +1,8 @@
 class PollsController < ApplicationController
-  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start, :answer]
-  before_action :get_lecture
   before_action :authenticate_user!
+  before_action :get_course
+  before_action :get_lecture
+  before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start, :answer]
   before_action :set_is_student
   before_action do |controller|
     @hide_navbar = true
@@ -78,6 +79,7 @@ class PollsController < ApplicationController
       Answer.where(poll_id: poll.id, student_id: current_user.id).destroy_all
       save_given_answers(current_poll_answers, poll)
       @poll.gather_vote_results
+      broadcast_state
       redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, poll: @poll), notice: "You answered successfully ;-)"
     end
   end
@@ -110,6 +112,7 @@ class PollsController < ApplicationController
         @poll.poll_options.build(description: poll_option_description.to_param)
       end
       if @poll.save
+        broadcast_state
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully updated."
       else
         render :edit
@@ -125,7 +128,55 @@ class PollsController < ApplicationController
     redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully destroyed."
   end
 
+  # GET /polls/:id/serializedOptions
+  def serialized_options
+    render json: get_serialized_options
+  end
+
+  # GET /polls/:id/serialize_participants_count
+  def serialized_participants_count
+    render json: get_serialized_participants_count
+  end
+
   private
+    # Send belonging poll_options to subscribers so they can update their data
+    def broadcast_options
+      poll = Poll.find(params[:id])
+      if @poll.lecture == @lecture
+        # broadcast update via ActionCable
+        PollOptionsChannel.broadcast_to(poll, get_serialized_options)
+      end
+    end
+
+    def get_serialized_options
+      poll = Poll.find(params[:id])
+      poll_options = poll.poll_options
+      poll_options.map { |option| ActiveModelSerializers::Adapter::Json.new(
+        PollOptionSerializer.new(option)
+      ).serializable_hash}
+    end
+
+    # Send belonging participants count of a poll to subscribers so they can update their data
+    def broadcast_participants_count
+      poll = Poll.find(params[:id])
+      if @poll.lecture == @lecture
+        # broadcast update via ActionCable
+        PollParticipantsCountChannel.broadcast_to(poll, get_serialized_participants_count)
+      end
+    end
+
+    def get_serialized_participants_count
+      poll = Poll.find(params[:id])
+      lecture = Lecture.find(params[:lecture_id])
+      { "numberOfParticipants" => Answer.where(poll_id: poll.id).distinct.count(:student_id),
+              "numberOfLectureUsers" => lecture.participating_students.length() }
+    end
+
+    def broadcast_state
+      broadcast_options
+      broadcast_participants_count
+    end
+
     # Use callbacks to share common setup or constraints between actions.
     def set_poll
       @poll = Poll.find(params[:id])
@@ -136,8 +187,20 @@ class PollsController < ApplicationController
       params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
     end
 
+    # This method looks for the course in the database and redirects with a failure if the course does not exist.
+    def get_course
+      @course = Course.find_by(id: params[:course_id])
+      if @course.nil?
+        redirect_to root_path, alert: "The course you requested does not exist."
+      end
+    end
+
+    # This method looks for the lecture in the database and redirects with a failure if the lecture does not exist.
     def get_lecture
-      @lecture = Lecture.find(params[:lecture_id])
+      @lecture = Lecture.find_by(id: params[:lecture_id])
+      if @lecture.nil?
+        redirect_to course_path(id: @course.id), alert: "The lecture you requested does not exist."
+      end
     end
 
     def answer_params

@@ -1,4 +1,4 @@
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped table-responsive-md">
   <thead>
     <tr>
       <th scope="col">Name</th>
@@ -18,9 +18,21 @@
       <% if lecture.status != "running" %>
         <tr>
           <td><%= lecture.name %></td>
-          <td><%= lecture.date.strftime("%d-%m-%Y") %></td>
-          <td><%= lecture.start_time.strftime("%H:%M") %></td>
-          <td><%= lecture.end_time.strftime("%H:%M") %></td>
+          <td>
+            <%if lecture.date %>
+              <%= lecture.date.strftime("%d-%m-%Y") %>
+            <% end %>
+          </td>
+          <td>
+            <%if lecture.start_time %>
+              <%= lecture.start_time.strftime("%H:%M") %>
+            <% end %>
+          </td>
+          <td>
+            <%if lecture.end_time %>
+              <%= lecture.end_time.strftime("%H:%M")  %>
+            <% end %>
+          </td>
           <% if !@current_user.is_student%>
             <td><%= lecture.enrollment_key %></td>
             <td><%= lecture.status%></td>

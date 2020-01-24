@@ -27,7 +27,8 @@ const createQuestionFromData = (questionData) => {
         author_id: questionData.author_id,
         created_at: new Date(questionData.created_at),
         upvotes: questionData.upvotes,
-        already_upvoted: questionData.already_upvoted != null ? questionData.already_upvoted : false
+        already_upvoted: questionData.already_upvoted != null ? questionData.already_upvoted : false,
+        resolved: questionData.resolved
     });
 };
 
@@ -35,6 +36,8 @@ const QuestionsList = types
     .model({
         list: types.optional(types.array(Question), []),
         is_sorted_by_time: types.optional(types.boolean, false),
+        filter_resolved: types.optional(types.boolean, false),
+        filter_unresolved: types.optional(types.boolean, true),
     })
     .actions(self => ({
         addQuestion(questionData) {
@@ -49,13 +52,10 @@ const QuestionsList = types
             self.list = sortQuestionsList(self.list, self.is_sorted_by_time);
         },
         resolveQuestionById(id: number) {
-            let resolvedQuestion: QuestionModel;
             self.list.forEach(question => {
                 if (question.id == id)
-                    resolvedQuestion = question
+                    question.resolved = true
             });
-            if (resolvedQuestion)
-                destroy(resolvedQuestion)
         },
         upvoteQuestionById(question_id: number, upvoter_id: number) {
             let upvoteQuestion: QuestionModel;
@@ -69,9 +69,26 @@ const QuestionsList = types
                 upvoter_id == getQuestionsRootStore(self).user_id && upvoteQuestion.disallowUpvote();
             }
         },
+
         toggleSorting() {
             self.is_sorted_by_time = !self.is_sorted_by_time;
             self.list = sortQuestionsList(self.list, self.is_sorted_by_time)
+        },
+        toggleFilterResolved() {
+            if (self.filter_resolved)
+                self.filter_resolved = false;
+            else {
+                self.filter_resolved = true;
+                self.filter_unresolved = false;
+            }
+        },
+        toggleFilterUnresolved() {
+            if (self.filter_unresolved)
+                self.filter_unresolved = false;
+            else {
+                self.filter_unresolved = true;
+                self.filter_resolved = false;
+            }
         }
     }));
 

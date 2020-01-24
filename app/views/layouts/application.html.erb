@@ -1,16 +1,7 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>LecturePortal</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
-    <!-- Bootstrap meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-    <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_include_tag 'application', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag    'application' %>
+    <%= render "layouts/application-head" %>
   </head>
 
   <body>
@@ -18,7 +9,7 @@
       <%= render "layouts/navbar" %>
     <% end %>
     <%# Bootstrap container, https://getbootstrap.com/docs/4.0/layout/overview/ %>
-    <main role="main" class="container mt-4">
+    <main role="main"  <%if !@hide_navbar %>class="container mt-4" <% end %>>
       <% if notice %><div class="alert alert-success notice" role="alert"><%= notice %></div><% end %>
       <% if alert %><div class="alert alert-danger" role="alert"><%= alert %></div><% end %>
       <%= yield %>

@@ -1,4 +1,5 @@
 require "rails_helper"
+require "action_cable/testing/rspec"
 
 RSpec.describe LecturesController, type: :controller do
   let(:valid_attributes) {
@@ -38,7 +39,7 @@ RSpec.describe LecturesController, type: :controller do
     }
     urls.each do |path, params|
       it " the #{path}  page" do
-        get path, params: params,  session: valid_session
+        get path, params: params, session: valid_session
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -60,6 +61,22 @@ RSpec.describe LecturesController, type: :controller do
       login_student(student)
       get :show, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
+    end
+
+    it "redirects to course overview when the lecture does not exist", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      login_student()
+      not_existing_lecture_id = lecture.id + 5
+      get :show, params: { course_id: (lecture.course.id), id: not_existing_lecture_id }, session: valid_session
+      expect(response).to redirect_to(course_path(lecture.course))
+    end
+
+    it "redirects to the root path view if the course does not exist", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      not_existing_lecture_id = lecture.id + 5
+      not_existing_course_id = lecture.course.id + 5
+      get :show, params: { course_id: not_existing_course_id, id: not_existing_lecture_id }, session: valid_session
+      expect(response).to redirect_to(root_path)
     end
 
     it "redirects to course overview for not joined students", :logged_lecturer do
@@ -229,18 +246,29 @@ RSpec.describe LecturesController, type: :controller do
       @lecture = FactoryBot.create(:lecture, status: "running")
     end
 
-    it "redirects to the lectures overview for students" do
+    it "redirects to the lecture's overview for students with right key" do
       login_student
-      # post :join_lecture, params: { id: @lecture.id }, session: valid_session
-      # expect(response).to redirect_to(lecture_path(@lecture))
-      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: @lecture.enrollment_key } }, session: valid_session
       expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
+    end
+
+    it "redirects to the courses's overview for students without right key" do
+      login_student
+      post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: "wrong" } }, session: valid_session
+      expect(response).to redirect_to(course_path(@lecture.course.id))
     end
 
     it "redirects to overview for other lecturers" do
       login_lecturer
       post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
       expect(response).to redirect_to(course_path(@lecture.course.id))
+    end
+
+    it "broadcasts to the StudentsStatisticsChannel" do
+      login_student
+      expect {
+        post :join_lecture, params: { course_id: @lecture.course.id, id: @lecture.id, lecture: { enrollment_key: @lecture.enrollment_key } }, session: valid_session
+      }.to have_broadcasted_to(@lecture).from_channel(StudentsStatisticsChannel)
     end
   end
 
@@ -253,7 +281,13 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to the lectures overview" do
       post :leave_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
-      expect(response).to redirect_to(course_lecture_path(course_id: @lecture.course.id, id: @lecture.id))
+      expect(response).to redirect_to(course_path(id: @lecture.course.id))
+    end
+
+    it "broadcasts to the StudentsStatisticsChannel" do
+      expect {
+        post :leave_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
+      }.to have_broadcasted_to(@lecture).from_channel(StudentsStatisticsChannel)
     end
   end
 
@@ -274,6 +308,103 @@ RSpec.describe LecturesController, type: :controller do
       expect(@lecture.status).to eq "ended"
     end
   end
+
+  describe "PUT #update" do
+    context "with valid params" do
+      let(:new_attributes) {
+        { name: "SWT2", enrollment_key: "epic", status: "running", description: "new description" }
+      }
+      before(:each) do
+        @lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+        login_lecturer(@lecture.lecturer)
+      end
+
+      it "updates the requested lecture" do
+        put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: new_attributes }, session: valid_session
+        @lecture.reload
+        expect(@lecture.name).to eq("SWT2")
+        expect(@lecture.enrollment_key).to eq("epic")
+        expect(@lecture.running?).to eq(true)
+        expect(@lecture.description).to eq("new description")
+        expect(@lecture.status).to eq("running")
+      end
+
+      it "redirects to the lecture" do
+        # put :update, params: { id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
+        # expect(response).to redirect_to(lecture_path(@lecture))
+        put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
+        expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
+      end
+
+      it "removes all joined students when adding key to keyless lecture", :logged_lecturer do
+        @lecture.update(enrollment_key: nil)
+        @lecture.join_lecture(FactoryBot.create(:user, :student))
+        put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: new_attributes }, session: valid_session
+        @lecture.reload
+        expect(@lecture.participating_students.length).to eq(0)
+      end
+    end
+
+    context "with invalid params" do
+      it "redirects to course show for other lecturers", :logged_lecturer do
+        lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+        put :update, params: { course_id: lecture.course.id, id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
+        expect(response).to redirect_to(course_path(id: lecture.course.id))
+      end
+      it "returns a success response for lecturer (i.e. to display the 'edit' template)", :logged_lecturer do
+        lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+        login_lecturer(lecture.lecturer)
+        put :update, params: { course_id: lecture.course.id, id: lecture.to_param, lecture: invalid_attributes }, session: valid_session
+        expect(response).to be_successful
+      end
+    end
+  end
+
+  describe "PUT #update_comprehension_stamp" do
+    before(:each) do
+      # login user
+      @lecture = FactoryBot.create(:lecture, status: "running")
+      @user = FactoryBot.create(:user, :student)
+      login_student(@user)
+      @lecture.join_lecture(@user)
+    end
+    context "with valid params" do
+      it "adds a comprehension stamp" do
+        expect {
+          put :update_comprehension_stamp, params: { course_id: (@lecture.course.id), id: @lecture.id, status: 0 }, session: valid_session
+        }.to change(LectureComprehensionStamp, :count).by(1)
+      end
+      it "changes a comprehension stamp" do
+        expect {
+          put :update_comprehension_stamp, params: { course_id: (@lecture.course.id), id: @lecture.id, status: 0 }, session: valid_session
+        }.to change(LectureComprehensionStamp, :count).by(1)
+        expect {
+          put :update_comprehension_stamp, params: { course_id: (@lecture.course.id), id: @lecture.id, status: 1 }, session: valid_session
+        }.to change(LectureComprehensionStamp, :count).by(0)
+      end
+
+      it "broadcasts an update to the user" do
+        expect {
+          put :update_comprehension_stamp, params: { course_id: (@lecture.course.id), id: @lecture.id, status: 0 }, session: valid_session
+        }.to have_broadcasted_to("lecture_comprehension_stamp:#{@lecture.id}:#{@user.id}").from_channel(ComprehensionStampChannel)
+      end
+      it "does not broadcast an update to another user" do
+        sign_out(@user)
+        @user1 = FactoryBot.create(:user, :student)
+        login_student(@user1)
+        @lecture.join_lecture(@user1)
+        expect {
+          put :update_comprehension_stamp, params: { course_id: (@lecture.course.id), id: @lecture.id, status: 0 }, session: valid_session
+        }.to_not have_broadcasted_to("lecture_comprehension_stamp:#{@lecture.id}:#{@user.id}").from_channel(ComprehensionStampChannel)
+      end
+      it "broadcasts an update to the lecturer" do
+        expect {
+          put :update_comprehension_stamp, params: { course_id: (@lecture.course.id), id: @lecture.id, status: 0 }, session: valid_session
+        }.to have_broadcasted_to("lecture_comprehension_stamp:#{@lecture.id}").from_channel(ComprehensionStampChannel)
+      end
+    end
+  end
+
 
   def login_student(user = FactoryBot.create(:user, :student))
     sign_in(user, scope: :user)

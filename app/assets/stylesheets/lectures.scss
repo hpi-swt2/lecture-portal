@@ -2,7 +2,10 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
+@import "lecture_dashboard";
 @import 'lecture_updates';
+@import "lecture_statistics";
+@import "lecture_comprehension";
 @import 'questions';
 
 .text-right {
@@ -18,4 +21,15 @@ form.button_to {
 
 .tab-pane {
   padding-top: 20px;
+
+  &::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+}
+
+.padded-text {
+  padding: 20px;
+  padding-right: 0;
 }

@@ -1,6 +1,6 @@
 class CoursesController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_course, only: [:show, :edit, :update, :destroy]
+  before_action :get_course, only: [:show, :edit, :update, :destroy]
   before_action :validate_owner, only: [:edit, :update, :destroy]
   before_action :require_lecturer, only: [:edit, :update, :destroy]
 
@@ -72,8 +72,12 @@ class CoursesController < ApplicationController
 
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_course
-      @course = Course.find(params[:id])
+    # This method looks for the lecture in the database and redirects with a failure if the lecture does not exist.
+    def get_course
+      @course = Course.find_by(id: params[:id])
+      if @course.nil?
+        redirect_to root_path, alert: "The lecture you requested does not exist."
+      end
     end
 
     # Only allow a trusted parameter "white list" through.

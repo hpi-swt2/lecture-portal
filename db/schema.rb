@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_11_115936) do
+ActiveRecord::Schema.define(version: 2020_01_12_153848) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -45,7 +45,19 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.integer "lecture_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "user_id"
     t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
+    t.index ["user_id"], name: "index_feedbacks_on_user_id"
+  end
+
+  create_table "lecture_comprehension_stamps", id: false, force: :cascade do |t|
+    t.integer "lecture_id", null: false
+    t.integer "user_id", null: false
+    t.integer "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["lecture_id", "user_id"], name: "index_lecture_comprehension_stamps_on_lecture_id_and_user_id"
+    t.index ["user_id", "lecture_id"], name: "index_lecture_comprehension_stamps_on_user_id_and_lecture_id"
   end
 
   create_table "lectures", force: :cascade do |t|
@@ -119,6 +131,7 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "author_id"
+    t.boolean "isLink", default: false
     t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
     t.index ["author_id"], name: "index_uploaded_files_on_author_id"
   end
@@ -132,7 +145,9 @@ ActiveRecord::Schema.define(version: 2020_01_11_115936) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_student", default: false, null: false
+    t.integer "feedback_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["feedback_id"], name: "index_users_on_feedback_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 

@@ -1,0 +1,136 @@
+#comprehension {
+  span {
+    word-break: break-all;
+  }
+  span.participants {
+    float: right;
+  }
+  .legendItem .blue, .comprehensionButton.blue::after {
+    background-color: #80b2ff;
+  }
+  .legendItem .green, .comprehensionButton.green::after {
+    background-color: #98ff9c;
+  }
+  .legendItem .red, .comprehensionButton.red::after {
+    background-color: #ff8988;
+  }
+  .comprehensionBox {
+    width: 100%;
+    padding: 20px 0;
+    border: 1px solid #333;
+    background-color: #fdfdfd;
+
+    &.disabled {
+      .comprehensionButton, p {
+        opacity: .5 !important;
+      }
+      .comprehensionItem {
+        cursor: initial !important;
+      }
+    }
+
+    p {
+      margin: 0 !important;
+    }
+
+    &::after{
+      display: block;
+      content: " ";
+      clear: both;
+    }
+
+    > .comprehensionItem {
+      float: left;
+      width: 33.33%;
+      text-align: center;
+      cursor: pointer;
+
+      &:hover, &:active, &:focus {
+        .comprehensionButton, p {
+          opacity: .8;
+        }
+      }
+
+      > div {
+        margin-left: 6px;
+      }
+
+      .comprehensionButton {
+        width: 80px;
+        height: 80px;
+        border-radius: 100%;
+        position: relative;
+        opacity: .5;
+        margin: auto;
+
+        &::after {
+          width: 70px;
+          height: 70px;
+          border-radius: 100%;
+          display: block;
+          content: ' ';
+          left: 2px;
+          top: 2px;
+          position: absolute;
+        }
+      }
+      p {
+        opacity: .5;
+      }
+
+      &.active {
+        > div {
+          margin-left: 0;
+        }
+        .comprehensionButton {
+          border: 3px solid;
+          opacity: 1;
+
+          &.blue {
+            border-color: #3771ff;
+          }
+          &.green {
+            border-color: #10ca10;
+          }
+          &.red {
+            border-color: #f15655;
+          }
+        }
+        p {
+          opacity: 1;
+        }
+      }
+    }
+  }
+  .comprehensionResults {
+    width: 100%;
+    height: 60px;
+    margin: 10px 0;
+  }
+  .comprehensionLegend {
+    .legendItem {
+      margin-bottom: 10px;
+      > div {
+        vertical-align: middle;
+        display: table-row;
+
+        > div {
+          width: 25px;
+          height: 25px;
+          display: table-cell;
+        }
+
+        > span {
+          padding-left: 15px;
+        }
+      }
+    }
+  }
+}
+
+@media(max-width: 767px) {
+  .comprehensionItem {
+    float: none !important;
+    width: 100% !important;
+  }
+}

@@ -1,4 +1,4 @@
-<%= form_with(model: [@course, lecture], local: true, params: render_enrolment_key) do |form| %>
+<%= form_with(model: [@course, lecture], local: true) do |form| %>
   <% if lecture.errors.any? %>
     <div id="error_explanation">
       <h2><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</h2>
@@ -44,12 +44,10 @@
     <%= form.text_area :description, :readonly => lecture.ended?, :class => "form-control", :rows => "5" %>
   </div>
 
-  <% if render_enrolment_key==true %>
-    <div class="form-group">
-      <%= form.label :enrollment_key %>
-      <%= form.text_field :enrollment_key, class: "form-control" %>
-    </div>
-  <% end %>
+  <div class="form-group">
+    <%= form.label :enrollment_key, "Enrollment Key (optional)" %>
+    <%= form.text_field :enrollment_key, class: "form-control" %>
+  </div>
 
   <div class="form-check">
     <%= form.check_box :questions_enabled, :disabled => lecture.ended?, class: "form-check-input" %>
@@ -62,10 +60,10 @@
   </div>
 
   <div class="actions d-flex flex-row justify-content-between mt-2">
-    <div class="float-left">
+    <div>
       <%= yield(:action_left) %>
     </div>
-    <div class="float-left">
+    <div>
       <%= yield(:action_right) %>
       <% if !lecture.ended? %>
         <%= form.submit :class => "btn btn-primary" %>

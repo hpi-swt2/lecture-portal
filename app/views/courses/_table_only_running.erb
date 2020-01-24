@@ -1,4 +1,4 @@
-<table class="table table-sm table-striped">
+<table class="table table-sm table-striped table-responsive-md">
   <thead>
     <tr>
       <th scope="col">Name</th>
@@ -16,7 +16,11 @@
       <% if lecture.status == "running" %>
         <tr>
           <td><%= lecture.name %></td>
-          <td><%= lecture.end_time.strftime("%H:%M") %></td>
+          <td>
+            <%if lecture.end_time %>
+              <%= lecture.end_time.strftime("%H:%M")  %>
+            <% end %>
+          </td>
           <% if !@current_user.is_student%>
             <td><%= lecture.enrollment_key %></td>
             <td><%= lecture.status%></td>
@@ -25,8 +29,13 @@
             <% if @current_user.is_student%>
               <%if lecture.participating_students.include?(@current_user)%>
                 <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
-              <% else %>
-                  <%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class:"btn btn-primary" %>
+              <% elsif lecture.enrollment_key_present? && !lecture.participating_students.include?(@current_user)%>
+                <%= form_tag join_lecture_path(:course_id => @course.id, :id => lecture.id, method: :post, autocomplete: "off") do -%>
+                  <%= text_field :lecture, :enrollment_key %>
+                  <%= submit_tag 'Join', class: "btn btn-primary" %>
+                <% end %>
+              <%else %>
+                <%= button_to 'Join', join_lecture_path(:course_id => @course.id, :id => lecture.id),method: :post, class:"btn btn-primary" %>
               <% end %>
             <% else %>
               <% if lecture.status == "running" %>
