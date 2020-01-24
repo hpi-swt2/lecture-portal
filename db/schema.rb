@@ -46,7 +46,6 @@ ActiveRecord::Schema.define(version: 2020_01_24_140445) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
-    t.string "hash_id"
     t.index ["lecture_id"], name: "index_feedbacks_on_lecture_id"
     t.index ["user_id"], name: "index_feedbacks_on_user_id"
   end
