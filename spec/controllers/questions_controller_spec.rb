@@ -6,7 +6,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   before(:each) do
     @lecturer = FactoryBot.create(:user, :lecturer, email: "lecturer@mail.de")
-    @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+    @lecture = FactoryBot.create(:lecture, lecturer: @lecturer, status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
     @valid_attributes = {
       content: "Question",
       lecture_id: @lecture.id,
@@ -136,7 +136,10 @@ RSpec.describe QuestionsController, type: :controller do
         not_upvoted_question = FactoryBot.create(:question, author: another_student, lecture: @lecture)
         sign_in(another_student, scope: :user)
         post :upvote, params: { course_id: @lecture.course.id, lecture_id: @lecture.id, id: @question.id }, session: valid_session
-        expected = [ @question, not_upvoted_question ]
+        expected = ActiveModelSerializers::SerializableResource.new(
+          [@question, not_upvoted_question],
+            each_serializer: QuestionSerializer,
+            current_user: @lecturer)
         expect(Question.questions_for_lecture(@lecture, @lecturer).to_json).to eq(expected.to_json)
       end
     end

@@ -43,7 +43,7 @@ RSpec.describe "home/index", type: :view do
       @lecture = FactoryBot.create(:lecture, name: "Name", enrollment_key: "Enrollment", status: "created",  course: @course, lecturer: @lecturer)
       login_student
       @course.join_course(@current_user)
-      @lecture.update(status: "running")
+      @lecture.update(status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
     end
 
     it "displays key input form for lectures with a key for not joined students" do
@@ -63,6 +63,12 @@ RSpec.describe "home/index", type: :view do
       expect(page).to have_css("form", count: 2)
       # it's 2 because of the courses button
       expect(page).to have_css("input", count: 2)
+    end
+
+    it "shows an 'Unenroll' button" do
+      # because a joined course is displayed
+      visit root_path
+      expect(page).to have_link("Unenroll")
     end
   end
 

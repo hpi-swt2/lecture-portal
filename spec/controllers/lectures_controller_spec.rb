@@ -108,15 +108,15 @@ RSpec.describe LecturesController, type: :controller do
   describe "GET #edit" do
     describe "is only accessible before a lecture was started:" do
       it "running lecture redirects to overview" do
-        lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "running")
+        lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
         login_lecturer(lecture.lecturer)
         get :edit, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
       end
-      it "ended lecture redirects to overview" do
-        # lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "ended")
-        # lecture = FactoryBot.create(:lecture, valid_attributes_with_lecturer.merge(status: "ended"))
-        lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "ended")
+      it "archived lecture redirects to overview" do
+        # lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "archived")
+        # lecture = FactoryBot.create(:lecture, valid_attributes_with_lecturer.merge(status: "archived"))
+        lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "archived", date: Date.yesterday)
         login_lecturer(lecture.lecturer)
         get :edit, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
@@ -286,16 +286,6 @@ RSpec.describe LecturesController, type: :controller do
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
       sign_in(@lecturer, scope: :user)
     end
-
-    it "should not be possible to restart an ended lecture" do
-      @lecture.set_inactive
-      @lecture.save
-      expect(@lecture.status).to eq "ended"
-
-      post :start_lecture, params: { course_id: @lecture.course.id, id: @lecture.id }, session: valid_session
-      @lecture.reload
-      expect(@lecture.status).to eq "ended"
-    end
   end
 
   describe "PUT #update" do
@@ -351,7 +341,7 @@ RSpec.describe LecturesController, type: :controller do
   describe "PUT #update_comprehension_stamp" do
     before(:each) do
       # login user
-      @lecture = FactoryBot.create(:lecture, status: "running")
+      @lecture = FactoryBot.create(:lecture, status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
       @user = FactoryBot.create(:user, :student)
       login_student(@user)
       @lecture.join_lecture(@user)
