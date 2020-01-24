@@ -55,6 +55,13 @@ describe "Upload files", type: :feature do
     it "uploads a link" do
       expect(UploadedFile.count).to be(0)
       find(:id, "input-upload-link").set("https://hpi.de")
+      click_on("Attach Link")
+      expect(UploadedFile.count).to be(1)
+    end
+
+    it "uploads a link with a link name" do
+      expect(UploadedFile.count).to be(0)
+      find(:id, "input-upload-link").set("https://hpi.de")
       find(:id, "input-upload-link-name").set("Hasso-Plattner-Institute")
       click_on("Attach Link")
       expect(UploadedFile.count).to be(1)
