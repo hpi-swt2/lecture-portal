@@ -1,9 +1,9 @@
     # This file should contain all the record creation needed to seed the database with its default values.
     # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 
-    lecturer_1 = User.create(is_student: false, email: "lecturer-1@hpi.de", password: "1234567890", password_confirmation: "1234567890")
-    User.create(is_student: true, email: "student-1@hpi.de", password: "1234567890", password_confirmation: "1234567890")
-    User.create(is_student: true, email: "student-2@hpi.de", password: "1234567890", password_confirmation: "1234567890")
+    lecturer_1 = User.create(is_student: false, email: "lecturer-1@hpi.de", password: "1234567890", password_confirmation: "1234567890", hash_id: "1")
+    User.create(is_student: true, email: "student-1@hpi.de", password: "1234567890", password_confirmation: "1234567890", hash_id: "2")
+    User.create(is_student: true, email: "student-2@hpi.de", password: "1234567890", password_confirmation: "1234567890", hash_id: "3")
 
     course_1 = Course.create(name: "<Kurs-1>", description: "Testkurs #1", creator: lecturer_1)
 
