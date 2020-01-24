@@ -20,7 +20,7 @@
     <%= form_with(model: @model, local: true, html: { multipart: true } ) do |form| %>
       <% if uploaded_file.errors.any? %>
         <div id="error_explanation">
-          <h2><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this file from being saved:</h2>
+          <p class="h2" role="alert"><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this file from being saved:</p>
 
           <ul>
           <% uploaded_file.errors.full_messages.each do |message| %>
@@ -58,7 +58,7 @@
     <%= form_with(model: @model, local: true, html: { multipart: true } ) do |form| %>
       <% if uploaded_file.errors.any? %>
         <div id="error_explanation">
-          <h2><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this link from being saved:</h2>
+          <p class="h2" role="alert"><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this link from being saved:</p>
 
           <ul>
           <% uploaded_file.errors.full_messages.each do |message| %>

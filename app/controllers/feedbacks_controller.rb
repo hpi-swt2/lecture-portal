@@ -3,6 +3,7 @@ class FeedbacksController < ApplicationController
   before_action :get_course
   before_action :get_lecture
   before_action :validate_joined_user_or_owner
+  before_action :validate_feedback_enabled
 
   def create
     @lecture = Lecture.find(params[:lecture_id])
@@ -43,6 +44,12 @@ class FeedbacksController < ApplicationController
       # return head :forbidden unless isJoinedStudent || isLectureOwner
       unless isJoinedStudent || isLectureOwner
         redirect_to course_path(@lecture.course), alert: "You are not a member of this lecture!"
+      end
+    end
+
+    def validate_feedback_enabled
+      unless @lecture.feedback_enabled
+        redirect_to course_lecture_path(@lecture.course, @lecture)
       end
     end
 end
