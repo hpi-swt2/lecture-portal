@@ -23,7 +23,7 @@ describe "The course detail page", type: :feature do
       expect(page).to have_link("Create Lecture")
     end
     it "should show a \"Review\" button when lecture is ended" do
-      @lecture.set_inactive
+      @lecture.set_archived
       # make sure this does not fail
       expect(@lecture.save).to be_truthy
       visit(course_path(@course))
@@ -161,7 +161,7 @@ describe "The course detail page", type: :feature do
 
     it "should show a \"Review\" button when lecture is ended for a student who joined the lecture" do
         @lecture.join_lecture(@student)
-        @lecture.set_inactive
+        @lecture.set_archived
         # make sure this does not fail
         expect(@lecture.save).to be_truthy
         visit(course_path(@course))
@@ -169,7 +169,7 @@ describe "The course detail page", type: :feature do
       end
 
     it "should show a \"Review\" button when lecture is ended for a student who did not join the lecture" do
-      @lecture.set_inactive
+      @lecture.set_archived
       # make sure this does not fail
       expect(@lecture.save).to be_truthy
       visit(course_path(@course))
