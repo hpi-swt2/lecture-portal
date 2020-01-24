@@ -13,15 +13,15 @@ const mapStore = ({ poll_options }: PollOptionsRootStoreModel) => ({
 
 const PollResultBarChart: React.FunctionComponent<{}> = observer(() => {
     const { poll_options } = useInjectPollOptions(mapStore);
-    const pollDataInitializer = new PollResultDataInitializer(poll_options);
+    const values = poll_options.poll_options.map(option => ({y: option.votes, label: option.description}));
     const options = {
         colorSet: "grayShade",
         exportEnabled: true,
         animationEnabled: true,
         data: [{
-            indexLabel: "{y}%",
+            indexLabel: "{y}",
             type: "column",
-            dataPoints: pollDataInitializer.getPollData()
+            dataPoints: values
         }]
     }
     
