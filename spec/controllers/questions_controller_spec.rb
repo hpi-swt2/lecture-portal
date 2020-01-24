@@ -6,7 +6,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   before(:each) do
     @lecturer = FactoryBot.create(:user, :lecturer, email: "lecturer@mail.de")
-    @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+    @lecture = FactoryBot.create(:lecture, lecturer: @lecturer, status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
     @valid_attributes = {
       content: "Question",
       lecture_id: @lecture.id,

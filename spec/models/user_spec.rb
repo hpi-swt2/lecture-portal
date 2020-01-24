@@ -23,6 +23,12 @@ RSpec.describe User, type: :model do
     expect(@user).not_to be_valid
   end
 
+  it "(student) is not valid without a calender url" do
+    @student = FactoryBot.create(:user, :student)
+    @student.hash_id = ""
+    expect(@student).not_to be_valid
+  end
+
   it "can participate lectures" do
     @user.is_student = true
     lecture1 = FactoryBot.create(:lecture)

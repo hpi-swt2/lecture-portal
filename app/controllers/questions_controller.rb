@@ -3,7 +3,7 @@ class QuestionsController < ApplicationController
   before_action :get_course
   before_action :get_lecture
   before_action :validate_joined_user_or_owner
-  before_action :validate_lecture_running_or_ended, except: [:index]
+  before_action :validate_lecture_running_or_active, except: [:index]
   before_action :get_question, only: [:upvote, :resolve]
   before_action :validate_question_unresolved, only: [:upvote, :resolve]
 
@@ -79,11 +79,13 @@ class QuestionsController < ApplicationController
       isStudent = current_user.is_student
       isJoinedStudent = isStudent && @lecture.participating_students.include?(current_user)
       isLectureOwner = !isStudent && @lecture.lecturer == current_user
-      return head :forbidden unless isJoinedStudent || isLectureOwner
+      unless isJoinedStudent || isLectureOwner
+        head :forbidden
+      end
     end
 
-    def validate_lecture_running_or_ended
-      head :forbidden if @lecture.readonly?
+    def validate_lecture_running_or_active
+      head :forbidden unless @lecture.allow_interactions?
     end
 
     def get_question
