@@ -88,10 +88,21 @@ class Lecture < ApplicationRecord
     }
   end
 
+  def update_lecture_status
+    if self.date < Date.today
+      self.set_archived
+    elsif self.date > Date.today
+      self.set_created
+    elsif self.start_time.seconds_since_midnight - 300 < DateTime.now.utc.seconds_since_midnight && self.end_time.seconds_since_midnight + 300 > DateTime.now.utc.seconds_since_midnight
+      self.set_running
+    else
+      self.set_active
+    end
+  end
+
   def allow_comprehension?
     self.status == "running"
   end
-
 
   def Lecture.eliminate_comprehension_stamps
     Lecture.where(status: "running").each { |lecture|
@@ -148,18 +159,6 @@ class Lecture < ApplicationRecord
         { status: status, last_update: nil }
       else
         { status: status, last_update: last_update.timestamp }
-      end
-    end
-
-    def update_lecture_status
-      if self.date < Date.today
-        self.set_archived
-      elsif self.date > Date.today
-        self.set_created
-      elsif self.start_time.seconds_since_midnight - 300 < DateTime.now.utc.seconds_since_midnight && self.end_time.seconds_since_midnight + 300 > DateTime.now.utc.seconds_since_midnight
-        self.set_running
-      else
-        self.set_active
       end
     end
 end
