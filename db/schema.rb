@@ -62,7 +62,6 @@ ActiveRecord::Schema.define(version: 2020_01_24_140445) do
 
   create_table "lectures", force: :cascade do |t|
     t.string "name"
-    t.string "description", default: ""
     t.string "enrollment_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
