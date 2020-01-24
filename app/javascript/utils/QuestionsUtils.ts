@@ -46,14 +46,27 @@ export const initQuestionsApp = (rootStore: QuestionsRootStoreModel) => {
     setupActionCable(rootStore);
 };
 
-export const createQuestion = (content: string) => {
-    axiosInstance.post("", { content: content });
+
+const sendPostRequest = async  (url: string, content?: string) => {
+    try {
+        await axiosInstance.post(url, { content: content });
+    }catch (e) {
+        if (e.response.status == 403) {
+            const {href} = window.location;
+            const nextUrl = href.substr(0, href.indexOf("/lecture"));
+            window.location.href = nextUrl;
+        }
+    }
+}
+
+export const createQuestion = async (content: string) => {
+    sendPostRequest("", content);
 };
 
 export const resolveQuestionById = (id: number) => {
-    axiosInstance.post(id + "/resolve");
+    sendPostRequest(id + "/resolve");
 };
 
 export const upvoteQuestionById = (id : number) => {
-    axiosInstance.post(id + "/upvote");
+    sendPostRequest(id + "/upvote");
 };

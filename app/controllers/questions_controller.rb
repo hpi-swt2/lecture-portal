@@ -80,7 +80,7 @@ class QuestionsController < ApplicationController
       isJoinedStudent = isStudent && @lecture.participating_students.include?(current_user)
       isLectureOwner = !isStudent && @lecture.lecturer == current_user
       unless isJoinedStudent || isLectureOwner
-        redirect_to course_lectures_path(@lecture.course)
+        head :forbidden
       end
     end
 
