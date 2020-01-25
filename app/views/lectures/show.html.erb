@@ -28,7 +28,7 @@
         <h2 class="h5">Materials</h2>
         <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
         <% unless current_user.is_student %>
-          <%= link_to "Add lecture material", new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class:"btn btn-link"%>
+          <%= link_to "Add lecture material", new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class: "btn btn-link"%>
         <% end %>
       </div>
       <div class="col-12 col-sm-6 col-xl-4">
@@ -79,9 +79,9 @@
               <%= form.label :content, "Write your feedback here"%>
               <%= form.text_area :content, {class: "form-control"} %>
             </p>
-            <p>
+            <div class="d-flex flex-row-reverse">
               <%= form.submit "Submit", {class: "btn btn-primary", id: "feedback-submit"} %>
-            </p>
+            </div>
           <% end %>
           <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert"> Feedback submitted</div>
         <% end %>
@@ -114,8 +114,4 @@
       <%= render 'form', lecture: @lecture %>
     </div>
   <% end %>
-</div>
-
-<div class="d-flex justify-content-center">
-  <%= link_to (fa_icon 'arrow-left', text: 'Back'), course_path(@course), class:"btn btn-link" %>
 </div>

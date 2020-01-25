@@ -34,19 +34,19 @@
           <td class="text-right">
             <% if @current_user.is_student%>
               <%if lecture.participating_students.include?(@current_user)%>
-                <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+                <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class: "btn btn-primary"} %>
               <% elsif lecture.enrollment_key_present? %>
                 <%= form_tag join_lecture_path(:course_id => @course.id, :id => lecture.id, method: :post, autocomplete: "off") do -%>
                   <%= text_field :lecture, :enrollment_key %>
                   <%= submit_tag 'Join', class: "btn btn-primary" %>
                 <% end %>
               <%else %>
-                <%= button_to 'Join', join_lecture_path(:course_id => @course.id, :id => lecture.id),method: :post, class:"btn btn-primary" %>
+                <%= button_to 'Join', join_lecture_path(:course_id => @course.id, :id => lecture.id),method: :post, class: "btn btn-primary" %>
               <% end %>
             <% else %>
               <% if lecture.status == "running" || lecture.status == "active" %>
-                <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-outline-secondary"} %>
-                <%= link_to 'View', course_lecture_path(:course_id => course.id, :id => lecture.id), {class:"btn btn-primary"} %>
+                <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-outline-secondary"} %>
+                <%= link_to 'View', course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-primary"} %>
               <% end %>
             <% end %>
           </td>
