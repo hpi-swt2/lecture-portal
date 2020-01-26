@@ -55,6 +55,7 @@ describe "Upload files", type: :feature do
     # students are not allowed to upload files
     it "redirects a student away" do
       sign_in @student
+      @lecture.course.join_course(@student)
       @lecture.join_lecture(@student)
       visit(new_course_lecture_uploaded_file_path(@lecture.course, @lecture))
       expect(current_path).to eq(course_lecture_path(@lecture.course, @lecture))
