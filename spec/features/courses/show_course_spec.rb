@@ -13,11 +13,6 @@ describe "The course detail page", type: :feature do
       sign_in @lecturer
     end
 
-    it "should have a \"Start\" button for not started lectures" do
-      visit(course_path(@course))
-      expect(page).to have_link("Start", href: start_lecture_path(course_id: @lecture.course.id) + "?id=" + @lecture.id.to_s)
-    end
-
     it "should not have a \"View\" link for not started lectures" do
       visit(course_path(@course))
       expect(page).to_not have_link("View", href: course_lecture_path(@course, @lecture))
@@ -27,24 +22,12 @@ describe "The course detail page", type: :feature do
       visit(course_path(@course))
       expect(page).to have_link("Create Lecture")
     end
-
-    it "should set the lecture active on clicking \"Start\"" do
+    it "should show a \"Review\" button when lecture is ended" do
+      @lecture.set_archived
+      # make sure this does not fail
+      expect(@lecture.save).to be_truthy
       visit(course_path(@course))
-      click_on("Start")
-      @lecture.reload
-      expect(@lecture.status).to eq("running")
-    end
-
-    it "should redirect to the show path after clicking \"Start\"" do
-      visit(course_path(@course))
-      click_on("Start")
-      expect(current_path).to eq(course_lecture_path(@course, @lecture))
-    end
-
-    it "should not show the \"Start\" button after a lecture was started" do
-      visit(course_path(@course))
-      click_on("Start")
-      expect(page).not_to have_link("Start")
+      expect(page).to have_link("Review", href: course_lecture_path(@course, @lecture))
     end
 
     it "should show a \"View\" link after the lecture is started" do
@@ -156,6 +139,23 @@ describe "The course detail page", type: :feature do
       expect(page).to_not have_selector("a[href='#{course_uploaded_file_path(@course, @other_student_file)}'][data-method='delete']")
       @delete_link = find_link("Delete File", href: course_uploaded_file_path(@course, @student_file))
       expect { @delete_link.click }.to change(UploadedFile, :count).by(-1)
+    end
+
+    it "should show a \"Review\" button when lecture is ended for a student who joined the lecture" do
+        @lecture.join_lecture(@student)
+        @lecture.set_archived
+        # make sure this does not fail
+        expect(@lecture.save).to be_truthy
+        visit(course_path(@course))
+        expect(page).to have_link("Review", href: course_lecture_path(@course, @lecture))
+      end
+
+    it "should show a \"Review\" button when lecture is ended for a student who did not join the lecture" do
+      @lecture.set_archived
+      # make sure this does not fail
+      expect(@lecture.save).to be_truthy
+      visit(course_path(@course))
+      expect(page).to have_link("Review", href: course_lecture_path(@course, @lecture))
     end
   end
 end

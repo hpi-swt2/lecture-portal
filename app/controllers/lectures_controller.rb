@@ -9,6 +9,7 @@ class LecturesController < ApplicationController
   before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show, :update_comprehension_stamp, :get_comprehension, :join_lecture_with_url]
   before_action :require_student, only: [:join_lecture, :leave_lecture, :update_comprehension_stamp]
   before_action :validate_course_creator, only: [:create, :new]
+  before_action :validate_lecture_running, only: [:update_comprehension_stamp]
   before_action :generate_enrollment_qr_code, except: [:create, :new, :current]
 
   # GET /lectures
@@ -17,8 +18,9 @@ class LecturesController < ApplicationController
     @lectures = Lecture.where(lecturer: current_user)
 
     @running_lectures = @lectures.where(status: "running")
+    @active_lectures = @lectures.where(status: "active")
     @created_lectures = @lectures.where(status: "created")
-    @ended_lectures = @lectures.where(status: "ended")
+    @archived_lectures = @lectures.where(status: "archived")
   end
 
   # GET courses/:course_id/lectures/1
@@ -82,16 +84,6 @@ class LecturesController < ApplicationController
     end
   end
 
-  def start_lecture
-    if @lecture.status != "ended"
-      @lecture.set_active
-      @lecture.save
-      redirect_to course_lecture_path(@course, @lecture)
-    else
-      redirect_to course_lecture_path(@course, @lecture), alert: "Can't restart an ended lecture."
-    end
-  end
-
   def join_lecture
     if params[:lecture].present?
       key = params[:lecture][:enrollment_key]
@@ -110,12 +102,6 @@ class LecturesController < ApplicationController
     @lecture.leave_lecture(current_user)
     redirect_to course_path(@course), notice: "You successfully left the lecture."
     StudentsStatisticsChannel.broadcast_to(@lecture, -1)
-  end
-
-  def end_lecture
-    @lecture.set_inactive
-    @lecture.save
-    redirect_to course_lecture_path(@course, @lecture), notice: "You successfully ended the lecture."
   end
 
   # PUT /lectures/:id/comprehension
@@ -152,6 +138,10 @@ class LecturesController < ApplicationController
       if @lecture.nil?
         redirect_to course_path(@course), alert: "The lecture you requested does not exist."
       end
+    end
+
+    def validate_lecture_running
+      head :forbidden unless @lecture.allow_comprehension?
     end
 
     def validate_lecture_owner

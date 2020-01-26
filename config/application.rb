@@ -23,6 +23,12 @@ module LecturePortal
           Lecture.eliminate_comprehension_stamps
         end
       end
+
+      Rufus::Scheduler.singleton.every '1m' do
+        ActiveRecord::Base.connection_pool.with_connection do
+          Lecture.handle_activations
+        end
+      end
     end
   end
 end

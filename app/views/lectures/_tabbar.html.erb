@@ -24,12 +24,9 @@
     <% end %>
   </ul>
   <aside class="actions-right">
-    <% if @lecture.status == "running" %>
-      <% if @current_user.is_student %>
-        <%= link_to "Leave Lecture", leave_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class:"btn btn-outline-secondary" %>
-      <% else %>
-        <%= link_to "End Lecture", end_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class:"btn btn-outline-secondary" %>
-      <% end %>
+    <%= link_to (fa_icon 'arrow-left', text: 'Back to Course'), course_path(@course), class: "btn btn-outline-primary" %>
+    <% if @current_user.is_student && (@lecture.status == "running" || @lecture.status == "active") %>
+      <%= link_to "Leave Lecture", leave_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class: "btn btn-outline-secondary" %>
     <% end %>
   </aside>
 </div>

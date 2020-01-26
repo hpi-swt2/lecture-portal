@@ -10,9 +10,9 @@ RSpec.describe "lectures/show", type: :view do
                                   status: "running",
                                   lecturer: FactoryBot.create(:user, :lecturer),
                                   course: @course,
-                                  date: "2020-02-02",
-                                  start_time: "2020-01-01 10:10:00",
-                                  end_time: "2020-01-01 10:20:00"
+                                  date: Date.today,
+                                  start_time: DateTime.now,
+                                  end_time: DateTime.now + 20.minutes
     ))
   end
 
@@ -54,12 +54,6 @@ RSpec.describe "lectures/show", type: :view do
       @lecture.update(enrollment_key: nil)
       render
       expect(rendered).not_to have_css("#enrollmentKey-tab")
-    end
-
-
-    it "renders end button" do
-      render
-      expect(rendered).to have_link("End Lecture")
     end
 
     it "renders a leave lecture button" do
