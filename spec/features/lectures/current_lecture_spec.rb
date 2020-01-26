@@ -8,6 +8,7 @@ describe "The current lectures page", type: :feature do
     before(:each) do
       @student = FactoryBot.create(:user, :student)
       @course = FactoryBot.create(:course)
+      @course.join_course(@student)
       sign_in @student
     end
 

@@ -84,7 +84,7 @@ RSpec.describe LecturesController, type: :controller do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       user = FactoryBot.create(:user, :student)
       lecture.course.join_course(user)
-      login_student()
+      login_student(user)
       get :show, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
       expect(response).to redirect_to(course_path(lecture.course))
     end

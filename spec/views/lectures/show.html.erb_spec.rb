@@ -43,6 +43,13 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_css("#enrollmentKey-tab")
     end
 
+    it "renders enrollment qr code if enrollment key is present" do
+      render
+      assert_select "a", "Enrollment Key"
+      expect(rendered).to have_css("#qr-code-container")
+      expect(rendered).to have_tag("svg")
+    end
+
     it "does not render enrollment key tab button if enrollment key is not present" do
       @lecture.update(enrollment_key: nil)
       render

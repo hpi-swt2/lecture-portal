@@ -3,13 +3,13 @@ require "rqrcode"
 class LecturesController < ApplicationController
   before_action :authenticate_user!
   before_action :get_course
-  before_action :get_lecture, except: [:create, :new]
+  before_action :get_lecture, except: [:create, :new, :current]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :validate_joined_user_or_owner, only: [:show, :update_comprehension_stamp, :get_comprehension]
   before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show, :update_comprehension_stamp, :get_comprehension, :join_lecture_with_url]
   before_action :require_student, only: [:join_lecture, :leave_lecture, :update_comprehension_stamp]
   before_action :validate_course_creator, only: [:create, :new]
-  before_action :generate_enrollment_qr_code, except: [:create, :new]
+  before_action :generate_enrollment_qr_code, except: [:create, :new, :current]
 
   # GET /lectures
   def index
