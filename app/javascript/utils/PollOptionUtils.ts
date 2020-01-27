@@ -34,7 +34,7 @@ const loadParticipantsCount = (rootStore: PollOptionsRootStoreModel) => {
 
 
 const setupActionCable = (rootStore: PollOptionsRootStoreModel) => {
-    setupPollOptionsActionCable(rootStore.lecture_id,
+    setupPollOptionsActionCable(rootStore.poll_id,
         (data) => {
             rootStore.poll_options.setPollOptions(data);
         }
@@ -42,7 +42,7 @@ const setupActionCable = (rootStore: PollOptionsRootStoreModel) => {
 };
 
 const setupParticipantsActionCable = (rootStore: PollOptionsRootStoreModel) => {
-    setupPollParticipantsCountActionCable(rootStore.lecture_id,
+    setupPollParticipantsCountActionCable(rootStore.poll_id,
         (data) => {
             rootStore.poll_participants_count.setPollParticipants(data);
         }

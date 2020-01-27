@@ -21,11 +21,12 @@ before_script:
  - nvm alias default 13.1.0
  - nvm use 13.1.0
 script:
- # else views with TypeScript components will not render
- - RAILS_ENV=test bundle exec rails assets:precompile
- - RAILS_ENV=test bundle exec rails db:migrate
- - bundle exec rspec spec/
- - bundle exec rubocop
+  # this has to be run before compiling the assets, else rufus fails
+  - RAILS_ENV=test bundle exec rails db:migrate
+  # else views with TypeScript components will not render
+  - RAILS_ENV=test bundle exec rails assets:precompile
+  - bundle exec rspec spec/
+  - bundle exec rubocop
 
 deploy:
   provider: script

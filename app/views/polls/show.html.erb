@@ -19,7 +19,7 @@
 <% else %>
   <div id="pollInformation">
     <p id="pollTitle">
-      <h4><%= @poll.title %></h4> <br>
+      <h3><%= @poll.title %></h3> <br>
     </p>
 
     <p class="pollStatusInformation">
@@ -44,6 +44,6 @@
   </div>
 <% end %>
 <% if !@is_student %>
-  <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id) %> |
+  <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
 <% end %>
-<%= link_to 'Back', course_lecture_polls_path(@lecture.course, @lecture, id: @poll) %>
+<%= link_to (fa_icon 'arrow-left', text: 'Back'), course_lecture_polls_path(@lecture.course, @lecture, id: @poll), class: "btn btn-outline-primary" %>

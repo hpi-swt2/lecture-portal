@@ -23,6 +23,20 @@ RSpec.describe User, type: :model do
     expect(@user).not_to be_valid
   end
 
+  it "(student) is not valid without a calender url" do
+    skip("Needs to be checked if needed. But creation without hash_id is not possible, because it is added directly before. So only way of")
+    @student = FactoryBot.create(:user, :student)
+    @student.hash_id = ""
+    expect(@student).not_to be_valid
+  end
+
+  it "(student) without hash_id is impossible" do
+    @student = FactoryBot.create(:user, :student)
+    @student.hash_id = nil
+    @student.valid? # triggers validation which recreates the hash_id
+    expect(@student.hash_id != nil)
+  end
+
   it "can participate lectures" do
     @user.is_student = true
     lecture1 = FactoryBot.create(:lecture)
