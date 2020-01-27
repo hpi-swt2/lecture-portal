@@ -20,17 +20,21 @@ module LecturePortal
     # the framework and any gems in your application.
 
     config.after_initialize do
-      # Schedule a check for aging of comprehension stamps
-      Rufus::Scheduler.singleton.every '30s' do
-        ActiveRecord::Base.connection_pool.with_connection do
-          Lecture.eliminate_comprehension_stamps
-        end
-      end
+      unless defined?(Rails::Console) || Rails.env.test? || File.split($0).last == 'rake' then
+        scheduler = Rufus::Scheduler.singleton
 
-      # Schedule a check for lecture cyclus
-      Rufus::Scheduler.singleton.every '1m' do
-        ActiveRecord::Base.connection_pool.with_connection do
-          Lecture.handle_activations
+        # Schedule a check for aging of comprehension stamps
+        scheduler.every '30s' do
+          ActiveRecord::Base.connection_pool.with_connection do
+            Lecture.eliminate_comprehension_stamps
+          end
+        end
+
+        # Schedule a check for lecture cyclus
+        scheduler.every '1m' do
+          ActiveRecord::Base.connection_pool.with_connection do
+            Lecture.handle_activations
+          end
         end
       end
     end
