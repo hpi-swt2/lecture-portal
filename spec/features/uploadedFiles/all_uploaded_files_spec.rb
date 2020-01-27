@@ -25,24 +25,24 @@ describe "The uploaded files index page", type: :feature do
     end
 
     it "should be assosiatable from the author" do
-      fileAuthor = @file.author
-      expect(fileAuthor.uploaded_files.include?(@file)).to be_truthy
+      file_author = @file.author
+      expect(file_author.uploaded_files.include?(@file)).to be_truthy
     end
 
     it "should show the license content type" do
-      visit uploaded_files_path
+      visit course_lecture_uploaded_files_path(@lecture.course, @lecture)
       # setup worked, else rest of test is pointless
       expect(UploadedFile.all.size).to eq(1)
       expect(page).to have_link("LICENSE")
     end
 
     it "should show a download file link as it's name" do
-      visit uploaded_files_path
-      expect(page).to have_link "LICENSE", href: uploaded_file_path(@file), count: 1
+      visit course_lecture_uploaded_files_path(@lecture.course, @lecture)
+      expect(page).to have_link "LICENSE", href: course_lecture_uploaded_file_path(@lecture.course, @lecture, @file), count: 1
     end
 
     it "should download the file when clicking the link" do
-      visit uploaded_files_path
+      visit course_lecture_uploaded_files_path(@lecture.course, @lecture)
       click_on "LICENSE"
       expect(page.body).to eql @file.data
       expect(page.response_headers["Content-Type"]).to eql @file.content_type

@@ -1,5 +1,7 @@
-<h1>Upload file</h1>
+<h1>Upload</h1>
+
+<% content_for :action_left do %>
+  <%= link_to (fa_icon 'arrow-left', text: 'Back'), (@lecture ? course_lecture_path(@course, @lecture) : course_path(@course)), class: "btn btn-outline-primary" %>
+<% end %>
 
 <%= render 'form', uploaded_file: @uploaded_file %>
-
-<%= link_to 'Back', uploaded_files_path %>

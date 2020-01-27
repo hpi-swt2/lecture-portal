@@ -43,3 +43,9 @@ $success: #00911f;
 @import "lectures";
 @import "polls";
 @import "courses";
+
+img,
+video,
+canvas {
+  max-width: 100%;
+}

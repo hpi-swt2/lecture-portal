@@ -1,98 +1,117 @@
-<%= render 'tabbar', current_user: @current_user %>
+<script>
+    function handleSubmit() {
+        document.getElementById("feedback-notification").style.display = "block";
+        if (document.getElementById("feedback-submit").value !== "Update")
+        {document.getElementById("feedback-submit").value = "Update"}
+    }
+</script>
 
-<h5><%= @lecture.name %></h5>
-<% if @lecture.start_time &&  @lecture.end_time && @lecture.date%>
+<h1 class="h5"><%= @lecture.name %></h1>
+<% if @lecture.start_time && @lecture.end_time && @lecture.date%>
   <p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
 <% end %>
-<div class="tab-content" id="lectureTabsContent" style="width: 70vw">
-  <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="width: 70vw">
+
+<%= render 'tabbar', current_user: @current_user %>
+
+<div class="tab-content" id="lectureTabsContent">
+  <div class="tab-pane fade show active mx-auto" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="max-width: 2000px;">
     <div class="row">
-      <div id="updates" class="col-lg-4 col-md-6">
+      <div id="updates" class="col-12 col-sm-6 col-xl-4">
           <% if @current_user.is_student %>
-            <h5>Updates</h5>
+            <h2 class="h5">Updates</h2>
           <% else %>
-            <h5>Questions</h5>
+            <h2 class="h5">Questions</h2>
           <% end %>
-          <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?}) %>
+          <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: @lecture.allow_interactions?, questions_list: Question.questions_for_lecture(@lecture, current_user)}) %>
       </div>
-      <div id="materials" class="col-lg-4 col-md-6">
+      <div id="materials" class="col-12 col-sm-6 col-xl-4 ">
+        <h2 class="h5">Materials</h2>
         <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
+        <% unless current_user.is_student %>
+          <%= link_to "Add lecture material", new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class: "btn btn-link"%>
+        <% end %>
       </div>
-      <div id="comprehension" class="col-lg-4 col-md-6">
-        <h5>Comprehension Level</h5>
-        <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id} ) %>
+      <div class="col-12 col-sm-6 col-xl-4">
+        <% unless @current_user.is_student %>
+          <div id="statistics">
+            <h2 class="h5">Statistics</h2>
+            <%=  react_component("StatisticsApp",  {lecture_id: @lecture.id, course_id: @lecture.course.id, student_count: @lecture.participating_students.count, question_count: Question.where(lecture: @lecture).count, resolved_count: Question.where(lecture: @lecture, resolved: true).count} )  %>
+          </div>
+        <% end %>
+        <div id="comprehension">
+          <h2 class="h5">Comprehension Level</h2>
+          <%= react_component("ComprehensionApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: @lecture.allow_comprehension?, comprehension_state: @lecture.comprehension_state(current_user)} ) %>
+        </div>
       </div>
     </div>
   </div>
 
-  <div class="tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
+  <div class="container tab-pane fade" id="questions" role="tabpanel" aria-labelledby="questions-tab">
     <% if @lecture.questions_enabled %>
-      <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: !@lecture.readonly?} ) %>
+      <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: @lecture.allow_interactions?, questions_list: Question.questions_for_lecture(@lecture, current_user)} ) %>
     <% else %>
-      <h1> Questions are not enabled. :(</h1>
+      <p class="h1"> Questions are not enabled. :(</p>
     <% end %>
   </div>
 
-  <div class="tab-pane fade poll-tab-container" id="polls" role="tabpanel" aria-labelledby="polls-tab" >
+  <div class="container tab-pane fade poll-tab-container" id="polls" role="tabpanel" aria-labelledby="polls-tab" >
     <% if @lecture.polls_enabled%>
       <iframe class="polls-iframe" src="<%= course_lecture_polls_path(@course, @lecture) %>"></iframe>
     <% else %>
-      <h1> Polls are not enabled. :( </h1>
+      <p class="h1"> Polls are not enabled. :( </p>
     <% end %>
   </div>
 
-  <div class="tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
-
-    <% if @current_user.is_student %>
-
-      <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ]) do |form| %>
-        <p>
-          <%= form.label :content %><br>
-          <%= form.text_field :content %>
-        </p>
-        <p>
-          <%= form.submit %>
-        </p>
-      <% end %>
-
-    <% else %>
-
-      <% @lecture.feedbacks.each do |feedback| %>
-        <p>
-          <strong>Feedback:</strong>
-          <%= feedback.content %>
-        </p>
-      <% end %>
-
-    <% end %>
-
-  </div>
-  <% if !@current_user.is_student %>
-    <div class="tab-pane fade" id="enrollmentKey" role="tabpanel" aria-labelledby="enrollmentKey-tab-tab">
-      <h1 class="padded-text">Enrollment Key: <%= @lecture.enrollment_key %></h1>
-      <h3 class="padded-text"> Students </h3>
-        <ol>
-        <% for student in @lecture.participating_students%>
-          <li><%= student.email %></li>
+  <div class="container tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
+    <% if @lecture.feedback_enabled %>
+      <% if @current_user.is_student %>
+        <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ], :html => { :onsubmit => "handleSubmit()" }) do |form| %>
+          <% if @lecture.feedbacks.where(user_id: @current_user.id).present? %>
+            <p>
+              <%= form.label :content, "You submitted your feedback. Update it here."%>
+              <%= form.text_area(:content, :value => @lecture.feedbacks.where(user_id: @current_user.id).first.content, :class => "form-control") %>
+            </p>
+            <p>
+              <%= form.submit "Update", {class: "btn btn-primary", id: "feedback-submit"}  %>
+            </p>
+          <% else %>
+            <p>
+              <%= form.label :content, "Write your feedback here"%>
+              <%= form.text_area :content, {class: "form-control"} %>
+            </p>
+            <div class="d-flex flex-row-reverse">
+              <%= form.submit "Submit", {class: "btn btn-primary", id: "feedback-submit"} %>
+            </div>
+          <% end %>
+          <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert"> Feedback submitted</div>
         <% end %>
-        </ol>
-    </div>
-    <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+      <% else %>
+          <% @lecture.feedbacks.each do |feedback| %>
+            <p>
+              <strong>Feedback:</strong>
+              <%= feedback.content %>
+            </p>
+        <% end %>
+      <% end %>
+    <% else %>
+      <h1> Feedback is not enabled. :(</h1>
+    <% end %>
+  </div>
+
+  <% unless @current_user.is_student %>
+    <% if @lecture.enrollment_key_present? %>
+      <div class="container tab-pane fade" id="enrollmentKey" role="tabpanel" aria-labelledby="enrollmentKey-tab-tab">
+        <p class="h1 padded-text">Enrollment Key: <%= @lecture.enrollment_key %></p>
+        <p class="h3 padded-text"> Students </p>
+          <ol>
+            <% for student in @lecture.participating_students%>
+              <li><%= student.email %></li>
+            <% end %>
+          </ol>
+      </div>
+    <% end %>
+    <div class="container tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
       <%= render 'form', lecture: @lecture %>
     </div>
   <% end %>
 </div>
-
-<table>
-  <tr>
-    <td colspan="2"><%= link_to 'Back', course_path(@course), class:"btn btn-link" %> </td>
-    <% if !@current_user.is_student %>
-      <% if @lecture.created? %>
-          <td colspan="2"> | <%= link_to "Edit", edit_course_lecture_path(course_id: @lecture.course.id, id: @lecture.id), class:"btn btn-link" %></td>
-        <td colspan="2"> | <%= link_to "Start", start_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class:"btn btn-link" %></td>
-      <% elsif @lecture.running? %>
-        <td colspan="2"> | <%= link_to 'New Poll', new_course_lecture_poll_path(@course, @lecture), {class:"btn btn-link"} %> </td>
-      <%end %>
-  <%end %>
-  </tr>
-</table>

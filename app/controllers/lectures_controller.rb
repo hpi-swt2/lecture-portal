@@ -1,12 +1,13 @@
 class LecturesController < ApplicationController
   before_action :authenticate_user!
   before_action :get_course
-  before_action :set_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture, :update_comprehension_stamp, :get_comprehension]
+  before_action :get_lecture, only: [:show, :edit, :update, :destroy, :start_lecture, :end_lecture, :join_lecture, :leave_lecture, :update_comprehension_stamp, :get_comprehension]
   before_action :validate_lecture_owner, only: [:edit, :update, :destroy, :start_lecture, :end_lecture]
   before_action :validate_joined_user_or_owner, only: [:show, :update_comprehension_stamp, :get_comprehension]
   before_action :require_lecturer, except: [:current, :join_lecture, :leave_lecture, :show, :update_comprehension_stamp, :get_comprehension]
   before_action :require_student, only: [:join_lecture, :leave_lecture, :update_comprehension_stamp]
   before_action :validate_course_creator, only: [:create, :new]
+  before_action :validate_lecture_running, only: [:update_comprehension_stamp]
 
   # GET /lectures
   def index
@@ -14,14 +15,16 @@ class LecturesController < ApplicationController
     @lectures = Lecture.where(lecturer: current_user)
 
     @running_lectures = @lectures.where(status: "running")
+    @active_lectures = @lectures.where(status: "active")
     @created_lectures = @lectures.where(status: "created")
-    @ended_lectures = @lectures.where(status: "ended")
+    @archived_lectures = @lectures.where(status: "archived")
   end
 
   # GET courses/:course_id/lectures/1
   def show
     @current_user = current_user
     @uploaded_files = @lecture.uploaded_files
+    render layout: "application-full"
   end
 
   # GET courses/:course_id/lectures/new
@@ -78,16 +81,6 @@ class LecturesController < ApplicationController
     end
   end
 
-  def start_lecture
-    if @lecture.status != "ended"
-      @lecture.set_active
-      @lecture.save
-      redirect_to course_lecture_path(@course, @lecture)
-    else
-      redirect_to course_lecture_path(@course, @lecture), alert: "Can't restart an ended lecture."
-    end
-  end
-
   def join_lecture
     if params[:lecture].present?
       key = params[:lecture][:enrollment_key]
@@ -98,6 +91,7 @@ class LecturesController < ApplicationController
       @lecture.save
       current_user.save
       redirect_to course_lecture_path(@course, @lecture), notice: "You successfully joined the lecture."
+      StudentsStatisticsChannel.broadcast_to(@lecture, 1)
     else
       redirect_to course_path(@course), alert: "You inserted the wrong key!"
     end
@@ -105,13 +99,8 @@ class LecturesController < ApplicationController
 
   def leave_lecture
     @lecture.leave_lecture(current_user)
-    redirect_to course_lecture_path(@course, @lecture), notice: "You successfully left the lecture."
-  end
-
-  def end_lecture
-    @lecture.set_inactive
-    @lecture.save
-    redirect_to course_lecture_path(@course, @lecture), notice: "You successfully ended the lecture."
+    redirect_to course_path(@course), notice: "You successfully left the lecture."
+    StudentsStatisticsChannel.broadcast_to(@lecture, -1)
   end
 
   # PUT /lectures/:id/comprehension
@@ -127,29 +116,26 @@ class LecturesController < ApplicationController
     @lecture.broadcast_comprehension_status
   end
 
-  def get_comprehension
-    if current_user.is_student
-      stamp = @lecture.lecture_comprehension_stamps.where(user: current_user).max { |a, b| a.timestamp <=> b.timestamp }
-      if stamp
-        if stamp.timestamp <= Time.now - LectureComprehensionStamp.seconds_till_comp_timeout
-          data = { status: -1, last_update: stamp.timestamp }
-        else
-          data = { status: stamp.status, last_update: stamp.timestamp }
-        end
-      else
-        data = { status: -1, last_update: nil }
-      end
-    else
-      data = @lecture.get_comprehension_status
-    end
-
-    render json: data
-  end
-
   private
     # Use callbacks to share common setup or constraints between actions.
-    def set_lecture
-      @lecture = Lecture.find(params[:id])
+    # This method looks for the course in the database and redirects with a failure if the course does not exist.
+    def get_course
+      @course = Course.find_by(id: params[:course_id])
+      if @course.nil?
+        redirect_to root_path, alert: "The course you requested does not exist."
+      end
+    end
+
+    # This method looks for the lecture in the database and redirects with a failure if the lecture does not exist.
+    def get_lecture
+      @lecture = Lecture.find_by(id: params[:id])
+      if @lecture.nil?
+        redirect_to course_path(@course), alert: "The lecture you requested does not exist."
+      end
+    end
+
+    def validate_lecture_running
+      head :forbidden unless @lecture.allow_comprehension?
     end
 
     def validate_lecture_owner
@@ -176,7 +162,7 @@ class LecturesController < ApplicationController
     end
 
     def lecture_params
-      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled, :description, :date, :start_time, :end_time)
+      params.require(:lecture).permit(:name, :enrollment_key, :status, :polls_enabled, :questions_enabled, :date, :start_time, :end_time, :feedback_enabled)
     end
 
     def require_lecturer
@@ -189,9 +175,5 @@ class LecturesController < ApplicationController
       if @course.creator != current_user
         redirect_to @course, alert: "You can only access your own courses."
       end
-    end
-
-    def get_course
-      @course = Course.find(params[:course_id])
     end
 end

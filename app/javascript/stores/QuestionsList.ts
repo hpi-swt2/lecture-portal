@@ -75,12 +75,20 @@ const QuestionsList = types
             self.list = sortQuestionsList(self.list, self.is_sorted_by_time)
         },
         toggleFilterResolved() {
-            // only turn off resolved filter if unresolved filter is on
-            self.filter_resolved = !self.filter_resolved || !self.filter_unresolved;
+            if (self.filter_resolved)
+                self.filter_resolved = false;
+            else {
+                self.filter_resolved = true;
+                self.filter_unresolved = false;
+            }
         },
         toggleFilterUnresolved() {
-            // only turn off unresolved filter if resolved filter is on
-            self.filter_unresolved = !self.filter_unresolved || !self.filter_resolved;
+            if (self.filter_unresolved)
+                self.filter_unresolved = false;
+            else {
+                self.filter_unresolved = true;
+                self.filter_resolved = false;
+            }
         }
     }));
 
