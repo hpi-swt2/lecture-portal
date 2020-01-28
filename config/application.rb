@@ -11,16 +11,30 @@ module LecturePortal
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 5.2
 
+    config.active_record.default_timezone = :local
+    config.active_record.time_zone_aware_attributes = false
+
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration can go into files in config/initializers
     # -- all .rb files in that directory are automatically loaded after loading
     # the framework and any gems in your application.
 
-    # Schedule a check for aging of comprehension stamps
     config.after_initialize do
-      Rufus::Scheduler.singleton.every '30s' do
-        ActiveRecord::Base.connection_pool.with_connection do
-          Lecture.eliminate_comprehension_stamps
+      unless defined?(Rails::Console) || Rails.env.test? || File.split($0).last == 'rake' then
+        scheduler = Rufus::Scheduler.singleton
+
+        # Schedule a check for aging of comprehension stamps
+        scheduler.every '30s' do
+          ActiveRecord::Base.connection_pool.with_connection do
+            Lecture.eliminate_comprehension_stamps
+          end
+        end
+
+        # Schedule a check for lecture cyclus
+        scheduler.every '1m' do
+          ActiveRecord::Base.connection_pool.with_connection do
+            Lecture.handle_activations
+          end
         end
       end
     end

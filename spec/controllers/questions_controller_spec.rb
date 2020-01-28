@@ -6,7 +6,7 @@ RSpec.describe QuestionsController, type: :controller do
 
   before(:each) do
     @lecturer = FactoryBot.create(:user, :lecturer, email: "lecturer@mail.de")
-    @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
+    @lecture = FactoryBot.create(:lecture, lecturer: @lecturer, status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
     @valid_attributes = {
       content: "Question",
       lecture_id: @lecture.id,
@@ -19,49 +19,12 @@ RSpec.describe QuestionsController, type: :controller do
     }
   end
 
-  context "with user not logged in" do
-    describe "GET #index" do
-      it "should not return questions list" do
-        get :index, params: { course_id: @lecture.course.id, lecture_id: @lecture.id },  session: valid_session
-        expect(response).not_to be_successful
-      end
-    end
-  end
-
   context "with user logged in as student" do
     before(:each) do
       @student = FactoryBot.create(:user, :student)
       sign_in(@student, scope: :user)
       @lecture.join_lecture(@student)
       @question = FactoryBot.create(:question, author: @student, lecture: @lecture)
-    end
-
-    describe "GET #index" do
-      it "should return successful response" do
-        get :index, params: { course_id: @lecture.course.id, lecture_id: @lecture.id }, session: valid_session
-        expect(response).to be_successful
-      end
-      it "should return list of a question" do
-        expected = [ QuestionSerializer.new(@question, scope: @student, scope_name: :current_user).as_json ]
-        get :index, params: { course_id: @lecture.course.id, lecture_id: @lecture.id }, session: valid_session
-        expect(response.body).to eq(expected.to_json)
-      end
-      it "should return a time-sorted list of all questions" do
-        question2 = FactoryBot.create(:question, author: @student, lecture: @lecture)
-        expected = [ QuestionSerializer.new(question2, scope: @student, scope_name: :current_user).as_json,
-                     QuestionSerializer.new(@question, scope: @student, scope_name: :current_user).as_json ]
-        get :index, params: { course_id: @lecture.course.id, lecture_id: @lecture.id }, session: valid_session
-        expect(response.body).to eq(expected.to_json)
-      end
-
-      it "should only show questions belonging to the requested lecture" do
-        another_lecture = FactoryBot.create(:lecture)
-        another_lecture.join_lecture(@student)
-        FactoryBot.create(:question, author: @student, lecture: another_lecture)
-        expected = [ QuestionSerializer.new(@question, scope: @student, scope_name: :current_user).as_json ]
-        get :index, params: { course_id: @lecture.course.id, lecture_id: @lecture.id }, session: valid_session
-        expect(response.body).to eq(expected.to_json)
-      end
     end
 
     describe "POST #upvote" do
@@ -154,7 +117,6 @@ RSpec.describe QuestionsController, type: :controller do
     describe "POST #resolve" do
       it "should set a question as resolved after the resolve API call" do
         post :resolve, params: { course_id: @lecture.course.id, lecture_id: @lecture.id, id: @question.id }, session: valid_session
-        puts response.body
         updatedQuestion = Question.find(@question.id)
         expect(updatedQuestion.resolved).to eq(true)
       end
@@ -173,12 +135,11 @@ RSpec.describe QuestionsController, type: :controller do
         not_upvoted_question = FactoryBot.create(:question, author: another_student, lecture: @lecture)
         sign_in(another_student, scope: :user)
         post :upvote, params: { course_id: @lecture.course.id, lecture_id: @lecture.id, id: @question.id }, session: valid_session
-        sign_out(another_student)
-        sign_in(@lecturer, scope: :user)
-        expected = [ QuestionSerializer.new(@question, scope: @lecturer, scope_name: :current_user).as_json,
-                     QuestionSerializer.new(not_upvoted_question, scope: @lecturer, scope_name: :current_user).as_json ]
-        get :index, params: { course_id: @lecture.course.id, lecture_id: @lecture.id }, session: valid_session
-        expect(response.body).to eq(expected.to_json)
+        expected = ActiveModelSerializers::SerializableResource.new(
+          [@question, not_upvoted_question],
+            each_serializer: QuestionSerializer,
+            current_user: @lecturer)
+        expect(Question.questions_for_lecture(@lecture, @lecturer).to_json).to eq(expected.to_json)
       end
     end
   end

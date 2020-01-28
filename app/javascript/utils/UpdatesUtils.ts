@@ -10,14 +10,16 @@ const StoreContext = createContext<UpdatesRootStoreModel>(
 export const useUpdatesStore = () => useContext(StoreContext);
 export const StoreProvider = StoreContext.Provider;
 
-const axiosInstance = axios.create();
+export interface IUpdatesAppProps {
+    user_id: number,
+    is_student: boolean,
+    lecture_id: number,
+    course_id: number,
+    interactions_enabled: boolean,
+    questions_list: any
+}
 
-const loadQuestionsList = (rootStore: UpdatesRootStoreModel) => {
-    axiosInstance.get("")
-        .then(res => {
-            rootStore.updatesList.setQuestionsList(res.data);
-        });
-};
+const axiosInstance = axios.create();
 
 const setupActionCable = (rootStore: UpdatesRootStoreModel) => {
     setupQuestionsActionCable(rootStore.lecture_id,
@@ -38,9 +40,16 @@ export const createUpdatesRootStore = (): UpdatesRootStoreModel => {
     return createUpdatesStore();
 };
 
-export const initUpdatesApp = (rootStore: UpdatesRootStoreModel) => {
+export const initUpdatesApp = (rootStore: UpdatesRootStoreModel, params: IUpdatesAppProps) => {
+    rootStore.setUserId(params.user_id);
+    rootStore.setIsStudent(params.is_student);
+    rootStore.setLectureId(params.lecture_id);
+    rootStore.setInteractionsEnabled(params.interactions_enabled);
+    rootStore.setCourseId(params.course_id);
+    rootStore.updatesList.setQuestionsList(params.questions_list);
+
     axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector<HTMLMetaElement>('[name=csrf-token]').content;
     axiosInstance.defaults.baseURL = `/courses/` + rootStore.course_id + `/lectures/` + rootStore.lecture_id + `/questions/`;
-    loadQuestionsList(rootStore);
+
     setupActionCable(rootStore);
 };
