@@ -25,6 +25,7 @@ RUN bundle install --without development test
 COPY . .
 RUN yarn install --check-files
 ENV RAILS_ENV=TEST
+RUN ./bin/rails db:migrate
 RUN ./bin/rails assets:precompile
 ENV RAILS_ENV=production
 EXPOSE 3000
