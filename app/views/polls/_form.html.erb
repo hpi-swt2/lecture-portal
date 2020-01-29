@@ -27,7 +27,7 @@
   </div>
 
   <div class="field">
-    <%= react_component("PollOption", @poll.poll_options.length>1 ? {options: @poll.poll_options.map{|option| option.description}} : {options: ["", ""]}) %>
+    <%= react_component("PollOption", @poll.poll_options.length>1 ? {options: @poll.sorted_options.map{|option| option.description}} : {options: ["", ""]}) %>
   </div>
 
   <div class="actions">
