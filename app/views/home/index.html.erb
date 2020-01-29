@@ -17,7 +17,6 @@
           <% @courses.each do |course| %>
             <tr>
               <td><%= course.name %></td>
-              <td><%= course.description %></td>
               <td class="text-right">
                 <% if course.status == "open" %>
                   <%= link_to 'View', course, {class: "btn btn-primary"} %>
