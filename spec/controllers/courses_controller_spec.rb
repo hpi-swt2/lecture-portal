@@ -60,10 +60,16 @@ RSpec.describe CoursesController, type: :controller do
   end
 
   describe "GET #index" do
-    it "returns a success response", :logged_lecturer do
+    it "returns a not successful response because /index shouldn't be accessed", :logged_lecturer do
       Course.create! valid_attributes
       get :index, params: {}, session: valid_session
-      expect(response).to be_successful
+      expect(response).not_to be_successful
+    end
+
+    it "redirects to the root path view if the index is accessed", :logged_lecturer do
+      Course.create! valid_attributes
+      get :index, params: {}, session: valid_session
+      expect(response).to redirect_to(root_path)
     end
   end
 
