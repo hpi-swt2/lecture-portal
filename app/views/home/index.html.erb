@@ -16,6 +16,7 @@
           <% @courses.each do |course| %>
             <tr>
               <td><%= course.name %></td>
+              <td><%= course.description %></td>
               <td class="text-right">
                 <% if course.status == "open" %>
                   <%= link_to 'View', course, {class: "btn btn-primary"} %>
@@ -67,14 +68,16 @@
         <table class="table .table-sm table-striped">
           <thead>
           <tr>
-            <th class="col-sm-8"  scope="col">Name</th>
-            <th scope="col" colspan="3"></th>
+            <th class="col-sm-2"  scope="col">Name</th>
+            <th class="col-sm"  scope="col">Description</th>
+            <th scope="col" colspan="4"></th>
           </tr>
           </thead>
 
           <% @participating_courses.each do |course| %>
             <tr>
               <td><%= course.name %></td>
+              <td><%= course.description %></td>
               <td><%= button_to "View", course_path(id: course.id), :method => "get", class: "btn btn-primary" %></td>
               <td><%= link_to "Unenroll", leave_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
             </tr>
@@ -85,13 +88,19 @@
         <table class="table .table-sm table-striped">
           <thead>
           <tr>
-            <th class="col-sm-8" scope="col">Name</th>
+            <th class="col-sm-2" scope="col">Name</th>
+            <th class="col-sm" scope="col">Description</th>
             <th scope="col" colspan="3"></th>
           </tr>
           </thead>
           <% @open_courses.each do |course| %>
             <tr>
               <td><%= course.name %></td>
+              <td>
+                <div class="overflowing">
+                <%= course.description %>
+                </div>
+              </td>
               <td><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
             </tr>
           <% end %>
@@ -99,5 +108,5 @@
       <% end %>
     <% end %>
 
-    </p>
-    </div>
+  </p>
+</div>
