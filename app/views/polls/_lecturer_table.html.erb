@@ -10,7 +10,7 @@
   </thead>
 
   <tbody>
-  <% polls.each do |poll| %>
+  <% polls.each.sort_by{|poll| poll.created_at} do |poll| %>
     <tr>
       <td><%= poll.title %></td>
       <td><%= poll.is_active %></td>
