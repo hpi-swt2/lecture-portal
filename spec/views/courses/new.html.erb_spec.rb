@@ -20,5 +20,4 @@ RSpec.describe "courses/new", type: :view do
     render
     assert_select "[href =?]", root_path
   end
-
 end
