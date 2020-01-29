@@ -81,7 +81,7 @@
               <td>
                 <span style="white-space: nowrap">
                   <%= button_to "View", course_path(id: course.id), :method => "get", class: "btn btn-primary" %>
-                  <%= button_to "Unenroll", leave_course_path(id: course.id), method: :post, class: "btn btn-primary" %>
+                  <%= link_to "Unenroll", leave_course_path(id: course.id), method: :post, class: "btn btn-primary" %>
                 </span>
               </td>
             </tr>
