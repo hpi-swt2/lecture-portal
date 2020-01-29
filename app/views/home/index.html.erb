@@ -71,7 +71,6 @@
             <th class="col-sm"  scope="col">Name</th>
             <th class="col-sm"  scope="col">Description</th>
             <th class="col-sm"  scope="col" style="width: 168px"> </th>
-            <th scope="col" colspan="4"></th>
           </tr>
           </thead>
 
@@ -95,8 +94,7 @@
           <tr>
             <th class="col-sm" scope="col">Name</th>
             <th class="col-sm" scope="col">Description</th>
-            <th class="col-sm" scope="col" style="width: max-content"></th>
-            <th class="col-sm" scope="col" style="width: 62px"></th>
+            <th class="col-sm" scope="col" style="width: 168px"></th>
           </tr>
           </thead>
           <% @open_courses.each do |course| %>
@@ -107,7 +105,7 @@
               <td>
                 <span class="overflowing"><%= course.description %></span>
               </td>
-              <td><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
+              <td class="text-right"><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
               <td> </td>
             </tr>
           <% end %>
