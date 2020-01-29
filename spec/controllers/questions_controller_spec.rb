@@ -117,7 +117,6 @@ RSpec.describe QuestionsController, type: :controller do
     describe "POST #resolve" do
       it "should set a question as resolved after the resolve API call" do
         post :resolve, params: { course_id: @lecture.course.id, lecture_id: @lecture.id, id: @question.id }, session: valid_session
-        puts response.body
         updatedQuestion = Question.find(@question.id)
         expect(updatedQuestion.resolved).to eq(true)
       end
