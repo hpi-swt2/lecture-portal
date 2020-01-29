@@ -2,10 +2,9 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
-#overflowing {
+.overflowing {
   text-overflow: ellipsis;
+  display: block;
   white-space: nowrap;
-  display: inline-block;
   overflow: hidden;
-  width: 100px;
-}​
+}
