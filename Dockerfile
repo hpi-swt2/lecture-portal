@@ -24,7 +24,6 @@ RUN bundle install --without development test
 COPY . .
 RUN yarn install --check-files
 
-RUN ./bin/rails assets:precompile
 EXPOSE 3000
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true
