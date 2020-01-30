@@ -8,7 +8,7 @@ describe "The lecture dashboard page", type: :feature do
     before :each do
       @link_addr = "https://hpi.de"
       @link_name = "Example link"
-      @file_addr = file_fixture("LICENSE")
+      @file_addr = file_fixture("LICENSE.md")
       @lecturer = FactoryBot.create(:user, :lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
       @other_lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
@@ -17,8 +17,8 @@ describe "The lecture dashboard page", type: :feature do
       @course = @lecture.course
       @link = UploadedFile.new(filename: @link_name, data: @link_addr, allowsUpload: @lecture, isLink: true, author: @lecturer)
       @link.save
-      @filename = "LICENSE"
-      @filename2 = "OTHER LICENSE"
+      @filename = "LICENSE.md"
+      @filename2 = "OTHER LICENSE.md"
       @file = UploadedFile.new(filename: @filename, content_type: "text/plain", data: @file_addr.read, allowsUpload: @lecture, isLink: false, author: @lecturer)
       @file.save
       @file2 = UploadedFile.new(filename: @filename2, content_type: "text/plain", data: @file_addr.read, allowsUpload: @other_lecture, isLink: false, author: @lecturer)
