@@ -13,7 +13,7 @@ class Lecture < ApplicationRecord
   validates :start_time, presence: true
   validates :end_time, presence: true
 
-  validates :name, presence: true, length: { in: 2..40 }
+  validates :name, presence: true, length: { in: 2..142 }
   validates :enrollment_key, length: { in: 3..20, if: :enrollment_key_present? }
   scope :running, -> { where status: "running" }
   scope :active, -> { running.or(where status: "active") }
@@ -84,14 +84,29 @@ class Lecture < ApplicationRecord
 
   def Lecture.handle_activations
     Lecture.where(status: [:created, :active, :running]).each { |lecture|
-      lecture.update_lecture_status
+      if lecture.update_lecture_status
+        lecture.save
+      end
     }
+  end
+
+  def update_lecture_status
+    old_status = self.status
+    if self.date < Date.today
+      self.set_archived
+    elsif self.date > Date.today
+      self.set_created
+    elsif self.start_time.utc.seconds_since_midnight - 300 < Time.current.utc.seconds_since_midnight && self.end_time.utc.seconds_since_midnight + 300 > Time.current.utc.seconds_since_midnight
+      self.set_running
+    else
+      self.set_active
+    end
+    old_status != self.status
   end
 
   def allow_comprehension?
     self.status == "running"
   end
-
 
   def Lecture.eliminate_comprehension_stamps
     Lecture.where(status: "running").each { |lecture|
@@ -138,6 +153,7 @@ class Lecture < ApplicationRecord
         { status: -1, last_update: nil }
       end
     end
+
     def comprehension_state_lecture
       status = Array.new(LectureComprehensionStamp.number_of_states, 0)
       status.size.times do |i|
@@ -148,18 +164,6 @@ class Lecture < ApplicationRecord
         { status: status, last_update: nil }
       else
         { status: status, last_update: last_update.timestamp }
-      end
-    end
-
-    def update_lecture_status
-      if self.date < Date.today
-        self.set_archived
-      elsif self.date > Date.today
-        self.set_created
-      elsif self.start_time.seconds_since_midnight - 300 < DateTime.now.utc.seconds_since_midnight && self.end_time.seconds_since_midnight + 300 > DateTime.now.utc.seconds_since_midnight
-        self.set_running
-      else
-        self.set_active
       end
     end
 end
