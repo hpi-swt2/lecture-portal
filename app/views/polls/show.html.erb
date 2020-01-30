@@ -36,7 +36,7 @@
     </p>
   </div>
 <% end %>
-<% if @is_student && (!@poll.is_active || @lecture.allow_interactions?) || !@is_student %>
+<% if @is_student && (!@poll.is_active || !@lecture.allow_interactions?) || !@is_student %>
   <h3>Voting Results</h3>
   <div>
     <%= react_component("PollResultApp",  {course_id: @lecture.course_id, lecture_id: @lecture.id, poll_id: @poll.id, poll_option_ids: @poll.poll_options.map{|option| option.id}} ) %>
