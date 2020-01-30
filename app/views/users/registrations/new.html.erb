@@ -32,7 +32,7 @@
   <div class="actions d-flex flex-row justify-content-between mt-2">
     <div></div>
     <div class="form-group">
-      <%= link_to ("Log in instead"), new_session_path(resource_name), class: "btn btn-outline-primary" %>
+      <%= render 'users/shared/links' %>
       <%= f.submit t('.sign_up'), class: 'btn btn-primary' %>
     </div>
   </div>
