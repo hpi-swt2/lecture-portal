@@ -33,6 +33,14 @@ describe "Upload files", type: :feature do
       expect(UploadedFile.count).to be(1)
     end
 
+    it "uploads a file with a filename" do
+      expect(UploadedFile.count).to be(0)
+      find(:id, "input-upload-file").set(@data)
+      find(:id, "input-upload-file-name").set("Hasso-Plattner-Institute")
+      click_on("Upload File")
+      expect(UploadedFile.count).to be(1)
+    end
+
     it "uploads a valid file with umlauts and with correct type" do
       expect(UploadedFile.count).to be(0)
       find(:id, "input-upload-file").set(@data_umlauts)
@@ -47,6 +55,14 @@ describe "Upload files", type: :feature do
     it "uploads a link" do
       expect(UploadedFile.count).to be(0)
       find(:id, "input-upload-link").set("https://hpi.de")
+      click_on("Attach Link")
+      expect(UploadedFile.count).to be(1)
+    end
+
+    it "uploads a link with a link name" do
+      expect(UploadedFile.count).to be(0)
+      find(:id, "input-upload-link").set("https://hpi.de")
+      find(:id, "input-upload-link-name").set("Hasso-Plattner-Institute")
       click_on("Attach Link")
       expect(UploadedFile.count).to be(1)
     end
