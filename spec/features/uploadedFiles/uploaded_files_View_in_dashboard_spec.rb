@@ -7,6 +7,7 @@ describe "The lecture dashboard page", type: :feature do
   context "having uploaded two files" do
     before :each do
       @link_addr = "https://hpi.de"
+      @link_name = "Example link"
       @file_addr = file_fixture("LICENSE")
       @lecturer = FactoryBot.create(:user, :lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
@@ -14,7 +15,7 @@ describe "The lecture dashboard page", type: :feature do
       @other_lecture
       @other_lecture.save
       @course = @lecture.course
-      @link = UploadedFile.new(data: @link_addr, allowsUpload: @lecture, isLink: true, author: @lecturer)
+      @link = UploadedFile.new(filename: @link_name, data: @link_addr, allowsUpload: @lecture, isLink: true, author: @lecturer)
       @link.save
       @filename = "LICENSE"
       @filename2 = "OTHER LICENSE"
@@ -27,7 +28,7 @@ describe "The lecture dashboard page", type: :feature do
 
     it "shows the link" do
       visit course_lecture_path(@course, @lecture)
-      expect(page).to have_link(@link_addr)
+      expect(page).to have_link(@link_name)
     end
 
     it "shows the file name" do
@@ -42,7 +43,7 @@ describe "The lecture dashboard page", type: :feature do
 
     it "has the \"Download\" button" do
       visit course_lecture_path(@course, @lecture)
-      expect(page).to have_link(@link_addr)
+      expect(page).to have_link(@link_name)
     end
   end
 end
