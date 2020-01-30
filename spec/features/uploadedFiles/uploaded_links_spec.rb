@@ -7,9 +7,10 @@ describe "The uploaded files index page", type: :feature do
   context "having uploaded one file" do
     before :each do
       @data = "https://hpi.de"
+      @data_name = "Hasso-Plattner-Institute"
       @lecturer = FactoryBot.create(:user, :lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
-      @file = UploadedFile.new(filename: "LICENSE", data: @data, allowsUpload: @lecture, isLink: true, author: @lecturer)
+      @file = UploadedFile.new(filename: @data_name, data: @data, allowsUpload: @lecture, isLink: true, author: @lecturer)
       sign_in @lecturer
     end
 
@@ -20,7 +21,7 @@ describe "The uploaded files index page", type: :feature do
     it "is rendered as link" do
       @file.save
       visit course_lecture_uploaded_files_path(@lecture.course, @lecture)
-      expect(page).to have_link(@data)
+      expect(page).to have_link(@data_name)
     end
   end
 end
