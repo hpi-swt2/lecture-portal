@@ -8,13 +8,13 @@
       <div style="white-space: nowrap;">
         <% if file.isLink %>
           <%= fa_icon 'link', :class => "text-info pr-2" %>
-          <%= link_to file.filename, file.data, target: "_blank", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
+          <%= link_to file.filename, file.data, target: "_self", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
         <% else %>
           <%= fa_icon 'file', :class => "text-info pr-2" %>
           <% if @lecture %>
-            <%= link_to file.filename, course_lecture_uploaded_file_path(@lecture.course, @lecture, file), target: "_blank", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
+            <%= link_to file.filename, course_lecture_uploaded_file_path(@lecture.course, @lecture, file), target: "_self", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
           <% else %>
-            <%= link_to file.filename, course_uploaded_file_path(@course, file), target: "_blank", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
+            <%= link_to file.filename, course_uploaded_file_path(@course, file), target: "_self", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
           <% end %>
         <% end %>
       </div>
