@@ -33,8 +33,11 @@ form.button_to {
   padding: 20px;
   padding-right: 0;
 }
-select {
+.time select,
+.date select {
   @extend .form-control;
-  width: 5.5vw;
-  display: inline;
+  display: inline-block;
+  min-width: 8ch;
+  max-width: 15ch;
+  margin: 0 4px;
 }
