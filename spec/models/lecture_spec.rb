@@ -105,6 +105,24 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture.update(status: "running")).to be_truthy
   end
 
+  it "change status to active when day is today" do
+    @lecture.update(date: Date.today)
+    expect(@lecture.status).to eq("active")
+  end
+
+  it "change status to running when day is today and time is between start and end time" do
+    @lecture.update(date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 1.hour)
+    expect(@lecture.status).to eq("running")
+  end
+
+  it "change status to archived when day is yesterday" do
+    @lecture.update(date: Date.yesterday)
+    expect(@lecture.status).to eq("archived")
+  end
+
+  it "have status created" do
+    expect(@lecture.status).to eq("created")
+  end
 
   describe "comprehension_state" do
     context "as student" do
