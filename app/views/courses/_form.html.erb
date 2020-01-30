@@ -30,6 +30,7 @@
     </div>
     <div>
       <%= yield(:action_right) %>
+      <%= link_to (fa_icon 'arrow-left', text: 'Back to Overview'), courses_path, class: "btn btn-outline-primary" %>
       <%= form.submit :class => "btn btn-primary" %>
     </div>
   </div>
