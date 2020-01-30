@@ -64,7 +64,7 @@
 
   <div class="container tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
     <% if @lecture.feedback_enabled %>
-      <% if @current_user.is_student %>
+      <% if @current_user.is_student && @lecture.allow_interactions?%>
         <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ], :html => { :onsubmit => "handleSubmit()" }) do |form| %>
           <% if @lecture.feedbacks.where(user_id: @current_user.id).present? %>
             <p>
