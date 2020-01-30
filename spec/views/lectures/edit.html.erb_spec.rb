@@ -26,19 +26,23 @@ RSpec.describe "lectures/edit", type: :view do
       assert_select "input[name=?]", "lecture[end_time]"
       assert_select "input[name=?]", "lecture[questions_enabled]"
       assert_select "input[name=?]", "lecture[polls_enabled]"
-      assert_select "textarea[name=?]", "lecture[description]"
+      assert_select "input[name=?]", "lecture[feedback_enabled]"
     end
   end
 
   it " should be disabled if the lecture is archived" do
-    @lecture.set_inactive
+    @lecture.set_archived
     render
     assert_select "form[action=?][method=?]", course_lecture_path(course_id: @course.id, id: @lecture), "post" do
       assert_select "input[name=?][readonly]", "lecture[name]"
-      assert_select "textarea[name=?][readonly]", "lecture[description]"
       assert_select "input[name=?][disabled]", "lecture[questions_enabled]"
       assert_select "input[name=?][disabled]", "lecture[polls_enabled]"
     end
+  end
+
+  it "should have a \"back\" button which redirects to the course overview." do
+    render
+    assert_select "[href =?]", course_path(id: @course.id)
   end
 
   it "renders a delete button" do

@@ -25,6 +25,12 @@ RSpec.describe FeedbacksController, type: :controller do
         get :create, params: { course_id: not_existing_course_id, lecture_id: not_existing_lecture_id }, session: valid_session
         expect(response).to redirect_to(root_path)
       end
+
+      it "reloads lecture view when feedback is given when not enabled anymore" do
+        @lecture.update(feedback_enabled: false)
+        get :create, params: { course_id: @lecture.course.id, lecture_id: @lecture }, session: valid_session
+        expect(response).to redirect_to(course_lecture_path(@lecture.course, @lecture))
+      end
     end
   end
 end
