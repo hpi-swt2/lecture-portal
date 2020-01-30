@@ -47,7 +47,7 @@ RSpec.describe "lectures/show", type: :view do
       @qr_code = RQRCode::QRCode.new("http://some-random.url/that/is/not/tested")
       render
       assert_select "a", "Enrollment Key"
-      expect(rendered).to have_selector("div", :class => "qr-code-container")
+      expect(rendered).to have_selector("div", class: "qr-code-container")
     end
 
     it "does not render enrollment key tab button if enrollment key is not present" do

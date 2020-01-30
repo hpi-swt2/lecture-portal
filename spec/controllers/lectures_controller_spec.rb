@@ -89,6 +89,15 @@ RSpec.describe LecturesController, type: :controller do
       expect(response).to redirect_to(course_path(lecture.course))
     end
 
+    pending "redirects to lecture overview when student enrolls via url", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      lecture.save()
+      login_student
+      url = course_lecture_path(lecture.course.id, lecture) + "/enroll?key=" + lecture.enrollment_key
+      get url, session: valid_session
+      expect(response).to redirect_to(course_lecture_path(lecture.course.id, lecture))
+    end
+
     it "redirects to overview for other lecturers", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       login_lecturer()
