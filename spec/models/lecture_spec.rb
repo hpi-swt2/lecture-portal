@@ -129,16 +129,20 @@ RSpec.describe Lecture, type: :model do
     expect(@lecture.status).to eq("created")
     travel 1.day
     Lecture.handle_activations
-    expect(Lecture.find(@lecture.id).status).to eq("active")
+    @lecture.reload
+    expect(@lecture.status).to eq("active")
     travel 1.hour
     Lecture.handle_activations
-    expect(Lecture.find(@lecture.id).status).to eq("running")
+    @lecture.reload
+    expect(@lecture.status).to eq("running")
     travel 1.day
     Lecture.handle_activations
-    expect(Lecture.find(@lecture.id).status).to eq("archived")
+    @lecture.reload
+    expect(@lecture.status).to eq("archived")
     travel_back
     Lecture.handle_activations
-    expect(Lecture.find(@lecture.id).status).to eq("archived")
+    @lecture.reload
+    expect(@lecture.status).to eq("archived")
   end
 
   describe "comprehension_state" do
