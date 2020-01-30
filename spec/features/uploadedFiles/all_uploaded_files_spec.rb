@@ -6,10 +6,10 @@ describe "The uploaded files index page", type: :feature do
 
   context "having uploaded one file" do
     before :each do
-      data = file_fixture("LICENSE").read
+      data = file_fixture("LICENSE.md").read
       @lecturer = FactoryBot.create(:user, :lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
-      @file = UploadedFile.new(filename: "LICENSE", content_type: "text/plain", data: data, allowsUpload: @lecture, author: @lecturer)
+      @file = UploadedFile.new(filename: "LICENSE", content_type: "text/plain", data: data, allowsUpload: @lecture, author: @lecturer, extension: ".md")
       @file.save
       sign_in @lecturer
     end
@@ -47,5 +47,13 @@ describe "The uploaded files index page", type: :feature do
       expect(page.body).to eql @file.data
       expect(page.response_headers["Content-Type"]).to eql @file.content_type
     end
+
+    it "download should have file extension attached" do
+      visit course_lecture_uploaded_files_path(@lecture.course, @lecture)
+      click_on "LICENSE"
+      expect(page.body).to eql @file.data
+      expect(page.response_headers["Content-Disposition"]).to eq 'attachment; filename="LICENSE.md"'
+    end
+
   end
 end

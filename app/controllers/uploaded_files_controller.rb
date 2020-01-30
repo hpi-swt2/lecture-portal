@@ -42,6 +42,7 @@ class UploadedFilesController < ApplicationController
   # POST /courses/:course_id/lectures/:lecture_id/uploaded_files
   def create
     uploaded_file = uploaded_file_params["attachment"]
+    extension = nil
     if uploaded_file.nil? || !(uploaded_file.is_a? ActionDispatch::Http::UploadedFile)
       filename = nil
       content_type = nil
@@ -50,6 +51,7 @@ class UploadedFilesController < ApplicationController
       filename = uploaded_file_params["filename"].blank? ? uploaded_file.original_filename : uploaded_file_params["filename"]
       content_type = uploaded_file.content_type
       data = uploaded_file.read
+      extension = File.extname(uploaded_file.original_filename)
     end
     is_link = !uploaded_file_params["link"].blank?
     if is_link
@@ -61,7 +63,7 @@ class UploadedFilesController < ApplicationController
     if @lecture
       allows_upload = @lecture
     end
-    @uploaded_file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: allows_upload, isLink: is_link, author: current_user)
+    @uploaded_file = UploadedFile.create(filename: filename, content_type: content_type, data: data, allowsUpload: allows_upload, isLink: is_link, author: current_user, extension: extension)
     if @uploaded_file.save
       if @lecture
         redirect_to (course_lecture_path(@course, @lecture)), notice: "Uploaded file was successfully saved."
@@ -76,7 +78,11 @@ class UploadedFilesController < ApplicationController
   # GET /courses/:course_id/lectures/:lecture_id/uploaded_files/:id
   def show
     file = UploadedFile.find(params[:id])
-    send_data file.data, filename: file.filename, type: file.content_type, disposition: "attachment"
+    filename = file.filename
+    if(file.extension?)
+      filename = filename + file.extension
+    end
+    send_data file.data, filename: filename, type: file.content_type, disposition: "attachment"
   end
 
 
