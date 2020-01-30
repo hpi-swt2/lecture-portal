@@ -50,6 +50,19 @@ RSpec.describe "courses/show", type: :view do
       render
       expect(rendered).to have_link("Unenroll")
     end
+
+    it "shows no material added yet message if no materials are added" do
+      render
+      expect(rendered).to have_content("No materials added yet")
+    end
+
+    it "shows link to added material if material is added" do
+      file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload: @course)
+      @student_files.push(file)
+      render
+      expect(rendered).to have_link(file.filename)
+    end
+
   end
 
   def login_student(user = FactoryBot.create(:user, :student))
