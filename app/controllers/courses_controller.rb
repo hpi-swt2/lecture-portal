@@ -7,6 +7,7 @@ class CoursesController < ApplicationController
   # GET /courses
   def index
     @courses = Course.all
+    redirect_to root_path
   end
 
   # GET /courses/1
