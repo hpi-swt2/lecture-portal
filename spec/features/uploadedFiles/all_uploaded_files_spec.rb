@@ -54,6 +54,5 @@ describe "The uploaded files index page", type: :feature do
       expect(page.body).to eql @file.data
       expect(page.response_headers["Content-Disposition"]).to eq 'attachment; filename="LICENSE.md"'
     end
-
   end
 end

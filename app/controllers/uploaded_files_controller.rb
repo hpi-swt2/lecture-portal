@@ -79,7 +79,7 @@ class UploadedFilesController < ApplicationController
   def show
     file = UploadedFile.find(params[:id])
     filename = file.filename
-    if(file.extension?)
+    if file.extension?
       filename = filename + file.extension
     end
     send_data file.data, filename: filename, type: file.content_type, disposition: "attachment"
