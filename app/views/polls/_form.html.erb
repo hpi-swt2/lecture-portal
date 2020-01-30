@@ -11,27 +11,32 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
+  <div class="form-group">
+    <%= form.label :title, "Title" %>
+    <%= form.text_field :title, class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= form.label :is_multiselect %>
-    <%= form.check_box :is_multiselect %>
-  </div>
-
-  <div class="field">
-    <%= form.label :is_active %>
-    <%= form.check_box :is_active %>
-  </div>
-
-  <div class="field">
+  <div class="form-group">
     <%= react_component("PollOption", @poll.poll_options.length>1 ? {options: @poll.poll_options.map{|option| option.description}} : {options: ["", ""]}) %>
   </div>
 
-  <div class="actions">
-    <%= form.submit%>
+  <div class="form-check">
+    <%= form.check_box :is_multiselect, class: "form-check-input" %>
+    <%= form.label :is_multiselect, "Is Multiselect", :class => "form-check-label" %>
+  </div>
+
+  <div class="form-check">
+    <%= form.check_box :is_active, class: "form-check-input" %>
+    <%= form.label :is_active, "Is Active", :class => "form-check-label" %>
+  </div>
+
+  <div class="actions d-flex flex-row justify-content-between mt-2">
+    <div>
+      <%= yield(:action_left) %>
+    </div>
+    <div>
+      <%= form.submit :class => "btn btn-primary" %>
+    </div>
   </div>
 
 <% end %>
