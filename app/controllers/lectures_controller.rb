@@ -187,7 +187,7 @@ class LecturesController < ApplicationController
     end
 
     def generate_enrollment_qr_code
-      enrollment_url = request.base_url + "/courses/" + @course.id.to_s + "/lectures/" + @lecture.id.to_s + "/enroll"
+      enrollment_url = course_lecture_path(@course, @lecture) + "/enroll"
       if @lecture.enrollment_key
         enrollment_url += "?key=" + @lecture.enrollment_key
       end
