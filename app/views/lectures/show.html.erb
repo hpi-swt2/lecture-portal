@@ -1,4 +1,4 @@
-<script>
+ <script>
     function handleSubmit() {
         document.getElementById("feedback-notification").style.display = "block";
         if (document.getElementById("feedback-submit").value !== "Update")
@@ -93,8 +93,10 @@
                 <li class="list-group-item">
                   <%= feedback.content %>
                 </li>
+              <% end %>
             </ul>
-        <% end %>
+          </div>
+        </div>
       <% end %>
     <% else %>
       <h1> Feedback is not enabled. :(</h1>
