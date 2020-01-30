@@ -1,3 +1,43 @@
+<script>
+    var minuteDifference = 30;
+    var hourDifference = 1;
+
+    function handleEndTimeInput() {
+        let startTime = document.getElementById("startTime").value;
+        let startTimeSplit = startTime.split(":");
+        let startTimeHour = startTimeSplit[0];
+        let startTimeMinute = startTimeSplit[1];
+
+        let endTime = document.getElementById("endTime").value;
+        let endTimeSplit = endTime.split(":");
+        let endTimeHour = endTimeSplit[0];
+        let endTimeMinute = endTimeSplit[1];
+        hourDifference = parseInt(endTimeHour) - parseInt(startTimeHour);
+        minuteDifference = parseInt(endTimeMinute) - parseInt(startTimeMinute);
+    }
+
+    function handleStartTimeInput(){
+        let startTime = document.getElementById("startTime").value;
+        let timeSplit = startTime.split(":");
+        let endTimeHour = parseInt(timeSplit[0]) + hourDifference;
+        let endTimeMinute = parseInt(timeSplit[1]) + minuteDifference;
+        endTimeHour = endTimeHour.toString();
+        endTimeMinute = endTimeMinute.toString();
+
+        if (endTimeHour.length === 1) {
+            endTimeHour = "0" + endTimeHour
+        }
+
+        if (endTimeMinute.length === 1) {
+            endTimeMinute = "0" + endTimeMinute
+        }
+
+        document.getElementById("endTime").value = endTimeHour + ":" + endTimeMinute;
+    }
+
+
+</script>
+
 <%= form_with(model: [@course, lecture], local: true) do |form| %>
   <% if lecture.errors.any? %>
     <div id="error_explanation">
@@ -25,17 +65,17 @@
   <div class="row">
     <div class="date form-group col-12 col-sm-4">
       <%= form.label :date %>
-      <%= form.date_field :date, :readonly => lecture.archived?, class: "form-control" %>
+      <%= form.date_field :date, value: Date.today,:readonly => lecture.archived?, class: "form-control", id: "startDate" %>
     </div>
 
     <div class="start_time form-group col-6 col-sm-4">
       <%= form.label :start_time %>
-      <%= form.time_field :start_time, :readonly => lecture.archived?, class: "form-control" %>
+      <%= form.time_field :start_time, value: (DateTime.now + 59.minutes).beginning_of_hour.strftime("%H:%M") ,:readonly => lecture.archived?, class: "form-control", id: "startTime", onchange: "handleStartTimeInput()"%>
     </div>
 
     <div class="end_time form-group col-6 col-sm-4">
       <%= form.label :end_time %>
-      <%= form.time_field :end_time, :readonly => lecture.archived?, class: "form-control" %>
+      <%= form.time_field :end_time, value: ((DateTime.now + 59.minutes).beginning_of_hour + 90.minutes).strftime("%H:%M"), :readonly => lecture.archived?, class: "form-control", id: "endTime", onchange: "handleEndTimeInput()" %>
     </div>
   </div>
 
