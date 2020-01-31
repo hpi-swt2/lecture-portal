@@ -14,11 +14,21 @@ RSpec.describe "lectures/new", type: :view do
 
       assert_select "input[name=?]", "lecture[enrollment_key]"
 
-      assert_select "input[name=?]", "lecture[date]"
+      # components of time_select and date_select
+      assert_select "select[name=?]", "lecture[date(1i)]"
 
-      assert_select "input[name=?]", "lecture[start_time]"
+      assert_select "select[name=?]", "lecture[date(2i)]"
 
-      assert_select "input[name=?]", "lecture[end_time]"
+      assert_select "select[name=?]", "lecture[date(3i)]"
+
+      # there are 3 hidden inputs for start and end time, so the selects start with 4i
+      assert_select "select[name=?]", "lecture[start_time(4i)]"
+
+      assert_select "select[name=?]", "lecture[start_time(5i)]"
+
+      assert_select "select[name=?]", "lecture[end_time(4i)]"
+
+      assert_select "select[name=?]", "lecture[end_time(5i)]"
 
       assert_select "input[name=?]", "lecture[questions_enabled]"
 
