@@ -12,8 +12,8 @@ const mapStore = ({ poll_participants_count }: PollOptionsRootStoreModel) => ({
 const ParticipantsCount: React.FunctionComponent<{}> = observer(() => {
     const { poll_participants_count } = useInjectPollOptions(mapStore);
     return (
-        <div id="numberOfParticipants">
-            <FontAwesomeIcon icon={faUserAlt} inverse className={"userIcon"} />
+        <div id="number-of-participants">
+            <FontAwesomeIcon icon={faUserAlt} inverse className="user-icon" />
             {poll_participants_count.numberOfParticipants} of {poll_participants_count.numberOfLectureUsers} participants
          </div>
     );

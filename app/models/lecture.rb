@@ -13,7 +13,7 @@ class Lecture < ApplicationRecord
   validates :start_time, presence: true
   validates :end_time, presence: true
 
-  validates :name, presence: true, length: { in: 2..40 }
+  validates :name, presence: true, length: { in: 2..142 }
   validates :enrollment_key, length: { in: 3..20, if: :enrollment_key_present? }
   scope :running, -> { where status: "running" }
   scope :active, -> { running.or(where status: "active") }
@@ -32,6 +32,7 @@ class Lecture < ApplicationRecord
 
   def set_archived
     self.status = :archived
+    self.close_all_polls
   end
 
 
@@ -45,25 +46,6 @@ class Lecture < ApplicationRecord
     if self.participating_students.include?(student)
       self.participating_students.delete(student)
     end
-  end
-
-
-  def compare_ignore_status(other_lecture)
-    name == other_lecture.name && polls_enabled == other_lecture.polls_enabled && questions_enabled == other_lecture.questions_enabled \
-    && enrollment_key == other_lecture.enrollment_key && id == other_lecture.id
-  end
-
-  def ==(other_lecture)
-    status == other_lecture.status && compare_ignore_status(other_lecture)
-  end
-
-  def !=(other_lecture)
-    !(self == other_lecture)
-  end
-
-  def to_s
-    "{ id:" + id.to_s + " status: " + status.to_s + " name: " + name +
-        " enrollment_key : " + enrollment_key + " polls_enabled " + polls_enabled.to_s + " questions_enabled " + questions_enabled.to_s + "}"
   end
 
   def readonly?
@@ -84,14 +66,29 @@ class Lecture < ApplicationRecord
 
   def Lecture.handle_activations
     Lecture.where(status: [:created, :active, :running]).each { |lecture|
-      lecture.update_lecture_status
+      if lecture.update_lecture_status
+        lecture.save
+      end
     }
+  end
+
+  def update_lecture_status
+    old_status = self.status
+    if self.date < Date.today
+      self.set_archived
+    elsif self.date > Date.today
+      self.set_created
+    elsif self.start_time.utc.seconds_since_midnight - 300 < Time.current.utc.seconds_since_midnight && self.end_time.utc.seconds_since_midnight + 300 > Time.current.utc.seconds_since_midnight
+      self.set_running
+    else
+      self.set_active
+    end
+    old_status != self.status
   end
 
   def allow_comprehension?
     self.status == "running"
   end
-
 
   def Lecture.eliminate_comprehension_stamps
     Lecture.where(status: "running").each { |lecture|
@@ -125,6 +122,12 @@ class Lecture < ApplicationRecord
     end
   end
 
+  def close_all_polls
+    self.polls.where(is_active: true).each { |poll|
+      poll.close
+    }
+  end
+
   private
     def comprehension_state_student(current_user)
       stamp = self.lecture_comprehension_stamps.where(user: current_user).max { |a, b| a.timestamp <=> b.timestamp }
@@ -138,6 +141,7 @@ class Lecture < ApplicationRecord
         { status: -1, last_update: nil }
       end
     end
+
     def comprehension_state_lecture
       status = Array.new(LectureComprehensionStamp.number_of_states, 0)
       status.size.times do |i|
@@ -148,18 +152,6 @@ class Lecture < ApplicationRecord
         { status: status, last_update: nil }
       else
         { status: status, last_update: last_update.timestamp }
-      end
-    end
-
-    def update_lecture_status
-      if self.date < Date.today
-        self.set_archived
-      elsif self.date > Date.today
-        self.set_created
-      elsif self.start_time.seconds_since_midnight - 300 < DateTime.now.utc.seconds_since_midnight && self.end_time.seconds_since_midnight + 300 > DateTime.now.utc.seconds_since_midnight
-        self.set_running
-      else
-        self.set_active
       end
     end
 end

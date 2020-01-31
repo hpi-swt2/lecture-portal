@@ -1,6 +1,6 @@
 <%= form_with(model: [@lecture.course, @lecture, poll], local: true) do |form| %>
   <% if poll.errors.any? %>
-    <div id="error_explanation">
+    <div id="error-explanation">
       <p class="h2" role="alert"><%= pluralize(@poll.errors.count, "error") %> prohibited this poll from being saved:</p>
 
       <ul>
@@ -11,27 +11,33 @@
     </div>
   <% end %>
 
-  <div class="field">
-    <%= form.label :title %>
-    <%= form.text_field :title %>
+  <div class="form-group">
+    <%= form.label :title, "Title" %>
+    <%= form.text_field :title, class: "form-control" %>
   </div>
 
-  <div class="field">
-    <%= form.label :is_multiselect %>
-    <%= form.check_box :is_multiselect %>
+  <div class="form-group">
+    <%= react_component("PollOption", @poll.poll_options.length>1 ? {options: @poll.sorted_options.map{|option| option.description}} : {options: ["", ""]}) %>
   </div>
 
-  <div class="field">
-    <%= form.label :is_active %>
-    <%= form.check_box :is_active %>
+  <div class="form-check">
+    <%= form.check_box :is_multiselect, class: "form-check-input" %>
+    <%= form.label :is_multiselect, "Is Multiselect", :class => "form-check-label" %>
   </div>
 
-  <div class="field">
-    <%= react_component("PollOption", @poll.poll_options.length>1 ? {options: @poll.poll_options.map{|option| option.description}} : {options: ["", ""]}) %>
+  <div class="form-check">
+    <%= form.check_box :is_active, class: "form-check-input" %>
+    <%= form.label :is_active, "Is Active", :class => "form-check-label" %>
   </div>
 
-  <div class="actions">
-    <%= form.submit%>
+  <div class="actions d-flex flex-row justify-content-between mt-2">
+    <div>
+      <%= yield(:action_left) %>
+    </div>
+    <div>
+      <%= yield(:action_right) %>
+      <%= form.submit :class => "btn btn-primary" %>
+    </div>
   </div>
 
 <% end %>

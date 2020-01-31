@@ -1,5 +1,7 @@
 <h1>New Course</h1>
 
-<%= render 'form', course: @course %>
+<% content_for :action_left do %>
+  <%= link_to (fa_icon 'arrow-left', text: 'Back to Overview'), courses_path, class: "btn btn-outline-primary" %>
+<% end %>
 
-<%= link_to 'Back', courses_path %>
+<%= render 'form', course: @course %>

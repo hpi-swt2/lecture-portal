@@ -4,6 +4,7 @@ class PollsController < ApplicationController
   before_action :get_lecture
   before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start, :answer]
   before_action :set_is_student
+  before_action :validate_lecture_running_or_active, except: [:index, :show, :serialized_options, :serialized_participants_count]
   before_action do |controller|
     @hide_navbar = true
   end
@@ -51,20 +52,16 @@ class PollsController < ApplicationController
     end
   end
 
-  # GET /polls/1/stop
+  # GET /polls/1/stop_start
   def stop_start
-    if @poll.is_active
-      if @poll.update(is_active: false)
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You stopped the poll!"
+    if @lecture.allow_interactions?
+      if @poll.is_active
+        stop
       else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Stopping the poll did not work :("
+        start
       end
     else
-      if @poll.update(is_active: true)
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You started the poll!"
-      else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Starting the poll did not work :("
-      end
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "The lecture is archived and doesn't allow any more interactions"
     end
   end
 
@@ -88,11 +85,8 @@ class PollsController < ApplicationController
   def create
     current_poll_params = poll_params
     @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
-    poll_options = current_poll_params[:poll_options]
-    for poll_option in poll_options do
-      poll_option_description = poll_option.values_at(1)
-      @poll.poll_options.build(description: poll_option_description.to_param)
-    end
+    poll_option_params = current_poll_params[:poll_options]
+    create_and_save_poll_options_from_params(poll_option_params)
     if @poll.save
       redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully created."
     else
@@ -104,13 +98,10 @@ class PollsController < ApplicationController
   def update
     current_poll_params = poll_params
     if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
-      poll_options = current_poll_params[:poll_options]
+      poll_option_params = current_poll_params[:poll_options]
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
       PollOption.where(poll_id: @poll.id).destroy_all
-      for poll_option in poll_options do
-        poll_option_description = poll_option.values_at(1)
-        @poll.poll_options.build(description: poll_option_description.to_param)
-      end
+      create_and_save_poll_options_from_params(poll_option_params)
       if @poll.save
         broadcast_state
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully updated."
@@ -139,6 +130,22 @@ class PollsController < ApplicationController
   end
 
   private
+    def start
+      if @poll.update(is_active: true)
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You started the poll!"
+      else
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Starting the poll did not work :("
+      end
+    end
+
+    def stop
+      if @poll.update(is_active: false)
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You stopped the poll!"
+      else
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Stopping the poll did not work :("
+      end
+    end
+
     # Send belonging poll_options to subscribers so they can update their data
     def broadcast_options
       poll = Poll.find(params[:id])
@@ -150,7 +157,7 @@ class PollsController < ApplicationController
 
     def get_serialized_options
       poll = Poll.find(params[:id])
-      poll_options = poll.poll_options
+      poll_options = poll.sorted_options
       poll_options.map { |option| ActiveModelSerializers::Adapter::Json.new(
         PollOptionSerializer.new(option)
       ).serializable_hash}
@@ -222,5 +229,18 @@ class PollsController < ApplicationController
           current_answer.save
         end
       }
+    end
+
+    def validate_lecture_running_or_active
+      head :forbidden unless @lecture.allow_interactions?
+    end
+
+    def create_and_save_poll_options_from_params(poll_option_params)
+      i = 0
+      for poll_option_param in poll_option_params do
+        poll_option_description = poll_option_param.values_at(1)
+        @poll.poll_options.build(description: poll_option_description.to_param, index: i)
+        i = i + 1
+      end
     end
 end

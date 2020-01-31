@@ -6,10 +6,10 @@ describe "Uploading files", type: :feature do
 
   context "to a lecture" do
     before :each do
-      data = file_fixture("LICENSE").read
+      data = file_fixture("LICENSE.md").read
       @lecturer = FactoryBot.create(:user, :lecturer)
       @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
-      @file = UploadedFile.new(filename: "LICENSE", content_type: "text/plain", data: data, allowsUpload: @lecture, author: @lecturer)
+      @file = UploadedFile.new(filename: "LICENSE.md", content_type: "text/plain", data: data, allowsUpload: @lecture, author: @lecturer)
     end
 
     it "allows a lecture to be associated" do
@@ -26,10 +26,10 @@ describe "Uploading files", type: :feature do
   end
   context "to a course" do
     before :each do
-      data = file_fixture("LICENSE").read
+      data = file_fixture("LICENSE.md").read
       @lecturer = FactoryBot.create(:user, :lecturer)
       @course = FactoryBot.create(:course, creator: @lecturer)
-      @file = UploadedFile.new(filename: "LICENSE", content_type: "text/plain", data: data, allowsUpload: @course, author: @lecturer)
+      @file = UploadedFile.new(filename: "LICENSE.md", content_type: "text/plain", data: data, allowsUpload: @course, author: @lecturer)
     end
 
     it "allows a course to be associated" do

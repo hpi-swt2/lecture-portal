@@ -21,17 +21,17 @@
     <%= f.label :password_confirmation %>
     <%= f.password_field :password_confirmation, autocomplete: 'current-password', class: 'form-control' %>
   </div>
-
-  <div class="form-group form-check">
-    <%= f.check_box :is_student, class: 'form-check-input' %>
-    <%= f.label :is_student, class: 'form-check-label' do %>
-      <%= resource.class.human_attribute_name('is_student') %>
-    <% end %>
-  </div>
-
   <div class="form-group">
-    <%= f.submit t('.sign_up'), class: 'btn btn-primary' %>
+    <%= f.label :secret_key, "Lecturer key (leave blank to create a student account)" %>
+    <%= f.password_field :secret_key, class: 'form-control' %>
   </div>
-<% end %>
 
-<%= render 'users/shared/links' %>
+  <div class="actions d-flex flex-row justify-content-between mt-2">
+    <div></div>
+    <div class="form-group">
+      <%= render 'users/shared/links' %>
+      <%= f.submit t('.sign_up'), class: 'btn btn-primary' %>
+    </div>
+  </div>
+
+<% end %>

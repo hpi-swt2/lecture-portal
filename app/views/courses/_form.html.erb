@@ -1,6 +1,6 @@
 <%= form_with(model: course, local: true) do |form| %>
   <% if course.errors.any? %>
-    <div id="error_explanation">
+    <div id="error-explanation">
       <p class="h2" role="alert"><%= pluralize(course.errors.count, "error") %> prohibited this course from being saved:</p>
 
       <ul>
@@ -11,21 +11,26 @@
     </div>
   <% end %>
 
-  <div class="field row">
-    <%= form.label :name , :class => "col" %>
-    <%= form.text_field :name , :class => "col-10" %>
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control" %>
   </div>
 
-  <div class="field row">
-    <%= form.label :description, :class => "col" %>
-    <%= form.text_field :description , :class => "col-10" %>
+  <div class="form-group">
+    <%= form.label :description %>
+    <%= form.text_field :description, class: "form-control" %>
   </div>
 
-  <br/>
-  <div class="actions">
-    <%= form.submit :class => "btn btn-primary" %>
-    <% if defined?(with_delete_button) && with_delete_button %>
-      <%= link_to 'Delete Course', course_path(id:@course.id), method: :delete, data: { confirm: "Do you really want to delete this course?\n\nDeleted courses cannot be restored!" }, :class => "btn btn-primary" %>
-    <% end %>
+  <div class="actions d-flex flex-row justify-content-between mt-2">
+    <div>
+      <%= yield(:action_left) %>
+    </div>
+    <div>
+      <%= yield(:action_right) %>
+      <% if defined?(with_delete_button) && with_delete_button %>
+        <%= link_to 'Delete Course', course_path(id:@course.id), method: :delete, data: { confirm: "Do you really want to delete this course?\n\nDeleted courses cannot be restored!" }, :class => "btn btn-outline-danger" %>
+      <% end %>
+      <%= form.submit :class => "btn btn-primary" %>
+    </div>
   </div>
 <% end %>

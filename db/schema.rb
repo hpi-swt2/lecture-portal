@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_24_151237) do
+ActiveRecord::Schema.define(version: 2020_01_30_131908) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 2020_01_24_151237) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "votes", default: 0, null: false
+    t.decimal "index"
     t.index ["poll_id"], name: "index_poll_options_on_poll_id"
   end
 
@@ -130,8 +131,9 @@ ActiveRecord::Schema.define(version: 2020_01_24_151237) do
     t.integer "allowsUpload_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.boolean "isLink", default: false
     t.integer "author_id"
+    t.boolean "isLink", default: false
+    t.string "extension"
     t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
     t.index ["author_id"], name: "index_uploaded_files_on_author_id"
   end
