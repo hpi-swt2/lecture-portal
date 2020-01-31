@@ -19,11 +19,10 @@
           <%= link_to 'Edit', edit_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-secondary"} %>
           <% if poll.status == "created" %>
             <%= link_to 'Start', stop_start_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
-          <% elsif poll.status == "running"%>
-            <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
           <% else %>
             <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
-      <% end %>
+            <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+          <% end %>
         <% end %>
       </td>
     </tr>
