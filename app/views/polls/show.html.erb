@@ -36,13 +36,13 @@
     </p>
   </div>
 <% end %>
-<% if @is_student && !@poll.is_active || !@is_student %>
+<% if @is_student && (!@poll.is_active || !@lecture.allow_interactions?) || !@is_student %>
   <h3>Voting Results</h3>
   <div>
     <%= react_component("PollResultApp",  {course_id: @lecture.course_id, lecture_id: @lecture.id, poll_id: @poll.id, poll_option_ids: @poll.poll_options.map{|option| option.id}} ) %>
   </div>
 <% end %>
-<% if !@is_student %>
+<% if !@is_student && @lecture.allow_interactions? %>
   <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
 <% end %>
 <%= link_to (fa_icon 'arrow-left', text: 'Back'), course_lecture_polls_path(@lecture.course, @lecture, id: @poll), class: "btn btn-outline-primary" %>
