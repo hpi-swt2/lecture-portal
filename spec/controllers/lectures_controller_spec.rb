@@ -54,7 +54,7 @@ RSpec.describe LecturesController, type: :controller do
       # lecture = FactoryBot.create(:lecture, valid_attributes_with_lecturer)
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       student = FactoryBot.create(:user, :student)
-      lecture.join_lecture(student)
+      join_course_and_lecture(student, lecture)
       login_student(student)
       get :show, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
       expect(response).to be_successful
@@ -62,7 +62,9 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to course overview when the lecture does not exist", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
-      login_student()
+      user = FactoryBot.create(:user, :student)
+      join_course_and_lecture(user, lecture)
+      login_student(user)
       not_existing_lecture_id = lecture.id + 5
       get :show, params: { course_id: (lecture.course.id), id: not_existing_lecture_id }, session: valid_session
       expect(response).to redirect_to(course_path(lecture.course))
@@ -70,6 +72,8 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to the root path view if the course does not exist", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      user = FactoryBot.create(:user, :student)
+      join_course_and_lecture(user, lecture)
       not_existing_lecture_id = lecture.id + 5
       not_existing_course_id = lecture.course.id + 5
       get :show, params: { course_id: not_existing_course_id, id: not_existing_lecture_id }, session: valid_session
@@ -78,9 +82,18 @@ RSpec.describe LecturesController, type: :controller do
 
     it "redirects to course overview for not joined students", :logged_lecturer do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
-      login_student()
+      user = FactoryBot.create(:user, :student)
+      lecture.course.join_course(user)
+      login_student(user)
       get :show, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
       expect(response).to redirect_to(course_path(lecture.course))
+    end
+
+    it "redirects to lecture overview when student enrolls via url" do
+      lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      login_student
+      get :join_lecture_with_url, params: { course_id: lecture.course.id, lecture_id: lecture.id, key: lecture.enrollment_key }, session: valid_session
+      expect(response).to redirect_to(course_lecture_path(lecture.course.id, lecture))
     end
 
     it "redirects to overview for other lecturers", :logged_lecturer do
@@ -190,7 +203,7 @@ RSpec.describe LecturesController, type: :controller do
 
       it "removes all joined students when adding key to keyless lecture", :logged_lecturer do
         @lecture.update(enrollment_key: nil)
-        @lecture.join_lecture(FactoryBot.create(:user, :student))
+        join_course_and_lecture(FactoryBot.create(:user, :student), @lecture)
         put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: new_attributes }, session: valid_session
         @lecture.reload
         expect(@lecture.participating_students.length).to eq(0)
@@ -316,7 +329,7 @@ RSpec.describe LecturesController, type: :controller do
 
       it "removes all joined students when adding key to keyless lecture", :logged_lecturer do
         @lecture.update(enrollment_key: nil)
-        @lecture.join_lecture(FactoryBot.create(:user, :student))
+        join_course_and_lecture(FactoryBot.create(:user, :student), @lecture)
         put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: new_attributes }, session: valid_session
         @lecture.reload
         expect(@lecture.participating_students.length).to eq(0)
@@ -343,7 +356,7 @@ RSpec.describe LecturesController, type: :controller do
       @lecture = FactoryBot.create(:lecture, status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
       @user = FactoryBot.create(:user, :student)
       login_student(@user)
-      @lecture.join_lecture(@user)
+      join_course_and_lecture(@user, @lecture)
     end
     context "with valid params" do
       it "adds a comprehension stamp" do
@@ -369,7 +382,7 @@ RSpec.describe LecturesController, type: :controller do
         sign_out(@user)
         @user1 = FactoryBot.create(:user, :student)
         login_student(@user1)
-        @lecture.join_lecture(@user1)
+        join_course_and_lecture(@user1, @lecture)
         expect {
           put :update_comprehension_stamp, params: { course_id: (@lecture.course.id), id: @lecture.id, status: 0 }, session: valid_session
         }.to_not have_broadcasted_to("lecture_comprehension_stamp:#{@lecture.id}:#{@user.id}").from_channel(ComprehensionStampChannel)
@@ -389,5 +402,9 @@ RSpec.describe LecturesController, type: :controller do
   def login_lecturer(user = FactoryBot.create(:user, :lecturer))
     @lecturer = user
     sign_in(user, scope: :user)
+  end
+  def join_course_and_lecture(student, lecture)
+    lecture.join_lecture(student)
+    lecture.course.join_course(student)
   end
 end
