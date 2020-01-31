@@ -6,7 +6,7 @@ describe "Upload files", type: :feature do
 
   before :each do
     # could not get fixture_file_upload to find the file
-    @data = file_fixture("LICENSE")
+    @data = file_fixture("LICENSE.md")
     @data_umlauts = file_fixture("FileWithUmlautsÜÖÄüöä")
     @lecturer = FactoryBot.create(:user, :lecturer)
     @student = FactoryBot.create(:user, :student)
@@ -39,6 +39,13 @@ describe "Upload files", type: :feature do
       find(:id, "input-upload-file-name").set("Hasso-Plattner-Institute")
       click_on("Upload File")
       expect(UploadedFile.count).to be(1)
+    end
+
+    it "extracts extension from an upload" do
+      expect(UploadedFile.where(extension: ".md").count).to be(0)
+      find(:id, "input-upload-file").set(@data)
+      click_on("Upload File")
+      expect(UploadedFile.where(extension: ".md").count).to be(1)
     end
 
     it "uploads a valid file with umlauts and with correct type" do
