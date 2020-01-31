@@ -126,7 +126,7 @@ class LecturesController < ApplicationController
         redirect_to root_path, alert: "The course you requested does not exist."
       end
     end
-    
+
     # This method looks for the lecture in the database and redirects with a failure if the lecture does not exist.
     def get_lecture
       if params[:id].nil?
@@ -134,7 +134,7 @@ class LecturesController < ApplicationController
       else
         @lecture = Lecture.find_by(id: params[:id])
       end
-      
+
       if @lecture.nil?
         redirect_to course_path(@course), alert: "The lecture you requested does not exist."
       end
