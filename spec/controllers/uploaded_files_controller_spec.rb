@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe UploadedFilesController, type: :controller do
   before :each do
-    file = fixture_file_upload("files/LICENSE", "text/plain")
+    file = fixture_file_upload("files/LICENSE.md", "text/plain")
     @lecturer = FactoryBot.create(:user, :lecturer)
     @lecture = FactoryBot.create(:lecture, lecturer: @lecturer)
     @file = Hash.new
