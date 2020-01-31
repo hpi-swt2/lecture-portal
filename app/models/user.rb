@@ -41,7 +41,4 @@ class User < ApplicationRecord
     def unique_hash_id?
       !self.class.exists?(hash_id: self.hash_id)
     end
-
-
-
 end
