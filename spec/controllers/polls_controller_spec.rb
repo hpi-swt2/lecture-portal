@@ -186,7 +186,7 @@ RSpec.describe PollsController, type: :controller do
   describe "#stop_start" do
     context "while lecture is running" do
       lecture = FactoryBot.create(:lecture)
-      lecture.set_running
+      lecture.update(date: Date.today, start_time: DateTime.now)
       lecture.update(enrollment_key: nil)
       it "starts an inactive poll when the lecture is still running", :logged_lecturer do
         poll = FactoryBot.create(:poll, :inactive)
@@ -213,8 +213,7 @@ RSpec.describe PollsController, type: :controller do
     end
     context "when the lecture stopped running" do
       lecture = FactoryBot.create(:lecture)
-      lecture.set_archived
-      lecture.update(enrollment_key: nil)
+      lecture.update(date: Date.yesterday)
       it "doesn't start an inactive poll when the lecture is not running", :logged_lecturer do
         poll = FactoryBot.create(:poll, :inactive)
         get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
