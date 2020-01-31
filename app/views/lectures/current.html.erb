@@ -25,3 +25,9 @@
 </table>
 
 <br>
+
+<script> 
+  function isRelevantLectureStatusUpdated(lecture_id, course_id) {
+        return course_id == "<%= @course.id %>"
+  }
+</script>

@@ -53,3 +53,9 @@
     <%= link_to "Unenroll", leave_course_path(id: @course.id), method: :post, class: "btn btn-outline-secondary" %>
   <% end %>
 </div>
+
+<script> 
+  function isRelevantLectureStatusUpdated(lecture_id, course_id) {
+        return course_id == "<%= @course.id %>"
+  }
+</script>

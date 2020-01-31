@@ -23,3 +23,9 @@
   <h2>Archived Lectures</h2>
   <%= render 'table', lectures: @archived_lectures %>
 <% end %>
+
+<script> 
+  function isRelevantLectureStatusUpdated(lecture_id, course_id) {
+        return course_id == "<%= @lecture.course.id %>"
+  }
+</script>

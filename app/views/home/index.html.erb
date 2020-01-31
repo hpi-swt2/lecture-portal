@@ -114,3 +114,11 @@
 
   </p>
 </div>
+
+<% if user_signed_in? && @current_user.is_student %>
+  <script> 
+    function isRelevantLectureStatusUpdated(lecture_id, course_id) {
+          return <%= @participating_lectures.map { |i| i.id } %>.includes(lecture_id) 
+    }
+  </script>
+<% end %>
