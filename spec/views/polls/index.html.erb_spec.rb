@@ -21,15 +21,15 @@ RSpec.describe "polls/index", type: :view do
   it "renders a list of polls for lecturer" do
     login_lecturer
     visit course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id)
-    find(:table_row, {"Title" => "Title1", "Active" => "No"}, {})
-    find(:table_row, {"Title" => "Title2", "Active" => "Yes"}, {})
+    find(:table_row, { "Title" => "Title1", "Active" => "No" }, {})
+    find(:table_row, { "Title" => "Title2", "Active" => "Yes" }, {})
   end
 
   it "renders a list of polls for student" do
     login_student
     visit course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id)
-    find(:table_row, {"Title" => "Title1", "Active" => "No"}, {})
-    find(:table_row, {"Title" => "Title2", "Active" => "Yes"}, {})
+    find(:table_row, { "Title" => "Title1", "Active" => "No" }, {})
+    find(:table_row, { "Title" => "Title2", "Active" => "Yes" }, {})
   end
 
   def login_lecturer
