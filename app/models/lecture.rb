@@ -19,23 +19,6 @@ class Lecture < ApplicationRecord
   scope :running, -> { where status: "running" }
   scope :active, -> { running.or(where status: "active") }
 
-  def set_created
-    self.status = :created
-  end
-
-  def set_active
-    self.status = :active
-  end
-
-  def set_running
-    self.status = :running
-  end
-
-  def set_archived
-    self.status = :archived
-    self.close_all_polls
-  end
-
   def join_lecture(student)
     unless self.participating_students.include?(student)
       self.participating_students << student
@@ -127,7 +110,7 @@ class Lecture < ApplicationRecord
   end
 
   def close_all_polls
-    self.polls.where(status: "running").each { |poll|
+    self.polls.where(status: "running").reverse_each { |poll|
       poll.close
     }
   end
@@ -146,6 +129,7 @@ class Lecture < ApplicationRecord
     end
 
     def set_archived
+      self.close_all_polls
       self.status = :archived
     end
 
