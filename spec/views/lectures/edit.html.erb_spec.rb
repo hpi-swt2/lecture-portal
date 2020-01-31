@@ -18,7 +18,6 @@ RSpec.describe "lectures/edit", type: :view do
   it "renders the edit lecture form" do
     render
     assert_select "form[action=?][method=?]", course_lecture_path(course_id: @course.id, id: @lecture), "post" do
-      save_and_open_page
       assert_select "input[name=?]", "lecture[name]"
       assert_select "input[name=?]", "lecture[enrollment_key]"
       # components of time_select and date_select
@@ -37,7 +36,7 @@ RSpec.describe "lectures/edit", type: :view do
   end
 
   it " should be disabled if the lecture is archived" do
-    @lecture.set_archived
+    @lecture.update(date: Date.yesterday)
     render
     assert_select "form[action=?][method=?]", course_lecture_path(course_id: @course.id, id: @lecture), "post" do
       assert_select "input[name=?][readonly]", "lecture[name]"

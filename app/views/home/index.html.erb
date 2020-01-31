@@ -80,7 +80,7 @@
               <td>
                 <span style="white-space: nowrap">
                   <%= button_to "View", course_path(id: course.id), :method => "get", class: "btn btn-primary" %>
-                  <%= link_to "Unenroll", leave_course_path(id: course.id), method: :post, class: "btn btn-primary" %>
+                  <%= link_to "Unenroll", leave_course_path(id: course.id), method: :post, class: "btn btn-outline-danger" %>
                 </span>
               </td>
             </tr>
@@ -104,7 +104,7 @@
               <td>
                 <span class="overflowing"><%= course.description %></span>
               </td>
-              <td class="text-right"><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
+              <td class="text-right"><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-outline-danger" %></td>
               <td> </td>
             </tr>
           <% end %>
@@ -114,3 +114,13 @@
 
   </p>
 </div>
+
+<% if user_signed_in? && @current_user.is_student %>
+  <script> 
+    $(document).on("turbolinks:load", function() {
+      initLectureStatusUpdating(function(lecture_id, course_id) {
+        return <%= @participating_lectures.map { |i| i.id } %>.includes(lecture_id) 
+      });
+    }); 
+  </script>
+<% end %>
