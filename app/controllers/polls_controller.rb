@@ -55,13 +55,13 @@ class PollsController < ApplicationController
   # GET /polls/1/stop
   def stop_start
     if @poll.is_active
-      if @poll.update(is_active: false)
+      if @poll.update(status: "stopped")
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You stopped the poll!"
       else
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Stopping the poll did not work :("
       end
     else
-      if @poll.update(is_active: true)
+      if @poll.update(status: "running")
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You started the poll!"
       else
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Starting the poll did not work :("
@@ -88,7 +88,7 @@ class PollsController < ApplicationController
   # POST /polls
   def create
     current_poll_params = poll_params
-    @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
+    @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], status: current_poll_params[:status])
     poll_option_params = current_poll_params[:poll_options]
     create_and_save_poll_options_from_params(poll_option_params)
     if @poll.save
@@ -101,7 +101,7 @@ class PollsController < ApplicationController
   # PATCH/PUT /polls/1
   def update
     current_poll_params = poll_params
-    if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
+    if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], status: current_poll_params[:status])
       poll_option_params = current_poll_params[:poll_options]
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
       PollOption.where(poll_id: @poll.id).destroy_all
@@ -179,7 +179,7 @@ class PollsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def poll_params
-      params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
+      params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :status, :number_of_options, poll_options: params[:poll][:poll_options].keys)
     end
 
     # This method looks for the course in the database and redirects with a failure if the course does not exist.
