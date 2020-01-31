@@ -13,7 +13,7 @@ const UpdatesList: React.FunctionComponent<{}> = observer(() => {
   const { is_student, updatesList } = useInjectUpdates(mapStore);
 
   return (
-    <div className="questionsList mt-1">
+    <div className="questions-list mt-1">
       <ul className={(is_student ? "" : "is_lecturer")}>
         {updatesList.getList().map(update => (
             update.isVisible() &&

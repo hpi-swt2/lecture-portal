@@ -43,6 +43,13 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_css("#enrollmentKey-tab")
     end
 
+    it "renders enrollment qr code if enrollment key is present" do
+      @qr_code = RQRCode::QRCode.new("http://some-random.url/that/is/not/tested")
+      render
+      assert_select "a", "Enrollment Key"
+      expect(rendered).to have_selector("div", class: "qr-code-container")
+    end
+
     it "does not render enrollment key tab button if enrollment key is not present" do
       @lecture.update(enrollment_key: nil)
       render
@@ -71,7 +78,7 @@ RSpec.describe "lectures/show", type: :view do
       @lecture.update(feedback_enabled: false)
       render
       assert_select "a", "Feedback"
-      expect(rendered).to have_text("Feedback is not enabled.")
+      expect(rendered).to have_text("Feedback is not enabled or the lecture is not active.")
     end
 
     it "does not show notice pages on disabled questions/polls/feedback when questions are enabled" do
