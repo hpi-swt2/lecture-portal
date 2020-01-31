@@ -1,9 +1,9 @@
 class User < ApplicationRecord
   has_one :feedback, dependent: :destroy
   has_many :uploaded_files, foreign_key: "author_id"
-  has_many :lectures, dependent: :destroy
-  has_many :courses, dependent: :destroy
-  has_many :questions
+  has_many :lectures, dependent: :destroy, foreign_key: "lecturer_id"
+  has_many :courses, dependent: :destroy, foreign_key: "creator_id"
+  has_many :questions, foreign_key: "author_id"
   has_and_belongs_to_many :participating_lectures, class_name: :Lecture
   has_and_belongs_to_many :participating_courses, class_name: :Course
   has_and_belongs_to_many :upvoted_questions, class_name: :Question
