@@ -9,7 +9,7 @@
   </thead>
 
   <tbody>
-  <% polls.sort_by{|poll| poll.created_at}.each do |poll| %>
+  <% polls.sort_by{|poll| poll.created_at}.each do |poll|%>
     <tr>
       <td><%= poll.title %></td>
       <td><%= poll.status %></td>
@@ -24,3 +24,24 @@
   <% end %>
   </tbody>
 </table>
+
+<script>
+  async function sleep(ms) {
+    const promise = new Promise();
+    setTimeout(ms, () => promise.resolve());
+    return promise
+  }
+  function reload() {
+    // reload page
+    window.location.reload(true);
+  }
+  async function main() {
+    while (true){
+      await sleep(10000);
+      reload();
+    }
+    main();
+  }
+
+
+</script>
