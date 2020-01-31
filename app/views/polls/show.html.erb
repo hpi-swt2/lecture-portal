@@ -21,17 +21,16 @@
       <h3><%= @poll.title %></h3> <br>
       <% if !@is_student && @lecture.allow_interactions? %>
         <div style="text-align: center;">
-          <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), class: "btn btn-primary" %>
+          <% if @poll.status == "created"%>
+            <%= link_to 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
+          <% elsif @poll.status == "running"%>
+            <%= link_to 'Stop', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
+          <%else %>
+            <%= link_to 'Restart', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
+          <%end %>
         </div>
       <% end %>
     </p>
-    <% if @poll.status == "created"%>
-      <%= link_to 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
-    <% elsif @poll.status == "running"%>
-      <%= link_to 'Stop', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
-    <%else %>
-      <%= link_to 'Restart', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
-    <%end %>
     <p class="pollStatusInformation">
       <% if  @poll.is_multiselect? %>
         Multiselect enabled
