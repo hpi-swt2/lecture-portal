@@ -88,7 +88,7 @@ class PollsController < ApplicationController
   # POST /polls
   def create
     current_poll_params = poll_params
-    @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], status: current_poll_params[:status])
+    @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], status: "created")
     poll_option_params = current_poll_params[:poll_options]
     create_and_save_poll_options_from_params(poll_option_params)
     if @poll.save
@@ -101,7 +101,7 @@ class PollsController < ApplicationController
   # PATCH/PUT /polls/1
   def update
     current_poll_params = poll_params
-    if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], status: current_poll_params[:status])
+    if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect])
       poll_option_params = current_poll_params[:poll_options]
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
       PollOption.where(poll_id: @poll.id).destroy_all
@@ -230,5 +230,9 @@ class PollsController < ApplicationController
         @poll.poll_options.build(description: poll_option_description.to_param, index: i)
         i = i + 1
       end
+    end
+
+    def get_toggled_status
+      @poll.is_active ? "stopped" : "running"
     end
 end
