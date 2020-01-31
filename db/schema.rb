@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_31_103246) do
+ActiveRecord::Schema.define(version: 2020_01_31_140124) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -101,7 +101,7 @@ ActiveRecord::Schema.define(version: 2020_01_31_103246) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "lecture_id"
-    t.string "status"
+    t.string "status", default: "1", null: false
     t.index ["lecture_id"], name: "index_polls_on_lecture_id"
   end
 
