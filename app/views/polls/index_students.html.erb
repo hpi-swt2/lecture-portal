@@ -1,1 +1,10 @@
 <%= render 'student_table', polls: @polls %>
+
+<script lang="js">
+    function main() {
+        setTimeout(function () {
+          window.location.reload(true);
+        }, 3000);
+    };
+    main();
+</script>

@@ -24,24 +24,3 @@
   <% end %>
   </tbody>
 </table>
-
-<script>
-  async function sleep(ms) {
-    const promise = new Promise();
-    setTimeout(ms, () => promise.resolve());
-    return promise
-  }
-  function reload() {
-    // reload page
-    window.location.reload(true);
-  }
-  async function main() {
-    while (true){
-      await sleep(10000);
-      reload();
-    }
-    main();
-  }
-
-
-</script>
