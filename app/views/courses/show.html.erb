@@ -50,6 +50,6 @@
   <%= link_to (fa_icon 'arrow-left', text: 'Back to Overview'), root_path, class: "btn btn-outline-primary" %>
 
   <% if @current_user.is_student %>
-    <%= link_to "Unenroll", leave_course_path(id: @course.id), method: :post, class: "btn btn-outline-secondary" %>
+    <%= link_to "Unenroll", leave_course_path(id: @course.id), method: :post, class: "btn btn-outline-danger" %>
   <% end %>
 </div>
