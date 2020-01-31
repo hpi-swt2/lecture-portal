@@ -23,6 +23,7 @@ class UploadedFile < ApplicationRecord
     @files
   end
   validates :data, presence: true
+  validates :filename, presence: true
   # do not validate presence of content type. Unfortunately, rspec can not set it in tests,
   # so validating its presence will break some tests without possibility to fix them.
 end
