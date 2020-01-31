@@ -51,4 +51,8 @@ RSpec.describe User, type: :model do
     @user.upvoted_questions << question1
     @user.upvoted_questions << question2
   end
+
+  it "can be destroyed" do
+    expect { @user.destroy }.to_not raise_error
+  end
 end
