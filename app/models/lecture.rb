@@ -1,6 +1,6 @@
 class Lecture < ApplicationRecord
   before_save :update_lecture_status, if: lambda { |l| l.date_changed? || l.start_time_changed? || end_time_changed? }
-  before_save :lecture_status_changed, if: lambda { |l| l.status.changed? }
+  before_save :lecture_status_changed, if: lambda { |l| l.status_changed? }
 
   belongs_to :lecturer, class_name: :User
   has_and_belongs_to_many :participating_students, class_name: :User
@@ -58,19 +58,20 @@ class Lecture < ApplicationRecord
   def update_lecture_status
     old_status = self.status
     if self.date < Date.today
-      self.set_archived
+      set_archived
     elsif self.date > Date.today
-      self.set_created
+      set_created
     elsif self.start_time.utc.seconds_since_midnight - 300 < Time.current.utc.seconds_since_midnight && self.end_time.utc.seconds_since_midnight + 300 > Time.current.utc.seconds_since_midnight
-      self.set_running
+      set_running
     else
-      self.set_active
+      set_active
     end
     old_status != self.status
   end
 
   def lecture_status_changed
-    ActionCable.server.broadcast "lecture_status_channel", lecture_id: self.id, course_id: self.course.id
+    puts "in lecture_changed"
+    ActionCable.server.broadcast "lecture_status_channel", {lecture_id: self.id, course_id: self.course.id}
   end
 
   def allow_comprehension?

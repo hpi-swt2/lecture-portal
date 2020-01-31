@@ -1,6 +1,6 @@
 class LectureStatusChannel < ApplicationCable::Channel
     def subscribed
-      stream_for "lecture_status_channel"
+      stream_from "lecture_status_channel"
     end
   
     def unsubscribed

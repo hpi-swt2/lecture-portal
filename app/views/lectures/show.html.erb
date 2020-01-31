@@ -4,6 +4,10 @@
         if (document.getElementById("feedback-submit").value !== "Update")
         {document.getElementById("feedback-submit").value = "Update"}
     }
+
+    function isRelevantLectureStatusUpdated(lecture_id, course_id) {
+      return lecture_id == "<%= @lecture.id %>"
+    }
 </script>
 
 <h1 class="h5"><%= @lecture.name %></h1>
