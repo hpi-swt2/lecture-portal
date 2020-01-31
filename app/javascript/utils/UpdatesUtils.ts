@@ -25,11 +25,11 @@ const setupActionCable = (rootStore: UpdatesRootStoreModel) => {
     setupQuestionsActionCable(rootStore.lecture_id,
         (data) => {
             const { question } = data;
-            rootStore.updatesList.questionsList.addQuestion(question);
+            rootStore.updatesList.questions-list.addQuestion(question);
         }, (id) => {
-            rootStore.updatesList.questionsList.resolveQuestionById(id);
+            rootStore.updatesList.questions-list.resolveQuestionById(id);
         }, (question_id, upvoter_id) => {
-            rootStore.updatesList.questionsList.upvoteQuestionById(
+            rootStore.updatesList.questions-list.upvoteQuestionById(
                 question_id,
                 upvoter_id
         )}

@@ -7,7 +7,7 @@ export const createPollOptionsStore = (): PollOptionsRootStoreModel => {
         poll_options: []
     });
     const participantsCount = PollParticipantsCount.create({
-        numberOfParticipants: -1,
+        number-of-participants: -1,
         numberOfLectureUsers: -1
     });
     const env: PollOptionsRootStoreEnv = {

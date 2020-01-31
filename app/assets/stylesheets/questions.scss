@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
 
-form#questionForm {
+form#question-form {
   > textarea {
     width: 100%;
     border: 1px solid #aaa;
@@ -14,7 +14,7 @@ form#questionForm {
   }
 }
 
-div.questionsList {
+div.questions-list {
   clear: both;
   margin: 0 0 70px;
   &.interactions_enabled {

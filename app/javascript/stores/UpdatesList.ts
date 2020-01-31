@@ -7,12 +7,12 @@ export type UpdatesListModel = Instance<typeof UpdatesList>
 
 const UpdatesList = types
     .model({
-        questionsList: QuestionsList
+        questions-list: QuestionsList
     })
     .views(self => ({
         getList() {
             let updatesList = [];
-            self.questionsList.list.forEach((question) => {
+            self.questions-list.list.forEach((question) => {
                 updatesList.push(new UpdateItem(
                     UpdateTypes.Question,
                     observable.box(question)
@@ -23,7 +23,7 @@ const UpdatesList = types
     }))
     .actions(self => ({
         setQuestionsList(questionData) {
-            self.questionsList.setQuestionsList(questionData)
+            self.questions-list.setQuestionsList(questionData)
         }
     }));
 

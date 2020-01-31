@@ -1,6 +1,6 @@
 <%= form_with(model: [@course, lecture], local: true) do |form| %>
   <% if lecture.errors.any? %>
-    <div id="error_explanation">
+    <div id="error-explanation">
       <p class="h2" role="alert"><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</p>
 
       <ul>

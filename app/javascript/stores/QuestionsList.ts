@@ -4,8 +4,8 @@ import { getQuestionsRootStore } from "./QuestionsRootStore";
 
 export type QuestionsListModel = Instance<typeof QuestionsList>
 
-const sortQuestionsList = (questionsList, sortByTime: boolean) => {
-    return questionsList.slice().sort(sortByTime ? timeSorting : upvoteSorting);
+const sortQuestionsList = (questions-list, sortByTime: boolean) => {
+    return questions-list.slice().sort(sortByTime ? timeSorting : upvoteSorting);
 };
 
 const timeSorting = (a: QuestionModel, b: QuestionModel): number => {

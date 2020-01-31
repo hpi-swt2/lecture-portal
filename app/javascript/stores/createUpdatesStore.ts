@@ -4,7 +4,7 @@ import QuestionsList from "./QuestionsList";
 
 export const createUpdatesStore = (): UpdatesRootStoreModel => {
     const updatesList = UpdatesList.create({
-        questionsList: QuestionsList.create({
+        questions-list: QuestionsList.create({
             list: []
         })
     });
