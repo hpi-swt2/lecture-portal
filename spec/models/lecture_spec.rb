@@ -167,7 +167,7 @@ RSpec.describe Lecture, type: :model do
   it "not change status once it is archived" do
     @lecture.update(date: Date.yesterday, start_time: DateTime.now - 1.day - 1.hour, end_time: DateTime.now - 1.day + 1.hour)
     expect(@lecture.status).to eq("archived")
-    travel -1.day do
+    travel (-1).day do
       Lecture.handle_activations
       @lecture.reload
       expect(@lecture.status).to eq("archived")
