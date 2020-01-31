@@ -103,7 +103,6 @@ RSpec.describe Lecture, type: :model do
     expect(open_polls).to_not be_empty
     @lecture.update(date: Date.yesterday)
     open_polls = @lecture.polls.where(is_active: true)
-    skip("Needs to be implemented")
     expect(open_polls).to be_empty
   end
 
