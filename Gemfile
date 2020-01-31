@@ -135,3 +135,6 @@ gem "action-cable-testing"
 gem "icalendar"
 # Easily schedule tasks in ruby <3
 gem "rufus-scheduler"
+
+# adds support for qr-codes
+gem "rqrcode", "~> 1.1"

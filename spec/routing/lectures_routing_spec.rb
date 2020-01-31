@@ -18,6 +18,14 @@ RSpec.describe LecturesController, type: :routing do
       expect(get: "/courses/1/lectures/1/edit").to route_to("lectures#edit", id: "1", course_id: "1")
     end
 
+    it "routes to #join_lecture_with_url" do
+      expect(get: "/courses/1/lectures/1/enroll").to route_to("lectures#join_lecture_with_url", lecture_id: "1", course_id: "1")
+    end
+
+    it "routes to #join_lecture_with_url" do
+      key = "hfdahfdsahfdsa"
+      expect(get: "/courses/1/lectures/1/enroll?key="+key).to route_to("lectures#join_lecture_with_url", lecture_id: "1", course_id: "1", key: key)
+    end
 
     it "routes to #create" do
       expect(post: "/courses/1/lectures").to route_to("lectures#create", course_id: "1")
