@@ -53,20 +53,16 @@ class PollsController < ApplicationController
     end
   end
 
-  # GET /polls/1/stop
+  # GET /polls/1/stop_start
   def stop_start
-    if @poll.is_active
-      if @poll.update(is_active: false)
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You stopped the poll!"
+    if @lecture.allow_interactions?
+      if @poll.is_active
+        stop
       else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Stopping the poll did not work :("
+        start
       end
     else
-      if @poll.update(is_active: true)
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You started the poll!"
-      else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Starting the poll did not work :("
-      end
+      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "The lecture is archived and doesn't allow any more interactions"
     end
   end
 
@@ -135,6 +131,22 @@ class PollsController < ApplicationController
   end
 
   private
+    def start
+      if @poll.update(is_active: true)
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You started the poll!"
+      else
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Starting the poll did not work :("
+      end
+    end
+
+    def stop
+      if @poll.update(is_active: false)
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You stopped the poll!"
+      else
+        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Stopping the poll did not work :("
+      end
+    end
+
     # Send belonging poll_options to subscribers so they can update their data
     def broadcast_options
       poll = Poll.find(params[:id])

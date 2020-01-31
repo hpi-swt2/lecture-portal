@@ -5,3 +5,16 @@ $(document).on("turbolinks:load", function() {
     $('.nav-tabs a[href="#' + document.URL.split("#")[1] + '"]').tab("show");
   }
 });
+
+function initLectureStatusUpdating(isRelevantLectureStatusUpdated) {
+  App.cable.subscriptions.create(
+    { channel: "LectureStatusChannel" },
+    {
+      received: function(data) {
+        if (isRelevantLectureStatusUpdated(data.lecture_id, data.course_id)) {
+          window.location.reload();
+        }
+      }
+    }
+  );
+}
