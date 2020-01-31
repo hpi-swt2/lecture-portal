@@ -34,6 +34,10 @@
         <%= form.label :attachment, "Click to choose File" %>
         <br/>
         <%= form.file_field :attachment, :class => "btn btn-outline-secondary", id:"input-upload-file", required: true %>
+        <div class="form-group">
+          <%= form.label :File_Name, "display name (optional)" %>
+          <%= form.text_field :filename, :class => "form-control", id:"input-upload-file-name", placeholder: "Task 1" %>
+        </div>
       </div>
 
 
@@ -65,8 +69,13 @@
       <% end %>
 
       <div class="form-group">
-        <%= form.label :link %>
+        <%= form.label :link%>
         <%= form.text_field :link, :class => "form-control", id:"input-upload-link", required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :link_Name, "display name (optional)" %>
+        <%= form.text_field :link_name, :class => "form-control", id:"input-upload-link-name", placeholder: "Exercise Link" %>
       </div>
 
       <div class="actions d-flex flex-row justify-content-between mt-2">
