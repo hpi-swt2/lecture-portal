@@ -57,7 +57,7 @@ class LecturesController < ApplicationController
   # PATCH/PUT courses/:course_id/lectures/1
   def update
     if !@lecture.enrollment_key_present? && !lecture_params[:enrollment_key].empty?
-      @lecture.participating_students.each do | student |
+      @lecture.participating_students.reverse_each do | student |
         @lecture.leave_lecture(student)
       end
     end
