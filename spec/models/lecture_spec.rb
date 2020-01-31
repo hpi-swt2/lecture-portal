@@ -104,7 +104,7 @@ RSpec.describe Lecture, type: :model do
     @lecture.polls << poll
     open_polls = @lecture.polls.where(status: "running")
     expect(open_polls).to_not be_empty
-    @lecture.update(status: "archived", date: Date.yesterday)
+    @lecture.set_archived
     open_polls = @lecture.polls.where(status: "running")
     expect(open_polls).to be_empty
   end
