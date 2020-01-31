@@ -18,14 +18,14 @@ RSpec.describe PollsController, type: :controller do
     lecture: FactoryBot.create(:lecture),
     is_multiselect: true,
     lecture_id: lecture.id,
-    is_active: false,
+    status: "stopped",
     poll_options: poll_options
   }}
   let(:valid_attributes_with_active) { {
     title: "Example Title",
     is_multiselect: true,
     lecture_id: lecture.id,
-    is_active: true,
+    status: "running",
     poll_options: poll_options
   }}
   # we need the distinction between params and attributes because
@@ -35,7 +35,7 @@ RSpec.describe PollsController, type: :controller do
       title: "Example Title",
       is_multiselect: true,
       lecture_id: lecture.id,
-      is_active: false,
+      status: "stopped",
       poll_options: poll_options_params
   }}
   let(:invalid_attributes) { {
@@ -133,14 +133,14 @@ RSpec.describe PollsController, type: :controller do
 
     it "returns a failure response for students for not active polls", :logged_student do
       poll = Poll.create! valid_attributes
-      poll.is_active = false
+      poll.status = "stopped"
       get :edit, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).not_to be_successful
     end
 
     it "returns a failure response for students for active polls", :logged_student do
       poll = Poll.create! valid_attributes_with_active
-      poll.is_active = true
+      poll.status = "running"
       get :edit, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to_not be_successful
     end
@@ -149,7 +149,7 @@ RSpec.describe PollsController, type: :controller do
   describe "GET #answer" do
     it "returns a success response for students", :logged_student do
       poll = Poll.create! valid_attributes_with_active
-      poll.is_active = true
+      poll.status = "running"
       get :answer, params: { course_id: lecture.course.id, lecture_id: lecture.to_param, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
@@ -245,7 +245,7 @@ RSpec.describe PollsController, type: :controller do
         # skip("Add a hash of attributes valid for your model")
         title: "New Title",
         is_multiselect: false,
-        is_active: false,
+        status: "stopped",
         poll_options: poll_options_params
       }}
 
