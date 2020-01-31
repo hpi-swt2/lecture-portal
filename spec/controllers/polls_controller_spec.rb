@@ -178,17 +178,39 @@ RSpec.describe PollsController, type: :controller do
   end
 
   describe "#stop_start" do
-    it "starts an inactive poll", :logged_student do
-      poll = FactoryBot.create(:poll, :inactive)
-      get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
-      poll.reload
-      expect(poll.is_active).to eq(true)
+    context "while lecture is running" do
+      lecture = FactoryBot.create(:lecture)
+      lecture.set_running
+      lecture.update(enrollment_key: nil)
+      it "starts an inactive poll when the lecture is still running", :logged_lecturer do
+        poll = FactoryBot.create(:poll, :inactive)
+        get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
+        poll.reload
+        expect(poll.is_active).to eq(true)
+      end
+      it "stops an active poll when the lecture is still running", :logged_lecturer do
+        poll = FactoryBot.create(:poll, :active)
+        get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
+        poll.reload
+        expect(poll.is_active).to eq(false)
+      end
     end
-    it "stops an active poll", :logged_student do
-      poll = FactoryBot.create(:poll, :active)
-      get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
-      poll.reload
-      expect(poll.is_active).to eq(false)
+    context "when the lecture stopped running" do
+      lecture = FactoryBot.create(:lecture)
+      lecture.set_archived
+      lecture.update(enrollment_key: nil)
+      it "doesn't start an inactive poll when the lecture is not running", :logged_lecturer do
+        poll = FactoryBot.create(:poll, :inactive)
+        get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
+        poll.reload
+        expect(poll.is_active).to eq(false)
+      end
+      it "doesn't stop an active poll when the lecture is not running", :logged_lecturer do
+        poll = FactoryBot.create(:poll, :active)
+        get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
+        poll.reload
+        expect(poll.is_active).to eq(true)
+      end
     end
   end
 

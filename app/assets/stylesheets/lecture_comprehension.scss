@@ -5,26 +5,26 @@
   span.participants {
     float: right;
   }
-  .legendItem .blue, .comprehensionButton.blue::after {
+  .legend-item .blue, .comprehension-button.blue::after {
     background-color: #80b2ff;
   }
-  .legendItem .green, .comprehensionButton.green::after {
+  .legend-item .green, .comprehension-button.green::after {
     background-color: #98ff9c;
   }
-  .legendItem .red, .comprehensionButton.red::after {
+  .legend-item .red, .comprehension-button.red::after {
     background-color: #ff8988;
   }
-  .comprehensionBox {
+  .comprehension-box {
     width: 100%;
     padding: 20px 0;
     border: 1px solid #333;
     background-color: #fdfdfd;
 
     &.disabled {
-      .comprehensionButton, p {
+      .comprehension-button, p {
         opacity: .5 !important;
       }
-      .comprehensionItem {
+      .comprehension-item {
         cursor: initial !important;
       }
     }
@@ -39,14 +39,14 @@
       clear: both;
     }
 
-    > .comprehensionItem {
+    > .comprehension-item {
       float: left;
       width: 33.33%;
       text-align: center;
       cursor: pointer;
 
       &:hover, &:active, &:focus {
-        .comprehensionButton, p {
+        .comprehension-button, p {
           opacity: .8;
         }
       }
@@ -55,7 +55,7 @@
         margin-left: 6px;
       }
 
-      .comprehensionButton {
+      .comprehension-button {
         width: 80px;
         height: 80px;
         border-radius: 100%;
@@ -82,7 +82,7 @@
         > div {
           margin-left: 0;
         }
-        .comprehensionButton {
+        .comprehension-button {
           border: 3px solid;
           opacity: 1;
 
@@ -102,13 +102,13 @@
       }
     }
   }
-  .comprehensionResults {
+  .comprehension-results {
     width: 100%;
     height: 60px;
     margin: 10px 0;
   }
-  .comprehensionLegend {
-    .legendItem {
+  .comprehension-legend {
+    .legend-item {
       margin-bottom: 10px;
       > div {
         vertical-align: middle;
@@ -129,7 +129,7 @@
 }
 
 @media(max-width: 767px) {
-  .comprehensionItem {
+  .comprehension-item {
     float: none !important;
     width: 100% !important;
   }
