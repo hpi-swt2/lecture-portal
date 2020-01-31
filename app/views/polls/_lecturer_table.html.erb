@@ -16,11 +16,15 @@
       <td><%= poll.status %></td>
       <td class="text-right">
         <% if @lecture.allow_interactions?%>
-          <%= link_to 'Edit', edit_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
-          <% text = poll.is_active ? 'Stop' : 'Start' %>
-          <%= link_to text, stop_start_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+          <%= link_to 'Edit', edit_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-secondary"} %>
+          <% if poll.status == "created" %>
+            <%= link_to 'Start', stop_start_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+          <% elsif poll.status == "running"%>
+            <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+          <% else %>
+            <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+      <% end %>
         <% end %>
-        <%= link_to 'Results', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
       </td>
     </tr>
   <% end %>
