@@ -61,6 +61,8 @@ RSpec.describe PollsController, type: :controller do
     if test.metadata[:logged_student]
       login_student
     end
+
+    lecture.update(date: Date.today)
   end
 
   describe "Should prompt the user to log in first and redirect before accessing" do
