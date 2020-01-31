@@ -31,9 +31,9 @@ const ComprehensionStudent: React.FunctionComponent<{}> = observer(() => {
         let comprehensionItems = [];
         for (let i = 0; i < numberOfComprehensionStates; i++) {
             comprehensionItems.push(
-                <div className={"comprehensionItem" + (active_stamp == i ? " active" : "")} key={i} onClick={onComprehensionStampClick(i)}>
+                <div className={"comprehension-item" + (active_stamp == i ? " active" : "")} key={i} onClick={onComprehensionStampClick(i)}>
                     <div>
-                        <div className={"comprehensionButton " + comprehensionStates[i]} />
+                        <div className={"comprehension-button " + comprehensionStates[i]} />
                     </div>
                     <p>{comprehensionLabels[i]}</p>
                 </div>);
@@ -44,7 +44,7 @@ const ComprehensionStudent: React.FunctionComponent<{}> = observer(() => {
     return (
         <div>
             <p>Last Updated: {formatDate(last_updated)}</p>
-            <div className={"comprehensionBox" + (interactions_enabled ? "" : " disabled")}>
+            <div className={"comprehension-box" + (interactions_enabled ? "" : " disabled")}>
                 {renderComprehensionItems()}
             </div>
         </div>

@@ -16,9 +16,14 @@
   </ol>
 
 <% else %>
-  <div id="pollInformation">
-    <p id="pollTitle">
+  <div class="poll-information">
+    <p class="poll-title">
       <h3><%= @poll.title %></h3> <br>
+      <% if !@is_student && @lecture.allow_interactions? %>
+        <div style="text-align: center;">
+          <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), class: "btn btn-primary" %>
+        </div>
+      <% end %>
     </p>
     <% if @poll.status == "created"%>
       <%= link_to 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>

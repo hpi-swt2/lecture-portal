@@ -19,7 +19,7 @@
   <div class="tab-pane fade show active" id="upload-file" role="tabpanel" aria-labelledby="upload-file-tab">
     <%= form_with(model: @model, local: true, html: { multipart: true } ) do |form| %>
       <% if uploaded_file.errors.any? %>
-        <div id="error_explanation">
+        <div id="error-explanation">
           <p class="h2" role="alert"><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this file from being saved:</p>
 
           <ul>
@@ -57,7 +57,7 @@
   <div class="tab-pane fade" id="upload-link" role="tabpanel" aria-labelledby="upload-link-tab">
     <%= form_with(model: @model, local: true, html: { multipart: true } ) do |form| %>
       <% if uploaded_file.errors.any? %>
-        <div id="error_explanation">
+        <div id="error-explanation">
           <p class="h2" role="alert"><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this link from being saved:</p>
 
           <ul>

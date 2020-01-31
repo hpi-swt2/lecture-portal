@@ -1,7 +1,7 @@
 <h1>Editing Poll</h1>
 
 <% content_for :action_left do %>
-  <%= link_to (fa_icon 'arrow-left', text: 'Back'), course_lecture_polls_path(@lecture.course, @lecture), class: "btn btn-outline-primary" %>
+  <%= link_to (fa_icon 'arrow-left', text: 'Show all Polls'), course_lecture_polls_path(@lecture.course, @lecture), class: "btn btn-outline-primary" %>
 <% end %>
 
 <% content_for :action_right do %>
