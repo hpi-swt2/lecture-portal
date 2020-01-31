@@ -14,7 +14,7 @@ const ParticipantsCount: React.FunctionComponent<{}> = observer(() => {
     return (
         <div id="number-of-participants">
             <FontAwesomeIcon icon={faUserAlt} inverse className="user-icon" />
-            {poll_participants_count.number-of-participants} of {poll_participants_count.numberOfLectureUsers} participants
+            {poll_participants_count.numberOfParticipants} of {poll_participants_count.numberOfLectureUsers} participants
          </div>
     );
 });

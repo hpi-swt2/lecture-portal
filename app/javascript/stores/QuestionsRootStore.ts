@@ -1,11 +1,11 @@
 import { types, Instance, IAnyStateTreeNode, getRoot } from "mobx-state-tree"
-import questions-list, { QuestionsListModel } from "./QuestionsList";
+import questionsList, { QuestionsListModel } from "./QuestionsList";
 import currentQuestion, { CurrentQuestionModel } from "./CurrentQuestion";
 
 export type QuestionsRootStoreModel = Instance<typeof QuestionsRootStore>
 
 export type QuestionsRootStoreEnv = {
-    questions-list: QuestionsListModel,
+    questionsList: QuestionsListModel,
     current_question: CurrentQuestionModel
 }
 
@@ -21,7 +21,7 @@ const QuestionsRootStore = types.model("QuestionsRootStore", {
 
     is_student: types.optional(types.boolean, true),
     current_question: currentQuestion,
-    questions-list: questions-list,
+    questionsList: questionsList,
 }).actions(self => ({
     setUserId(user_id: number) {
         self.user_id = user_id;
@@ -29,7 +29,7 @@ const QuestionsRootStore = types.model("QuestionsRootStore", {
     setIsStudent(is_student: boolean) {
         self.is_student = is_student;
         //Default sorting shall be time based for student and upvote based for lecturers
-        self.questions-list.is_sorted_by_time = is_student;
+        self.questionsList.is_sorted_by_time = is_student;
     },
     setLectureId(lecture_id: number) {
         self.lecture_id = lecture_id

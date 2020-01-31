@@ -24,7 +24,7 @@ const axiosInstance = axios.create();
 const loadQuestionsList = (rootStore: QuestionsRootStoreModel) => {
     axiosInstance.get("")
         .then(res => {
-            rootStore.questions-list.setQuestionsList(res.data);
+            rootStore.questionsList.setQuestionsList(res.data);
         });
 };
 
@@ -33,11 +33,11 @@ const setupActionCable = (rootStore: QuestionsRootStoreModel) => {
     setupQuestionsActionCable(rootStore.lecture_id,
         (data) => {
             const {question} = data;
-            rootStore.questions-list.addQuestion(question);
+            rootStore.questionsList.addQuestion(question);
         }, (id) => {
-            rootStore.questions-list.resolveQuestionById(id);
+            rootStore.questionsList.resolveQuestionById(id);
         }, (question_id, upvoter_id) => {
-            rootStore.questions-list.upvoteQuestionById(
+            rootStore.questionsList.upvoteQuestionById(
                 question_id,
                 upvoter_id
             )
@@ -55,7 +55,7 @@ export const initQuestionsApp = (rootStore: QuestionsRootStoreModel, params: IQu
     rootStore.setLectureId(params.lecture_id);
     rootStore.setCourseId(params.course_id);
     rootStore.setInteractionsEnabled(params.interactions_enabled);
-    rootStore.questions-list.setQuestionsList(params.questions_list);
+    rootStore.questionsList.setQuestionsList(params.questions_list);
 
     axiosInstance.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector<HTMLMetaElement>('[name=csrf-token]').content;
     axiosInstance.defaults.baseURL = `/courses/` + rootStore.course_id + `/lectures/` + rootStore.lecture_id + `/questions/`;

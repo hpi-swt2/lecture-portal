@@ -162,7 +162,7 @@ class PollsController < ApplicationController
     def get_serialized_participants_count
       poll = Poll.find(params[:id])
       lecture = Lecture.find(params[:lecture_id])
-      { "number-of-participants" => Answer.where(poll_id: poll.id).distinct.count(:student_id),
+      { "numberOfParticipants" => Answer.where(poll_id: poll.id).distinct.count(:student_id),
               "numberOfLectureUsers" => lecture.participating_students.length() }
     end
 
