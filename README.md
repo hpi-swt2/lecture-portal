@@ -16,6 +16,7 @@ Test url: [https://hpi-lectureportal-dev.herokuapp.com/](https://hpi-lectureport
 * `rails db:migrate db:seed` Setup database, run migrations, seed the database with defaults
 * `rails s` Start the Rails development server (By default runs on _localhost:3000_)
 * `bundle exec rspec` Run all the tests (using the [RSpec](http://rspec.info/) test framework)
+* Set the environment variable **SECRET_KEY** to the secret value that lecturers should enter to gain lecturer privilege.
 
 ## Developer Guide
 
