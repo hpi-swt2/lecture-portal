@@ -16,8 +16,8 @@ RSpec.describe "courses/new", type: :view do
     end
   end
 
-  it "should have a \"back\" button which redirects to the home page" do
+  it "should have a \"back\" button which redirects to the course overview" do
     render
-    assert_select "[href =?]", root_path
+    assert_select "[href =?]", courses_path
   end
 end
