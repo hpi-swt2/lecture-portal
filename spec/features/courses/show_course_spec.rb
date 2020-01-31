@@ -36,17 +36,24 @@ describe "The course detail page", type: :feature do
       expect(page).to have_link("View", href: course_lecture_path(@course, @lecture))
     end
 
+    it "should show a \"View\" link when the lecture is active" do
+      @lecture.update(status: "active")
+      visit(course_path(@course))
+      expect(page).to have_link("View", href: course_lecture_path(@course, @lecture))
+    end
+
+    it "should show a \"View\" link after the lecture is created" do
+      @lecture.update(status: "created")
+      visit(course_path(@course))
+      expect(page).to have_link("View", href: edit_course_lecture_path(course_id: @course.id, id: @lecture.id))
+    end
+
     it "should not show lectures of other lecturers" do
       course2 = FactoryBot.create(:course)
       lecture2 = FactoryBot.create(:lecture, course: course2)
       lecture2.update(status: "running")
       visit(course_path(@course))
       expect(page).to_not have_link("View", href: course_lecture_path(course2, lecture2))
-    end
-
-    it "should have an \"edit\" button." do
-      visit course_path(@course)
-      expect(page).to have_link("Edit", href: edit_course_lecture_path(course_id: @course.id, id: @lecture.id))
     end
 
     it "should redirect to current course page when accessed by a student" do
