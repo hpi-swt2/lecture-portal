@@ -62,7 +62,6 @@ RSpec.describe "courses/show", type: :view do
       render
       expect(rendered).to have_link(file.filename)
     end
-
   end
 
   def login_student(user = FactoryBot.create(:user, :student))
