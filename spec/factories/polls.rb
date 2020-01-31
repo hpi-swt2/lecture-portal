@@ -2,13 +2,13 @@ FactoryBot.define do
   factory :poll do
     title { "MyString" }
     is_multiselect { false }
-    is_active { true }
+    status { "running" }
     lecture_id { FactoryBot.create(:lecture).id }
     trait :active do
-      is_active { true }
+      status { "running" }
     end
     trait :inactive do
-      is_active { false }
+      status { "created" }
     end
     trait :single_select do
       is_multiselect { false }

@@ -4,14 +4,18 @@ class Poll < ApplicationRecord
   belongs_to :lecture
   validates :title, presence: true
   validates :is_multiselect, inclusion: { in: [true, false] }
-  validates :is_active, inclusion: { in: [true, false] }
+  validates :status, inclusion: { in: ["running", "created", "stopped"] }
 
   def close
-    self.update(is_active: false)
+    self.update(status: "stopped")
   end
 
   def sorted_options
     poll_options.sort_by { | opt | opt.index }
+  end
+
+  def is_active
+    status=="running"
   end
 
   def gather_vote_results
