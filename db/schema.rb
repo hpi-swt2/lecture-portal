@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_30_131908) do
+ActiveRecord::Schema.define(version: 2020_01_31_143506) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
