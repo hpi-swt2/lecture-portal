@@ -3,7 +3,7 @@
 class Users::PasswordsController < Devise::PasswordsController
   # GET /resource/password/new
   def new
-    super
+    redirect_to new_user_registration_path
   end
 
   # POST /resource/password
