@@ -37,3 +37,12 @@ form.button_to {
 .qr-code-container {
   text-align: center;
 }
+
+.time select,
+.date select {
+  @extend .form-control;
+  display: inline-block;
+  min-width: 8ch;
+  max-width: 15ch;
+  margin: 0 4px;
+}

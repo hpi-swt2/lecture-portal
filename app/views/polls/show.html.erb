@@ -1,5 +1,5 @@
 <%if @is_student%>
-  <h2>Options</h2>
+  <h2>Your Vote</h2>
   <ol>
     <% for option in @poll.poll_options %>
 
@@ -14,7 +14,6 @@
     </li>
     <% end %>
   </ol>
-  <%= link_to 'Answer', answer_course_lecture_poll_path(@lecture.course, @lecture, @poll) %> |
 
 <% else %>
   <div id="pollInformation">
