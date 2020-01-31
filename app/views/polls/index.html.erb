@@ -1,4 +1,6 @@
 <%= render 'lecturer_table', polls: @polls %>
 <br>
 
-<%= link_to 'New Poll', new_course_lecture_poll_path(@lecture.course, @lecture), {class: "btn btn-primary"} %>
+<% if @lecture.allow_interactions? %>
+    <%= link_to 'New Poll', new_course_lecture_poll_path(@lecture.course, @lecture), {class: "btn btn-primary"} %>
+<% end %>

@@ -4,6 +4,7 @@ class FeedbacksController < ApplicationController
   before_action :get_lecture
   before_action :validate_joined_user_or_owner
   before_action :validate_feedback_enabled
+  before_action :validate_lecture_running_or_active, except: [:index]
 
   def create
     @lecture = Lecture.find(params[:lecture_id])
@@ -51,5 +52,9 @@ class FeedbacksController < ApplicationController
       unless @lecture.feedback_enabled
         redirect_to course_lecture_path(@lecture.course, @lecture)
       end
+    end
+
+    def validate_lecture_running_or_active
+      head :forbidden unless @lecture.allow_interactions?
     end
 end
