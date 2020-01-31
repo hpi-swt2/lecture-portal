@@ -195,8 +195,6 @@ RSpec.describe LecturesController, type: :controller do
       end
 
       it "redirects to the lecture" do
-        # put :update, params: { id: @lecture.to_param, @lecture.participating_students.each do | student | lecture: valid_attributes }, session: valid_session
-        # expect(response).to redirect_to(lecture_path(@lecture))
         put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
       end
