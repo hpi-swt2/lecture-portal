@@ -92,7 +92,6 @@ RSpec.describe "lectures/show", type: :view do
       assert_select "a", "Enrollment Key"
       expect(rendered).to have_text("student@mail.com")
     end
-
   end
 
   describe "as a student" do

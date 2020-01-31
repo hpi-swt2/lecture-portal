@@ -38,7 +38,6 @@ class LecturesController < ApplicationController
 
   # GET courses/:course_id/lectures/1/edit
   def edit
-
   end
 
   # POST courses/:course_id/lectures
