@@ -32,6 +32,7 @@ class Lecture < ApplicationRecord
 
   def set_archived
     self.status = :archived
+    self.close_all_polls
   end
 
 
@@ -119,6 +120,12 @@ class Lecture < ApplicationRecord
     else
       comprehension_state_lecture
     end
+  end
+
+  def close_all_polls
+    self.polls.where(is_active: true).each { |poll|
+      poll.close
+    }
   end
 
   private
