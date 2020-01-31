@@ -222,7 +222,7 @@ class PollsController < ApplicationController
     def validate_lecture_running_or_active
       head :forbidden unless @lecture.allow_interactions?
     end
-  
+
     def create_and_save_poll_options_from_params(poll_option_params)
       i = 0
       for poll_option_param in poll_option_params do
