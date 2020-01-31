@@ -53,7 +53,6 @@ RSpec.describe "lectures/edit", type: :view do
 
   it "renders a delete button" do
     render
-
     assert_select "[data-method=delete]"
   end
 end

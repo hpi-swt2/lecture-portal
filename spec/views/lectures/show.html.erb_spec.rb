@@ -28,12 +28,10 @@ RSpec.describe "lectures/show", type: :view do
       assert_select "a", "Feedback"
       assert_select "a", "Questions"
       assert_select "a", "Polls"
-      assert_select "a", "Settings"
       expect(rendered).to have_css("#dashboard-tab")
       expect(rendered).to have_css("#feedback-tab")
       expect(rendered).to have_css("#questions-tab")
       expect(rendered).to have_css("#polls-tab")
-      expect(rendered).to have_css("#settings-tab")
     end
 
     it "renders enrollment key tab if enrollment key is present" do
@@ -95,29 +93,6 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_text("student@mail.com")
     end
 
-    it "can change title in settings tab" do
-      render
-      assert_select "a", "Settings"
-      expect(rendered).to have_selector("input[id='lecture_name'][type='text']")
-    end
-
-    it "can change enrollment key in settings tab" do
-      render
-      assert_select "a", "Settings"
-      expect(rendered).to have_selector("input[id='lecture_enrollment_key'][type='text']")
-    end
-
-    it "can change polls in settings tab" do
-        render
-        assert_select "a", "Settings"
-        expect(rendered).to have_selector("input[id='lecture_polls_enabled'][type='checkbox']")
-      end
-
-    it "can change questions in settings tab" do
-      render
-      assert_select "a", "Settings"
-      expect(rendered).to have_selector("input[id='lecture_questions_enabled'][type='checkbox']")
-    end
   end
 
   describe "as a student" do
