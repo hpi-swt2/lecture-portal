@@ -1,4 +1,4 @@
-<script>
+ <script>
     function handleSubmit() {
         document.getElementById("feedback-notification").style.display = "block";
         if (document.getElementById("feedback-submit").value !== "Update")
@@ -87,12 +87,17 @@
           <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert"> Feedback submitted</div>
         <% end %>
       <% else %>
-          <% @lecture.feedbacks.each do |feedback| %>
-            <p>
-              <strong>Feedback:</strong>
-              <%= feedback.content %>
-            </p>
-        <% end %>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <ul class="list-group">
+              <% @lecture.feedbacks.each do |feedback| %>
+                <li class="list-group-item">
+                  <%= feedback.content %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
       <% end %>
     <% else %>
       <h1> Feedback is not enabled. :(</h1>

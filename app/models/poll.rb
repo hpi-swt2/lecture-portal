@@ -13,6 +13,10 @@ class Poll < ApplicationRecord
     end
   end
 
+  def sorted_options
+    poll_options.sort_by { | opt | opt.index }
+  end
+
   def gather_vote_results
     reset_votes(poll_options)
     gather_votes(answers)

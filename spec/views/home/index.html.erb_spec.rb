@@ -70,6 +70,11 @@ RSpec.describe "home/index", type: :view do
       visit root_path
       expect(page).to have_link("Unenroll")
     end
+
+    it "displays a course's description" do
+      visit root_path
+      expect(page).to have_text(@course.description)
+    end
   end
 
   def login_student(user = FactoryBot.create(:user, :student))
