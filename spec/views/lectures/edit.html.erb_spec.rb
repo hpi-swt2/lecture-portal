@@ -37,7 +37,7 @@ RSpec.describe "lectures/edit", type: :view do
   end
 
   it " should be disabled if the lecture is archived" do
-    @lecture.set_archived
+    @lecture.update(date: Date.yesterday)
     render
     assert_select "form[action=?][method=?]", course_lecture_path(course_id: @course.id, id: @lecture), "post" do
       assert_select "input[name=?][readonly]", "lecture[name]"

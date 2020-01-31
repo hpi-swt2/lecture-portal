@@ -70,7 +70,6 @@ class Lecture < ApplicationRecord
   end
 
   def lecture_status_changed
-    puts "in lecture_changed"
     ActionCable.server.broadcast "lecture_status_channel", { lecture_id: self.id, course_id: self.course.id }
   end
 
