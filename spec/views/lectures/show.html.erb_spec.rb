@@ -15,7 +15,7 @@ RSpec.describe "lectures/show", type: :view do
                                   end_time: DateTime.now + 20.minutes
     ))
     @uploaded_files = []
-    @questions = Question.questions_for_lecture(@lecture, current_user)
+    @questions = Question.where(lecture: @lecture)
   end
 
   describe "as a lecturer" do
@@ -122,18 +122,6 @@ RSpec.describe "lectures/show", type: :view do
     it "shows link to added material if material is added" do
       file = FactoryBot.create(:uploaded_file, author: @current_user, allowsUpload: @lecture)
       @uploaded_files.push(file)
-      render
-      expect(rendered).to have_link(file.filename)
-    end
-
-    it "shows no questions asked yet message if no questions were asked yet" do
-      render
-      expect(rendered).to have_content("No questions asked yet")
-    end
-
-    it "shows link to added material if material is added" do
-      file = FactoryBot.create(:uploaded_file, author: @lecturer, allowsUpload: @course)
-      @student_files.push(file)
       render
       expect(rendered).to have_link(file.filename)
     end
