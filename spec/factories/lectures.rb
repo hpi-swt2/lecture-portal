@@ -4,9 +4,9 @@ FactoryBot.define do
     enrollment_key { "ruby" }
     lecturer { FactoryBot.create(:user, :lecturer) }
     course { FactoryBot.create(:course) }
-    date { "2020-02-02" }
-    start_time { "2020-01-01 10:10:00" }
-    end_time { "2020-01-01 10:20:00" }
+    date { Date.tomorrow }
+    start_time { DateTime.now + 1.hour }
+    end_time { DateTime.now + 2.hours }
   end
 
   trait :keyless do
