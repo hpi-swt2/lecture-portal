@@ -12,7 +12,7 @@ RSpec.describe Lecture, type: :model do
   }
 
   before (:each) do
-    @lecture = FactoryBot.build(:lecture)
+    @lecture = FactoryBot.create(:lecture)
   end
 
   it "is creatable using a Factory" do
@@ -98,11 +98,12 @@ RSpec.describe Lecture, type: :model do
   end
 
   it "closes remaining open polls when archived" do
-    FactoryBot.create(:poll, lecture: @lecture)
-    open_polls = @lecture.polls.where(is_active: true)
+    poll = FactoryBot.create(:poll, lecture_id: @lecture.id, status: "running")
+    @lecture.polls << poll
+    open_polls = @lecture.polls.where(status: "running")
     expect(open_polls).to_not be_empty
-    @lecture.update(date: Date.yesterday)
-    open_polls = @lecture.polls.where(is_active: true)
+    @lecture.update(status: "archived", date: Date.yesterday)
+    open_polls = @lecture.polls.where(status: "running")
     expect(open_polls).to be_empty
   end
 

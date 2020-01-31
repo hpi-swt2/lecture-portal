@@ -110,7 +110,7 @@ class Lecture < ApplicationRecord
   end
 
   def close_all_polls
-    self.polls.where(is_active: true).each { |poll|
+    self.polls.where(status: "running").reverse_each { |poll|
       poll.close
     }
   end
@@ -129,6 +129,7 @@ class Lecture < ApplicationRecord
     end
 
     def set_archived
+      self.close_all_polls
       self.status = :archived
       self.close_all_polls
     end
