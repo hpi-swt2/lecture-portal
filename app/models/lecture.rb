@@ -1,5 +1,6 @@
 class Lecture < ApplicationRecord
   before_save :update_lecture_status, if: lambda { |l| l.date_changed? || l.start_time_changed? || end_time_changed? }
+  before_save :lecture_status_changed, if: lambda { |l| l.status.changed? }
 
   belongs_to :lecturer, class_name: :User
   has_and_belongs_to_many :participating_students, class_name: :User
@@ -17,23 +18,6 @@ class Lecture < ApplicationRecord
   validates :enrollment_key, length: { in: 3..20, if: :enrollment_key_present? }
   scope :running, -> { where status: "running" }
   scope :active, -> { running.or(where status: "active") }
-
-  def set_created
-    self.status = :created
-  end
-
-  def set_active
-    self.status = :active
-  end
-
-  def set_running
-    self.status = :running
-  end
-
-  def set_archived
-    self.status = :archived
-  end
-
 
   def join_lecture(student)
     unless self.participating_students.include?(student)
@@ -85,6 +69,10 @@ class Lecture < ApplicationRecord
     old_status != self.status
   end
 
+  def lecture_status_changed
+    ActionCable.server.broadcast "lecture_status_channel", lecture_id: self.id, course_id: self.course.id
+  end
+
   def allow_comprehension?
     self.status == "running"
   end
@@ -122,6 +110,22 @@ class Lecture < ApplicationRecord
   end
 
   private
+    def set_created
+      self.status = :created
+    end
+
+    def set_active
+      self.status = :active
+    end
+
+    def set_running
+      self.status = :running
+    end
+
+    def set_archived
+      self.status = :archived
+    end
+
     def comprehension_state_student(current_user)
       stamp = self.lecture_comprehension_stamps.where(user: current_user).max { |a, b| a.timestamp <=> b.timestamp }
       if stamp
