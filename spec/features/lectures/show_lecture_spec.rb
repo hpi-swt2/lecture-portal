@@ -61,6 +61,7 @@ end
 
     it "students should be able to leave a lecture" do
       @lecture.update(status: "running")
+      @lecture.course.join_course(@student)
       @lecture.join_lecture(@student)
       visit(course_lecture_path(@lecture.course, @lecture))
       expect(@lecture.participating_students.length).to be 1

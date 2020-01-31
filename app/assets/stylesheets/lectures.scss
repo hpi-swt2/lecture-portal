@@ -40,6 +40,11 @@ form.button_to {
   font-size: medium;
 }
 
+
+.qr-code-container {
+  text-align: center;
+}
+
 .time select,
 .date select {
   @extend .form-control;
