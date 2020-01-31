@@ -63,19 +63,25 @@
   </div>
 
   <div class="row">
-    <div class="date form-group col-12 col-sm-4">
+    <div class="date form-group col-12 col-md-4">
       <%= form.label :date %>
-      <%= form.date_field :date, value: Date.today,:readonly => lecture.archived?, class: "form-control", id: "startDate" %>
+      <div class="d-flex">
+        <%= form.date_select :date, :readonly => lecture.archived?, id: "startDate" %>
+      </div>
     </div>
 
-    <div class="start_time form-group col-6 col-sm-4">
+    <div class="time start_time form-group col-6 col-sm-4">
       <%= form.label :start_time %>
-      <%= form.time_field :start_time, value: (DateTime.now + 59.minutes).beginning_of_hour.strftime("%H:%M") ,:readonly => lecture.archived?, class: "form-control", id: "startTime", onchange: "handleStartTimeInput()"%>
+      <div class="d-flex">
+        <%= form.time_select :start_time, {minute_step: 5}, :readonly => lecture.archived?, id: "startTime", onchange: "handleStartTimeInput()" %>
+      </div>
     </div>
 
-    <div class="end_time form-group col-6 col-sm-4">
+    <div class="time end_time form-group col-6 col-sm-4">
       <%= form.label :end_time %>
-      <%= form.time_field :end_time, value: ((DateTime.now + 59.minutes).beginning_of_hour + 90.minutes).strftime("%H:%M"), :readonly => lecture.archived?, class: "form-control", id: "endTime", onchange: "handleEndTimeInput()" %>
+      <div class="d-flex">
+        <%= form.time_select :end_time, {minute_step: 5}, :readonly => lecture.archived?id: "endTime", onchange: "handleEndTimeInput() %>
+      </div>
     </div>
   </div>
 

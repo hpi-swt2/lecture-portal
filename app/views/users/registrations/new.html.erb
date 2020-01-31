@@ -29,9 +29,12 @@
     <% end %>
   </div>
 
-  <div class="form-group">
-    <%= f.submit t('.sign_up'), class: 'btn btn-primary' %>
+  <div class="actions d-flex flex-row justify-content-between mt-2">
+    <div></div>
+    <div class="form-group">
+      <%= render 'users/shared/links' %>
+      <%= f.submit t('.sign_up'), class: 'btn btn-primary' %>
+    </div>
   </div>
-<% end %>
 
-<%= render 'users/shared/links' %>
+<% end %>
