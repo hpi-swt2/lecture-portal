@@ -110,7 +110,7 @@ RSpec.describe Lecture, type: :model do
   end
 
   it "can be changed before it ended" do
-    @lecture.set_active
+    @lecture.update(date: Date.today, start_time: DateTime.now + 1.hour)
     expect(@lecture).to be_valid
     @lecture.save
     expect(@lecture.save).to be_truthy
