@@ -98,7 +98,7 @@ RSpec.describe Lecture, type: :model do
   end
 
   it "closes remaining open polls when archived" do
-    poll = FactoryBot.create(:poll, lecture: @lecture)
+    FactoryBot.create(:poll, lecture: @lecture)
     open_polls = @lecture.polls.where(is_active: true)
     expect(open_polls).to_not be_empty
     @lecture.update(date: Date.yesterday)
