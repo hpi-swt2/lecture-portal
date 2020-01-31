@@ -1,7 +1,7 @@
 <h1>Editing Lecture</h1>
 
 <% content_for :action_left do %>
-  <%= link_to (fa_icon 'arrow-left', text: 'Back'), course_path(id:@lecture.course.id), class: "btn btn-outline-primary" %>
+  <%= link_to (fa_icon 'arrow-left', text: 'Back'), course_lecture_path(course_id:@lecture.course.id, id: @lecture.id), class: "btn btn-outline-primary" %>
 <% end %>
 
 <% content_for :action_right do %>

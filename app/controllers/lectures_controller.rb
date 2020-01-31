@@ -38,9 +38,7 @@ class LecturesController < ApplicationController
 
   # GET courses/:course_id/lectures/1/edit
   def edit
-    if @lecture.status != "created"
-      redirect_to course_lecture_path(@course, @lecture), alert: "This page is only available before a lecture was started. Use the settings tab instead."
-    end
+
   end
 
   # POST courses/:course_id/lectures
