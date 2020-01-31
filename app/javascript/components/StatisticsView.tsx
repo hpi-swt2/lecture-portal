@@ -15,13 +15,13 @@ const StatisticsView: React.FunctionComponent<{}> = observer(() => {
     return (
         <div className="row">
             <div className="col col-sm-6">
-                <div className="statisticsBox">
+                <div className="statistics-box">
                     <p>Students</p>
                     <p>{student_count}</p>
                 </div>
             </div>
             <div className="col col-sm-6">
-                <div className="statisticsBox">
+                <div className="statistics-box">
                     <p>Resolved Questions</p>
                     <p>{resolved_count}/{question_count}</p>
                 </div>

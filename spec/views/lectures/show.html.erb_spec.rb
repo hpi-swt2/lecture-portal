@@ -76,7 +76,7 @@ RSpec.describe "lectures/show", type: :view do
       @lecture.update(feedback_enabled: false)
       render
       assert_select "a", "Feedback"
-      expect(rendered).to have_text("Feedback is not enabled.")
+      expect(rendered).to have_text("Feedback is not enabled or the lecture is not active.")
     end
 
     it "does not show notice pages on disabled questions/polls/feedback when questions are enabled" do
