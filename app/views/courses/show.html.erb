@@ -53,3 +53,11 @@
     <%= link_to "Unenroll", leave_course_path(id: @course.id), method: :post, class: "btn btn-outline-danger" %>
   <% end %>
 </div>
+
+<script> 
+  $(document).on("turbolinks:load", function() {
+    initLectureStatusUpdating(function(lecture_id, course_id) {
+      return course_id == "<%= @course.id %>"
+    });
+  }); 
+</script>
