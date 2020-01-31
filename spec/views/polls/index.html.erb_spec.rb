@@ -14,7 +14,7 @@ RSpec.describe "polls/index", type: :view do
         title: "Title2",
         is_multiselect: false,
         lecture_id: @lecture.id,
-        status: "stopped"
+        status: "running"
       )
     ])
   end
