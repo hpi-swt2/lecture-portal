@@ -8,7 +8,7 @@ class Poll < ApplicationRecord
   validate :only_one_poll_active
 
   def close
-    self.update(is_active:false)
+    self.update(is_active: false)
   end
 
   def only_one_poll_active

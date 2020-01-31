@@ -135,7 +135,6 @@ class PollsController < ApplicationController
   end
 
   private
-
     def start
       if @poll.update(is_active: true)
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You started the poll!"
