@@ -19,7 +19,6 @@ const QuestionsForm: React.FunctionComponent<{}> = observer(() => {
   if (is_student && interactions_enabled) {
     const formRef = createRef<HTMLFormElement>();
     const textareaRef = createRef<HTMLTextAreaElement>();
-    const formId = "questionForm";
 
     useEffect(() => textareaRef.current.focus(), []);
 
@@ -42,7 +41,7 @@ const QuestionsForm: React.FunctionComponent<{}> = observer(() => {
     };
 
     return (
-      <form id={formId} ref={formRef} onSubmit={handleSubmit}>
+      <form id="question-form" ref={formRef} onSubmit={handleSubmit}>
         <label>Ask a question:</label>
         <textarea
           rows={3}
