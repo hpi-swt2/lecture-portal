@@ -7,6 +7,10 @@ class Poll < ApplicationRecord
   validates :status, inclusion: { in: ["running", "created", "stopped"] }
   validate :only_one_poll_active
 
+  def close
+    self.update(is_active: false)
+  end
+
   def only_one_poll_active
     if is_active && Poll.where(lecture_id: lecture.id, status: "running").where.not(id: id).length > 0
       errors.add(:only_one_poll_can_be_active, "There can be only one poll active for one lecture.")
