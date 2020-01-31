@@ -110,6 +110,12 @@ class Lecture < ApplicationRecord
     end
   end
 
+  def close_all_polls
+    self.polls.where(is_active: true).each { |poll|
+      poll.close
+    }
+  end
+
   private
     def set_created
       self.status = :created
