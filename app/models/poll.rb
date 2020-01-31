@@ -5,16 +5,9 @@ class Poll < ApplicationRecord
   validates :title, presence: true
   validates :is_multiselect, inclusion: { in: [true, false] }
   validates :status, inclusion: { in: ["running", "created", "stopped"] }
-  validate :only_one_poll_active
 
   def close
     self.update(status: "stopped")
-  end
-
-  def only_one_poll_active
-    if is_active && Poll.where(lecture_id: lecture.id, status: "running").where.not(id: id).length > 0
-      errors.add(:only_one_poll_can_be_active, "There can be only one poll active for one lecture.")
-    end
   end
 
   def sorted_options
