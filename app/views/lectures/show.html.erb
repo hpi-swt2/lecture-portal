@@ -1,4 +1,4 @@
-<script>
+ <script>
     function handleSubmit() {
         document.getElementById("feedback-notification").style.display = "block";
         if (document.getElementById("feedback-submit").value !== "Update")
@@ -28,8 +28,9 @@
         <h2 class="h5">Materials</h2>
         <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
         <% unless current_user.is_student %>
-          <%= link_to "Add lecture material", new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class: "btn btn-link"%>
-        <% end %>
+          <%= link_to (fa_icon 'plus', text: 'Add Material'), new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class: 
+          "btn btn-link text-muted float-right"%>
+        <% end %> 
       </div>
       <div class="col-12 col-sm-6 col-xl-4">
         <% unless @current_user.is_student %>
@@ -86,12 +87,17 @@
           <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert"> Feedback submitted</div>
         <% end %>
       <% else %>
-          <% @lecture.feedbacks.each do |feedback| %>
-            <p>
-              <strong>Feedback:</strong>
-              <%= feedback.content %>
-            </p>
-        <% end %>
+        <div class="panel panel-default">
+          <div class="panel-body">
+            <ul class="list-group">
+              <% @lecture.feedbacks.each do |feedback| %>
+                <li class="list-group-item">
+                  <%= feedback.content %>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
       <% end %>
     <% else %>
       <h1> Feedback is not enabled. :(</h1>
