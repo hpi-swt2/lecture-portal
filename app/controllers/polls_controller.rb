@@ -88,8 +88,8 @@ class PollsController < ApplicationController
   def create
     current_poll_params = poll_params
     @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
-    poll_options = current_poll_params[:poll_options]
-    save_poll_options(poll_options)
+    poll_option_params = current_poll_params[:poll_options]
+    create_and_save_poll_options_from_params(poll_option_params)
     if @poll.save
       redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully created."
     else
@@ -101,10 +101,10 @@ class PollsController < ApplicationController
   def update
     current_poll_params = poll_params
     if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
-      poll_options = current_poll_params[:poll_options]
+      poll_option_params = current_poll_params[:poll_options]
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
       PollOption.where(poll_id: @poll.id).destroy_all
-      save_poll_options(poll_options)
+      create_and_save_poll_options_from_params(poll_option_params)
       if @poll.save
         broadcast_state
         redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully updated."
@@ -218,10 +218,10 @@ class PollsController < ApplicationController
       }
     end
 
-    def save_poll_options(poll_options)
+    def create_and_save_poll_options_from_params(poll_option_params)
       i = 0
-      for poll_option in poll_options do
-        poll_option_description = poll_option.values_at(1)
+      for poll_option_param in poll_option_params do
+        poll_option_description = poll_option_param.values_at(1)
         @poll.poll_options.build(description: poll_option_description.to_param, index: i)
         i = i + 1
       end
