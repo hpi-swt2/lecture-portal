@@ -97,6 +97,18 @@ RSpec.describe Lecture, type: :model do
     expect { @lecture.update(status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes) }.to raise_error(ActiveRecord::ReadOnlyRecord)
   end
 
+  it "closes remaining open polls when archived" do
+    poll = FactoryBot.create(:poll)
+    poll.lecture = @lecture
+    poll.save
+    @lecture.polls << poll
+    open_polls = @lecture.polls.where(is_active: true)
+    expect(open_polls).to_not be_empty
+    @lecture.update(status: "archived", date: Date.yesterday)
+    open_polls = @lecture.polls.where(is_active: true)
+    expect(open_polls).to be_empty
+  end
+
   it "can be changed before it ended" do
     @lecture.set_active
     expect(@lecture).to be_valid

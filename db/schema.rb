@@ -146,8 +146,8 @@ ActiveRecord::Schema.define(version: 2020_01_30_131908) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_student", default: false, null: false
-    t.string "hash_id"
     t.integer "feedback_id"
+    t.string "hash_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["feedback_id"], name: "index_users_on_feedback_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
