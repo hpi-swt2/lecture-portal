@@ -23,7 +23,10 @@ RSpec.describe "polls/index", type: :view do
     visit course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id)
     expect(page).to have_text("Title1")
     expect(page).to have_text("Title2")
+    expect(page).to have_text("Yes")
+    expect(page).to have_text("No")
   end
+
   def login_lecturer
     user = FactoryBot.create(:user, :lecturer)
     sign_in(user, scope: :user)
