@@ -35,7 +35,6 @@ class Lecture < ApplicationRecord
     self.close_all_polls
   end
 
-
   def join_lecture(student)
     unless self.participating_students.include?(student)
       self.participating_students << student
