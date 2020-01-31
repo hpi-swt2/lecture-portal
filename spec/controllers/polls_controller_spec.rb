@@ -61,7 +61,7 @@ RSpec.describe PollsController, type: :controller do
     if test.metadata[:logged_student]
       login_student
     end
-    
+
     lecture.update(date: Date.today)
   end
 
