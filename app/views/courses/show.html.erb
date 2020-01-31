@@ -47,9 +47,17 @@
 <% end %>
 
 <div class="d-flex flex-row justify-content-between mb-2">
-  <%= link_to (fa_icon 'arrow-left', text: 'Back to Overview'), root_path, class: "btn btn-outline-primary" %>
+  <%= link_to (fa_icon 'arrow-left', text: 'Back to Overview'), root_path, class: "btn btn-primary" %>
 
   <% if @current_user.is_student %>
-    <%= link_to "Unenroll", leave_course_path(id: @course.id), method: :post, class: "btn btn-outline-secondary" %>
+    <%= link_to "Unenroll", leave_course_path(id: @course.id), method: :post, class: "btn btn-outline-danger" %>
   <% end %>
 </div>
+
+<script> 
+  $(document).on("turbolinks:load", function() {
+    initLectureStatusUpdating(function(lecture_id, course_id) {
+      return course_id == "<%= @course.id %>"
+    });
+  }); 
+</script>
