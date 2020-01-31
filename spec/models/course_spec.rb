@@ -3,6 +3,8 @@ require "rails_helper"
 RSpec.describe Course, type: :model do
   before(:each) do
     @course = FactoryBot.build(:course)
+    @lecture = FactoryBot.build(:lecture)
+    @lecture.course = @course
   end
 
   it "is creatable using a Factory" do
@@ -25,5 +27,10 @@ RSpec.describe Course, type: :model do
 
   it "is open by default after creation" do
     expect(@course.status).to eq "open"
+  end
+  it "can be destroyed after one of its lectures was archived" do
+    @lecture.update(status: "archived", date: Date.yesterday)
+    expect(@lecture).to be_valid
+    expect { @course.destroy }.to_not raise_error
   end
 end
