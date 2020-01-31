@@ -16,12 +16,17 @@
   </ol>
 
 <% else %>
-  <div id="pollInformation">
-    <p id="pollTitle">
+  <div class="poll-information">
+    <p class="poll-title">
       <h3><%= @poll.title %></h3> <br>
+      <% if !@is_student %>
+        <div style="text-align: center;">
+          <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
+        </div>
+      <% end %>
     </p>
 
-    <p class="pollStatusInformation">
+    <p class="poll-status-information">
       <% if  @poll.is_multiselect? %>
         Multiselect enabled
       <% else %>
@@ -41,8 +46,5 @@
   <div>
     <%= react_component("PollResultApp",  {course_id: @lecture.course_id, lecture_id: @lecture.id, poll_id: @poll.id, poll_option_ids: @poll.poll_options.map{|option| option.id}} ) %>
   </div>
-<% end %>
-<% if !@is_student %>
-  <%= link_to @poll.is_active ? 'Stop' : 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
 <% end %>
 <%= link_to (fa_icon 'arrow-left', text: 'Back'), course_lecture_polls_path(@lecture.course, @lecture, id: @poll), class: "btn btn-outline-primary" %>
