@@ -131,7 +131,6 @@ class Lecture < ApplicationRecord
     def set_archived
       self.close_all_polls
       self.status = :archived
-      self.close_all_polls
     end
 
     def comprehension_state_student(current_user)
