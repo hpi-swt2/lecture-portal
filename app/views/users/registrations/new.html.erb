@@ -21,12 +21,9 @@
     <%= f.label :password_confirmation %>
     <%= f.password_field :password_confirmation, autocomplete: 'current-password', class: 'form-control' %>
   </div>
-
-  <div class="form-group form-check">
-    <%= f.check_box :is_student, class: 'form-check-input' %>
-    <%= f.label :is_student, class: 'form-check-label' do %>
-      <%= resource.class.human_attribute_name('is_student') %>
-    <% end %>
+  <div class="form-group">
+    <%= f.label :secret_key, "Lecturer key (leave blank to create a student account)" %>
+    <%= f.password_field :secret_key, class: 'form-control' %>
   </div>
 
   <div class="actions d-flex flex-row justify-content-between mt-2">
