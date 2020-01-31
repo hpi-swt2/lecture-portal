@@ -102,10 +102,10 @@ RSpec.describe Lecture, type: :model do
     poll.lecture = @lecture
     poll.save
     @lecture.polls << poll
-    open_polls = @lecture.polls.where(is_active: true)
+    open_polls = @lecture.polls.where(status: "running")
     expect(open_polls).to_not be_empty
     @lecture.update(status: "archived", date: Date.yesterday)
-    open_polls = @lecture.polls.where(is_active: true)
+    open_polls = @lecture.polls.where(status: "running")
     expect(open_polls).to be_empty
   end
 

@@ -123,7 +123,7 @@ class Lecture < ApplicationRecord
   end
 
   def close_all_polls
-    self.polls.where(is_active: true).each { |poll|
+    self.polls.where(status: "running").each { |poll|
       poll.close
     }
   end

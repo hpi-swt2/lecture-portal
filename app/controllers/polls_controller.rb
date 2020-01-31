@@ -55,21 +55,9 @@ class PollsController < ApplicationController
   # GET /polls/1/stop_start
   def stop_start
     if @poll.is_active
-      if @poll.update(status: "stopped")
-        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "You stopped the poll!"
-    if @lecture.allow_interactions?
-      if @poll.is_active
-        stop
-      else
-        start
-      end
+      start
     else
-      if @poll.update(status: "running")
-        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll), notice: "You started the poll!"
-      else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Starting the poll did not work :("
-      end
-      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "The lecture is archived and doesn't allow any more interactions"
+      stop
     end
   end
 
@@ -139,18 +127,18 @@ class PollsController < ApplicationController
 
   private
     def start
-      if @poll.update(is_active: true)
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You started the poll!"
+      if @poll.update(status: get_toggled_status)
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "You started the poll!"
       else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Starting the poll did not work :("
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "Starting the poll did not work :("
       end
     end
 
     def stop
-      if @poll.update(is_active: false)
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You stopped the poll!"
+      if @poll.update(status: get_toggled_status)
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "You stopped the poll!"
       else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Stopping the poll did not work :("
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "Stopping the poll did not work :("
       end
     end
 
