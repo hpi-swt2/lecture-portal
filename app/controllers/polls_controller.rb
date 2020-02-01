@@ -55,9 +55,9 @@ class PollsController < ApplicationController
   # GET /polls/1/stop_start
   def stop_start
     if @poll.is_active
-      start
-    else
       stop
+    else
+      start
     end
   end
 
