@@ -19,7 +19,6 @@
             <%= link_to 'Start', stop_start_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
           <% else %>
             <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
-            <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
           <% end %>
         <% end %>
       </td>
