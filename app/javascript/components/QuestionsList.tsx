@@ -34,8 +34,8 @@ const QuestionsList: React.FunctionComponent<{}> = observer(() => {
   };
 
   return (
-    <div className={"questionsList" + (interactions_enabled && is_student ? " interactions_enabled" : "")}>
-      <div className="questionsFilter">
+    <div className={"questions-list" + (interactions_enabled && is_student ? " interactions_enabled" : "")}>
+      <div className="questions-filter">
         <div className="filtering">
           <button className={"btn btn-secondary " + (is_student ? "btn-sm" : "btn-lg") + (questionsList.filter_unresolved ? " active" : "")} onClick={onFilterUnresolvedClick}>
             unresolved

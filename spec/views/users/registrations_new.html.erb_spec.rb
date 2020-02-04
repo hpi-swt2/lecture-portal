@@ -15,6 +15,6 @@ RSpec.describe "users/sign_up", type: :view do
     expect(page).to have_field("user[email]")
     expect(page).to have_field("user[password]")
     expect(page).to have_field("user[password_confirmation]")
-    expect(page).to have_field("user[is_student]")
+    expect(page).to have_field("user[secret_key]")
   end
 end
