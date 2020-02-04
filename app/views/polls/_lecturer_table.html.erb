@@ -9,9 +9,9 @@
 
   <tbody>
   <% polls.sort_by{|poll| poll.created_at}.each do |poll| %>
-    <tr>
+    <tr class="<%= 'active-poll-row' if poll.is_active %>">
       <td><%= poll.title %></td>
-      <td><%= poll.status %></td>
+      <td><%= poll.is_active ? 'Yes' : 'No'%></td>
       <td class="text-right">
         <% if @lecture.allow_interactions?%>
           <%= link_to 'Edit', edit_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-secondary"} %>
