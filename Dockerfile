@@ -24,10 +24,11 @@ RUN bundle install --without development test
 
 COPY . .
 RUN yarn install --check-files
-ENV RAILS_ENV=test
+RUN cp ./config/database.yml ./config/database_real.yml
+RUN cp ./config/database_travis_build.yml ./config/database.yml
 RUN ./bin/rails db:migrate
 RUN ./bin/rails assets:precompile
-ENV RAILS_ENV=production
+RUN cp ./config/database_real.yml ./config/database.yml
 EXPOSE 3000
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true
