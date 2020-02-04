@@ -13,12 +13,14 @@
       <td><%= poll.title %></td>
       <td><%= poll.is_active ? 'Yes' : 'No'%></td>
       <td class="text-right">
-        <% if @lecture.allow_interactions?%>
+        <% if !@lecture.archived?%>
           <%= link_to 'Edit', edit_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-secondary"} %>
-          <% if poll.status == "created" %>
-            <%= link_to 'Start', stop_start_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
-          <% else %>
-            <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+          <% if @lecture.allow_interactions?%>
+            <% if poll.status == "created"  %>
+              <%= link_to 'Start', stop_start_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+            <% else %>
+              <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+            <% end %>
           <% end %>
         <% end %>
       </td>
