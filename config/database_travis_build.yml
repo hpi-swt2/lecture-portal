@@ -20,6 +20,7 @@ test:
   <<: *default
   database: db/test.sqlite3
 
+#this config is used in deployment. To compile production assets, we need a database. We can not use PostGres since this build runs on a Travis machine, so use sqlite in this case.
 production:
   <<: *default
   database: db/test.sqlite3
