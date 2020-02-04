@@ -1,7 +1,7 @@
 language: ruby
 branches:
   only:
-    - ab/compile-assets-against-test-db
+    - dev
     - master
 cache:
   bundler: true
@@ -34,4 +34,4 @@ deploy:
   script: ./deployment.sh
   on:
     all_branches: true
-    condition: $TRAVIS_BRANCH =~ ^(ab/compile-assets-against-test-db|master)$
+    condition: $TRAVIS_BRANCH =~ ^(dev|master)$
