@@ -55,14 +55,10 @@ class PollsController < ApplicationController
 
   # GET /polls/1/stop_start
   def stop_start
-    if @lecture.allow_interactions?
-      if @poll.is_active
-        stop
-      else
-        start
-      end
+    if @poll.is_active
+      start
     else
-      redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "The lecture is archived and doesn't allow any more interactions"
+      stop
     end
   end
 
@@ -85,7 +81,7 @@ class PollsController < ApplicationController
   # POST /polls
   def create
     current_poll_params = poll_params
-    @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
+    @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], status: "created")
     poll_option_params = current_poll_params[:poll_options]
     create_and_save_poll_options_from_params(poll_option_params)
     if @poll.save
@@ -98,7 +94,7 @@ class PollsController < ApplicationController
   # PATCH/PUT /polls/1
   def update
     current_poll_params = poll_params
-    if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
+    if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect])
       poll_option_params = current_poll_params[:poll_options]
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
       PollOption.where(poll_id: @poll.id).destroy_all
@@ -132,18 +128,18 @@ class PollsController < ApplicationController
 
   private
     def start
-      if @poll.update(is_active: true)
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You started the poll!"
+      if @poll.update(status: get_toggled_status)
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "You started the poll!"
       else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Starting the poll did not work :("
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "Starting the poll did not work :("
       end
     end
 
     def stop
-      if @poll.update(is_active: false)
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You stopped the poll!"
+      if @poll.update(status: get_toggled_status)
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "You stopped the poll!"
       else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Stopping the poll did not work :("
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "Stopping the poll did not work :("
       end
     end
 
@@ -192,7 +188,7 @@ class PollsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def poll_params
-      params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
+      params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :status, :number_of_options, poll_options: params[:poll][:poll_options].keys)
     end
 
     # This method looks for the course in the database and redirects with a failure if the course does not exist.
@@ -247,5 +243,9 @@ class PollsController < ApplicationController
         @poll.poll_options.build(description: poll_option_description.to_param, index: i)
         i = i + 1
       end
+    end
+
+    def get_toggled_status
+      @poll.is_active ? "stopped" : "running"
     end
 end
