@@ -19,12 +19,15 @@ RUN gem install bundler -v 2.0.2
 ENV BUNDLER_VERSION 2.0.2
 # see https://github.com/sass/sassc-ruby/issues/146
 RUN gem install sassc -- --disable-march-tune-native
+RUN gem install sqlite3
 RUN bundle install --without development test
 
 COPY . .
 RUN yarn install --check-files
-
+ENV RAILS_ENV=test
+RUN ./bin/rails db:migrate
 RUN ./bin/rails assets:precompile
+ENV RAILS_ENV=production
 EXPOSE 3000
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true
