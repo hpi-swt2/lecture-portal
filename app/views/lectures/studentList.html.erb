@@ -1,0 +1,15 @@
+<p class="h1 padded-text"> Students </p>
+<ol>
+    <% for student in @lecture.participating_students%>
+    <li><%= student.email %></li>
+    <% end %>
+</ol>
+
+<script lang="js">
+    function main() {
+        setTimeout(function () {
+          window.location.reload(true);
+        }, 3000);
+    };
+    main();
+</script>
