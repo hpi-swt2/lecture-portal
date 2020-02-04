@@ -43,6 +43,13 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to have_css("#enrollmentKey-tab")
     end
 
+    it "renders student list tab" do
+      render
+      assert_select "a", "Student List"
+      expect(rendered).to have_content("Student List")
+      expect(rendered).to have_css("#studentList-tab")
+    end
+
     it "renders enrollment qr code if enrollment key is present" do
       @qr_code = RQRCode::QRCode.new("http://some-random.url/that/is/not/tested")
       render
@@ -86,13 +93,6 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to_not have_text("Questions are not enabled.")
       expect(rendered).to_not have_text("Polls are not enabled.")
       expect(rendered).to_not have_text("Feedback is not enabled.")
-    end
-
-    it "shows list of participating students in enrollment key tab" do
-      @lecture.join_lecture(FactoryBot.create(:user, :student, email: "student@mail.com"))
-      render
-      assert_select "a", "Enrollment Key"
-      expect(rendered).to have_text("student@mail.com")
     end
 
     it "can change title in settings tab" do
@@ -143,6 +143,12 @@ RSpec.describe "lectures/show", type: :view do
       render
       expect(rendered).not_to have_content("Enrollment Key")
       expect(rendered).not_to have_css("#enrollmentKey-tab")
+    end
+
+    it "renders no student list tab" do
+      render
+      expect(rendered).not_to have_content("Student List")
+      expect(rendered).not_to have_css("#studentList-tab")
     end
 
     it "renders no settings tab" do
