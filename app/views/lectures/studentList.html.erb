@@ -4,12 +4,17 @@
     <li><%= student.email %></li>
     <% end %>
 </ol>
+<%= content_tag :div, class: "invisible", data: {lecture_status: @lecture.status} do %>
+<% end %>
 
 <script lang="js">
+    let lecture_status = $('.invisible').data('lecture_status')
     function main() {
         setTimeout(function () {
           window.location.reload(true);
         }, 3000);
     };
-    main();
+    if(lecture_status == "active"){
+        main();
+    }
 </script>

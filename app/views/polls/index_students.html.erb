@@ -1,10 +1,15 @@
 <%= render 'student_table', polls: @polls %>
-
+<%= content_tag :div, class: "invisible", data: {lecture_status: @lecture.status} do %>
+<% end %>
 <script lang="js">
+    let lecture_stat = $('.invisible').data('lectureStatus');
     function main() {
         setTimeout(function () {
           window.location.reload(true);
         }, 3000);
     };
-    main();
+    console.log(lecture_stat);
+    if (lecture_stat == "active"){
+        main();
+    }
 </script>
