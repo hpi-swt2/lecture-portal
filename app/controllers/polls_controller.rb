@@ -97,6 +97,8 @@ class PollsController < ApplicationController
     if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect])
       poll_option_params = current_poll_params[:poll_options]
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
+      # Also delete answers to prevent foreign key constraint violations
+      Answer.where(poll_id: @poll.id).destroy_all
       PollOption.where(poll_id: @poll.id).destroy_all
       create_and_save_poll_options_from_params(poll_option_params)
       if @poll.save
@@ -112,6 +114,9 @@ class PollsController < ApplicationController
 
   # DELETE /polls/1
   def destroy
+    # Also delete answers and options to prevent foreign key constraint violations
+    Answer.where(poll_id: @poll.id).destroy_all
+    PollOption.where(poll_id: @poll.id).destroy_all
     @poll.destroy
     redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully destroyed."
   end
