@@ -12,9 +12,14 @@
     <li class="nav-item">
       <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback" role="tab" aria-controls="feedback" aria-selected="false">Feedback</a>
     </li>
-    <% if !@current_user.is_student && @lecture.enrollment_key_present? %>
+    <% if !@current_user.is_student %>
+      <% if @lecture.enrollment_key_present? %>
+        <li class="nav-item">
+          <a class="nav-link" id="enrollmentKey-tab" data-toggle="tab" href="#enrollmentKey" role="tab" aria-controls="enrollmentKey" aria-selected="false">Enrollment Key</a>
+        </li>
+      <% end %>
       <li class="nav-item">
-        <a class="nav-link" id="enrollmentKey-tab" data-toggle="tab" href="#enrollmentKey" role="tab" aria-controls="enrollmentKey" aria-selected="false">Enrollment Key</a>
+        <a class="nav-link" id="studentList-tab" data-toggle="tab" href="#studentList" role="tab" aria-controls="studentList" aria-selected="false">Student List</a>
       </li>
     <% end %>
   </ul>

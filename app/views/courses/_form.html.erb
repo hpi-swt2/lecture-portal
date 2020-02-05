@@ -28,7 +28,7 @@
     <div>
       <%= yield(:action_right) %>
       <% if defined?(with_delete_button) && with_delete_button %>
-        <%= link_to 'Delete Course', course_path(id:@course.id), method: :delete, data: { confirm: "Do you really want to delete this course?\n\nDeleted courses cannot be restored!" }, :class => "btn btn-outline-secondary" %>
+        <%= link_to 'Delete Course', course_path(id:@course.id), method: :delete, data: { confirm: "Do you really want to delete this course?\n\nDeleted courses cannot be restored!" }, :class => "btn btn-outline-danger" %>
       <% end %>
       <%= form.submit :class => "btn btn-primary" %>
     </div>

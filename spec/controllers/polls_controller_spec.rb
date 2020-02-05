@@ -18,14 +18,14 @@ RSpec.describe PollsController, type: :controller do
     lecture: FactoryBot.create(:lecture),
     is_multiselect: true,
     lecture_id: lecture.id,
-    is_active: false,
+    status: "stopped",
     poll_options: poll_options
   }}
   let(:valid_attributes_with_active) { {
     title: "Example Title",
     is_multiselect: true,
     lecture_id: lecture.id,
-    is_active: true,
+    status: "running",
     poll_options: poll_options
   }}
   # we need the distinction between params and attributes because
@@ -35,7 +35,7 @@ RSpec.describe PollsController, type: :controller do
       title: "Example Title",
       is_multiselect: true,
       lecture_id: lecture.id,
-      is_active: false,
+      status: "stopped",
       poll_options: poll_options_params
   }}
   let(:invalid_attributes) { {
@@ -122,6 +122,12 @@ RSpec.describe PollsController, type: :controller do
       get :new, params: { course_id: lecture.course.id, lecture_id: lecture.id }, session: valid_session
       expect(response).to redirect_to(course_lecture_polls_path(course_id: lecture.course.id, lecture_id: lecture.id))
     end
+    it "creates an active poll for a lecturer if another one is already running", :logged_lecturer do
+      poll1 = FactoryBot.create(:poll, :active, lecture_id: lecture.id)
+      poll2 = FactoryBot.create(:poll, :active, lecture_id: lecture.id)
+      expect(poll1).to be_valid
+      expect(poll2).to be_valid
+    end
   end
 
   describe "GET #edit" do
@@ -133,14 +139,14 @@ RSpec.describe PollsController, type: :controller do
 
     it "returns a failure response for students for not active polls", :logged_student do
       poll = Poll.create! valid_attributes
-      poll.is_active = false
+      poll.status = "stopped"
       get :edit, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).not_to be_successful
     end
 
     it "returns a failure response for students for active polls", :logged_student do
       poll = Poll.create! valid_attributes_with_active
-      poll.is_active = true
+      poll.status = "running"
       get :edit, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.to_param }, session: valid_session
       expect(response).to_not be_successful
     end
@@ -149,7 +155,7 @@ RSpec.describe PollsController, type: :controller do
   describe "GET #answer" do
     it "returns a success response for students", :logged_student do
       poll = Poll.create! valid_attributes_with_active
-      poll.is_active = true
+      poll.status = "running"
       get :answer, params: { course_id: lecture.course.id, lecture_id: lecture.to_param, id: poll.to_param }, session: valid_session
       expect(response).to be_successful
     end
@@ -178,17 +184,48 @@ RSpec.describe PollsController, type: :controller do
   end
 
   describe "#stop_start" do
-    it "starts an inactive poll", :logged_student do
-      poll = FactoryBot.create(:poll, :inactive)
-      get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
-      poll.reload
-      expect(poll.is_active).to eq(true)
+    context "while lecture is running" do
+      lecture = FactoryBot.create(:lecture)
+      lecture.update(date: Date.today, start_time: DateTime.now)
+      lecture.update(enrollment_key: nil)
+      it "starts an inactive poll when the lecture is still running", :logged_lecturer do
+        poll = FactoryBot.create(:poll, :inactive)
+        get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
+        poll.reload
+        expect(poll.is_active).to eq(true)
+      end
+      it "stops an active poll when the lecture is still running", :logged_lecturer do
+        poll = FactoryBot.create(:poll, :active)
+        get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
+        poll.reload
+        expect(poll.is_active).to eq(false)
+      end
+      it "starts a poll while another one is running", :logged_lecturer do
+        poll1 = FactoryBot.create(:poll, :active, lecture_id: lecture.id)
+        poll2 = FactoryBot.create(:poll, :inactive, lecture_id: lecture.id)
+        get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll2.id }, session: valid_session
+        poll2.reload
+        expect(poll1).to be_valid
+        expect(poll2).to be_valid
+        expect(poll1.is_active).to eq(true)
+        expect(poll2.is_active).to eq(true)
+      end
     end
-    it "stops an active poll", :logged_student do
-      poll = FactoryBot.create(:poll, :active)
-      get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
-      poll.reload
-      expect(poll.is_active).to eq(false)
+    context "when the lecture stopped running" do
+      lecture = FactoryBot.create(:lecture)
+      lecture.update(date: Date.yesterday)
+      it "doesn't start an inactive poll when the lecture is not running", :logged_lecturer do
+        poll = FactoryBot.create(:poll, :inactive)
+        get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
+        poll.reload
+        expect(poll.is_active).to eq(false)
+      end
+      it "doesn't stop an active poll when the lecture is not running", :logged_lecturer do
+        poll = FactoryBot.create(:poll, :active)
+        get :stop_start, params: { course_id: lecture.course.id, lecture_id: lecture.id, id: poll.id }, session: valid_session
+        poll.reload
+        expect(poll.is_active).to eq(true)
+      end
     end
   end
 
@@ -224,7 +261,7 @@ RSpec.describe PollsController, type: :controller do
         # skip("Add a hash of attributes valid for your model")
         title: "New Title",
         is_multiselect: false,
-        is_active: false,
+        status: "stopped",
         poll_options: poll_options_params
       }}
 
