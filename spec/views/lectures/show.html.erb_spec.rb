@@ -14,6 +14,8 @@ RSpec.describe "lectures/show", type: :view do
                                   start_time: DateTime.now,
                                   end_time: DateTime.now + 20.minutes
     ))
+    @uploaded_files = []
+    @questions = Question.where(lecture: @lecture)
   end
 
   describe "as a lecturer" do
@@ -117,6 +119,18 @@ RSpec.describe "lectures/show", type: :view do
       render
       assert_select "a", "Settings"
       expect(rendered).to have_selector("input[id='lecture_questions_enabled'][type='checkbox']")
+    end
+
+    it "shows no material added yet message if no materials are added" do
+      render
+      expect(rendered).to have_content("No materials added yet")
+    end
+
+    it "shows link to added material if material is added" do
+      file = FactoryBot.create(:uploaded_file, author: @current_user, allowsUpload: @lecture)
+      @uploaded_files.push(file)
+      render
+      expect(rendered).to have_link(file.filename)
     end
   end
 
