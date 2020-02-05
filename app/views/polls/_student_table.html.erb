@@ -15,7 +15,7 @@
       <td class="text-right">
         <% if poll.is_active && @lecture.allow_interactions? %>
           <%= link_to 'Vote', answer_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary vote-button"} %>
-        <% else %>
+        <% elsif poll.status == "stopped"%>
           <%= link_to 'Results', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-outline-secondary"} %>
         <% end %>
       </td>
