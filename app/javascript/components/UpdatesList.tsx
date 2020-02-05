@@ -9,19 +9,33 @@ const mapStore = ({ is_student, updatesList }: UpdatesRootStoreModel) => ({
   updatesList
 });
 
-const UpdatesList: React.FunctionComponent<{}> = observer(() => {
-  const { is_student, updatesList } = useInjectUpdates(mapStore);
+function EmptyUpdatesMessage() {
+    return <p className="text-center text-gray"> No questions asked yet </p>
+}
 
-  return (
-    <div className="questions-list mt-1">
-      <ul className={(is_student ? "" : "is_lecturer")}>
-        {updatesList.getList().map(update => (
-            update.isVisible() &&
-                <Update item={update} key={update.id} />
-        ))}
-      </ul>
-    </div>
-  );
+function Updates(props) {
+    return (
+        <div className="questionsList mt-1">
+            <ul className={(props.is_student ? "" : "is_lecturer")}>
+                {props.updatesList.getList().map(update => (
+                    update.isVisible() &&
+                    <Update item={update} key={update.id} />
+                ))}
+            </ul>
+        </div>
+    );
+}
+
+const UpdatesList: React.FunctionComponent<{}> = observer(() => {
+    const { is_student, updatesList } = useInjectUpdates(mapStore);
+    const isNotEmpty = updatesList.getList().length
+
+    if (isNotEmpty) {
+        return  <Updates is_student={is_student} updatesList={updatesList} />;
+    }
+    return <EmptyUpdatesMessage />
 });
+
+
 
 export default UpdatesList;

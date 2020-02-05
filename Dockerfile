@@ -23,8 +23,17 @@ RUN bundle install --without development test
 
 COPY . .
 RUN yarn install --check-files
-
+# We need a database to precompile the assets. Compiling at run time is impossible; node fails because there is not enough memory.
+# Obviously, we do not want to connect to the real production database from whatever build server we run on.
+# So we exchange the real databas econfiguration that points to the Heroku database with one that points to a SQLite database we can quickly create on ephemeral storage.
+RUN cp ./config/database.yml ./config/database_real.yml
+RUN cp ./config/database_travis_build.yml ./config/database.yml
+# db schema needs to be created, so run migrations first
+RUN ./bin/rails db:migrate
+# now assets can be compiled
 RUN ./bin/rails assets:precompile
+# revert the change so we speak to the production database later
+RUN cp ./config/database_real.yml ./config/database.yml
 EXPOSE 3000
 ENV RAILS_SERVE_STATIC_FILES=true
 ENV RAILS_LOG_TO_STDOUT=true

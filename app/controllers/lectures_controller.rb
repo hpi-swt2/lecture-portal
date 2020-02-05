@@ -84,6 +84,11 @@ class LecturesController < ApplicationController
     end
   end
 
+  def studentList
+    @hide_navbar = true
+    render :studentList
+  end
+
   def join_lecture
     if params[:lecture].present?
       key = params[:lecture][:enrollment_key]

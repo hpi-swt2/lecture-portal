@@ -65,10 +65,10 @@ RSpec.describe "home/index", type: :view do
       expect(page).to have_css("input", count: 2)
     end
 
-    it "shows an 'Unenroll' button" do
+    it "does not show an 'Unenroll' button" do
       # because a joined course is displayed
       visit root_path
-      expect(page).to have_link("Unenroll")
+      expect(page).to_not have_link("Unenroll")
     end
 
     it "displays a course's description" do

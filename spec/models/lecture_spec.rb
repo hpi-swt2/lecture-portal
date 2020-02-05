@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Lecture, type: :model do
   let(:valid_attributes) {
-    { name: "SWT", enrollment_key: "swt", status: "created", date: "2020-02-02", start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
+    { name: "SWT", enrollment_key: "swt", status: "created", date: Date.tomorrow, start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
   }
   let(:valid_attributes_with_lecturer) {
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
@@ -12,7 +12,7 @@ RSpec.describe Lecture, type: :model do
   }
 
   before (:each) do
-    @lecture = FactoryBot.build(:lecture)
+    @lecture = FactoryBot.create(:lecture)
   end
 
   it "is creatable using a Factory" do
@@ -98,12 +98,12 @@ RSpec.describe Lecture, type: :model do
   end
 
   it "closes remaining open polls when archived" do
-    FactoryBot.create(:poll, lecture: @lecture)
-    open_polls = @lecture.polls.where(is_active: true)
+    poll = FactoryBot.create(:poll, lecture_id: @lecture.id, status: "running")
+    @lecture.polls << poll
+    open_polls = @lecture.polls.where(status: "running")
     expect(open_polls).to_not be_empty
-    @lecture.update(date: Date.yesterday)
-    open_polls = @lecture.polls.where(is_active: true)
-    skip("Needs to be implemented")
+    @lecture.update(status: "archived", date: Date.yesterday)
+    open_polls = @lecture.polls.where(status: "running")
     expect(open_polls).to be_empty
   end
 
