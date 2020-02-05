@@ -4,7 +4,8 @@ class PollsController < ApplicationController
   before_action :get_lecture
   before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start, :answer]
   before_action :set_is_student
-  before_action :validate_lecture_running_or_active, except: [:index, :show, :serialized_options, :serialized_participants_count]
+  before_action :validate_lecture_not_archived, except: [:index, :show, :serialized_options, :serialized_participants_count]
+  before_action :validate_lecture_running_or_active, except: [:index, :create, :new, :edit, :update, :destroy, :show, :serialized_options, :serialized_participants_count]
   before_action do |controller|
     @hide_navbar = true
   end
@@ -229,6 +230,10 @@ class PollsController < ApplicationController
 
     def validate_lecture_running_or_active
       head :forbidden unless @lecture.allow_interactions?
+    end
+
+    def validate_lecture_not_archived
+      head :forbidden if @lecture.archived?
     end
 
     def create_and_save_poll_options_from_params(poll_option_params)
