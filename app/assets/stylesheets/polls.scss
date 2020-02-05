@@ -12,29 +12,29 @@
   color: red;
 }
 
-#numberOfParticipants {
+#number-of-participants {
   text-align: right;
   font-size: 24px;
 }
 
-.userIcon {
+.user-icon {
   background-color: $gray-light;
   font-size:32px;
   margin-right: 10px;
   padding: 2px;
 }
 
-#pollInformation {
+.poll-information {
   border: 1px solid $black-main;
   text-color: $black-main;
   border-radius: 3px;
   margin-bottom: 10px;
   word-break: break-all;
   text-align: center;
-  > #pollTitle {
+  > .poll-title {
     font-size: 36px;
   }
-  > .pollStatusInformation {
+  > .poll-status-information {
     font-size: 16px;
   }
 }
@@ -43,6 +43,25 @@
   border: none;
   width: 100%;
   height: 100%;
+}
+
+.vote-button {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.active-poll-row {
+  background-color: $orange-dark !important;
+  color: white;
+  .btn {
+    background-color: white;
+    border-color: white;
+    color: $orange-dark;
+  }
+  .btn:hover {
+    background-color: $orange-main;
+    border-color: $orange-main;
+  }
 }
 
 // navbar_height: 40px;

@@ -39,7 +39,7 @@ class LecturesController < ApplicationController
   # GET courses/:course_id/lectures/1/edit
   def edit
     if @lecture.status != "created"
-      redirect_to course_lecture_path(@course, @lecture), alert: "This page is only available before a lecture was started. Use the settings tab instead."
+      redirect_to course_lecture_path(@course, @lecture)
     end
   end
 
@@ -56,8 +56,8 @@ class LecturesController < ApplicationController
 
   # PATCH/PUT courses/:course_id/lectures/1
   def update
-    if !@lecture.enrollment_key_present? && lecture_params[:enrollment_key]
-      @lecture.participating_students.each do | student |
+    if !@lecture.enrollment_key_present? && !lecture_params[:enrollment_key].empty?
+      @lecture.participating_students.reverse_each do | student |
         @lecture.leave_lecture(student)
       end
     end
@@ -82,6 +82,11 @@ class LecturesController < ApplicationController
     else
       redirect_to root_path, alert: "Only Students can access this site."
     end
+  end
+
+  def studentList
+    @hide_navbar = true
+    render :studentList
   end
 
   def join_lecture

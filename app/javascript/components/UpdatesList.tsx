@@ -27,7 +27,6 @@ function Updates(props) {
 }
 
 const UpdatesList: React.FunctionComponent<{}> = observer(() => {
-
     const { is_student, updatesList } = useInjectUpdates(mapStore);
     const isNotEmpty = updatesList.getList().length
 
@@ -35,7 +34,6 @@ const UpdatesList: React.FunctionComponent<{}> = observer(() => {
         return  <Updates is_student={is_student} updatesList={updatesList} />;
     }
     return <EmptyUpdatesMessage />
-
 });
 
 

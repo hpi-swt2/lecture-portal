@@ -25,3 +25,11 @@
 </table>
 
 <br>
+
+<script> 
+  $(document).on("turbolinks:load", function() {
+    initLectureStatusUpdating(function(lecture_id, course_id) {
+      return course_id == "<%= @course.id %>"
+    });
+  }); 
+</script>

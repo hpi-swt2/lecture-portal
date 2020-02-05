@@ -1,6 +1,6 @@
 <%= form_with(model: [@lecture.course, @lecture, poll], local: true) do |form| %>
   <% if poll.errors.any? %>
-    <div id="error_explanation">
+    <div id="error-explanation">
       <p class="h2" role="alert"><%= pluralize(@poll.errors.count, "error") %> prohibited this poll from being saved:</p>
 
       <ul>
@@ -23,11 +23,6 @@
   <div class="form-check">
     <%= form.check_box :is_multiselect, class: "form-check-input" %>
     <%= form.label :is_multiselect, "Is Multiselect", :class => "form-check-label" %>
-  </div>
-
-  <div class="form-check">
-    <%= form.check_box :is_active, class: "form-check-input" %>
-    <%= form.label :is_active, "Is Active", :class => "form-check-label" %>
   </div>
 
   <div class="actions d-flex flex-row justify-content-between mt-2">

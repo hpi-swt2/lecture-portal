@@ -3,7 +3,7 @@ require "action_cable/testing/rspec"
 
 RSpec.describe LecturesController, type: :controller do
   let(:valid_attributes) {
-    { name: "SWT", enrollment_key: "swt", status: "created", date: "2020-02-02", start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
+    { name: "SWT", enrollment_key: "swt", status: "created", date: Date.tomorrow, start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
   }
   let(:valid_attributes_with_lecturer) {
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
@@ -195,14 +195,13 @@ RSpec.describe LecturesController, type: :controller do
       end
 
       it "redirects to the lecture" do
-        # put :update, params: { id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
-        # expect(response).to redirect_to(lecture_path(@lecture))
         put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: valid_attributes }, session: valid_session
         expect(response).to redirect_to(course_lecture_path(@lecture.course.id, @lecture))
       end
 
       it "removes all joined students when adding key to keyless lecture", :logged_lecturer do
         @lecture.update(enrollment_key: nil)
+        join_course_and_lecture(FactoryBot.create(:user, :student), @lecture)
         join_course_and_lecture(FactoryBot.create(:user, :student), @lecture)
         put :update, params: { course_id: @lecture.course.id, id: @lecture.to_param, lecture: new_attributes }, session: valid_session
         @lecture.reload

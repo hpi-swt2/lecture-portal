@@ -66,7 +66,7 @@ const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
         let legendItems = [];
         for (let i = 0; i < numberOfComprehensionStates; i++) {
             legendItems.push(
-                <div className="legendItem" key={i}>
+                <div className="legend-item" key={i}>
                     <div>
                         <div className={comprehensionStates[i]} />
                         <span>{comprehensionLabels[i]}</span>
@@ -80,10 +80,10 @@ const ComprehensionLecturer: React.FunctionComponent<{}> = observer(() => {
         <div>
             <span>Last Updated: {formatDate(last_updated)}</span>
             <span className={"participants"}>{renderParticipants()}</span>
-            <div className="comprehensionResults">
+            <div className="comprehension-results">
                 <canvas ref={canvasRef} width={"100%"} height={"100%"} />
             </div>
-            <div className="comprehensionLegend">
+            <div className="comprehension-legend">
                 {renderLegend()}
             </div>
         </div>
