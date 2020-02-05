@@ -1,7 +1,7 @@
 <%if @is_student%>
   <h2>Your Vote</h2>
   <ol>
-    <% for option in @poll.poll_options %>
+    <% for option in @poll.sorted_options %>
 
     <li><%= option.description %>
       <% if @answers.any? %>
