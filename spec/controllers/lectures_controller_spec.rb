@@ -159,10 +159,10 @@ RSpec.describe LecturesController, type: :controller do
         }.to change(Lecture, :count).by(0)
       end
 
-      it "redirects to the lecture dashboard", :logged_lecturer do
+      it "redirects to the course overview", :logged_lecturer do
         course = FactoryBot.create(:course, creator: @lecturer)
         post :create, params: { course_id: (course.id), lecture: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(course_lecture_path(course_id: course.id, id: Lecture.find_by(course_id: course.id).id))
+        expect(response).to redirect_to(course_path(id: course.id))
       end
     end
 
