@@ -52,4 +52,4 @@
     <%= react_component("PollResultApp",  {course_id: @lecture.course_id, lecture_id: @lecture.id, poll_id: @poll.id, poll_option_ids: @poll.poll_options.map{|option| option.id}} ) %>
   </div>
 <% end %>
-<%= link_to (fa_icon 'arrow-left', text: 'Back'), course_lecture_polls_path(@lecture.course, @lecture, id: @poll), class: "btn btn-outline-primary" %>
+<%= link_to (fa_icon 'arrow-left', text: 'Show all polls'), course_lecture_polls_path(@lecture.course, @lecture, id: @poll), class: "btn btn-outline-primary" %>
