@@ -9,8 +9,35 @@
       <%= link_to (fa_icon 'user-plus', text: 'Sign-Up'), new_user_registration_path, class: 'btn btn-secondary btn-lg' %>
     <% else %>
       <% if !@current_user.is_student %>
-
         <%= link_to (fa_icon 'graduation-cap', text: 'New Course'), new_course_path, class: 'btn btn-secondary btn-lg' %>
+
+        <p class="lead">My Running Lectures</p>
+        <table class="table .table-sm table-striped">
+          <thead>
+          <tr>
+            <th style="width: 25%">Name</th>
+            <th style="width: 15%" scope="col">End Time</th>
+            <th style="width: 60%" scope="col"></th>
+          </tr>
+          </thead>
+          <% @courses.each do |course| %>
+            <% course.lectures.each do |lecture| %>
+              <% if lecture.status == "running" %>
+                <tr>
+                  <td><%= lecture.name %></td>
+                  <td>
+                    <%if lecture.end_time %>
+                      <%= lecture.end_time.strftime("%H:%M")  %>
+                    <% end %>
+                  </td>
+                  <td class="text-right">
+                    <%= button_to "View", course_lecture_path(course_id: lecture.course.id, id: lecture.id), :method => "get", class: "btn btn-primary" %>
+                  </td>
+                </tr>
+              <% end %>
+            <% end %>
+          <% end %>
+        </table>
 
         <h3>My Courses</h3>
         <% open_courses = @courses.select { |course| course.status == "open" } %>
@@ -28,6 +55,10 @@
         <%= render 'courses/table', courses: @open_courses, is_participating: false %>
 
       <% end %>
+
+      <div class="text-center mt-5">
+        <%= button_to "Browse available courses", available_courses_path, :method => "get", class: "btn btn-primary" %>
+      </div>
     <% end %>
 </div>
 
