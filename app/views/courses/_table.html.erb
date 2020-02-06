@@ -1,43 +1,21 @@
-<table class="table table-sm table-striped table-responsive-md">
+<table class="table table-striped table-responsive-md" style="table-layout: fixed">
   <thead>
-    <tr>
-      <th scope="col">Name</th>
-      <% if !@current_user.is_student%>
-        <th scope="col">Enrollment key</th>
-        <th scope="col">Status</th>
-      <% end %>
-      <th scope="col"></th>
-    </tr>
+  <tr>
+    <th class="col-sm"  scope="col">Name</th>
+    <th class="col-sm"  scope="col">Description</th>
+    <th class="col-sm"  scope="col" style="width: 20%"> </th>
+  </tr>
   </thead>
-
-  <tbody>
-    <% course.lectures.each do |lecture| %>
+  <% unless courses.nil? %>
+    <% courses.each do |course| %>
       <tr>
-        <td><%= lecture.name %></td>
-        <% if !@current_user.is_student%>
-          <td><%= lecture.enrollment_key %></td>
-          <td><%= lecture.status%></td>
-        <% end %>
-        <td class="text-right">
-          <% if @current_user.is_student%>
-            <% if lecture.status == "running" || lecture.status == "active" %>
-              <%= link_to 'View', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class: "btn btn-primary"} %>
-              <%= link_to "Join", join_lecture_path(:course_id => @course.id, :id => lecture.id), method: :post, class: "btn btn-primary" %>
-            <% elsif lecture.status == "archived" %>
-              <%= link_to 'Review', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class: "btn btn-outline-secondary"} %>
-            <% end %>
-          <% else %>
-            <% if lecture.status == "created" %>
-              <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-outline-secondary"} %>
-            <% elsif lecture.status == "running" || lecture.status == "active" %>
-              <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-outline-secondary"} %>
-              <%= link_to 'View', course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-primary"} %>
-            <% else %>
-              <%= link_to 'Review', course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-outline-secondary"} %>
-            <% end %>
-          <% end %>
-        </td>
-      </tr>
+        <td><span class="overflowing"><%= course.name %></span></td>
+        <td><span class="overflowing"><%= course.description %></span></td>
+        <% if is_participating %>
+          <td class="text-right"> <%= button_to "View", course_path(id: course.id), :method => "get", class: "btn btn-primary" %></td>
+        <%else %>
+          <td class="text-right"><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
+        <%end %>
     <% end %>
-  </tbody>
+  <% end %>
 </table>

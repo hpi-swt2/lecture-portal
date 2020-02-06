@@ -9,8 +9,8 @@
 <br>
 
 <% if !@course.lectures.empty? %>
-  <p class="lead"> Currently running lectures </p>
-  <%= render 'table_only_running', course: @course %>
+  <p class="lead"> Todays active or currently running lectures </p>
+  <%= render 'lectures/table_running', courses: [@course], renders_course_title: false %>
 <% end %>
 
 <br>
@@ -43,7 +43,7 @@
 
 <% if !@course.lectures.empty? %>
   <p class="lead">All Lectures</p>
-  <%= render 'table_not_running', course: @course %>
+  <%= render 'lectures/table_not_running', course: @course %>
 <% end %>
 
 <div class="d-flex flex-row justify-content-between mb-2">
