@@ -35,6 +35,21 @@ form.button_to {
   padding-right: 0;
 }
 
-.p {
-  text-color: $black-main;
+.text-gray {
+  color: $gray-dark;
+  font-size: medium;
+}
+
+
+.qr-code-container {
+  text-align: center;
+}
+
+.time select,
+.date select {
+  @extend .form-control;
+  display: inline-block;
+  min-width: 8ch;
+  max-width: 15ch;
+  margin: 0 4px;
 }

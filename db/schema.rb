@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_24_151237) do
+ActiveRecord::Schema.define(version: 2020_01_31_150617) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -91,6 +91,7 @@ ActiveRecord::Schema.define(version: 2020_01_24_151237) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "votes", default: 0, null: false
+    t.decimal "index"
     t.index ["poll_id"], name: "index_poll_options_on_poll_id"
   end
 
@@ -100,7 +101,7 @@ ActiveRecord::Schema.define(version: 2020_01_24_151237) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "lecture_id"
-    t.boolean "is_active", default: true, null: false
+    t.string "status"
     t.index ["lecture_id"], name: "index_polls_on_lecture_id"
   end
 
@@ -132,6 +133,7 @@ ActiveRecord::Schema.define(version: 2020_01_24_151237) do
     t.datetime "updated_at", null: false
     t.integer "author_id"
     t.boolean "isLink", default: false
+    t.string "extension"
     t.index ["allowsUpload_type", "allowsUpload_id"], name: "index_uploaded_files_on_allowsUpload_type_and_allowsUpload_id"
     t.index ["author_id"], name: "index_uploaded_files_on_author_id"
   end
@@ -145,8 +147,8 @@ ActiveRecord::Schema.define(version: 2020_01_24_151237) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.boolean "is_student", default: false, null: false
-    t.integer "feedback_id"
     t.string "hash_id"
+    t.integer "feedback_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["feedback_id"], name: "index_users_on_feedback_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true

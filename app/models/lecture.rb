@@ -1,5 +1,6 @@
 class Lecture < ApplicationRecord
   before_save :update_lecture_status, if: lambda { |l| l.date_changed? || l.start_time_changed? || end_time_changed? }
+  before_save :lecture_status_changed, if: lambda { |l| l.status_changed? }
 
   belongs_to :lecturer, class_name: :User
   has_and_belongs_to_many :participating_students, class_name: :User
@@ -18,23 +19,6 @@ class Lecture < ApplicationRecord
   scope :running, -> { where status: "running" }
   scope :active, -> { running.or(where status: "active") }
 
-  def set_created
-    self.status = :created
-  end
-
-  def set_active
-    self.status = :active
-  end
-
-  def set_running
-    self.status = :running
-  end
-
-  def set_archived
-    self.status = :archived
-  end
-
-
   def join_lecture(student)
     unless self.participating_students.include?(student)
       self.participating_students << student
@@ -45,25 +29,6 @@ class Lecture < ApplicationRecord
     if self.participating_students.include?(student)
       self.participating_students.delete(student)
     end
-  end
-
-
-  def compare_ignore_status(other_lecture)
-    name == other_lecture.name && polls_enabled == other_lecture.polls_enabled && questions_enabled == other_lecture.questions_enabled \
-    && enrollment_key == other_lecture.enrollment_key && id == other_lecture.id
-  end
-
-  def ==(other_lecture)
-    status == other_lecture.status && compare_ignore_status(other_lecture)
-  end
-
-  def !=(other_lecture)
-    !(self == other_lecture)
-  end
-
-  def to_s
-    "{ id:" + id.to_s + " status: " + status.to_s + " name: " + name +
-        " enrollment_key : " + enrollment_key + " polls_enabled " + polls_enabled.to_s + " questions_enabled " + questions_enabled.to_s + "}"
   end
 
   def readonly?
@@ -93,15 +58,19 @@ class Lecture < ApplicationRecord
   def update_lecture_status
     old_status = self.status
     if self.date < Date.today
-      self.set_archived
+      set_archived
     elsif self.date > Date.today
-      self.set_created
+      set_created
     elsif self.start_time.utc.seconds_since_midnight - 300 < Time.current.utc.seconds_since_midnight && self.end_time.utc.seconds_since_midnight + 300 > Time.current.utc.seconds_since_midnight
-      self.set_running
+      set_running
     else
-      self.set_active
+      set_active
     end
     old_status != self.status
+  end
+
+  def lecture_status_changed
+    ActionCable.server.broadcast "lecture_status_channel", { lecture_id: self.id, course_id: self.course.id }
   end
 
   def allow_comprehension?
@@ -140,7 +109,30 @@ class Lecture < ApplicationRecord
     end
   end
 
+  def close_all_polls
+    self.polls.where(status: "running").reverse_each { |poll|
+      poll.close
+    }
+  end
+
   private
+    def set_created
+      self.status = :created
+    end
+
+    def set_active
+      self.status = :active
+    end
+
+    def set_running
+      self.status = :running
+    end
+
+    def set_archived
+      self.close_all_polls
+      self.status = :archived
+    end
+
     def comprehension_state_student(current_user)
       stamp = self.lecture_comprehension_stamps.where(user: current_user).max { |a, b| a.timestamp <=> b.timestamp }
       if stamp

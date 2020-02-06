@@ -3,7 +3,7 @@
 <%=  uploaded_files = []  %>
 <% end %>
 <% if uploaded_files.empty? %>
-  <p class="text-center" style="@import 'colorScheme';color: $gray-main">No materials added to course yet</p>
+  <p class="text-center text-gray"> No materials added yet </p>
 <% else %>
   <ul class="list-group mb-2">
     <% uploaded_files.each do |file| %>
@@ -11,13 +11,13 @@
         <div style="white-space: nowrap;">
           <% if file.isLink %>
             <%= fa_icon 'link', :class => "text-info pr-2" %>
-            <%= link_to file.data, file.data, target: "_blank", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
+            <%= link_to file.filename, file.data, target: "_self", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
           <% else %>
             <%= fa_icon 'file', :class => "text-info pr-2" %>
             <% if @lecture %>
-              <%= link_to file.filename, course_lecture_uploaded_file_path(@lecture.course, @lecture, file), target: "_blank", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
+              <%= link_to file.filename, course_lecture_uploaded_file_path(@lecture.course, @lecture, file), target: "_self", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
             <% else %>
-              <%= link_to file.filename, course_uploaded_file_path(@course, file), target: "_blank", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
+              <%= link_to file.filename, course_uploaded_file_path(@course, file), target: "_self", class:"align-middle d-inline-block text-break mr-4", style:"white-space: normal;" %>
             <% end %>
           <% end %>
         </div>

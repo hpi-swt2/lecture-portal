@@ -17,6 +17,20 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+  # DRY
+  def self.secret_key_default
+    "IAmALecturer"
+  end
+  # secret_key is used like any other property by devise. The getter initializes the secret key entry in the registrations form.
+  def secret_key
+    ""
+  end
+
+  # the setter gets the value the user has entered into the secret_key field
+  def secret_key=(secret_key)
+    actual_key = ENV.fetch("SECRET_KEY", User.secret_key_default)
+    self.is_student = !(secret_key == actual_key)
+  end
 
   private
     def assign_hash_id
