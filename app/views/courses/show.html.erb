@@ -9,7 +9,7 @@
 <br>
 
 <% if !@course.lectures.empty? %>
-  <p class="lead"> Currently running lectures </p>
+  <p class="lead"> Todays active or currently running lectures </p>
   <%= render 'lectures/table_running', courses: [@course], renders_course_title: false %>
 <% end %>
 
