@@ -29,19 +29,32 @@ RSpec.describe "lectures/edit", type: :view do
       assert_select "select[name=?]", "lecture[start_time(5i)]"
       assert_select "select[name=?]", "lecture[end_time(4i)]"
       assert_select "select[name=?]", "lecture[end_time(5i)]"
+      # checkboxes for each feature
       assert_select "input[name=?]", "lecture[questions_enabled]"
       assert_select "input[name=?]", "lecture[polls_enabled]"
       assert_select "input[name=?]", "lecture[feedback_enabled]"
     end
   end
 
-  it " should be disabled if the lecture is archived" do
+  it "should be disabled if the lecture is archived" do
     @lecture.update(date: Date.yesterday)
     render
     assert_select "form[action=?][method=?]", course_lecture_path(course_id: @course.id, id: @lecture), "post" do
-      assert_select "input[name=?][readonly]", "lecture[name]"
+      assert_select "input[name=?][disabled]", "lecture[name]"
+      assert_select "input[name=?][disabled]", "lecture[enrollment_key]"
+      # components of time_select and date_select
+      assert_select "select[name=?][disabled]", "lecture[date(1i)]"
+      assert_select "select[name=?][disabled]", "lecture[date(2i)]"
+      assert_select "select[name=?][disabled]", "lecture[date(3i)]"
+      # there are 3 hidden inputs for start and end time, so the selects start with 4i
+      assert_select "select[name=?][disabled]", "lecture[start_time(4i)]"
+      assert_select "select[name=?][disabled]", "lecture[start_time(5i)]"
+      assert_select "select[name=?][disabled]", "lecture[end_time(4i)]"
+      assert_select "select[name=?][disabled]", "lecture[end_time(5i)]"
+      # checkboxes for each feature
       assert_select "input[name=?][disabled]", "lecture[questions_enabled]"
       assert_select "input[name=?][disabled]", "lecture[polls_enabled]"
+      assert_select "input[name=?][disabled]", "lecture[feedback_enabled]"
     end
   end
 
