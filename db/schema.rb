@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_01_30_131908) do
+ActiveRecord::Schema.define(version: 2020_01_31_150617) do
 
   create_table "answers", force: :cascade do |t|
     t.integer "student_id"
@@ -91,7 +91,7 @@ ActiveRecord::Schema.define(version: 2020_01_30_131908) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "votes", default: 0, null: false
-    t.decimal "index"
+    t.integer "index"
     t.index ["poll_id"], name: "index_poll_options_on_poll_id"
   end
 
@@ -101,7 +101,7 @@ ActiveRecord::Schema.define(version: 2020_01_30_131908) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "lecture_id"
-    t.boolean "is_active", default: true, null: false
+    t.string "status"
     t.index ["lecture_id"], name: "index_polls_on_lecture_id"
   end
 

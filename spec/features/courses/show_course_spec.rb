@@ -29,27 +29,27 @@ describe "The course detail page", type: :feature do
     end
 
     it "should show a \"View\" link after the lecture is started" do
-      @lecture.update(status: "running")
+      @lecture.update(date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 2.hours)
       visit(course_path(@course))
       expect(page).to have_link("View", href: course_lecture_path(@course, @lecture))
     end
 
     it "should show a \"View\" link when the lecture is active" do
-      @lecture.update(status: "active")
+      @lecture.update(date: Date.today, start_time: DateTime.now + 1.hours, end_time: DateTime.now + 2.hours)
       visit(course_path(@course))
       expect(page).to have_link("View", href: course_lecture_path(@course, @lecture))
     end
 
     it "should show a \"View\" link after the lecture is created" do
-      @lecture.update(status: "created")
+      @lecture.update(date: Date.tomorrow)
       visit(course_path(@course))
-      expect(page).to have_link("View", href: edit_course_lecture_path(course_id: @course.id, id: @lecture.id))
+      expect(page).to have_link("View", href: course_lecture_path(course_id: @course.id, id: @lecture.id, anchor: "settings"))
     end
 
     it "should not show lectures of other lecturers" do
       course2 = FactoryBot.create(:course)
       lecture2 = FactoryBot.create(:lecture, course: course2)
-      lecture2.update(status: "running")
+      lecture2.update(date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 2.hours)
       visit(course_path(@course))
       expect(page).to_not have_link("View", href: course_lecture_path(course2, lecture2))
     end

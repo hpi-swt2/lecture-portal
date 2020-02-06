@@ -45,6 +45,25 @@
   height: 100%;
 }
 
+.vote-button {
+  padding-right: 20px;
+  padding-left: 20px;
+}
+
+.active-poll-row {
+  background-color: $orange-dark !important;
+  color: white;
+  .btn {
+    background-color: white;
+    border-color: white;
+    color: $orange-dark;
+  }
+  .btn:hover {
+    background-color: $orange-main;
+    border-color: $orange-main;
+  }
+}
+
 // navbar_height: 40px;
 // nav_tabs_height: 42px;
 // polls_footer_height: 40px;
@@ -52,4 +71,9 @@
 
 .poll-tab-container {
   height: calc(85vh - 40px - 42px - 40px - 80px);
+}
+
+.text-gray {
+  color: $gray-dark;
+  font-size: medium;
 }

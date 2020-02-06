@@ -8,10 +8,10 @@
       initLectureStatusUpdating(function(lecture_id, course_id) {
         return lecture_id == "<%= @lecture.id %>"
       });
-    }); 
+    });
 </script>
 
-<h1 class="h5"><%= @lecture.name %></h1>
+<p class="lead"><%= @lecture.name %></h1>
 <% if @lecture.start_time && @lecture.end_time && @lecture.date%>
   <p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
 <% end %>
@@ -89,7 +89,7 @@
               <%= form.submit "Submit", {class: "btn btn-primary", id: "feedback-submit"} %>
             </div>
           <% end %>
-          <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert"> Feedback submitted</div>
+          <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert">Feedback saved</div>
         <% end %>
       <% else %>
         <div class="panel panel-default">
@@ -118,16 +118,22 @@
           <%= raw @qr_code.as_svg(offset: 0, color: '000', shape_rendering: 'crispEdges', module_size: 10, standalone: true) %>
         </div>
         <% end %>
-        <p class="h3 padded-text"> Students </p>
-          <ol>
-            <% for student in @lecture.participating_students%>
-              <li><%= student.email %></li>
-            <% end %>
-          </ol>
       </div>
     <% end %>
-    <div class="container tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-      <%= render 'form', lecture: @lecture %>
+
+    <div class="container tab-pane fade" id="studentList" role="tabpanel" aria-labelledby="studentList-tab">
+      <iframe class="polls-iframe" src="<%= studentList_path(@course, @lecture) %>"></iframe>
     </div>
+
   <% end %>
 </div>
+
+ <div class="d-flex flex-row justify-content-between mb-2">
+   <%= link_to (fa_icon 'arrow-left', text: 'Back to Course'), course_path(@course), class: "btn btn-outline-primary" %>
+
+   <% if @current_user.is_student && (@lecture.status == "running" || @lecture.status == "active") %>
+     <%= link_to "Leave Lecture", leave_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class: "btn btn-outline-secondary" %>
+   <% else %>
+     <%= link_to "Edit Lecture", edit_course_lecture_path(course_id: @lecture.course.id, id: @lecture.id), class: "btn btn-outline-secondary" %>
+   <% end %>
+ </div>
