@@ -29,7 +29,12 @@ class User < ApplicationRecord
   # the setter gets the value the user has entered into the secret_key field
   def secret_key=(secret_key)
     actual_key = ENV.fetch("SECRET_KEY", User.secret_key_default)
-    self.is_student = !(secret_key == actual_key)
+    self.is_student = true
+    if(secret_key == actual_key)
+      self.is_student = false
+    elsif !secret_key.nil? && !secret_key.empty?
+      raise Exception.new('secret key is invalid.')
+    end
   end
 
   private

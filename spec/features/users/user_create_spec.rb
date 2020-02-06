@@ -29,29 +29,16 @@ describe "Creating a new user", type: :feature do
         expect(User.find_by_email(@email_lecturer).is_student).to_not be_truthy
       end
 
-      it "does not make a user who does not know the secret key a lecturer" do
+      it "throws an error if a wrong secret_key is provided" do
           visit(new_user_registration_path)
           find(:id, "user_email").set(@email_student)
           find(:id, "user_password").set(@password)
           find(:id, "user_password_confirmation").set(@password)
           find(:id, "user_secret_key").set(@wrong_secret_key)
-          click_on("Sign up")
+          expect { click_on("Sign up") }.to raise_error 'secret key is invalid.'
           user = User.find_by email: @email_student
-          expect(user).to_not be_nil
-          expect(user.is_student).to be_truthy
+          expect(user).to be_nil
         end
-
-      it "does not make a user who does not know the secret key a lecturer" do
-        visit(new_user_registration_path)
-        find(:id, "user_email").set(@email_student)
-        find(:id, "user_password").set(@password)
-        find(:id, "user_password_confirmation").set(@password)
-        find(:id, "user_secret_key").set(@blank_secret_key)
-        click_on("Sign up")
-        user = User.find_by email: @email_student
-        expect(user).to_not be_nil
-        expect(user.is_student).to be_truthy
-      end
     end
 
   context "secret key is not set" do
@@ -76,10 +63,9 @@ describe "Creating a new user", type: :feature do
         find(:id, "user_password").set(@password)
         find(:id, "user_password_confirmation").set(@password)
         find(:id, "user_secret_key").set(@wrong_secret_key)
-        click_on("Sign up")
+        expect { click_on("Sign up") }.to raise_error 'secret key is invalid.'
         user = User.find_by email: @email_student
-        expect(user).to_not be_nil
-        expect(user.is_student).to be_truthy
+        expect(user).to be_nil
       end
 
     it "does not make a user who uses a blank secret key a lecturer" do
