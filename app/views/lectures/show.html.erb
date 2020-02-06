@@ -71,25 +71,25 @@
   <div class="container tab-pane fade" id="feedback" role="tabpanel" aria-labelledby="feedback-tab">
     <% if @lecture.feedback_enabled && @lecture.allow_interactions? %>
       <% if @current_user.is_student %>
+        <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert">Feedback saved</div>
         <%= form_with(model: [ @course, @lecture, @lecture.feedbacks.build ], :html => { :onsubmit => "handleSubmit()" }) do |form| %>
           <% if @lecture.feedbacks.where(user_id: @current_user.id).present? %>
             <p>
-              <%= form.label :content, "You submitted your feedback. Update it here."%>
+              <%= form.label :content, "You saved your feedback. Update it here."%>
               <%= form.text_area(:content, :value => @lecture.feedbacks.where(user_id: @current_user.id).first.content, :class => "form-control") %>
             </p>
-            <p>
+            <div class="d-flex flex-row-reverse">
               <%= form.submit "Update", {class: "btn btn-primary", id: "feedback-submit"}  %>
-            </p>
+            </div>
           <% else %>
             <p>
               <%= form.label :content, "Write your feedback here"%>
               <%= form.text_area :content, {class: "form-control"} %>
             </p>
             <div class="d-flex flex-row-reverse">
-              <%= form.submit "Submit", {class: "btn btn-primary", id: "feedback-submit"} %>
+              <%= form.submit "Save", {class: "btn btn-primary", id: "feedback-submit"} %>
             </div>
           <% end %>
-          <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert">Feedback saved</div>
         <% end %>
       <% else %>
         <div class="panel panel-default">
