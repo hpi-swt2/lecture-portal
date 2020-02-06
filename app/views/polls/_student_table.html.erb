@@ -4,18 +4,17 @@
     <th scope="col">Title</th>
     <th scope="col">Active</th>
     <th scope="col"></th>
-    <th scope="col"></th>
   </tr>
   </thead>
 
   <tbody>
-  <% polls.each do |poll| %>
-    <tr>
+  <% polls.sort_by{|poll| poll.created_at}.each do |poll| %>
+    <tr class="<%= 'active-poll-row' if poll.is_active %>">
       <td><%= poll.title %></td>
-      <td><%= poll.is_active %></td>
+      <td><%= poll.is_active ? 'Yes' : 'No' %></td>
       <td class="text-right">
-        <% if poll.is_active %>
-          <%= link_to 'Vote', answer_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+        <% if poll.is_active && @lecture.allow_interactions? %>
+          <%= link_to 'Vote', answer_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary vote-button"} %>
         <% else %>
           <%= link_to 'Results', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-outline-secondary"} %>
         <% end %>

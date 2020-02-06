@@ -15,4 +15,9 @@ RSpec.describe "courses/new", type: :view do
       assert_select "input[name=?]", "course[description]"
     end
   end
+
+  it "should have a \"back\" button which redirects to the course overview" do
+    render
+    assert_select "[href =?]", courses_path
+  end
 end
