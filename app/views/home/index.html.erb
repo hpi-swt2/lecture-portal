@@ -83,30 +83,11 @@
             </tr>
           <% end %>
         </table>
-
-        <h3>Available Courses</h3>
-        <table class="table table-sm table-striped table-responsive-md" style="table-layout: fixed">
-          <thead>
-          <tr>
-            <th class="col-sm" scope="col">Name</th>
-            <th class="col-sm" scope="col">Description</th>
-            <th class="col-sm" scope="col" style="width: 168px"></th>
-          </tr>
-          </thead>
-          <% @open_courses.each do |course| %>
-            <tr>
-              <td>
-                <span class="overflowing"><%= course.name %></span>
-              </td>
-              <td>
-                <span class="overflowing"><%= course.description %></span>
-              </td>
-              <td class="text-right"><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
-              <td> </td>
-            </tr>
-          <% end %>
-        </table>
       <% end %>
+  
+      <div class="text-center mt-5">
+        <%= button_to "Browse available courses", available_courses_path, :method => "get", class: "btn btn-primary" %>
+      </div>
     <% end %>
 
   </p>
