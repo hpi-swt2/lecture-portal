@@ -21,11 +21,11 @@
 <div class="tab-content" id="lectureTabsContent">
   <div class="tab-pane fade show active mx-auto" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="max-width: 2000px;">
     <div class="row">
-      <% if @lecture.questions_enabled %>
+      <% if @current_user.is_student || @lecture.questions_enabled %>
         <div id="updates" class="col-12 col-sm-6 col-xl-4">
-            <% if @current_user.is_student || @lecture.questions_enabled %>
+            <% if @current_user.is_student %>
               <h2 class="h5">Updates</h2>
-            <% elsif @lecture.questions_enabled %>
+            <% else %>
               <h2 class="h5">Questions</h2>
             <% end %>
             <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: @lecture.allow_interactions?, questions_list: Question.questions_for_lecture(@lecture, current_user)}) %>
@@ -37,7 +37,7 @@
         <% unless current_user.is_student %>
           <%= link_to (fa_icon 'plus', text: 'Add Material'), new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class: 
           "btn btn-link text-muted float-right"%>
-        <% end %> 
+        <% end %>
       </div>
       <div class="col-12 col-sm-6 col-xl-4">
         <% unless @current_user.is_student %>
