@@ -11,7 +11,7 @@
     });
 </script>
 
-<h1 class="h5"><%= @lecture.name %></h1>
+<p class="lead"><%= @lecture.name %></h1>
 <% if @lecture.start_time && @lecture.end_time && @lecture.date%>
   <p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
 <% end %>
@@ -91,7 +91,7 @@
               <%= form.submit "Submit", {class: "btn btn-primary", id: "feedback-submit"} %>
             </div>
           <% end %>
-          <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert"> Feedback submitted</div>
+          <div id="feedback-notification" style="display:none" class="alert alert-success" role="alert">Feedback saved</div>
         <% end %>
       <% else %>
         <div class="panel panel-default">
