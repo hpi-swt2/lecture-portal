@@ -68,23 +68,24 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).not_to have_css("[value='Leave Lecture']")
     end
 
-    it "shows notice page on polls tab when polls are disabled" do
+    it "hides tab and shows notice page on polls tab when polls are disabled" do
       @lecture.update(polls_enabled: false)
       render
+      expect(rendered).not_to have_css("[href='#polls']")
       expect(rendered).to have_text("Polls are not enabled.")
     end
 
-    it "shows notice page on questions tab when questions are disabled" do
+    it "hides tab and shows notice page on questions tab when questions are disabled" do
       @lecture.update(questions_enabled: false)
       render
-      assert_select "a", "Questions"
+      expect(rendered).not_to have_css("[href='#questions']")
       expect(rendered).to have_text("Questions are not enabled.")
     end
 
-    it "shows notice page on feedback tab when feedback is disabled" do
+    it "hides tab and show notice on feedback tab if feedback is disabled" do
       @lecture.update(feedback_enabled: false)
       render
-      assert_select "a", "Feedback"
+      expect(rendered).not_to have_css("[href='#feedback']")
       expect(rendered).to have_text("Feedback is not enabled or the lecture is not active.")
     end
 
