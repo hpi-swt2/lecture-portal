@@ -19,7 +19,7 @@
   <div class="tab-pane fade show active" id="upload-file" role="tabpanel" aria-labelledby="upload-file-tab">
     <%= form_with(model: @model, local: true, html: { multipart: true } ) do |form| %>
       <% if uploaded_file.errors.any? %>
-        <div id="error_explanation">
+        <div id="error-explanation">
           <p class="h2" role="alert"><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this file from being saved:</p>
 
           <ul>
@@ -34,6 +34,10 @@
         <%= form.label :attachment, "Click to choose File" %>
         <br/>
         <%= form.file_field :attachment, :class => "btn btn-outline-secondary", id:"input-upload-file", required: true %>
+        <div class="form-group">
+          <%= form.label :File_Name, "display name (optional)" %>
+          <%= form.text_field :filename, :class => "form-control", id:"input-upload-file-name", placeholder: "Task 1" %>
+        </div>
       </div>
 
 
@@ -53,7 +57,7 @@
   <div class="tab-pane fade" id="upload-link" role="tabpanel" aria-labelledby="upload-link-tab">
     <%= form_with(model: @model, local: true, html: { multipart: true } ) do |form| %>
       <% if uploaded_file.errors.any? %>
-        <div id="error_explanation">
+        <div id="error-explanation">
           <p class="h2" role="alert"><%= pluralize(uploaded_file.errors.count, "error") %> prohibited this link from being saved:</p>
 
           <ul>
@@ -65,8 +69,13 @@
       <% end %>
 
       <div class="form-group">
-        <%= form.label :link %>
+        <%= form.label :link%>
         <%= form.text_field :link, :class => "form-control", id:"input-upload-link", required: true %>
+      </div>
+
+      <div class="form-group">
+        <%= form.label :link_Name, "display name (optional)" %>
+        <%= form.text_field :link_name, :class => "form-control", id:"input-upload-link-name", placeholder: "Exercise Link" %>
       </div>
 
       <div class="actions d-flex flex-row justify-content-between mt-2">

@@ -1,7 +1,11 @@
 <h1>Editing Poll</h1>
 
+<% content_for :action_left do %>
+  <%= link_to (fa_icon 'arrow-left', text: 'Show all Polls'), course_lecture_polls_path(@lecture.course, @lecture), class: "btn btn-outline-primary" %>
+<% end %>
+
+<% content_for :action_right do %>
+  <%= link_to 'Delete', course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-danger" %>
+<% end %>
+
 <%= render 'form', poll: @poll %>
-
-<%= link_to (fa_icon 'arrow-left', text: 'Back'), course_lecture_polls_path(@lecture.course, @lecture), class: "btn btn-outline-primary" %>
-
-<%= link_to 'Delete', course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll), method: :delete, data: { confirm: 'Are you sure?' }, class: "btn btn-outline-secondary" %>

@@ -2,7 +2,6 @@
   <h1 class="display-4">HPI Lecture Portal</h1>
   <p class="lead">A Portal for organizing and administering lectures.</p>
   <hr class="my-4">
-  <p>It comes with many very good features.</p>
   <p class="lead">
     <%# fa_icon helper: https://github.com/bokmann/font-awesome-rails %>
     <% if user_signed_in? == false %>
@@ -27,21 +26,23 @@
         </table>
       <% else %>
 
-        <p class="lead">My Lectures</p>
+        <h3>Running Lectures</h3>
 
         <table class="table .table-sm table-striped">
           <thead>
           <tr>
-            <th style="width: 25%">Name</th>
-            <th style="width: 15%" scope="col">End Time</th>
-            <th style="width: 60%" scope="col"></th>
+            <th style="width: 40%">Name</th>
+            <th style="width: 20%">Course</th>
+            <th style="width: 10%" scope="col">End Time</th>
+            <th style="width: 30%" scope="col"></th>
           </tr>
           </thead>
 
           <% Lecture.where(course: @participating_courses).each do |lecture| %>
             <% if lecture.status == "running" || lecture.status == "active" %>
               <tr>
-                <td><%= lecture.course.name %> - <%= lecture.name %></td>
+                <td><span style="font-size: 1.25rem"><%= lecture.name %></span></td>
+                <td><%= link_to lecture.course.name, course_path(lecture.course) %></td>
                 <td>
                   <%if lecture.end_time %>
                     <%= lecture.end_time.strftime("%H:%M")  %>
@@ -64,41 +65,40 @@
           <% end %>
         </table>
 
-        <p class="lead">My Courses</p>
-        <table class="table .table-sm table-striped">
+        <h3>My Courses</h3>
+        <table class="table table-sm table-striped table-responsive-md" style="table-layout: fixed">
           <thead>
           <tr>
-            <th class="col-sm-8"  scope="col">Name</th>
-            <th scope="col" colspan="3"></th>
+            <th class="col-sm"  scope="col">Name</th>
+            <th class="col-sm"  scope="col">Description</th>
+            <th class="col-sm"  scope="col" style="width: 168px"> </th>
           </tr>
           </thead>
 
           <% @participating_courses.each do |course| %>
             <tr>
-              <td><%= course.name %></td>
-              <td><%= button_to "View", course_path(id: course.id), :method => "get", class: "btn btn-primary" %></td>
-              <td><%= link_to "Unenroll", leave_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
-            </tr>
-          <% end %>
-        </table>
-
-        <p class="lead">Available Courses</p>
-        <table class="table .table-sm table-striped">
-          <thead>
-          <tr>
-            <th class="col-sm-8" scope="col">Name</th>
-            <th scope="col" colspan="3"></th>
-          </tr>
-          </thead>
-          <% @open_courses.each do |course| %>
-            <tr>
-              <td><%= course.name %></td>
-              <td><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
+              <td><span class="overflowing"><%= course.name %></span></td>
+              <td><span class="overflowing"><%= course.description %></span></td>
+              <td class="text-right"> <%= button_to "View", course_path(id: course.id), :method => "get", class: "btn btn-primary" %></td>
             </tr>
           <% end %>
         </table>
       <% end %>
+  
+      <div class="text-center mt-5">
+        <%= button_to "Browse available courses", available_courses_path, :method => "get", class: "btn btn-primary" %>
+      </div>
     <% end %>
 
-    </p>
-    </div>
+  </p>
+</div>
+
+<% if user_signed_in? && @current_user.is_student %>
+  <script>
+    $(document).on("turbolinks:load", function() {
+      initLectureStatusUpdating(function(lecture_id, course_id) {
+        return <%= @participating_lectures.map { |i| i.id } %>.includes(lecture_id)
+      });
+    });
+  </script>
+<% end %>

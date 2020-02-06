@@ -14,6 +14,8 @@ RSpec.describe "lectures/show", type: :view do
                                   start_time: DateTime.now,
                                   end_time: DateTime.now + 20.minutes
     ))
+    @uploaded_files = []
+    @questions = Question.where(lecture: @lecture)
   end
 
   describe "as a lecturer" do
@@ -28,12 +30,10 @@ RSpec.describe "lectures/show", type: :view do
       assert_select "a", "Feedback"
       assert_select "a", "Questions"
       assert_select "a", "Polls"
-      assert_select "a", "Settings"
       expect(rendered).to have_css("#dashboard-tab")
       expect(rendered).to have_css("#feedback-tab")
       expect(rendered).to have_css("#questions-tab")
       expect(rendered).to have_css("#polls-tab")
-      expect(rendered).to have_css("#settings-tab")
     end
 
     it "renders enrollment key tab if enrollment key is present" do
@@ -41,6 +41,20 @@ RSpec.describe "lectures/show", type: :view do
       assert_select "a", "Enrollment Key"
       expect(rendered).to have_content("Enrollment Key")
       expect(rendered).to have_css("#enrollmentKey-tab")
+    end
+
+    it "renders student list tab" do
+      render
+      assert_select "a", "Student List"
+      expect(rendered).to have_content("Student List")
+      expect(rendered).to have_css("#studentList-tab")
+    end
+
+    it "renders enrollment qr code if enrollment key is present" do
+      @qr_code = RQRCode::QRCode.new("http://some-random.url/that/is/not/tested")
+      render
+      assert_select "a", "Enrollment Key"
+      expect(rendered).to have_selector("div", class: "qr-code-container")
     end
 
     it "does not render enrollment key tab button if enrollment key is not present" do
@@ -71,7 +85,7 @@ RSpec.describe "lectures/show", type: :view do
       @lecture.update(feedback_enabled: false)
       render
       assert_select "a", "Feedback"
-      expect(rendered).to have_text("Feedback is not enabled.")
+      expect(rendered).to have_text("Feedback is not enabled or the lecture is not active.")
     end
 
     it "does not show notice pages on disabled questions/polls/feedback when questions are enabled" do
@@ -81,35 +95,16 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).to_not have_text("Feedback is not enabled.")
     end
 
-    it "shows list of participating students in enrollment key tab" do
-      @lecture.join_lecture(FactoryBot.create(:user, :student, email: "student@mail.com"))
+    it "shows no material added yet message if no materials are added" do
       render
-      assert_select "a", "Enrollment Key"
-      expect(rendered).to have_text("student@mail.com")
+      expect(rendered).to have_content("No materials added yet")
     end
 
-    it "can change title in settings tab" do
+    it "shows link to added material if material is added" do
+      file = FactoryBot.create(:uploaded_file, author: @current_user, allowsUpload: @lecture)
+      @uploaded_files.push(file)
       render
-      assert_select "a", "Settings"
-      expect(rendered).to have_selector("input[id='lecture_name'][type='text']")
-    end
-
-    it "can change enrollment key in settings tab" do
-      render
-      assert_select "a", "Settings"
-      expect(rendered).to have_selector("input[id='lecture_enrollment_key'][type='text']")
-    end
-
-    it "can change polls in settings tab" do
-        render
-        assert_select "a", "Settings"
-        expect(rendered).to have_selector("input[id='lecture_polls_enabled'][type='checkbox']")
-      end
-
-    it "can change questions in settings tab" do
-      render
-      assert_select "a", "Settings"
-      expect(rendered).to have_selector("input[id='lecture_questions_enabled'][type='checkbox']")
+      expect(rendered).to have_link(file.filename)
     end
   end
 
@@ -138,10 +133,10 @@ RSpec.describe "lectures/show", type: :view do
       expect(rendered).not_to have_css("#enrollmentKey-tab")
     end
 
-    it "renders no settings tab" do
+    it "renders no student list tab" do
       render
-      expect(rendered).not_to have_content("Settings")
-      expect(rendered).not_to have_css("#settings-tab")
+      expect(rendered).not_to have_content("Student List")
+      expect(rendered).not_to have_css("#studentList-tab")
     end
 
     it "renders no end button" do

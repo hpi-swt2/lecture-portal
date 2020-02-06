@@ -2,7 +2,7 @@ require "rails_helper"
 
 RSpec.describe Lecture, type: :model do
   let(:valid_attributes) {
-    { name: "SWT", enrollment_key: "swt", status: "created", date: "2020-02-02", start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
+    { name: "SWT", enrollment_key: "swt", status: "created", date: Date.tomorrow, start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
   }
   let(:valid_attributes_with_lecturer) {
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
@@ -12,7 +12,7 @@ RSpec.describe Lecture, type: :model do
   }
 
   before (:each) do
-    @lecture = FactoryBot.build(:lecture)
+    @lecture = FactoryBot.create(:lecture)
   end
 
   it "is creatable using a Factory" do
@@ -97,14 +97,95 @@ RSpec.describe Lecture, type: :model do
     expect { @lecture.update(status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes) }.to raise_error(ActiveRecord::ReadOnlyRecord)
   end
 
+  it "closes remaining open polls when archived" do
+    poll = FactoryBot.create(:poll, lecture_id: @lecture.id, status: "running")
+    @lecture.polls << poll
+    open_polls = @lecture.polls.where(status: "running")
+    expect(open_polls).to_not be_empty
+    @lecture.update(status: "archived", date: Date.yesterday)
+    open_polls = @lecture.polls.where(status: "running")
+    expect(open_polls).to be_empty
+  end
+
   it "can be changed before it ended" do
-    @lecture.set_active
+    @lecture.update(date: Date.today, start_time: DateTime.now + 1.hour)
     expect(@lecture).to be_valid
     @lecture.save
     expect(@lecture.save).to be_truthy
     expect(@lecture.update(status: "running")).to be_truthy
   end
 
+  it "change status to active when day is today" do
+    @lecture.update(date: Date.today)
+    expect(@lecture.status).to eq("active")
+  end
+
+  it "change status to running when day is today and time is between start and end time" do
+    @lecture.update(date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 1.hour)
+    expect(@lecture.status).to eq("running")
+  end
+
+  it "change status to archived when day is yesterday" do
+    @lecture.update(date: Date.yesterday)
+    expect(@lecture.status).to eq("archived")
+  end
+
+  it "have status created when created" do
+    expect(@lecture.status).to eq("created")
+  end
+
+  it "change status from created to active when time changes" do
+    @lecture.update(date: Date.tomorrow, start_time: DateTime.now + 1.day + 1.hour, end_time: DateTime.now + 1.day + 2.hours)
+    expect(@lecture.status).to eq("created")
+    travel 1.day do
+      Lecture.handle_activations
+      @lecture.reload
+      expect(@lecture.status).to eq("active")
+    end
+  end
+
+  it "change status from active to running when time changes" do
+    @lecture.update(date: Date.today, start_time: DateTime.now + 1.hour, end_time: DateTime.now + 2.hours)
+    expect(@lecture.status).to eq("active")
+    travel 1.hour do
+      Lecture.handle_activations
+      @lecture.reload
+      expect(@lecture.status).to eq("running")
+    end
+  end
+
+  it "change status from running to active when time changes" do
+    @lecture.update(date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 1.hours)
+    expect(@lecture.status).to eq("running")
+    travel 2.hours do
+      Lecture.handle_activations
+      @lecture.reload
+      expect(@lecture.status).to eq("active")
+    end
+  end
+
+  it "change status from active to archived when time changes" do
+    @lecture.update(date: Date.today, start_time: DateTime.now - 2.hours, end_time: DateTime.now - 1.hour)
+    expect(@lecture.status).to eq("active")
+    travel 1.day do
+      Lecture.handle_activations
+      @lecture.reload
+      expect(@lecture.status).to eq("archived")
+    end
+  end
+
+  it "not change status once it is archived" do
+    @lecture.update(date: Date.yesterday, start_time: DateTime.now - 1.day - 1.hour, end_time: DateTime.now - 1.day + 1.hour)
+    expect(@lecture.status).to eq("archived")
+    travel (-1).day do
+      Lecture.handle_activations
+      @lecture.reload
+      expect(@lecture.status).to eq("archived")
+    end
+    Lecture.handle_activations
+    @lecture.reload
+    expect(@lecture.status).to eq("archived")
+  end
 
   describe "comprehension_state" do
     context "as student" do

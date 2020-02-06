@@ -1,11 +1,12 @@
 <h1>Editing Lecture</h1>
 
 <% content_for :action_left do %>
-  <%= link_to 'Delete', course_lecture_path(course_id:@lecture.course.id, id: @lecture.id), method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-secondary" %>
-<% end %>
-<% content_for :action_right do %>
-  <%= link_to (fa_icon 'arrow-left', text: 'Back'), course_path(id:@lecture.course.id), class: "btn btn-outline-primary" %>
-<% end %>
-<%= render 'form', lecture: @lecture, render_enrolment_key: true do %>
+  <%= link_to (fa_icon 'arrow-left', text: 'Back'), :back, class: "btn btn-outline-primary" %>
 <% end %>
 
+<% content_for :action_right do %>
+  <%= link_to 'Delete', course_lecture_path(course_id:@lecture.course.id, id: @lecture.id), method: :delete, data: { confirm: 'Are you sure?' }, :class => "btn btn-outline-danger" %>
+<% end %>
+
+<%= render 'form', lecture: @lecture, render_enrolment_key: true do %>
+<% end %>

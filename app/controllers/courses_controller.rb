@@ -53,6 +53,12 @@ class CoursesController < ApplicationController
     redirect_to courses_url, notice: "Course was successfully destroyed."
   end
 
+  def available
+    unless current_user.nil?
+      @participating_courses = current_user.participating_courses
+      @open_courses = Course.where(status: "open") - @participating_courses
+    end
+  end
 
   def join_course
     @course = Course.find(params[:id])

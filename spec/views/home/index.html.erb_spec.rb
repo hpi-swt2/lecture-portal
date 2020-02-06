@@ -9,16 +9,6 @@ RSpec.describe "home/index", type: :view do
     expect(page).to have_link "New Course", href: new_course_path
   end
 
-  it "displays all open courses for a student" do
-    # Using hard coded string and not factory default name cause a unique name is needed for this test
-    FactoryBot.create(:course, name: "index_test")
-    FactoryBot.create(:course, name: "index_test")
-    @current_user = FactoryBot.create(:user, :student)
-    sign_in @current_user
-    visit root_path
-    expect(page).to have_selector("td", text: "index_test", count: 2)
-  end
-
   it "displays the courses that a student is enrolled in with link" do
     @course = FactoryBot.create(:course)
     @current_user = FactoryBot.create(:user, :student)
@@ -48,27 +38,32 @@ RSpec.describe "home/index", type: :view do
 
     it "displays key input form for lectures with a key for not joined students" do
       visit root_path
-      expect(page).to have_text("Join")
-      # it's 2 because of the courses button
-      expect(page).to have_css("form", count: 2)
-      # it's 3 because of the courses button and the hidden field in the key input form
-      expect(page).to have_css("input", count: 3)
+      expect(page).to have_selector("input[value='Join']")
+      # it's 3 because of the courses button and the browse all courses button
+      expect(page).to have_css("form", count: 3)
+      # it's 4 because of the courses button and the hidden field in the key input form and the browse all courses button
+      expect(page).to have_css("input", count: 4)
     end
 
     it "does not display key input form for lectures without a key for not joined students" do
       @lecture.update(enrollment_key: nil)
       visit root_path
-      expect(page).to have_text("Join")
-      # it's 2 because of the courses button
-      expect(page).to have_css("form", count: 2)
-      # it's 2 because of the courses button
-      expect(page).to have_css("input", count: 2)
+      expect(page).to have_selector("input[value='Join']")
+      # it's 3 because of the courses button and the browse all courses button
+      expect(page).to have_css("form", count: 3)
+      # it's 3 because of the courses button and the browse all courses button
+      expect(page).to have_css("input", count: 3)
     end
 
-    it "shows an 'Unenroll' button" do
+    it "does not show an 'Unenroll' button" do
       # because a joined course is displayed
       visit root_path
-      expect(page).to have_link("Unenroll")
+      expect(page).to_not have_link("Unenroll")
+    end
+
+    it "displays a course's description" do
+      visit root_path
+      expect(page).to have_text(@course.description)
     end
   end
 
