@@ -28,9 +28,7 @@ ActiveRecord::Schema.define(version: 2020_01_31_150617) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "creator_id"
-    t.integer "lecture_id"
     t.index ["creator_id"], name: "index_courses_on_creator_id"
-    t.index ["lecture_id"], name: "index_courses_on_lecture_id"
   end
 
   create_table "courses_users", id: false, force: :cascade do |t|
