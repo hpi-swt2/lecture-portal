@@ -119,22 +119,6 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #edit" do
-    describe "is only accessible before a lecture was started:" do
-      it "running lecture redirects to overview" do
-        lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
-        login_lecturer(lecture.lecturer)
-        get :edit, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
-        expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
-      end
-      it "archived lecture redirects to overview" do
-        # lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "archived")
-        # lecture = FactoryBot.create(:lecture, valid_attributes_with_lecturer.merge(status: "archived"))
-        lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "archived", date: Date.yesterday)
-        login_lecturer(lecture.lecturer)
-        get :edit, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
-        expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
-      end
-    end
     it "returns a success response for lecturer" do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       login_lecturer(lecture.lecturer)
