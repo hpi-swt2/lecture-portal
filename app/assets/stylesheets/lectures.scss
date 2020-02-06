@@ -7,6 +7,7 @@
 @import "lecture_statistics";
 @import "lecture_comprehension";
 @import 'questions';
+@import "colorScheme";
 
 .text-right {
   a,
@@ -33,6 +34,17 @@ form.button_to {
   padding: 20px;
   padding-right: 0;
 }
+
+.text-gray {
+  color: $gray-dark;
+  font-size: medium;
+}
+
+
+.qr-code-container {
+  text-align: center;
+}
+
 .time select,
 .date select {
   @extend .form-control;

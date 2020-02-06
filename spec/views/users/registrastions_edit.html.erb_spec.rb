@@ -18,7 +18,7 @@ RSpec.describe "users/edit", type: :view do
     expect(page).to have_field("user[password]")
     expect(page).to have_field("user[password_confirmation]")
     expect(page).to have_field("user[current_password]")
-    expect(page).to have_field("user[is_student]")
+    # user can not change from student to lecturer or vice versa
   end
 
 
