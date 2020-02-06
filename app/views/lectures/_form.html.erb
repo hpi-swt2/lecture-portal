@@ -64,35 +64,35 @@
 
   <div class="form-group">
     <%= form.label :name %>
-    <%= form.text_field :name, :readonly => lecture.archived?, class: "form-control" %>
+    <%= form.text_field :name, :disabled => lecture.archived?, class: "form-control" %>
   </div>
 
   <div class="row">
     <div class="date form-group col-12 col-md-4">
       <%= form.label :date %>
       <div class="d-flex">
-        <%= form.date_select :date, value: Date.today, :readonly => lecture.archived?, id: "startDate" %>
+        <%= form.date_select :date, value: Date.today, :disabled => lecture.archived?, id: "startDate" %>
       </div>
     </div>
 
     <div class="time start_time form-group col-6 col-sm-4">
       <%= form.label :start_time %>
       <div class="d-flex">
-        <%= form.time_select :start_time, {minute_step: 5,:default => {:hour => ((DateTime.now + 59.minutes).beginning_of_hour).strftime("%H"), :minute => '00'}}, :readonly => lecture.archived?, onchange: "handleStartTimeInput()"%>
+        <%= form.time_select :start_time, {minute_step: 5,:default => {:hour => ((DateTime.now + 59.minutes).beginning_of_hour).strftime("%H"), :minute => '00'}}, :disabled => lecture.archived?, onchange: "handleStartTimeInput()"%>
       </div>
     </div>
 
     <div class="time end_time form-group col-6 col-sm-4">
       <%= form.label :end_time %>
       <div class="d-flex">
-        <%= form.time_select :end_time, {minute_step: 5, :default => {:hour => (((DateTime.now + 59.minutes).beginning_of_hour)+1.hours).strftime("%H"), :minute => '30'}}, :readonly => lecture.archived?, onchange: "handleEndTimeInput()" %>
+        <%= form.time_select :end_time, {minute_step: 5, :default => {:hour => (((DateTime.now + 59.minutes).beginning_of_hour)+1.hours).strftime("%H"), :minute => '30'}}, :disabled => lecture.archived?, onchange: "handleEndTimeInput()" %>
       </div>
     </div>
   </div>
 
   <div class="form-group">
     <%= form.label :enrollment_key, "Enrollment Key (optional)" %>
-    <%= form.text_field :enrollment_key, class: "form-control" %>
+    <%= form.text_field :enrollment_key, :disabled => lecture.archived?, class: "form-control" %>
   </div>
 
   <div class="form-check">
