@@ -83,10 +83,11 @@
         </table>
 
       <% end %>
+      <div class="text-center mt-5">
+        <%= button_to "Browse available courses", available_courses_path, :method => "get", class: "btn btn-primary" %>
+      </div>
     <% end %>
-  <div class="text-center mt-5">
-    <%= button_to "Browse available courses", available_courses_path, :method => "get", class: "btn btn-primary" %>
-  </div>
+
   </p>
 </div>
 

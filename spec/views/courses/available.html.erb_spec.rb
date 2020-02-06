@@ -3,8 +3,6 @@ require "rails_helper"
 RSpec.describe "home/available", type: :view do
   let(:valid_session) { {} }
 
-
-
   context "for students" do
     before(:each) do
       @course = FactoryBot.create(:course)
@@ -17,6 +15,16 @@ RSpec.describe "home/available", type: :view do
       FactoryBot.create(:course, name: "index_test_student")
       visit available_courses_path
       expect(page).to have_selector("td", text: "index_test_student", count: 2)
+    end
+
+    it "displays all open courses for a student one is not enrolled" do
+      # Using hard coded string and not factory default name cause a unique name is needed for this test
+      FactoryBot.create(:course, name: "test_student_not_enrolled")
+      lecture1 = FactoryBot.create(:course, name: "test_student_enrolled")
+      lecture1.join_course(@current_user)
+      visit available_courses_path
+      expect(page).to have_selector("td", text: "test_student_not_enrolled", count: 1)
+      expect(page).to have_selector("td", text: "test_student_enrolled", count: 0)
     end
 
     it "displays a course's description" do
