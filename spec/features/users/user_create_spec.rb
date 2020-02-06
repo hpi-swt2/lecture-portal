@@ -35,7 +35,7 @@ describe "Creating a new user", type: :feature do
           find(:id, "user_password").set(@password)
           find(:id, "user_password_confirmation").set(@password)
           find(:id, "user_secret_key").set(@wrong_secret_key)
-          expect { click_on("Sign up") }.to raise_error 'secret key is invalid.'
+          expect { click_on("Sign up") }.to raise_error "secret key is invalid."
           user = User.find_by email: @email_student
           expect(user).to be_nil
         end
@@ -63,7 +63,7 @@ describe "Creating a new user", type: :feature do
         find(:id, "user_password").set(@password)
         find(:id, "user_password_confirmation").set(@password)
         find(:id, "user_secret_key").set(@wrong_secret_key)
-        expect { click_on("Sign up") }.to raise_error 'secret key is invalid.'
+        expect { click_on("Sign up") }.to raise_error "secret key is invalid."
         user = User.find_by email: @email_student
         expect(user).to be_nil
       end

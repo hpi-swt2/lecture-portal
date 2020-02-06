@@ -30,10 +30,10 @@ class User < ApplicationRecord
   def secret_key=(secret_key)
     actual_key = ENV.fetch("SECRET_KEY", User.secret_key_default)
     self.is_student = true
-    if(secret_key == actual_key)
+    if secret_key == actual_key
       self.is_student = false
     elsif !secret_key.nil? && !secret_key.empty?
-      raise Exception.new('secret key is invalid.')
+      raise Exception.new("secret key is invalid.")
     end
   end
 
