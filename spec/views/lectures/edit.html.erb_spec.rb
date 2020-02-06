@@ -58,14 +58,13 @@ RSpec.describe "lectures/edit", type: :view do
     end
   end
 
-  it "should have a \"back\" button which redirects to the course overview." do
+  it "should have a \"back\" button which redirects to the previous page." do
     render
-    assert_select "[href =?]", course_path(id: @course.id)
+    assert_select "[href =?]", _back_url
   end
 
   it "renders a delete button" do
     render
-
     assert_select "[data-method=delete]"
   end
 end
