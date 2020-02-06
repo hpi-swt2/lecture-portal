@@ -52,10 +52,14 @@ const QuestionsList = types
             self.list = sortQuestionsList(self.list, self.is_sorted_by_time);
         },
         resolveQuestionById(id: number) {
-            self.list.forEach(question => {
-                if (question.id == id)
-                    question.resolved = true
-            });
+          let resolveQuestion: QuestionModel;
+          self.list.forEach(question => {
+            if (question.id == id) resolveQuestion = question;
+          });
+          if (resolveQuestion) {
+            resolveQuestion.resolved = true;
+            self.list.remove(resolveQuestion);
+          }
         },
         upvoteQuestionById(question_id: number, upvoter_id: number) {
             let upvoteQuestion: QuestionModel;
