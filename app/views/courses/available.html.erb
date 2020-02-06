@@ -6,7 +6,7 @@
     <tr>
       <th class="col-sm" scope="col"></th>
       <th class="col-sm" scope="col"></th>
-      <th class="col-sm" scope="col" style="width: 168px"></th>
+      <th class="col-sm" scope="col"></th>
     </tr>
     </thead>
     <% @open_courses.each do |course| %>
@@ -15,7 +15,11 @@
           <h5><%= course.name %></h5>
           <span class="overflowing"><%= course.description %></span>
         </td>
+        <% if @current_user.is_student? %>
         <td class="text-right"><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
+        <% else  %>
+        <td></td>
+        <% end %>
         <td> </td>
       </tr>
     <% end %>
