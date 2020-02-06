@@ -133,7 +133,7 @@
 
    <% if @current_user.is_student && (@lecture.status == "running" || @lecture.status == "active") %>
      <%= link_to "Leave Lecture", leave_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class: "btn btn-outline-secondary" %>
-   <% else %>
+   <% elsif @lecture.status != "archived" %>
      <%= link_to "Edit Lecture", edit_course_lecture_path(course_id: @lecture.course.id, id: @lecture.id), class: "btn btn-outline-secondary" %>
    <% end %>
  </div>
