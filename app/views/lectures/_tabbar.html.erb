@@ -21,15 +21,6 @@
       <li class="nav-item">
         <a class="nav-link" id="studentList-tab" data-toggle="tab" href="#studentList" role="tab" aria-controls="studentList" aria-selected="false">Student List</a>
       </li>
-      <li class="nav-item">
-        <a class="nav-link" id="settings-tab" data-toggle="tab" href="#settings" role="tab" aria-controls="settings" aria-selected="false">Settings</a>
-      </li>
     <% end %>
   </ul>
-  <aside class="actions-right">
-    <%= link_to (fa_icon 'arrow-left', text: 'Back to Course'), course_path(@course), class: "btn btn-outline-primary" %>
-    <% if @current_user.is_student && (@lecture.status == "running" || @lecture.status == "active") %>
-      <%= link_to "Leave Lecture", leave_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class: "btn btn-outline-danger" %>
-    <% end %>
-  </aside>
 </div>
