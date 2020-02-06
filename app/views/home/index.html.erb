@@ -3,114 +3,32 @@
   <p class="lead">A Portal for organizing and administering lectures.</p>
 </div>
 <div>
-  <p class="lead">
     <%# fa_icon helper: https://github.com/bokmann/font-awesome-rails %>
     <% if user_signed_in? == false %>
       <%= link_to (fa_icon 'sign-in', text: 'Log-In'), new_user_session_path, class: 'btn btn-primary btn-lg' %>
       <%= link_to (fa_icon 'user-plus', text: 'Sign-Up'), new_user_registration_path, class: 'btn btn-secondary btn-lg' %>
     <% else %>
       <% if !@current_user.is_student %>
+
         <%= link_to (fa_icon 'graduation-cap', text: 'New Course'), new_course_path, class: 'btn btn-secondary btn-lg' %>
-        <br>
-        <p class="lead">My Courses</p>
-        <table class="table .table-sm table-striped">
-          <% @courses.each do |course| %>
-            <tr>
-              <td><%= course.name %></td>
-              <td class="text-right">
-                <% if course.status == "open" %>
-                  <%= link_to 'View', course, {class: "btn btn-primary"} %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-        </table>
+
+        <h3>My Courses</h3>
+        <% open_courses = @courses.select { |course| course.status == "open" } %>
+        <%= render 'courses/table', courses: open_courses, is_participating: true %>
+
       <% else %>
 
         <h3>Running Lectures</h3>
-
-        <table class="table .table-sm table-striped">
-          <thead>
-          <tr>
-            <th style="width: 40%">Name</th>
-            <th style="width: 20%">Course</th>
-            <th style="width: 10%" scope="col">End Time</th>
-            <th style="width: 30%" scope="col"></th>
-          </tr>
-          </thead>
-
-          <% Lecture.where(course: @participating_courses).each do |lecture| %>
-            <% if lecture.status == "running" || lecture.status == "active" %>
-              <tr>
-                <td><span style="font-size: 1.25rem"><%= lecture.name %></span></td>
-                <td><%= link_to lecture.course.name, course_path(lecture.course) %></td>
-                <td>
-                  <%if lecture.end_time %>
-                    <%= lecture.end_time.strftime("%H:%M")  %>
-                  <% end %>
-                </td>
-                <td class="text-right" >
-                <% if @participating_lectures.include?(lecture)  %>
-                  <%= button_to "View", course_lecture_path(course_id: lecture.course.id, id: lecture.id), :method => "get", class: "btn btn-primary" %>
-                <% elsif lecture.enrollment_key_present? && !@participating_lectures.include?(lecture)%>
-                  <%= form_tag join_lecture_path(:course_id => lecture.course.id, :id => lecture.id, method: :post, autocomplete: "off") do -%>
-                    <%= text_field :lecture, :enrollment_key%>
-                    <%= submit_tag 'Join', class: "btn btn-primary" %>
-                  <% end %>
-                <% else %>
-                  <%= button_to 'Join', join_lecture_path(:course_id => lecture.course.id, :id => lecture.id),method: :post, class: "btn btn-primary" %>
-                <% end %>
-                </td>
-              </tr>
-            <% end %>
-          <% end %>
-        </table>
+        <%= render "lectures/table_running", courses: @participating_courses, renders_course_title: true %>
 
         <h3>My Courses</h3>
-        <table class="table table-sm table-striped table-responsive-md" style="table-layout: fixed">
-          <thead>
-          <tr>
-            <th class="col-sm"  scope="col">Name</th>
-            <th class="col-sm"  scope="col">Description</th>
-            <th class="col-sm"  scope="col" style="width: 168px"> </th>
-          </tr>
-          </thead>
-
-          <% @participating_courses.each do |course| %>
-            <tr>
-              <td><span class="overflowing"><%= course.name %></span></td>
-              <td><span class="overflowing"><%= course.description %></span></td>
-              <td class="text-right"> <%= button_to "View", course_path(id: course.id), :method => "get", class: "btn btn-primary" %></td>
-            </tr>
-          <% end %>
-        </table>
+        <%= render 'courses/table', courses: @participating_courses, is_participating: true %>
 
         <h3>Available Courses</h3>
-        <table class="table table-sm table-striped table-responsive-md" style="table-layout: fixed">
-          <thead>
-          <tr>
-            <th class="col-sm" scope="col">Name</th>
-            <th class="col-sm" scope="col">Description</th>
-            <th class="col-sm" scope="col" style="width: 168px"></th>
-          </tr>
-          </thead>
-          <% @open_courses.each do |course| %>
-            <tr>
-              <td>
-                <span class="overflowing"><%= course.name %></span>
-              </td>
-              <td>
-                <span class="overflowing"><%= course.description %></span>
-              </td>
-              <td class="text-right"><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
-              <td> </td>
-            </tr>
-          <% end %>
-        </table>
+        <%= render 'courses/table', courses: @open_courses, is_participating: false %>
+
       <% end %>
     <% end %>
-
-  </p>
 </div>
 
 <% if user_signed_in? && @current_user.is_student %>
