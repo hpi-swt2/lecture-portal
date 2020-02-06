@@ -15,6 +15,10 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /resource
   def create
+    @secret_key = sign_up_params[:secret_key]
+    if User.check_secret_key(@secret_key)
+      redirect_to(new_user_registration_path, alert: "Invalid Key. Please leave empty if you want to be a student.")  && (return)
+    end
     super
   end
 
