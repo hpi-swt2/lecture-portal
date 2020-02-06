@@ -11,33 +11,8 @@
       <% if !@current_user.is_student %>
         <%= link_to (fa_icon 'graduation-cap', text: 'New Course'), new_course_path, class: 'btn btn-secondary btn-lg' %>
 
-        <p class="lead">My Running Lectures</p>
-        <table class="table .table-sm table-striped">
-          <thead>
-          <tr>
-            <th style="width: 25%">Name</th>
-            <th style="width: 15%" scope="col">End Time</th>
-            <th style="width: 60%" scope="col"></th>
-          </tr>
-          </thead>
-          <% @courses.each do |course| %>
-            <% course.lectures.each do |lecture| %>
-              <% if lecture.status == "running" %>
-                <tr>
-                  <td><%= lecture.name %></td>
-                  <td>
-                    <%if lecture.end_time %>
-                      <%= lecture.end_time.strftime("%H:%M")  %>
-                    <% end %>
-                  </td>
-                  <td class="text-right">
-                    <%= button_to "View", course_lecture_path(course_id: lecture.course.id, id: lecture.id), :method => "get", class: "btn btn-primary" %>
-                  </td>
-                </tr>
-              <% end %>
-            <% end %>
-          <% end %>
-        </table>
+        <h3>My Running Lectures</h3>
+        <%= render 'lectures/table_running', courses: @courses, participating: true, renders_course_title: true %>
 
         <h3>My Courses</h3>
         <% open_courses = @courses.select { |course| course.status == "open" } %>
