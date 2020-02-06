@@ -1,0 +1,26 @@
+<div class="">
+  <h1 class="display-4">Available Courses</h1>
+
+  <table class="table table-sm table-striped table-responsive-md" style="table-layout: fixed">
+    <thead>
+    <tr>
+      <th class="col-sm" scope="col"></th>
+      <th class="col-sm" scope="col"></th>
+    </tr>
+    </thead>
+    <% @open_courses.each do |course| %>
+      <tr>
+        <td>
+          <h5><%= course.name %></h5>
+          <span class="overflowing"><%= course.description %></span>
+        </td>
+        <% if @current_user.is_student? %>
+        <td class="text-right" style="vertical-align: middle;"><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
+        <% else  %>
+        <td></td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+  <%= link_to (fa_icon 'arrow-left', text: 'Back to Overview'), root_path, class: "btn btn-outline-primary" %>
+</div>
