@@ -8,7 +8,7 @@
       initLectureStatusUpdating(function(lecture_id, course_id) {
         return lecture_id == "<%= @lecture.id %>"
       });
-    }); 
+    });
 </script>
 
 <h1 class="h5"><%= @lecture.name %></h1>
@@ -125,8 +125,15 @@
       <iframe class="polls-iframe" src="<%= studentList_path(@course, @lecture) %>"></iframe>
     </div>
 
-    <div class="container tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
-      <%= render 'form', lecture: @lecture %>
-    </div>
   <% end %>
 </div>
+
+ <div class="d-flex flex-row justify-content-between mb-2">
+   <%= link_to (fa_icon 'arrow-left', text: 'Back to Course'), course_path(@course), class: "btn btn-outline-primary" %>
+
+   <% if @current_user.is_student && (@lecture.status == "running" || @lecture.status == "active") %>
+     <%= link_to "Leave Lecture", leave_lecture_path(course_id: @lecture.course.id, id: @lecture.id), method: :post, class: "btn btn-outline-secondary" %>
+   <% else %>
+     <%= link_to "Edit Lecture", edit_course_lecture_path(course_id: @lecture.course.id, id: @lecture.id), class: "btn btn-outline-secondary" %>
+   <% end %>
+ </div>

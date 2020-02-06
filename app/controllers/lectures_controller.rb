@@ -38,9 +38,6 @@ class LecturesController < ApplicationController
 
   # GET courses/:course_id/lectures/1/edit
   def edit
-    if @lecture.status != "created"
-      redirect_to course_lecture_path(@course, @lecture)
-    end
   end
 
   # POST courses/:course_id/lectures
@@ -48,7 +45,7 @@ class LecturesController < ApplicationController
     @lecture = @course.lectures.build(lecture_params)
     @lecture.lecturer = current_user
     if @lecture.save
-      redirect_to course_lecture_path(@course, @lecture), notice: "Lecture was successfully created."
+      redirect_to course_path(@course), notice: "Lecture was successfully created."
     else
       render :new
     end
