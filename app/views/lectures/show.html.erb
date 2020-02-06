@@ -11,7 +11,7 @@
     });
 </script>
 
-<p class="lead"><%= @lecture.name %></h1>
+<p class="lead"><%= @lecture.name %><p>
 <% if @lecture.start_time && @lecture.end_time && @lecture.date%>
   <p><%= @lecture.date.strftime("%d.%m.%Y") %> <%= @lecture.start_time.strftime("%H:%M -") %> <%= @lecture.end_time.strftime("%H:%M") %></p>
 <% end %>
