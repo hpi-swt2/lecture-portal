@@ -58,7 +58,7 @@ RSpec.describe User, type: :model do
 
   it "can be destroyed when referenced from uploaded_files" do
     course = FactoryBot.create(:course)
-    file = FactoryBot.create(:uploaded_file, author: @user, allowsUpload_id: course.id, allowsUpload_type: "Course", data: "Something")
+    FactoryBot.create(:uploaded_file, author: @user, allowsUpload_id: course.id, allowsUpload_type: "Course", data: "Something")
     expect { @user.destroy }.to_not raise_error
   end
 
