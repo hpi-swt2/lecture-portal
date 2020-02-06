@@ -43,7 +43,7 @@
               <% end %>
             <% else %>
               <% if lecture.status == "created" %>
-                <%= link_to 'Edit', edit_course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-outline-secondary"} %>
+                <%= link_to 'View', course_lecture_path(:course_id => course.id, :id => lecture.id, :anchor => "settings"), {class: "btn btn-outline-secondary"} %>
               <% else %>
                 <%= link_to 'Review', course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-outline-secondary"} %>
               <% end %>
