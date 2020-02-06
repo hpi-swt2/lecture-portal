@@ -38,9 +38,6 @@ class LecturesController < ApplicationController
 
   # GET courses/:course_id/lectures/1/edit
   def edit
-    if @lecture.status != "created"
-      redirect_to course_lecture_path(@course, @lecture)
-    end
   end
 
   # POST courses/:course_id/lectures
@@ -48,7 +45,7 @@ class LecturesController < ApplicationController
     @lecture = @course.lectures.build(lecture_params)
     @lecture.lecturer = current_user
     if @lecture.save
-      redirect_to course_lecture_path(@course, @lecture), notice: "Lecture was successfully created."
+      redirect_to course_path(@course), notice: "Lecture was successfully created."
     else
       render :new
     end
@@ -82,6 +79,11 @@ class LecturesController < ApplicationController
     else
       redirect_to root_path, alert: "Only Students can access this site."
     end
+  end
+
+  def studentList
+    @hide_navbar = true
+    render :studentList
   end
 
   def join_lecture
@@ -189,7 +191,7 @@ class LecturesController < ApplicationController
     def generate_enrollment_qr_code
       enrollment_url = join_lecture_with_url_path(@course, @lecture)
       if @lecture.enrollment_key
-        enrollment_url += "?key=" + @lecture.enrollment_key
+        enrollment_url = request.base_url + enrollment_url + "?key=" + @lecture.enrollment_key
       end
       @qr_code = RQRCode::QRCode.new(enrollment_url)
     end

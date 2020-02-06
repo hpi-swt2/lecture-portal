@@ -3,7 +3,7 @@ require "action_cable/testing/rspec"
 
 RSpec.describe LecturesController, type: :controller do
   let(:valid_attributes) {
-    { name: "SWT", enrollment_key: "swt", status: "created", date: "2020-02-02", start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
+    { name: "SWT", enrollment_key: "swt", status: "created", date: Date.tomorrow, start_time: "2020-01-01 10:10:00", end_time: "2020-01-01 10:20:00", questions_enabled: true, polls_enabled: true }
   }
   let(:valid_attributes_with_lecturer) {
     valid_attributes.merge(lecturer: FactoryBot.create(:user, :lecturer, email: "test@test.de"))
@@ -119,22 +119,6 @@ RSpec.describe LecturesController, type: :controller do
   end
 
   describe "GET #edit" do
-    describe "is only accessible before a lecture was started:" do
-      it "running lecture redirects to overview" do
-        lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "running", date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 20.minutes)
-        login_lecturer(lecture.lecturer)
-        get :edit, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
-        expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
-      end
-      it "archived lecture redirects to overview" do
-        # lecture = Lecture.create! valid_attributes_with_lecturer.merge(status: "archived")
-        # lecture = FactoryBot.create(:lecture, valid_attributes_with_lecturer.merge(status: "archived"))
-        lecture = Lecture.create! valid_attributes_with_lecturer_with_course.merge(status: "archived", date: Date.yesterday)
-        login_lecturer(lecture.lecturer)
-        get :edit, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
-        expect(response).to redirect_to(course_lecture_path(course_id: lecture.course.id, id: lecture.id))
-      end
-    end
     it "returns a success response for lecturer" do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       login_lecturer(lecture.lecturer)
@@ -159,10 +143,10 @@ RSpec.describe LecturesController, type: :controller do
         }.to change(Lecture, :count).by(0)
       end
 
-      it "redirects to the lecture dashboard", :logged_lecturer do
+      it "redirects to the course overview", :logged_lecturer do
         course = FactoryBot.create(:course, creator: @lecturer)
         post :create, params: { course_id: (course.id), lecture: valid_attributes }, session: valid_session
-        expect(response).to redirect_to(course_lecture_path(course_id: course.id, id: Lecture.find_by(course_id: course.id).id))
+        expect(response).to redirect_to(course_path(id: course.id))
       end
     end
 
