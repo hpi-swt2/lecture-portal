@@ -23,35 +23,33 @@ describe "The course detail page", type: :feature do
       expect(page).to have_link("Create Lecture")
     end
     it "should show a \"Review\" button when lecture is ended" do
-      @lecture.set_archived
-      # make sure this does not fail
-      expect(@lecture.save).to be_truthy
+      expect(@lecture.update(date: Date.yesterday)).to be_truthy
       visit(course_path(@course))
       expect(page).to have_link("Review", href: course_lecture_path(@course, @lecture))
     end
 
     it "should show a \"View\" link after the lecture is started" do
-      @lecture.update(status: "running")
+      @lecture.update(date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 2.hours)
       visit(course_path(@course))
       expect(page).to have_link("View", href: course_lecture_path(@course, @lecture))
     end
 
     it "should show a \"View\" link when the lecture is active" do
-      @lecture.update(status: "active")
+      @lecture.update(date: Date.today, start_time: DateTime.now + 1.hours, end_time: DateTime.now + 2.hours)
       visit(course_path(@course))
       expect(page).to have_link("View", href: course_lecture_path(@course, @lecture))
     end
 
     it "should show a \"View\" link after the lecture is created" do
-      @lecture.update(status: "created")
+      @lecture.update(date: Date.tomorrow)
       visit(course_path(@course))
-      expect(page).to have_link("View", href: edit_course_lecture_path(course_id: @course.id, id: @lecture.id))
+      expect(page).to have_link("View", href: course_lecture_path(course_id: @course.id, id: @lecture.id, anchor: "settings"))
     end
 
     it "should not show lectures of other lecturers" do
       course2 = FactoryBot.create(:course)
       lecture2 = FactoryBot.create(:lecture, course: course2)
-      lecture2.update(status: "running")
+      lecture2.update(date: Date.today, start_time: DateTime.now, end_time: DateTime.now + 2.hours)
       visit(course_path(@course))
       expect(page).to_not have_link("View", href: course_lecture_path(course2, lecture2))
     end
@@ -149,18 +147,14 @@ describe "The course detail page", type: :feature do
     end
 
     it "should show a \"Review\" button when lecture is ended for a student who joined the lecture" do
-        @lecture.join_lecture(@student)
-        @lecture.set_archived
-        # make sure this does not fail
-        expect(@lecture.save).to be_truthy
-        visit(course_path(@course))
-        expect(page).to have_link("Review", href: course_lecture_path(@course, @lecture))
-      end
+      @lecture.join_lecture(@student)
+      expect(@lecture.update(date: Date.yesterday)).to be_truthy
+      visit(course_path(@course))
+      expect(page).to have_link("Review", href: course_lecture_path(@course, @lecture))
+    end
 
     it "should show a \"Review\" button when lecture is ended for a student who did not join the lecture" do
-      @lecture.set_archived
-      # make sure this does not fail
-      expect(@lecture.save).to be_truthy
+      expect(@lecture.update(date: Date.yesterday)).to be_truthy
       visit(course_path(@course))
       expect(page).to have_link("Review", href: course_lecture_path(@course, @lecture))
     end

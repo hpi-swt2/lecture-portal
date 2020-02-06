@@ -4,7 +4,8 @@ class PollsController < ApplicationController
   before_action :get_lecture
   before_action :set_poll, only: [:show, :edit, :update, :destroy, :stop, :save_answers, :stop_start, :answer]
   before_action :set_is_student
-  before_action :validate_lecture_running_or_active, except: [:index, :show, :serialized_options, :serialized_participants_count]
+  before_action :validate_lecture_not_archived, except: [:index, :show, :serialized_options, :serialized_participants_count]
+  before_action :validate_lecture_running_or_active, except: [:index, :create, :new, :edit, :update, :destroy, :show, :serialized_options, :serialized_participants_count]
   before_action do |controller|
     @hide_navbar = true
   end
@@ -52,20 +53,12 @@ class PollsController < ApplicationController
     end
   end
 
-  # GET /polls/1/stop
+  # GET /polls/1/stop_start
   def stop_start
     if @poll.is_active
-      if @poll.update(is_active: false)
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You stopped the poll!"
-      else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Stopping the poll did not work :("
-      end
+      start
     else
-      if @poll.update(is_active: true)
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "You started the poll!"
-      else
-        redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Starting the poll did not work :("
-      end
+      stop
     end
   end
 
@@ -88,7 +81,7 @@ class PollsController < ApplicationController
   # POST /polls
   def create
     current_poll_params = poll_params
-    @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
+    @poll = @lecture.polls.build(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], status: "created")
     poll_option_params = current_poll_params[:poll_options]
     create_and_save_poll_options_from_params(poll_option_params)
     if @poll.save
@@ -101,9 +94,11 @@ class PollsController < ApplicationController
   # PATCH/PUT /polls/1
   def update
     current_poll_params = poll_params
-    if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect], is_active: current_poll_params[:is_active])
+    if @poll.update(title: current_poll_params[:title], is_multiselect: current_poll_params[:is_multiselect])
       poll_option_params = current_poll_params[:poll_options]
       # Remove all previously existing options so there are no conflicts with the new/updated ones.
+      # Also delete answers to prevent foreign key constraint violations
+      Answer.where(poll_id: @poll.id).destroy_all
       PollOption.where(poll_id: @poll.id).destroy_all
       create_and_save_poll_options_from_params(poll_option_params)
       if @poll.save
@@ -119,6 +114,9 @@ class PollsController < ApplicationController
 
   # DELETE /polls/1
   def destroy
+    # Also delete answers and options to prevent foreign key constraint violations
+    Answer.where(poll_id: @poll.id).destroy_all
+    PollOption.where(poll_id: @poll.id).destroy_all
     @poll.destroy
     redirect_to course_lecture_polls_path(course_id: @lecture.course.id, lecture_id: @lecture.id), notice: "Poll was successfully destroyed."
   end
@@ -134,6 +132,22 @@ class PollsController < ApplicationController
   end
 
   private
+    def start
+      if @poll.update(status: get_toggled_status)
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "You started the poll!"
+      else
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "Starting the poll did not work :("
+      end
+    end
+
+    def stop
+      if @poll.update(status: get_toggled_status)
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "You stopped the poll!"
+      else
+        redirect_to course_lecture_poll_path(course_id: @lecture.course.id, lecture_id: @lecture.id, id: @poll.id), notice: "Stopping the poll did not work :("
+      end
+    end
+
     # Send belonging poll_options to subscribers so they can update their data
     def broadcast_options
       poll = Poll.find(params[:id])
@@ -179,7 +193,7 @@ class PollsController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def poll_params
-      params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :is_active, :number_of_options, poll_options: params[:poll][:poll_options].keys)
+      params.require(:poll).permit(:title, :is_multiselect, :lecture_id, :status, :number_of_options, poll_options: params[:poll][:poll_options].keys)
     end
 
     # This method looks for the course in the database and redirects with a failure if the course does not exist.
@@ -223,6 +237,10 @@ class PollsController < ApplicationController
       head :forbidden unless @lecture.allow_interactions?
     end
 
+    def validate_lecture_not_archived
+      head :forbidden if @lecture.archived?
+    end
+
     def create_and_save_poll_options_from_params(poll_option_params)
       i = 0
       for poll_option_param in poll_option_params do
@@ -230,5 +248,9 @@ class PollsController < ApplicationController
         @poll.poll_options.build(description: poll_option_description.to_param, index: i)
         i = i + 1
       end
+    end
+
+    def get_toggled_status
+      @poll.is_active ? "stopped" : "running"
     end
 end
