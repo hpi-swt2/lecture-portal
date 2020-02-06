@@ -21,21 +21,23 @@
 <div class="tab-content" id="lectureTabsContent">
   <div class="tab-pane fade show active mx-auto" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab" style="max-width: 2000px;">
     <div class="row">
-      <div id="updates" class="col-12 col-sm-6 col-xl-4">
-          <% if @current_user.is_student %>
-            <h2 class="h5">Updates</h2>
-          <% else %>
-            <h2 class="h5">Questions</h2>
-          <% end %>
-          <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: @lecture.allow_interactions?, questions_list: Question.questions_for_lecture(@lecture, current_user)}) %>
-      </div>
+      <% if (@current_user.is_student && @lecture.polls_enabled) || @lecture.questions_enabled %>
+        <div id="updates" class="col-12 col-sm-6 col-xl-4">
+            <% if @current_user.is_student %>
+              <h2 class="h5">Updates</h2>
+            <% else %>
+              <h2 class="h5">Questions</h2>
+            <% end %>
+            <%= react_component("UpdatesApp", {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: @lecture.allow_interactions?, questions_list: Question.questions_for_lecture(@lecture, current_user)}) %>
+        </div>
+      <% end %>
       <div id="materials" class="col-12 col-sm-6 col-xl-4 ">
         <h2 class="h5">Materials</h2>
         <%= render 'components/show_uploaded_files_or_links', uploaded_files: @uploaded_files %>
         <% unless current_user.is_student %>
           <%= link_to (fa_icon 'plus', text: 'Add Material'), new_course_lecture_uploaded_file_path(@lecture.course, @lecture), class: 
           "btn btn-link text-muted float-right"%>
-        <% end %> 
+        <% end %>
       </div>
       <div class="col-12 col-sm-6 col-xl-4">
         <% unless @current_user.is_student %>
@@ -56,7 +58,7 @@
     <% if @lecture.questions_enabled %>
       <%= react_component("QuestionsApp",  {user_id: @current_user.id, is_student: @current_user.is_student, lecture_id: @lecture.id, course_id: @lecture.course.id, interactions_enabled: @lecture.allow_interactions?, questions_list: Question.questions_for_lecture(@lecture, current_user)} ) %>
     <% else %>
-      <p class="h1"> Questions are not enabled. :(</p>
+      <p class="h1">Questions are not enabled. :(</p>
     <% end %>
   </div>
 
@@ -64,7 +66,7 @@
     <% if @lecture.polls_enabled%>
       <iframe class="polls-iframe" src="<%= course_lecture_polls_path(@course, @lecture) %>"></iframe>
     <% else %>
-      <p class="h1"> Polls are not enabled. :( </p>
+      <p class="h1">Polls are not enabled. :( </p>
     <% end %>
   </div>
 
