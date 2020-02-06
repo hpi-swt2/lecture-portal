@@ -157,11 +157,14 @@ class LecturesController < ApplicationController
       isJoinedStudentCourse = @course.participating_students.include?(current_user)
       isJoinedStudentLecture = @lecture.participating_students.include?(current_user)
       isLectureOwner = @lecture.lecturer == current_user
-      if isStudent && !isJoinedStudentCourse
-        redirect_to root_path, alert: "You must join the course before you can view one of its lectures."
-      elsif isStudent && !isJoinedStudentLecture
-        redirect_to course_path(@course), alert: "You must join a lecture before you can view it."
-      elsif !isStudent && !isLectureOwner
+      if isStudent
+        if !isJoinedStudentCourse
+          redirect_to root_path, alert: "You must join the course before you can view one of its lectures."
+        end
+        if !isJoinedStudentLecture && @lecture.status != "archived"
+          redirect_to course_path(@course), alert: "You must join a lecture before you can view it."
+        end
+      elsif !isLectureOwner
         redirect_to course_path(@course), alert: "You can only access your own lectures."
       end
     end

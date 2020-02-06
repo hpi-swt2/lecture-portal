@@ -89,6 +89,25 @@ RSpec.describe LecturesController, type: :controller do
       expect(response).to redirect_to(course_path(lecture.course))
     end
 
+    it "returns a success response on archived lectures for all course students even if they have not joined the lecture", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      lecture.update(status: "archived")
+      student = FactoryBot.create(:user, :student)
+      lecture.course.join_course(student)
+      login_student(student)
+      get :show, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
+      expect(response).to be_successful
+    end
+
+    it "returns a fail response on archived lectures for all students not enrolled in the course", :logged_lecturer do
+      lecture = Lecture.create! valid_attributes_with_lecturer_with_course
+      lecture.update(status: "archived")
+      student = FactoryBot.create(:user, :student)
+      login_student(student)
+      get :show, params: { course_id: (lecture.course.id), id: lecture.to_param }, session: valid_session
+      expect(response).to_not be_successful
+    end
+
     it "redirects to lecture overview when student enrolls via url" do
       lecture = Lecture.create! valid_attributes_with_lecturer_with_course
       login_student
