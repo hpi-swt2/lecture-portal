@@ -11,7 +11,7 @@
       <% if !@current_user.is_student %>
         <%= link_to (fa_icon 'graduation-cap', text: 'New Course'), new_course_path, class: 'btn btn-secondary btn-lg' %>
 
-        <h3>My Running Lectures</h3>
+        <h3>My todays active or currently running lectures</h3>
         <%= render 'lectures/table_running', courses: @courses, participating: true, renders_course_title: true %>
 
         <h3>My Courses</h3>
@@ -20,7 +20,7 @@
 
       <% else %>
 
-        <h3>Running Lectures</h3>
+        <h3>Todays active or currently running lectures</h3>
         <%= render "lectures/table_running", courses: @participating_courses, renders_course_title: true %>
 
         <h3>My Courses</h3>
