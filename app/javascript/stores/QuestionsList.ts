@@ -52,14 +52,19 @@ const QuestionsList = types
             self.list = sortQuestionsList(self.list, self.is_sorted_by_time);
         },
         resolveQuestionById(id: number) {
-          let resolveQuestion: QuestionModel;
-          self.list.forEach(question => {
-            if (question.id == id) resolveQuestion = question;
-          });
-          if (resolveQuestion) {
-            resolveQuestion.resolved = true;
-            self.list.remove(resolveQuestion);
-          }
+            self.list.forEach(question => {
+                if (question.id == id)
+                    question.resolved = true
+            });
+        },
+        removeQuestionById(id: number) {
+            let removeQuestion: QuestionModel;
+            self.list.forEach(question => {
+                if (question.id == id) removeQuestion = question;
+            });
+            if (removeQuestion) {
+                self.list.remove(removeQuestion);
+            }
         },
         upvoteQuestionById(question_id: number, upvoter_id: number) {
             let upvoteQuestion: QuestionModel;
