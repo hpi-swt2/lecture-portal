@@ -51,4 +51,26 @@ RSpec.describe User, type: :model do
     @user.upvoted_questions << question1
     @user.upvoted_questions << question2
   end
+
+  it "can be destroyed" do
+    expect { @user.destroy }.to_not raise_error
+  end
+
+  it "can be destroyed when referenced from uploaded_files" do
+    course = FactoryBot.create(:course)
+    FactoryBot.create(:uploaded_file, author: @user, allowsUpload_id: course.id, allowsUpload_type: "Course", data: "Something")
+    expect { @user.destroy }.to_not raise_error
+  end
+
+  it "can be destroyed if user is a course member" do
+    course = FactoryBot.create(:course)
+    course.join_course(@user)
+    expect { @user.destroy }.to_not raise_error
+  end
+
+  it "can be destroyed if user has joined a lecture" do
+    lecture = FactoryBot.create(:lecture)
+    lecture.join_lecture(@user)
+    expect { @user.destroy }.to_not raise_error
+  end
 end
