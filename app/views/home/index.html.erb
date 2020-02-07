@@ -1,11 +1,48 @@
 <div class="jumbotron">
   <h1 class="display-4">HPI Lecture Portal</h1>
   <p class="lead">A Portal for organizing and administering lectures.</p>
-  <hr class="my-4">
-  <p>It comes with many very good features.</p>
-  <p class="lead">
-    <%# fa_icon helper: https://github.com/bokmann/font-awesome-rails %>
-    <%= link_to (fa_icon 'sign-in', text: 'Log-In'), new_user_session_path, class: 'btn btn-primary btn-lg' %>
-    <%= link_to (fa_icon 'user-plus', text: 'Sign-Up'), new_user_registration_path, class: 'btn btn-secondary btn-lg' %>
-  </p>
 </div>
+<div>
+    <%# fa_icon helper: https://github.com/bokmann/font-awesome-rails %>
+    <% if user_signed_in? == false %>
+      <%= link_to (fa_icon 'sign-in', text: 'Log-In'), new_user_session_path, class: 'btn btn-primary btn-lg' %>
+      <%= link_to (fa_icon 'user-plus', text: 'Sign-Up'), new_user_registration_path, class: 'btn btn-secondary btn-lg' %>
+    <% else %>
+      <% if !@current_user.is_student %>
+        <%= link_to (fa_icon 'graduation-cap', text: 'New Course'), new_course_path, class: 'btn btn-secondary btn-lg' %>
+
+        <h3>My todays active or currently running lectures</h3>
+        <%= render 'lectures/table_running', courses: @courses, participating: true, renders_course_title: true %>
+
+        <h3>My Courses</h3>
+        <% open_courses = @courses.select { |course| course.status == "open" } %>
+        <%= render 'courses/table', courses: open_courses, is_participating: true %>
+
+      <% else %>
+
+        <h3>Todays active or currently running lectures</h3>
+        <%= render "lectures/table_running", courses: @participating_courses, renders_course_title: true %>
+
+        <h3>My Courses</h3>
+        <%= render 'courses/table', courses: @participating_courses, is_participating: true %>
+
+        <h3>Available Courses</h3>
+        <%= render 'courses/table', courses: @open_courses, is_participating: false %>
+
+      <% end %>
+
+      <div class="text-center mt-5">
+        <%= button_to "Browse available courses", available_courses_path, :method => "get", class: "btn btn-primary" %>
+      </div>
+    <% end %>
+</div>
+
+<% if user_signed_in? && @current_user.is_student %>
+  <script>
+    $(document).on("turbolinks:load", function() {
+      initLectureStatusUpdating(function(lecture_id, course_id) {
+        return <%= @participating_lectures.map { |i| i.id } %>.includes(lecture_id)
+      });
+    });
+  </script>
+<% end %>

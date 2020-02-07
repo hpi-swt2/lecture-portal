@@ -1,0 +1,124 @@
+<script>
+    var minuteDifference = 30;
+    var hourDifference = 1;
+
+    function handleEndTimeInput() {
+        let startTimeHour = document.getElementById("lecture_start_time_4i").value;
+        let startTimeMinute = document.getElementById("lecture_start_time_5i").value;
+
+        let endTimeHour = document.getElementById("lecture_end_time_4i").value;
+        let endTimeMinute = document.getElementById("lecture_end_time_5i").value;
+
+        hourDifference = parseInt(endTimeHour) - parseInt(startTimeHour);
+        minuteDifference = parseInt(endTimeMinute) - parseInt(startTimeMinute);
+    }
+
+    function handleStartTimeInput(){
+        let startTimeHour = document.getElementById("lecture_start_time_4i").value;
+        let startTimeMinute = document.getElementById("lecture_start_time_5i").value;
+
+        let endTimeHour = parseInt(startTimeHour) + hourDifference;
+        let endTimeMinute = parseInt(startTimeMinute) + minuteDifference;
+
+        if (endTimeMinute > 60) {
+            endTimeHour += 1;
+            endTimeMinute -= 60;
+        }
+
+        endTimeHour = endTimeHour.toString();
+        endTimeMinute = endTimeMinute.toString();
+
+        if (endTimeHour.length === 1) {
+            endTimeHour = "0" + endTimeHour
+        }
+
+        if (endTimeMinute.length === 1) {
+            endTimeMinute = "0" + endTimeMinute
+        }
+
+        document.getElementById("lecture_end_time_4i").value = endTimeHour;
+        document.getElementById("lecture_end_time_5i").value = endTimeMinute;
+    }
+
+
+</script>
+
+<%= form_with(model: [@course, lecture], local: true) do |form| %>
+  <% if lecture.errors.any? %>
+    <div id="error-explanation">
+      <p class="h2" role="alert"><%= pluralize(lecture.errors.count, "error") %> prohibited this lecture from being saved:</p>
+
+      <ul>
+        <% lecture.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <% if lecture.archived? %>
+    <div class="alert alert-info notice" role="alert">
+      This lecture has been archived and can no longer be modified.
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, :disabled => lecture.archived?, class: "form-control" %>
+  </div>
+
+  <div class="row">
+    <div class="date form-group col-12 col-md-4">
+      <%= form.label :date %>
+      <div class="d-flex">
+        <%= form.date_select :date, value: Date.today, :disabled => lecture.archived?, id: "startDate" %>
+      </div>
+    </div>
+
+    <div class="time start_time form-group col-6 col-sm-4">
+      <%= form.label :start_time %>
+      <div class="d-flex">
+        <%= form.time_select :start_time, {minute_step: 5,:default => {:hour => ((DateTime.now + 59.minutes).beginning_of_hour).strftime("%H"), :minute => '00'}}, :disabled => lecture.archived?, onchange: "handleStartTimeInput()"%>
+      </div>
+    </div>
+
+    <div class="time end_time form-group col-6 col-sm-4">
+      <%= form.label :end_time %>
+      <div class="d-flex">
+        <%= form.time_select :end_time, {minute_step: 5, :default => {:hour => (((DateTime.now + 59.minutes).beginning_of_hour)+1.hours).strftime("%H"), :minute => '30'}}, :disabled => lecture.archived?, onchange: "handleEndTimeInput()" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :enrollment_key, "Enrollment Key (optional)" %>
+    <%= form.text_field :enrollment_key, :disabled => lecture.archived?, class: "form-control" %>
+  </div>
+
+  <div class="form-check">
+    <%= form.check_box :questions_enabled, :disabled => lecture.archived?, class: "form-check-input" %>
+    <%= form.label :questions_enabled, "Enable Questions", :class => "form-check-label"%>
+  </div>
+
+  <div class="form-check">
+    <%= form.check_box :polls_enabled, :disabled => lecture.archived?, :class => "form-check-input" %>
+    <%= form.label :polls_enabled, "Enable Polls", :class => "form-check-label" %>
+  </div>
+
+  <div class="form-check">
+    <%= form.check_box :feedback_enabled, :disabled => lecture.archived?, :class => "form-check-input" %>
+    <%= form.label :feedback_enabled, "Enable Feedback", :class => "form-check-label" %>
+  </div>
+
+  <div class="actions d-flex flex-row justify-content-between mt-2">
+    <div>
+      <%= yield(:action_left) %>
+    </div>
+    <div>
+      <%= yield(:action_right) %>
+      <% if !lecture.archived? %>
+        <%= form.submit :class => "btn btn-primary" %>
+      <% end %>
+    </div>
+  </div>
+<% end %>

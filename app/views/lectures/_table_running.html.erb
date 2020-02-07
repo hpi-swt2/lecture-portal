@@ -1,0 +1,62 @@
+<table class="table table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Name</th>
+    <%if renders_course_title %>
+      <th scope="col">Course</th>
+    <% end %>
+    <th scope="col">Starts</th>
+    <th scope="col">Ends</th>
+    <% if !@current_user.is_student%>
+      <th scope="col">Enrollment key</th>
+      <th scope="col">Status</th>
+    <% end %>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% courses.each do |course| %>
+    <% course.lectures.each do |lecture| %>
+      <% if lecture.status == "running" || lecture.status == "active" %>
+        <tr>
+          <td><span class="overflowing" style="font-size: 1.25rem"><%= lecture.name %></span></td>
+          <% if renders_course_title %>
+            <td><%= link_to course.name, course_path(course) %></td>
+          <%end %>
+            <td>
+            <%if lecture.start_time %>
+              <%= lecture.start_time.strftime("%H:%M")  %>
+            <% end %>
+          </td>
+          <td>
+            <%if lecture.end_time %>
+              <%= lecture.end_time.strftime("%H:%M")  %>
+            <% end %>
+          </td>
+          <% if !@current_user.is_student%>
+            <td><%= lecture.enrollment_key %></td>
+            <td><%= lecture.status%></td>
+          <% end %>
+          <td class="text-right">
+            <% if @current_user.is_student%>
+              <%if lecture.participating_students.include?(@current_user)%>
+                <%= link_to 'View', course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-primary"} %>
+              <% elsif lecture.enrollment_key_present? %>
+                <%= form_tag join_lecture_path(:course_id => course.id, :id => lecture.id, method: :post, autocomplete: "off") do -%>
+                  <%= text_field :lecture, :enrollment_key, placeholder: "Enrollment key" %>
+                  <%= submit_tag 'Join', class: "btn btn-primary" %>
+                <% end %>
+              <%else %>
+                <%= button_to 'Join', join_lecture_path(:course_id => course.id, :id => lecture.id),method: :post, class: "btn btn-primary" %>
+              <% end %>
+            <% else %>
+                <%= link_to 'View', course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-primary"} %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  <%end %>
+  </tbody>
+</table>

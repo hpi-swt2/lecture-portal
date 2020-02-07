@@ -1,10 +1,13 @@
 # lecture-portal
 
+[![Build Status](https://travis-ci.com/hpi-swt2/lecture-portal.svg?branch=master)](https://travis-ci.com/hpi-swt2/lecture-portal)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
+[![mergify-status](https://img.shields.io/endpoint.svg?url=https://gh.mergify.io/badges/hpi-swt2/lecture-portal&style=flat)](https://dashboard.mergify.io/installation/6258647/repositories)
 
 Web application for organizing and managing lecture participation, written in [Ruby on Rails](https://rubyonrails.org/).
-Created in the [Software Engineering II course](https://hpi.de/plattner/teaching/winter-term-201920/softwaretechnik-ii.html) at HPI in Potsdam.
-
+Created in the [Software Engineering II course](https://hpi.de/plattner/teaching/winter-term-201920/softwaretechnik-ii.html) at HPI in Potsdam.  
+Productive url: [https://hpi-lectureportal.herokuapp.com/](https://hpi-lectureportal.herokuapp.com/) (will be deployed on every push to master)
+Test url: [https://hpi-lectureportal-dev.herokuapp.com/](https://hpi-lectureportal-dev.herokuapp.com/) (will be deployed on every push to dev)
 ## Setup
 
 * Ensure [Ruby](https://www.ruby-lang.org/) v2.5.1 (`ruby -v`) with [rbenv](https://github.com/rbenv/rbenv) or [RVM](http://rvm.io/)
@@ -13,6 +16,7 @@ Created in the [Software Engineering II course](https://hpi.de/plattner/teaching
 * `rails db:migrate db:seed` Setup database, run migrations, seed the database with defaults
 * `rails s` Start the Rails development server (By default runs on _localhost:3000_)
 * `bundle exec rspec` Run all the tests (using the [RSpec](http://rspec.info/) test framework)
+* Set the environment variable **SECRET_KEY** to the secret value that lecturers should enter to gain lecturer privilege. If it is not set, the secret key is **IAmALecturer**.
 
 ## Developer Guide
 
@@ -22,7 +26,7 @@ Created in the [Software Engineering II course](https://hpi.de/plattner/teaching
 
 ### Testing
 * To run the full test suite: `bundle exec rspec`.
-* For fancier test running use option `-f doc` 
+* For fancier test running use option `-f doc`
 * `bundle exec rspec spec/<rest_of_file_path>.rb` Specify a folder or test file to run
 * specify what tests to run dynamically by `-e 'search keyword in test name'`
 * `bundle exec rspec --profile` examine how much time individual tests take

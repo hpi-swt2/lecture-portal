@@ -1,0 +1,55 @@
+// Place all the styles related to the lectures controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+@import "lecture_dashboard";
+@import 'lecture_updates';
+@import "lecture_statistics";
+@import "lecture_comprehension";
+@import 'questions';
+@import "colorScheme";
+
+.text-right {
+  a,
+  form,
+  form > input {
+    display: inline-block;
+  }
+}
+form.button_to {
+  display: inline-block;
+}
+
+.tab-pane {
+  padding-top: 20px;
+
+  &::after {
+    content: "";
+    clear: both;
+    display: table;
+  }
+}
+
+.padded-text {
+  padding: 20px;
+  padding-right: 0;
+}
+
+.text-gray {
+  color: $gray-dark;
+  font-size: medium;
+}
+
+
+.qr-code-container {
+  text-align: center;
+}
+
+.time select,
+.date select {
+  @extend .form-control;
+  display: inline-block;
+  min-width: 8ch;
+  max-width: 15ch;
+  margin: 0 4px;
+}

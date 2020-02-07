@@ -1,0 +1,36 @@
+<%= form_with(model: course, local: true) do |form| %>
+  <% if course.errors.any? %>
+    <div id="error-explanation">
+      <p class="h2" role="alert"><%= pluralize(course.errors.count, "error") %> prohibited this course from being saved:</p>
+
+      <ul>
+      <% course.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= form.label :name %>
+    <%= form.text_field :name, class: "form-control" %>
+  </div>
+
+  <div class="form-group">
+    <%= form.label :description, "Description (optional)" %>
+    <%= form.text_field :description, class: "form-control" %>
+  </div>
+
+  <div class="actions d-flex flex-row justify-content-between mt-2">
+    <div>
+      <%= yield(:action_left) %>
+    </div>
+    <div>
+      <%= yield(:action_right) %>
+      <% if defined?(with_delete_button) && with_delete_button %>
+        <%= link_to 'Delete Course', course_path(id:@course.id), method: :delete, data: { confirm: "Do you really want to delete this course?\n\nDeleted courses cannot be restored!" }, :class => "btn btn-outline-danger" %>
+      <% end %>
+      <%= form.submit :class => "btn btn-primary" %>
+    </div>
+  </div>
+<% end %>

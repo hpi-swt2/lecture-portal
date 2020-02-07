@@ -1,0 +1,44 @@
+#updates {
+  > div {
+    overflow-y: scroll;
+    height: 50vh;
+  }
+
+  div.questions-list {
+    margin: 0;
+
+    > ul {
+      font-size: inherit !important;
+      text-align: center;
+      margin-bottom: 0;
+      padding: 0 10px;
+
+      > li {
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+
+        &.interactable {
+          cursor: pointer;
+          &:hover {
+            background-color: #ddd !important;
+          }
+        }
+        &.marked {
+          border: 1px solid #f2994a;
+        }
+        &:last-child {
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+}
+
+@media(max-width: 500px) {
+  #updates > div {
+      overflow-y: unset;
+      height: auto;
+  }
+}

@@ -38,3 +38,15 @@ $success: #00911f;
 @import "bootstrap";
 // https://github.com/bokmann/font-awesome-rails
 @import "font-awesome";
+
+@import "questions";
+@import "lectures";
+@import "polls";
+@import "courses";
+@import "home";
+
+img,
+video,
+canvas {
+  max-width: 100%;
+}

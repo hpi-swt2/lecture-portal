@@ -1,0 +1,25 @@
+<table class="table table-sm table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Title</th>
+    <th scope="col">Active</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% polls.sort_by{|poll| poll.created_at}.each do |poll| %>
+    <tr class="<%= 'active-poll-row' if poll.is_active %>">
+      <td><%= poll.title %></td>
+      <td><%= poll.is_active ? "Yes" : "No" %></td>
+      <td class="text-right">
+        <% if poll.is_active && @lecture.allow_interactions? %>
+          <%= link_to 'Vote', answer_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary vote-button"} %>
+        <% elsif poll.status == "stopped"%>
+          <%= link_to 'Results', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-outline-secondary"} %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,21 @@
+<table class="table table-striped table-responsive-md" style="table-layout: fixed">
+  <thead>
+  <tr>
+    <th class="col-sm"  scope="col">Name</th>
+    <th class="col-sm"  scope="col">Description</th>
+    <th class="col-sm"  scope="col" style="width: 20%"> </th>
+  </tr>
+  </thead>
+  <% unless courses.nil? %>
+    <% courses.each do |course| %>
+      <tr>
+        <td><span class="overflowing"><%= course.name %></span></td>
+        <td><span class="overflowing"><%= course.description %></span></td>
+        <% if is_participating %>
+          <td class="text-right"> <%= button_to "View", course_path(id: course.id), :method => "get", class: "btn btn-primary" %></td>
+        <%else %>
+          <td class="text-right"><%= link_to "Join", join_course_path(id: course.id), method: :post, class: "btn btn-primary" %></td>
+        <%end %>
+    <% end %>
+  <% end %>
+</table>

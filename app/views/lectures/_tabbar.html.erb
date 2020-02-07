@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-between nav-tabs">
+  <ul class="nav" id="lectureTabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" id="dashboard-tab" data-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="true">Dashboard</a>
+    </li>
+    <% if @lecture.questions_enabled %>
+      <li class="nav-item">
+        <a class="nav-link" id="questions-tab" data-toggle="tab" href="#questions" role="tab" aria-controls="questions" aria-selected="false">Questions</a>
+      </li>
+    <% end %>
+    <% if @lecture.polls_enabled %>
+      <li class="nav-item">
+        <a class="nav-link" id="polls-tab" data-toggle="tab" href="#polls" role="tab" aria-controls="contact" aria-selected="false">Polls</a>
+      </li>
+    <% end %>
+    <% if @lecture.feedback_enabled && @lecture.allow_interactions? %>
+      <li class="nav-item">
+        <a class="nav-link" id="feedback-tab" data-toggle="tab" href="#feedback" role="tab" aria-controls="feedback" aria-selected="false">Feedback</a>
+      </li>
+    <% end %>
+    <% if !@current_user.is_student %>
+      <% if @lecture.enrollment_key_present? %>
+        <li class="nav-item">
+          <a class="nav-link" id="enrollmentKey-tab" data-toggle="tab" href="#enrollmentKey" role="tab" aria-controls="enrollmentKey" aria-selected="false">Enrollment Key</a>
+        </li>
+      <% end %>
+      <li class="nav-item">
+        <a class="nav-link" id="studentList-tab" data-toggle="tab" href="#studentList" role="tab" aria-controls="studentList" aria-selected="false">Student List</a>
+      </li>
+    <% end %>
+  </ul>
+</div>

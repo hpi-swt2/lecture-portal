@@ -1,0 +1,55 @@
+<%if @is_student%>
+  <h2>Your Vote</h2>
+  <ol>
+    <% for option in @poll.sorted_options %>
+
+    <li><%= option.description %>
+      <% if @answers.any? %>
+      <% if @answers.any? {|answer| answer.option_id == option.id} %>
+      <span class="green-checkmark">&#x2714;</span>
+      <% else %>
+      <span class="red-cross">&#x2716;</span>
+      <% end %>
+      <% end %>
+    </li>
+    <% end %>
+  </ol>
+
+<% else %>
+  <div class="poll-information">
+    <p class="poll-title">
+      <h3><%= @poll.title %></h3> <br>
+      <% if !@is_student && @lecture.allow_interactions? %>
+        <div style="text-align: center;">
+          <% if @poll.status == "created"%>
+            <%= link_to 'Start', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
+          <% elsif @poll.status == "running"%>
+            <%= link_to 'Stop', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
+          <%else %>
+            <%= link_to 'Restart', stop_start_course_lecture_poll_path(course_id:@lecture.course.id, lecture_id:@lecture.id, id: @poll.id), class: "btn btn-primary" %>
+          <%end %>
+        </div>
+      <% end %>
+    </p>
+    <p class="poll-status-information">
+      <% if  @poll.is_multiselect? %>
+        Multiselect enabled
+      <% else %>
+        Multiselect disabled
+      <% end %>
+        |
+      <% if  @poll.is_active %>
+        Active
+      <% else %>
+        Inactive
+      <% end %>
+    </p>
+  </div>
+<% end %>
+<% if @is_student && (!@poll.is_active || !@lecture.allow_interactions?) || !@is_student %>
+  <h3>Voting Results</h3>
+  <div>
+    <%= react_component("PollResultApp",  {course_id: @lecture.course_id, lecture_id: @lecture.id, poll_id: @poll.id, poll_option_ids: @poll.poll_options.map{|option| option.id}} ) %>
+  </div>
+<% end %>
+<%= link_to (fa_icon 'arrow-left', text: 'Show all polls'), course_lecture_polls_path(@lecture.course, @lecture, id: @poll), class: "btn btn-outline-primary" %>

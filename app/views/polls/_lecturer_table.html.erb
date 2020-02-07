@@ -1,0 +1,32 @@
+<table class="table table-sm table-striped">
+  <thead>
+  <tr>
+    <th scope="col">Title</th>
+    <th scope="col">Active</th>
+    <th scope="col"></th>
+  </tr>
+  </thead>
+
+  <tbody>
+  <% polls.sort_by{|poll| poll.created_at}.each do |poll| %>
+    <tr class="<%= 'active-poll-row' if poll.is_active %>">
+      <td><%= poll.title %></td>
+      <td><%= poll.is_active ? "Yes" : "No" %></td>
+      <td class="text-right">
+        <% if !@lecture.archived?%>
+          <%= link_to 'Edit', edit_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-secondary"} %>
+          <% if @lecture.allow_interactions?%>
+            <% if poll.status == "created"  %>
+              <%= link_to 'Start', stop_start_course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+            <% else %>
+              <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+            <% end %>
+          <% end %>
+        <% else %>
+          <%= link_to 'View', course_lecture_poll_path(poll.lecture.course, poll.lecture, poll), {class: "btn btn-primary"} %>
+        <% end %>
+      </td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>

@@ -1,0 +1,56 @@
+<table class="table table-sm table-striped table-responsive-md">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Date</th>
+      <th scope="col">Starts</th>
+      <th scope="col">Ends</th>
+      <% if !@current_user.is_student%>
+        <th scope="col">Enrollment key</th>
+        <th scope="col">Status</th>
+      <% end %>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% course.lectures.each do |lecture| %>
+      <% if lecture.status != "running" && lecture.status != "active" %>
+        <tr>
+          <td><%= lecture.name %></td>
+          <td>
+            <%if lecture.date %>
+              <%= lecture.date.strftime("%d-%m-%Y") %>
+            <% end %>
+          </td>
+          <td>
+            <%if lecture.start_time %>
+              <%= lecture.start_time.strftime("%H:%M") %>
+            <% end %>
+          </td>
+          <td>
+            <%if lecture.end_time %>
+              <%= lecture.end_time.strftime("%H:%M")  %>
+            <% end %>
+          </td>
+          <% unless @current_user.is_student %>
+          <td><%=  lecture.enrollment_key  %></td>
+          <td><%= lecture.status %></td>
+          <%  end %>
+          <td class="text-right">
+            <% if @current_user.is_student%>
+              <% if lecture.status == "archived"  %>
+                <%= link_to 'Review', course_lecture_path(:course_id => @course.id, :id => lecture.id), {class: "btn btn-outline-secondary"} %>
+              <% end %>
+            <% else %>
+              <% if lecture.status == "created" %>
+                <%= link_to 'View', course_lecture_path(:course_id => course.id, :id => lecture.id, :anchor => "settings"), {class: "btn btn-outline-secondary"} %>
+              <% else %>
+                <%= link_to 'Review', course_lecture_path(:course_id => course.id, :id => lecture.id), {class: "btn btn-outline-secondary"} %>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    <% end %>
+  </tbody>
+</table>
