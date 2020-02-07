@@ -57,6 +57,15 @@ const QuestionsList = types
                     question.resolved = true
             });
         },
+        removeQuestionById(id: number) {
+            let removeQuestion: QuestionModel;
+            self.list.forEach(question => {
+                if (question.id == id) removeQuestion = question;
+            });
+            if (removeQuestion) {
+                self.list.remove(removeQuestion);
+            }
+        },
         upvoteQuestionById(question_id: number, upvoter_id: number) {
             let upvoteQuestion: QuestionModel;
             self.list.forEach(question => {
