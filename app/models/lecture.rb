@@ -9,7 +9,10 @@ class Lecture < ApplicationRecord
   has_many :lecture_comprehension_stamps, class_name: :LectureComprehensionStamp
   belongs_to :course
   has_many :uploaded_files, as: :allowsUpload
+
+
   enum status: { created: "created", running: "running", active: "active", archived: "archived" }
+
   validates :date, presence: true
   validates :start_time, presence: true
   validates :end_time, presence: true

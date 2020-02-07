@@ -32,6 +32,11 @@ class User < ApplicationRecord
     self.is_student = !(secret_key == actual_key)
   end
 
+  def self.check_secret_key(secret_key)
+    actual_key = ENV.fetch("SECRET_KEY", User.secret_key_default)
+    (secret_key != "" &&  secret_key != actual_key)
+  end
+
   private
     def assign_hash_id
       if self.hash_id === nil || self.hash_id === ""
